@@ -34,7 +34,25 @@ function love.draw()
 
     for _, a in pairs(agents) do
         love.graphics.setColor(1, 1, 1, 1) -- TODO: agent color
-        love.graphics.circle("fill", a.x, a.y, 5)
+        local x = a.x
+        local y = a.y
+        if a.shape == "triangle" then
+            love.graphics.polygon("fill",
+                x, y - 5,
+                x + 5, y + 5,
+                x - 5, y + 5
+            )
+        elseif a.shape == "rectangle" then
+            love.graphics.polygon("fill",
+                x - 5, y - 5,
+                x + 5, y - 5,
+                x + 5, y + 5,
+                x - 5, y + 5
+            )
+        else
+            -- Default to circle
+            love.graphics.circle("fill", a.x, a.y, 5)
+        end
     end
 end
 
