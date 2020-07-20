@@ -20,6 +20,10 @@ local function set_viewport_size(w, h)
     love.window.setMode(w, h, {})
 end
 
+local function set_background_color(r, g, b)
+    love.graphics.setBackgroundColor(r, g, b)
+end
+
 function love.update(dt)
     if not initialized then
         do return end
@@ -33,7 +37,11 @@ function love.draw()
     end
 
     for _, a in pairs(agents) do
-        love.graphics.setColor(1, 1, 1, 1) -- TODO: agent color
+        if a.color and #(a.color) == 4 then
+            love.graphics.setColor(a.color[1], a.color[2], a.color[3], a.color[4])
+        else
+            love.graphics.setColor(1, 1, 1, 1)
+        end
         local x = a.x
         local y = a.y
         if a.shape == "triangle" then
@@ -60,6 +68,7 @@ GraphicEngine = {
     init = init,
     set_agents = set_agents,
     set_viewport_size = set_viewport_size,
+    set_background_color = set_background_color
 }
 
 return GraphicEngine
