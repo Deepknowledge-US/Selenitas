@@ -2,6 +2,8 @@ local agents = nil
 local initialized = false
 local coord_scale = 1 -- coordinate scaling for better visualization
 local step_func = nil
+local time_between_steps = 0
+local _time_acc = 0
 
 local function init()
     -- TODO: read user settings
@@ -20,6 +22,10 @@ end
 
 local function set_step_function(f)
     step_func = f
+end
+
+local function set_time_between_steps(t)
+    time_between_steps = t
 end
 
 local function set_viewport_size(w, h)
@@ -65,6 +71,13 @@ function love.update(dt)
     if not initialized then
         do return end
     end
+    -- Skips until time between steps is covered
+    _time_acc = _time_acc + dt
+    if _time_acc < time_between_steps then
+        do return end
+    end
+    _time_acc = 0
+
     update(dt)
     if step_func then
         step_func()
@@ -106,7 +119,8 @@ GraphicEngine = {
     set_world_dimensions = set_world_dimensions,
     set_background_color = set_background_color,
     set_coordinate_scale = set_coordinate_scale,
-    set_step_function = set_step_function
+    set_step_function = set_step_function,
+    set_time_between_steps = set_time_between_steps
 }
 
 return GraphicEngine
