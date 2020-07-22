@@ -78,7 +78,7 @@ local function comunicate(x)
 
             function(other)        
                 other.message = true
-                other.color = "green"
+                other.color = "blue"
             end
         )
     end
@@ -104,7 +104,7 @@ setup(function()
 
     ask(one_of(People), function(agent)
         agent.message = true
-        agent.color = "green"
+        agent.color = "blue"
     end)
 
 end)
