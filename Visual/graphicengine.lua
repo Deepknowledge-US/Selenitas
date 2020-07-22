@@ -1,5 +1,6 @@
 local agents = nil
 local initialized = false
+local coord_scale = 1 -- coordinate scaling for better visualization
 
 local function init()
     -- TODO: read user settings
@@ -18,6 +19,14 @@ end
 
 local function set_viewport_size(w, h)
     love.window.setMode(w, h, {})
+end
+
+local function set_world_dimensions(x, y)
+    set_viewport_size(x * coord_scale, y * coord_scale)
+end
+
+local function set_coordinate_scale(f)
+    coord_scale = f
 end
 
 local function set_background_color(r, g, b)
@@ -61,8 +70,8 @@ function love.draw()
 
     for _, a in pairs(agents) do
         love.graphics.setColor(get_rgb_color(a.color))
-        local x = a.xcor
-        local y = a.ycor
+        local x = a.xcor * coord_scale
+        local y = a.ycor * coord_scale
         if a.shape == "triangle" then
             love.graphics.polygon("fill",
                 x, y - 5,
@@ -78,7 +87,7 @@ function love.draw()
             )
         else
             -- Default to circle
-            love.graphics.circle("fill", a.x, a.y, 5)
+            love.graphics.circle("fill", x, y, 5)
         end
     end
 end
@@ -86,8 +95,9 @@ end
 GraphicEngine = {
     init = init,
     set_agents = set_agents,
-    set_viewport_size = set_viewport_size,
-    set_background_color = set_background_color
+    set_world_dimensions = set_world_dimensions,
+    set_background_color = set_background_color,
+    set_coordinate_scale = set_coordinate_scale
 }
 
 return GraphicEngine
