@@ -24,6 +24,29 @@ local function set_background_color(r, g, b)
     love.graphics.setBackgroundColor(r, g, b)
 end
 
+local function get_rgb_color(p_color_str)
+    if p_color_str == "red" then
+        return {1, 0, 0, 1}
+    elseif p_color_str == "green" then
+        return {0, 1, 0, 1}
+    elseif p_color_str == "blue" then
+        return {0, 0, 1, 1}
+    elseif p_color_str == "green" then
+        return {0, 1, 0, 1}
+    elseif p_color_str == "yellow" then
+        return {1, 1, 0, 1}
+    elseif p_color_str == "cyan" then
+        return {0, 1, 1, 1}
+    elseif p_color_str == "magenta" then
+        return {1, 0, 1, 1}
+    elseif p_color_str == "black" then
+        return {0, 0, 0, 1}
+    else
+        -- Default to white
+        return {1, 1, 1, 1}
+    end
+end
+
 function love.update(dt)
     if not initialized then
         do return end
@@ -37,13 +60,9 @@ function love.draw()
     end
 
     for _, a in pairs(agents) do
-        if a.color and #(a.color) == 4 then
-            love.graphics.setColor(a.color[1], a.color[2], a.color[3], a.color[4])
-        else
-            love.graphics.setColor(1, 1, 1, 1)
-        end
-        local x = a.x
-        local y = a.y
+        love.graphics.setColor(get_rgb_color(a.color))
+        local x = a.xcor
+        local y = a.ycor
         if a.shape == "triangle" then
             love.graphics.polygon("fill",
                 x, y - 5,
