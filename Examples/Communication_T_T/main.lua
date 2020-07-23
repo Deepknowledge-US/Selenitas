@@ -132,8 +132,8 @@ end
 
 -- Setup and start visualization
 GraphicEngine.set_agents(People.agents)
-GraphicEngine.set_coordinate_scale(40)
+GraphicEngine.set_coordinate_scale(6)
 GraphicEngine.set_world_dimensions(config.xsize + 2, config.ysize + 2)
-GraphicEngine.set_time_between_steps(0.2)
+GraphicEngine.set_time_between_steps(0)
 GraphicEngine.set_step_function(run)
 GraphicEngine.init()

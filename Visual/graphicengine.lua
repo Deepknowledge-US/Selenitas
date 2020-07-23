@@ -4,6 +4,7 @@ local Slab = require "Thirdparty.Slab.Slab"
 local agents = nil
 local step_func = nil
 local initialized = false
+local go = false
 
 -- Time handling
 local time_between_steps = 0
@@ -41,8 +42,9 @@ local function update_ui(dt)
     if Slab.Button("Setup") then
         -- TODO: Setup button pressed
     end
-    if Slab.Button("Go") then
-        -- TODO: Go button pressed
+    local go_button_label = go and "Stop" or "Go"
+    if Slab.Button(go_button_label) then
+        go = not go
     end
     Slab.EndLayout()
     Slab.EndWindow()
@@ -114,7 +116,7 @@ function love.update(dt)
     end
     _time_acc = 0
 
-    if step_func then
+    if step_func and go then
         step_func()
     end
 end
