@@ -1,6 +1,6 @@
 local config = {}
 
-config.ticks = 100 -- iteraciones
+config.ticks = 200 -- iteraciones
 
 config.xsize = 10  -- Dimensiones del mundo. De momento un plano.
 

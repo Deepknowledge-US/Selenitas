@@ -65,7 +65,7 @@ local Collection = class.Collection {
         local k         = id or object.id or tam
 
         if not self.agents[k] then
-            self.order[tam] = k
+            table.insert(self.order,k)
         end
         self.agents[k]     = object
         self.agents[k].id  = k
@@ -80,7 +80,6 @@ local Collection = class.Collection {
             end
         end
     end;
-
 
     shuffle = function(self)
         local array = self.order
@@ -98,6 +97,45 @@ local Collection = class.Collection {
             end
         end
         return res
+    end;
+
+    clone_n_act = function(self,num, agent, funct)
+        local res = {}
+
+        for i=1,num do
+            local ag = self:clone(agent)
+            local new_id = self:search_free_id(#self.order + 1)
+            ag.id = new_id
+            self:add(ag)
+            table.insert(res, ag)
+        end
+
+        for _,v in ipairs(res)do
+            funct(v)
+        end
+    end;
+
+    clone = function(self, t ) -- deep-copy a table
+        if type(t) ~= "table" then return t end
+        local meta = getmetatable(t)
+        local target = {}
+        for k, v in pairs(t) do
+            if type(v) == "table" then
+                target[k] = self:clone(v)
+            else
+                target[k] = v
+            end
+        end
+        setmetatable(target, meta)
+        return target
+    end;
+
+    search_free_id = function(self, num)
+        if self.agents[num] ~= nil then
+            self:search_free_id(num+1)
+        else
+            return num
+        end
     end;
 
 }

@@ -115,7 +115,7 @@ function utils.die(agent, Agents)
     Agents:kill(agent)
 end
 
--- It returns a random element given a collection of them (or a table)
+-- Caution!! this function returns a list which contains a single element
 function utils.one_of(elements)
     if elements.order then
         local target = elements.order
@@ -175,30 +175,40 @@ function utils.fd(agent, num)
     agent.ycor = agent.xcor + math.cos(agent.head) * num
 end
 
+-- Advance in a grid
 function utils.fd_grid(agent, num)
-    local target = agent.xcor + math.sin(agent.head) * num
-    local opt1 = math.ceil(target)
-    local opt2 = opt1 + 1
-    if target - opt1 <= target - opt2 then
-        agent.xcor = opt1 % config.ysize
-    else
-        agent.xcor = opt2 % config.ysize
-    end
+    agent.xcor = math.ceil(agent.xcor + math.sin(agent.head) * num) % config.xsize
+    agent.xcor = agent.xcor > 0 and agent.xcor or config.xsize
 
-    target  = agent.ycor + math.cos(agent.head)
-    opt1    = math.ceil(target)
-    opt2    = opt1 + 1
-    if target - opt1 <= target - opt2 then
-        agent.ycor = opt1 % config.ysize
-    else
-        agent.ycor = opt2 % config.ysize
-    end
-
-    if agent.xcor == 0 then agent.xcor = config.xsize end
-    if agent.ycor == 0 then agent.ycor = config.ysize end
+    agent.ycor = math.ceil(agent.ycor + math.cos(agent.head) * num) % config.ysize
+    agent.ycor = agent.ycor > 0 and agent.ycor or config.ysize
 end
 
 
+-- This function encapsulates a call to the function clone_n_act in the collection given as parameter
+function utils.clone_n_act(n,agent,collection, funct)
+    return collection:clone_n_act(n,agent,funct)
+end
+
+
+-- We consider 8 neighbours.
+--  0 0 0        0 0 x
+--  0 x 0   ->   0 0 0
+--  0 0 0        0 0 0
+-- Extremes of the grid are conected.
+function utils.go_to_random_neighbour(x)
+
+    local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
+    local choose  = math.random(#changes)
+
+    -- Agents that cross a boundary will appear on the opposite side of the grid
+    x.xcor = (x.xcor + changes[choose][1]) % config.xsize
+    x.xcor = x.xcor > 0 and x.xcor or config.xsize
+
+    x.ycor = (x.ycor + changes[choose][2]) % config.ysize
+    x.ycor = x.ycor > 0 and x.ycor or config.ysize
+
+end
 
 
 -- This function encapsulates the anonymous function defined in the "setup" call of the
@@ -230,29 +240,23 @@ end
 -- config.go simulate the go button in NetLogo interface.
 
 function utils.run(funct)
-    local t=0
+
     math.randomseed(os.time())
-    while t < config.ticks do
-        if config.go then
+    local t=0
+    while config.go do -- While the 'go' button is pushed
+        if t < config.ticks then
             print('\n\n========== tick '.. t + 1 .. ' ===========')
             funct()
             print('=============================\n')
+
+            t=t+1
+        else
+            config.go = false
         end
-        t=t+1
     end
 
 end
 
-
-
--- function utils.agents(elements, funct)
---     for _,v in pairs(elements) do
---         if not funct(v) then
---             return false
---         end
---     end
---     return true
--- end
 
 
 return utils
