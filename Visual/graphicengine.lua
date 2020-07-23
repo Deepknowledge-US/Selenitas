@@ -1,3 +1,5 @@
+local Slab = require "Thirdparty.Slab.Slab"
+
 local agents = nil
 local initialized = false
 local coord_scale = 1 -- coordinate scaling for better visualization
@@ -7,13 +9,13 @@ local _time_acc = 0
 
 local function init()
     -- TODO: read user settings
-    -- TODO: setup UI
     initialized = true
     love.window.setTitle("Selenitas")
+    Slab.Initialize({})
 end
 
-local function update(dt)
-    -- TODO: update UI
+local function update_ui(dt)
+    Slab.Update(dt)
 end
 
 local function set_agents(p_agents)
@@ -68,6 +70,8 @@ local function get_rgb_color(p_color_str)
 end
 
 function love.update(dt)
+    update_ui(dt)
+
     if not initialized then
         do return end
     end
@@ -78,7 +82,6 @@ function love.update(dt)
     end
     _time_acc = 0
 
-    update(dt)
     if step_func then
         step_func()
     end
@@ -88,6 +91,9 @@ function love.draw()
     if (not initialized) or (not agents) then
         do return end
     end
+
+    -- Draw UI
+    Slab.Draw()
 
     for _, a in pairs(agents) do
         love.graphics.setColor(get_rgb_color(a.color))
