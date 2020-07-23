@@ -29,7 +29,7 @@ local function print_current_config()
     for i=config.ysize,1,-1 do
         local line = ""
         for j = 1,config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ', '
+            line = line .. Patches.agents[j..','..i].label .. ','
         end
         print(line)
     end
@@ -53,7 +53,6 @@ local function grow_old(agent)
         -- Agents:kill(agent) -- This is another option
     end
 end
-
 
 local function reproduce(agent)
     if agent.color == 'pink' and math.random(5) == 1 then
