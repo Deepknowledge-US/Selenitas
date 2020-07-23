@@ -1,11 +1,18 @@
 local Slab = require "Thirdparty.Slab.Slab"
 
+-- Simulation info
 local agents = nil
-local initialized = false
-local coord_scale = 1 -- coordinate scaling for better visualization
 local step_func = nil
+local initialized = false
+
+-- Time handling
 local time_between_steps = 0
 local _time_acc = 0
+
+-- Drawing params
+local coord_scale = 1 -- coordinate scaling for better visualization
+local ui_width = 152 -- width in pixels of UI column
+local ui_height = 400 -- height of UI column
 
 local function init()
     -- TODO: read user settings
@@ -16,6 +23,29 @@ end
 
 local function update_ui(dt)
     Slab.Update(dt)
+
+    Slab.BeginWindow("Simulation", {
+        Title = "Simulation",
+        X = 2,
+        Y = 2,
+        W = ui_width,
+        H = ui_height,
+        AllowMove = false,
+        AutoSizeWindow = false,
+        AllowResize = false
+    })
+    Slab.BeginLayout("Layout", {
+        AlignX = "center",
+        ExpandW = true
+    })
+    if Slab.Button("Setup") then
+        -- TODO: Setup button pressed
+    end
+    if Slab.Button("Go") then
+        -- TODO: Go button pressed
+    end
+    Slab.EndLayout()
+    Slab.EndWindow()
 end
 
 local function set_agents(p_agents)
@@ -31,11 +61,11 @@ local function set_time_between_steps(t)
 end
 
 local function set_viewport_size(w, h)
-    love.window.setMode(w, h, {})
+    love.window.setMode(math.max(ui_width, w), math.max(ui_height, h), {})
 end
 
 local function set_world_dimensions(x, y)
-    set_viewport_size(x * coord_scale, y * coord_scale)
+    set_viewport_size(ui_width + (x * coord_scale), y * coord_scale)
 end
 
 local function set_coordinate_scale(f)
@@ -99,7 +129,7 @@ function love.draw()
 
     for _, a in pairs(agents) do
         love.graphics.setColor(get_rgb_color(a.color))
-        local x = a.xcor * coord_scale
+        local x = (a.xcor * coord_scale) + ui_width
         local y = a.ycor * coord_scale
         if a.shape == "triangle" then
             love.graphics.polygon("fill",
