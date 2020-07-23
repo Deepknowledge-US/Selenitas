@@ -61,6 +61,8 @@ local function get_rgb_color(p_color_str)
         return {0, 1, 1, 1}
     elseif p_color_str == "magenta" then
         return {1, 0, 1, 1}
+    elseif p_color_str == "pink" then
+        return {1, 0.41, 0.7, 1}
     elseif p_color_str == "black" then
         return {0, 0, 0, 1}
     else
