@@ -4,9 +4,12 @@ local Patch     = require 'Engine.classes.class_patch'
 local pretty    = require 'pl.pretty'
 local utl       = require 'pl.utils'
 local lambda    = utl.string_lambda
+local sin       = math.sin
+local cos       = math.cos
+local rad       = math.rad
 
 local utils = {}
-
+---------------------------------------------
 
 
 -- ======================================= --
@@ -47,7 +50,7 @@ function utils.split(pString, pPattern)
     end
     return Table
 end
-----------------------------------------
+--------------------------
 
 
 -- ==================== --
@@ -90,6 +93,30 @@ function utils.member_of(item, elements)
     end
     return false
 end
+
+
+-------------------------------
+
+-- ========================= --
+-- UTILITIES FOR COLLECTIONS --
+-- ========================= --
+
+
+function utils.create_patches()
+    local patches  = Collection()
+
+    local x,y      = config.xsize , config.ysize
+    for i=1,x do
+        for j = 1,y do
+            local link_id = i .. ',' .. j
+            patches:add( Patch({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
+        end
+    end
+    patches:shuffle()
+    return patches
+end
+
+
 
 -----------------------------------
 
@@ -161,7 +188,7 @@ end
 
 -- A right turn of "num" degrees
 function utils.rt(agent, num)
-    agent.head = (agent.head + num) % 360
+    agent.head = agent.head + num
 end
 
 -- A left turn of "num" degrees
@@ -171,17 +198,24 @@ end
 
 -- Advance in the faced direction. The distance is specified with num
 function utils.fd(agent, num)
-    agent.xcor = agent.xcor + math.sin(agent.head) * num
-    agent.ycor = agent.xcor + math.cos(agent.head) * num
+
+    local s = sin(rad(agent.head))
+    agent.xcor = agent.xcor + s * num
+
+    local c = cos(rad(agent.head))
+    agent.ycor = agent.ycor + c * num
+
 end
 
--- Advance in a grid
+-- Advance in a grid in the faced direction
 function utils.fd_grid(agent, num)
-    agent.xcor = math.ceil(agent.xcor + math.sin(agent.head) * num) % config.xsize
-    agent.xcor = agent.xcor > 0 and agent.xcor or config.xsize
 
-    agent.ycor = math.ceil(agent.ycor + math.cos(agent.head) * num) % config.ysize
-    agent.ycor = agent.ycor > 0 and agent.ycor or config.ysize
+    local s = sin(rad(agent.head))
+    agent.xcor = math.ceil(agent.xcor + s * num)
+
+    local c = cos(rad(agent.head))
+    agent.ycor = math.ceil(agent.ycor + c * num)
+
 end
 
 
@@ -191,7 +225,7 @@ function utils.clone_n_act(n,agent,collection, funct)
 end
 
 
--- We consider 8 neighbours.
+-- 8 neighbours are considered.
 --  0 0 0        0 0 x
 --  0 x 0   ->   0 0 0
 --  0 0 0        0 0 0
@@ -217,17 +251,6 @@ end
 -- Then it executes once the anonymous function defined in the "setup" call of the main_code.lua file.
 
 function utils.setup( funct )
-    Patches  = Collection()
-
-    local x,y      = config.xsize , config.ysize
-    for i=1,x do
-        for j = 1,y do
-            local link_id = i .. ',' .. j
-            Patches:add( Patch({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
-        end
-    end
-    Patches:shuffle()
-
     funct()
 end
 
@@ -240,21 +263,16 @@ end
 -- config.go simulate the go button in NetLogo interface.
 
 function utils.run(funct)
-
     math.randomseed(os.time())
-    local t=0
+    T = 0
     while config.go do -- While the 'go' button is pushed
-        if t < config.ticks then
-            print('\n\n========== tick '.. t + 1 .. ' ===========')
+        if T < config.ticks then
             funct()
-            print('=============================\n')
-
-            t=t+1
+            T=T+1
         else
             config.go = false
         end
     end
-
 end
 
 

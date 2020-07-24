@@ -89,6 +89,19 @@ local Collection = class.Collection {
         end
     end;
 
+    one_of_others = function(self,agent)
+
+        if #self.order < 2 then return nil end
+
+        local candidate_id = math.random(#self.order)
+        local candidate = self.agents[candidate_id]
+        while candidate == agent do
+            candidate_id = math.random(#self.order)
+            candidate = self.agents[candidate_id]
+        end
+        return candidate
+    end;
+
     with = function(self,funct)
         local res = {}
         for _,v in pairs(self.agents) do
