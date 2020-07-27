@@ -88,7 +88,7 @@ end
 
 -- The anonymous function in this call is executed once by the setup function
 -- defined in utilities.lua
-setup(function()
+setup = function()
 
     -- Create a new collection
     People = Collection()
@@ -107,7 +107,11 @@ setup(function()
         agent.color = "blue"
     end)
 
-end)
+    config.go = true
+
+    return People.agents
+
+end
 
 -- This function is executed until the stop condition is reached, or until
 -- the number of iterations equals the number of ticks specified inf config_file
@@ -131,9 +135,9 @@ run = function()
 end
 
 -- Setup and start visualization
-GraphicEngine.set_agents(People.agents)
-GraphicEngine.set_coordinate_scale(6)
+GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(config.xsize + 2, config.ysize + 2)
 GraphicEngine.set_time_between_steps(0)
+GraphicEngine.set_setup_function(setup)
 GraphicEngine.set_step_function(run)
 GraphicEngine.init()

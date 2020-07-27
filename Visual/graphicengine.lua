@@ -2,6 +2,7 @@ local Slab = require "Thirdparty.Slab.Slab"
 
 -- Simulation info
 local agents = nil
+local setup_func = nil
 local step_func = nil
 local initialized = false
 local go = false
@@ -40,7 +41,10 @@ local function update_ui(dt)
         ExpandW = true
     })
     if Slab.Button("Setup") then
-        -- TODO: Setup button pressed
+        if setup_func then
+            agents = setup_func()
+        end
+        go = false
     end
     local go_button_label = go and "Stop" or "Go"
     if Slab.Button(go_button_label) then
@@ -52,6 +56,10 @@ end
 
 local function set_agents(p_agents)
     agents = p_agents
+end
+
+local function set_setup_function(f)
+    setup_func = f
 end
 
 local function set_step_function(f)
@@ -122,12 +130,12 @@ function love.update(dt)
 end
 
 function love.draw()
+    -- Draw UI
+    Slab.Draw()
+
     if (not initialized) or (not agents) then
         do return end
     end
-
-    -- Draw UI
-    Slab.Draw()
 
     for _, a in pairs(agents) do
         love.graphics.setColor(get_rgb_color(a.color))
@@ -159,6 +167,7 @@ GraphicEngine = {
     set_world_dimensions = set_world_dimensions,
     set_background_color = set_background_color,
     set_coordinate_scale = set_coordinate_scale,
+    set_setup_function = set_setup_function,
     set_step_function = set_step_function,
     set_time_between_steps = set_time_between_steps
 }
