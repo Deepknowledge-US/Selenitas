@@ -4,6 +4,8 @@ local Slab = require "Thirdparty.Slab.Slab"
 local agents = nil
 local setup_func = nil
 local step_func = nil
+local simulation_params = nil
+local sim_params_values = nil
 local initialized = false
 local go = false
 
@@ -37,7 +39,6 @@ local function update_ui(dt)
         AllowResize = false
     })
     Slab.BeginLayout("Layout", {
-        AlignX = "center",
         ExpandW = true
     })
     if Slab.Button("Setup") then
@@ -49,6 +50,29 @@ local function update_ui(dt)
     local go_button_label = go and "Stop" or "Go"
     if Slab.Button(go_button_label) then
         go = not go
+    end
+    -- Parse simulation params
+    for k, v in pairs(simulation_params) do
+        if v.type == "boolean" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            if Slab.CheckBox(sim_params_values[k] or false, "Enabled") then
+                sim_params_values[k] = (not sim_params_values[k]) or false
+            end
+        elseif v.type == "float" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            if Slab.InputNumberSlider(k .. "Slider", sim_params_values[k] or 0.0, v.min + 0.0000001, v.max, {}) then
+                sim_params_values[k] = Slab.GetInputNumber()
+            end
+        elseif v.type == "enum" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            for i, e in ipairs(v.options) do
+                if Slab.RadioButton(e, {Index = i, SelectedIndex = sim_params_values[k] or 1}) then
+                    sim_params_values[k] = i
+                end
+            end
+        else
+            print("UI Control of type \"" .. v.type .. "\" is not recognized.")
+        end
     end
     Slab.EndLayout()
     Slab.EndWindow()
@@ -68,6 +92,17 @@ end
 
 local function set_time_between_steps(t)
     time_between_steps = t
+end
+
+-- Expected input:
+-- {
+--    "param_1_name" : {type = "boolean"},
+--    "param_2_name" : {type = "float", min = minval, max = maxval},
+--    "param_3_name" : {type = "enum", options = {enum_val_1, enum_val_2, enum_val_3}}
+--}
+local function set_simulation_params(p)
+    simulation_params = p
+    sim_params_values = {}
 end
 
 local function set_viewport_size(w, h)
@@ -169,6 +204,7 @@ GraphicEngine = {
     set_coordinate_scale = set_coordinate_scale,
     set_setup_function = set_setup_function,
     set_step_function = set_step_function,
+    set_simulation_params = set_simulation_params,
     set_time_between_steps = set_time_between_steps
 }
 

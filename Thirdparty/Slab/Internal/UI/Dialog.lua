@@ -117,7 +117,7 @@ local function FileDialogItem(Id, Label, IsDirectory, Index)
 	ListBox.BeginItem(Id, {Selected = Utility.HasValue(ActiveInstance.Selected, Index)})
 
 	if IsDirectory then
-		Image.Begin('FileDialog_Folder', {Path = SLAB_PATH .. "/Internal/Resources/Textures/Folder.png"})
+		Image.Begin('FileDialog_Folder', {Path = SLAB_FILE_PATH .. "/Internal/Resources/Textures/Folder.png"})
 		Cursor.SameLine({CenterY = true})
 	end
 
@@ -165,11 +165,19 @@ local function FileDialogItem(Id, Label, IsDirectory, Index)
 		UpdateInputText(ActiveInstance)
 	end
 
-	if ListBox.IsItemClicked(1, true) and IsDirectory then
-		OpenDirectory(ActiveInstance.Directory .. "/" .. Label)
+	local Result = false
+
+	if ListBox.IsItemClicked(1, true) then
+		if IsDirectory then
+			OpenDirectory(ActiveInstance.Directory .. "/" .. Label)
+		else
+			Result = true
+		end
 	end
 
 	ListBox.EndItem()
+
+	return Result
 end
 
 local function AddDirectoryItem(Path)
@@ -502,13 +510,18 @@ function Dialog.FileDialog(Options)
 		LayoutManager.Begin('FileDialog_ListBox_Expand', {AnchorX = true, ExpandW = true})
 		ListBox.Begin('FileDialog_ListBox', {H = ListH, Clear = Clear})
 		local Index = 1
+		local ItemSelected = false
 		for I, V in ipairs(ActiveInstance.Directories) do
 			FileDialogItem('Item_' .. Index, V, true, Index)
 			Index = Index + 1
 		end
-		for I, V in ipairs(ActiveInstance.Files) do
-			FileDialogItem('Item_' .. Index, V, false, Index)
-			Index = Index + 1
+		if Options.Type ~= 'opendirectory' then
+			for I, V in ipairs(ActiveInstance.Files) do
+				if FileDialogItem('Item_' .. Index, V, false, Index) then
+					ItemSelected = true
+				end
+				Index = Index + 1
+			end
 		end
 		ListBox.End()
 		LayoutManager.End()
@@ -544,7 +557,7 @@ function Dialog.FileDialog(Options)
 		FilterW = FilterCBW
 
 		LayoutManager.Begin('FileDialog_Buttons_Layout', {AlignX = 'right', AlignY = 'bottom'})
-		if Button.Begin("OK") then
+		if Button.Begin("OK") or ItemSelected then
 			local OpeningDirectory = false
 			if #ActiveInstance.Return == 1 and Options.Type ~= 'opendirectory' then
 				local Path = ActiveInstance.Return[1]

@@ -56,6 +56,7 @@ local Style =
 	CheckBoxSelectedColor = {0.0, 0.0, 0.0, 1.0},
 	TextColor = {0.875, 0.875, 0.875, 1.0},
 	TextHoverBgColor = {0.5, 0.5, 0.5, 1.0},
+	TextURLColor = {0.2, 0.2, 1.0, 1.0},
 	ComboBoxColor = {0.4, 0.4, 0.4, 1.0},
 	ComboBoxHoveredColor = {0.55, 0.55, 0.55, 1.0},
 	ComboBoxDropDownColor = {0.4, 0.4, 0.4, 1.0},
@@ -64,6 +65,7 @@ local Style =
 	InputBgColor = {0.4, 0.4, 0.4, 1.0},
 	InputEditBgColor = {0.6, 0.6, 0.6, 1.0},
 	InputSelectColor = {0.14, 0.29, 0.53, 0.4},
+	InputSliderColor = {0.1, 0.1, 0.1, 1.0},
 	MultilineTextColor = {0.0, 0.0, 0.0, 1.0},
 
 	WindowRounding = 2.0,
@@ -79,8 +81,7 @@ local Style =
 
 function API.Initialize()
 	local StylePath = "/Internal/Resources/Styles/"
-	local Path = SLAB_PATH .. StylePath
-	Path = string.gsub(Path, "%.", "/")
+	local Path = SLAB_FILE_PATH .. StylePath
 	-- Use love's filesystem functions to support both packaged and unpackaged builds
 	local Items = love.filesystem.getDirectoryItems(Path)
 

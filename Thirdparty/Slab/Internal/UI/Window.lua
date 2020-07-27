@@ -30,6 +30,7 @@ local max = math.max
 local floor = math.floor
 
 local Cursor = require(SLAB_PATH .. ".Internal.Core.Cursor")
+local Dock = require(SLAB_PATH .. '.Internal.UI.Dock')
 local DrawCommands = require(SLAB_PATH .. ".Internal.Core.DrawCommands")
 local MenuState = require(SLAB_PATH .. ".Internal.UI.MenuState")
 local Mouse = require(SLAB_PATH .. ".Internal.Input.Mouse")
@@ -45,7 +46,7 @@ local Stack = {}
 local StackLockId = nil
 local PendingStack = {}
 local ActiveInstance = nil
-local CurrentFrameNumber = 0
+local MovingInstance = nil
 
 local SizerType =
 {
@@ -92,7 +93,6 @@ local function NewInstance(Id)
 	Instance.IsMoving = false
 	Instance.TitleDeltaX = 0.0
 	Instance.TitleDeltaY = 0.0
-	Instance.AllowMove = true
 	Instance.AllowResize = true
 	Instance.AllowFocus = true
 	Instance.SizerType = SizerType.None
@@ -148,22 +148,30 @@ local function Contains(Instance, X, Y)
 	return false
 end
 
-local function UpdateTitleBar(Instance, IsObstructed)
+local function UpdateTitleBar(Instance, IsObstructed, AllowMove)
 	if IsObstructed then
 		return
 	end
 
-	if Instance ~= nil and Instance.Title ~= "" and Instance.SizerType == SizerType.None and Instance.AllowMove then
+	if Instance ~= nil and Instance.Title ~= "" and Instance.SizerType == SizerType.None then
 		local W = Instance.W
 		local H = Style.Font:getHeight()
 		local X = Instance.X
 		local Y = Instance.Y - H
+		local IsTethered = Dock.IsTethered(Instance.Id)
 
 		local MouseX, MouseY = Mouse.Position()
 
 		if Mouse.IsClicked(1) then
 			if X <= MouseX and MouseX <= X + W and Y <= MouseY and MouseY <= Y + H then
-				Instance.IsMoving = true
+				if AllowMove then
+					Instance.IsMoving = true
+				end
+
+				if IsTethered then
+					Dock.BeginTear(Instance.Id, MouseX, MouseY)
+				end
+
 				if Instance.AllowFocus then
 					PushToTop(Instance)
 				end
@@ -176,6 +184,12 @@ local function UpdateTitleBar(Instance, IsObstructed)
 			local DeltaX, DeltaY = Mouse.GetDelta()
 			Instance.TitleDeltaX = Instance.TitleDeltaX + DeltaX
 			Instance.TitleDeltaY = Instance.TitleDeltaY + DeltaY
+		elseif IsTethered then
+			Dock.UpdateTear(Instance.Id, MouseX, MouseY)
+
+			if not Dock.IsTethered(Instance.Id) then
+				Instance.IsMoving = true
+			end
 		end
 	end
 end
@@ -338,10 +352,6 @@ function Window.Top()
 	return ActiveInstance
 end
 
-function Window.SetFrameNumber(FrameNumber)
-	CurrentFrameNumber = FrameNumber
-end
-
 function Window.IsObstructed(X, Y, SkipScrollCheck)
 	if Region.IsScrolling() then
 		return true
@@ -354,6 +364,25 @@ function Window.IsObstructed(X, Y, SkipScrollCheck)
 			return true
 		end
 
+		if ActiveInstance.IsMoving then
+			return false
+		end
+
+		-- Check if docked windows are obstructing floating windows.
+		for I, V in ipairs(Stack) do
+			if Dock.IsTethered(V.Id) then
+				if ActiveInstance == V then
+					return false
+				end
+
+				if Contains(V, X, Y) and V.CanObstruct and V.IsOpen then
+					return true
+				end
+			end
+		end
+
+		-- Proceed to check stack order of floating windows. Dialogs are pushed to the top of
+		-- the stack.
 		for I, V in ipairs(Stack) do
 			if V.Id == StackLockId then
 				FoundStackLock = true
@@ -425,6 +454,8 @@ function Window.Begin(Id, Options)
 	Options.Rounding = Options.Rounding == nil and Style.WindowRounding or Options.Rounding
 	Options.NoSavedSettings = Options.NoSavedSettings == nil and false or Options.NoSavedSettings
 
+	Dock.AlterOptions(Id, Options)
+
 	local TitleRounding = {Options.Rounding, Options.Rounding, 0, 0}
 	local BodyRounding = {0, 0, Options.Rounding, Options.Rounding}
 
@@ -472,7 +503,6 @@ function Window.Begin(Id, Options)
 	ActiveInstance.ContentH = Options.ContentH
 	ActiveInstance.BackgroundColor = Options.BgColor
 	ActiveInstance.Title = Options.Title
-	ActiveInstance.AllowMove = Options.AllowMove
 	ActiveInstance.AllowResize = Options.AllowResize and not Options.AutoSizeWindow
 	ActiveInstance.AllowFocus = Options.AllowFocus
 	ActiveInstance.Border = Options.Border
@@ -496,6 +526,7 @@ function Window.Begin(Id, Options)
 	end
 
 	if ActiveInstance.IsOpen then
+		local CurrentFrameNumber = Stats.GetFrameNumber()
 		ActiveInstance.IsAppearing = CurrentFrameNumber - ActiveInstance.FrameNumber > 1
 		ActiveInstance.FrameNumber = CurrentFrameNumber
 
@@ -533,7 +564,7 @@ function Window.Begin(Id, Options)
 	Cursor.SetAnchor(ActiveInstance.X + ActiveInstance.Border, ActiveInstance.Y + ActiveInstance.Border)
 
 	UpdateSize(ActiveInstance, IsObstructed)
-	UpdateTitleBar(ActiveInstance, IsObstructed)
+	UpdateTitleBar(ActiveInstance, IsObstructed, Options.AllowMove)
 
 	DrawCommands.SetLayer(ActiveInstance.Layer)
 
@@ -583,6 +614,7 @@ function Window.Begin(Id, Options)
 
 				if Mouse.IsClicked(1) then
 					ActiveInstance.IsOpen = false
+					ActiveInstance.IsMoving = false
 					Options.IsOpen = false
 				end
 			end
@@ -687,7 +719,11 @@ end
 
 function Window.GetPosition()
 	if ActiveInstance ~= nil then
-		return ActiveInstance.X, ActiveInstance.Y
+		local X, Y = ActiveInstance.X, ActiveInstance.Y
+		if ActiveInstance.Title ~= "" then
+			Y = Y - Style.Font:getHeight()
+		end
+		return X, Y
 	end
 	return 0.0, 0.0
 end
@@ -853,10 +889,17 @@ function Window.Validate()
 		assert(false, "EndWindow was not called for: " .. PendingStack[1].Id)
 	end
 
+	MovingInstance = nil
 	local ShouldUpdate = false
 	for I = #Stack, 1, -1 do
-		if Stack[I].FrameNumber ~= CurrentFrameNumber then
+		if Stack[I].IsMoving then
+			MovingInstance = Stack[I]
+		end
+
+		if Stack[I].FrameNumber ~= Stats.GetFrameNumber() then
 			Stack[I].StackIndex = 0
+			Region.ClearHotInstance(Stack[I].Id)
+			Region.ClearHotInstance(Stack[I].Id .. '_Title')
 			remove(Stack, I)
 			ShouldUpdate = true
 		end
@@ -921,6 +964,8 @@ function Window.GetInstanceInfo(Id)
 			break
 		end
 	end
+
+	insert(Result, "MovingInstance: " .. (MovingInstance ~= nil and MovingInstance.Id or "nil"))
 
 	if Instance ~= nil then
 		insert(Result, "Title: " .. Instance.Title)
@@ -996,6 +1041,10 @@ function Window.Load(Table)
 			end
 		end
 	end
+end
+
+function Window.GetMovingInstance()
+	return MovingInstance
 end
 
 return Window

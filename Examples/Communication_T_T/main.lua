@@ -138,6 +138,11 @@ end
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(config.xsize + 2, config.ysize + 2)
 GraphicEngine.set_time_between_steps(0)
+GraphicEngine.set_simulation_params({
+    firstval = {type = "boolean"},
+    secondval = {type = "float", min = 0.0, max = 10.0},
+    thirdval = {type = "enum", options = {"First Option", "Second Option", "Third Option"}}
+})
 GraphicEngine.set_setup_function(setup)
 GraphicEngine.set_step_function(run)
 GraphicEngine.init()

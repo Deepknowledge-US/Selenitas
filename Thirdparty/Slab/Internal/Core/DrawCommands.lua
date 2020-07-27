@@ -37,6 +37,7 @@ local DrawCommands = {}
 local LayerTable = {}
 local PendingBatches = {}
 local ActiveBatch = nil
+local Shaders = nil
 
 local Types =
 {
@@ -59,16 +60,19 @@ local Types =
 	Mesh = 17,
 	TextObject = 18,
 	Curve = 19,
-	Polygon = 20
+	Polygon = 20,
+	ShaderPush = 21,
+	ShaderPop = 22
 }
 
 local Layers =
 {
 	Normal = 1,
-	ContextMenu = 2,
-	MainMenuBar = 3,
-	Dialog = 4,
-	Debug = 5
+	Dock = 2,
+	ContextMenu = 3,
+	MainMenuBar = 4,
+	Dialog = 5,
+	Debug = 6
 }
 
 local ActiveLayer = Layers.Normal
@@ -331,6 +335,12 @@ local function DrawElements(Elements)
 			DrawCurve(V)
 		elseif V.Type == Types.Polygon then
 			DrawPolygon(V)
+		elseif V.Type == Types.ShaderPush then
+			insert(Shaders, 1, V.Shader)
+			love.graphics.setShader(V.Shader)
+		elseif V.Type == Types.ShaderPop then
+			remove(Shaders, 1)
+			love.graphics.setShader(Shaders[1])
 		end
 	end
 
@@ -370,6 +380,7 @@ end
 function DrawCommands.Reset()
 	LayerTable = {}
 	LayerTable[Layers.Normal] = {}
+	LayerTable[Layers.Dock] = {}
 	LayerTable[Layers.ContextMenu] = {}
 	LayerTable[Layers.MainMenuBar] = {}
 	LayerTable[Layers.Dialog] = {}
@@ -377,6 +388,7 @@ function DrawCommands.Reset()
 	ActiveLayer = Layers.Normal
 	PendingBatches = {}
 	ActiveBatch = nil
+	Shaders = {}
 end
 
 function DrawCommands.Begin(Options)
@@ -420,6 +432,8 @@ end
 function DrawCommands.SetLayer(Layer)
 	if Layer == 'Normal' then
 		ActiveLayer = Layers.Normal
+	elseif Layer == 'Dock' then
+		ActiveLayer = Layers.Dock
 	elseif Layer == 'ContextMenu' then
 		ActiveLayer = Layers.ContextMenu
 	elseif Layer == 'MainMenuBar' then
@@ -679,14 +693,36 @@ function DrawCommands.Polygon(Mode, Points, Color)
 	insert(ActiveBatch.Elements, Item)
 end
 
+function DrawCommands.PushShader(Shader)
+	AssertActiveBatch()
+	local Item =
+	{
+		Type = Types.ShaderPush,
+		Shader = Shader
+	}
+	insert(ActiveBatch.Elements, Item)
+end
+
+function DrawCommands.PopShader()
+	AssertActiveBatch()
+	local Item =
+	{
+		Type = Types.ShaderPop
+	}
+	insert(ActiveBatch.Elements, Item)
+end
+
 function DrawCommands.Execute()
 	local StatHandle = Stats.Begin('Execute', StatsCategory)
 
 	DrawLayer(LayerTable[Layers.Normal], 'Normal')
+	DrawLayer(LayerTable[Layers.Dock], 'Dock')
 	DrawLayer(LayerTable[Layers.ContextMenu], 'ContextMenu')
 	DrawLayer(LayerTable[Layers.MainMenuBar], 'MainMenuBar')
 	DrawLayer(LayerTable[Layers.Dialog], 'Dialog')
 	DrawLayer(LayerTable[Layers.Debug], 'Debug')
+
+	love.graphics.setShader()
 
 	Stats.End(StatHandle)
 end
@@ -695,6 +731,7 @@ function DrawCommands.GetDebugInfo()
 	local Result = {}
 
 	Result['Normal'] = GetLayerDebugInfo(LayerTable[Layers.Normal])
+	Result['Dock'] = GetLayerDebugInfo(LayerTable[Layers.Dock])
 	Result['ContextMenu'] = GetLayerDebugInfo(LayerTable[Layers.ContextMenu])
 	Result['MainMenuBar'] = GetLayerDebugInfo(LayerTable[Layers.MainMenuBar])
 	Result['Dialog'] = GetLayerDebugInfo(LayerTable[Layers.Dialog])

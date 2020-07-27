@@ -33,6 +33,7 @@ local Region = require(SLAB_PATH .. '.Internal.UI.Region')
 local Stats = require(SLAB_PATH .. '.Internal.Core.Stats')
 local Style = require(SLAB_PATH .. '.Style')
 local Tooltip = require(SLAB_PATH .. '.Internal.UI.Tooltip')
+local Tree = require(SLAB_PATH .. '.Internal.UI.Tree')
 local Window = require(SLAB_PATH .. '.Internal.UI.Window')
 
 local SlabDebug = {}
@@ -50,6 +51,7 @@ local SlabDebug_MultiLine = {Title = "Multi-Line Input", IsOpen = false}
 local SlabDebug_MultiLine_FileDialog = false
 local SlabDebug_MultiLine_FileName = ""
 local SlabDebug_MultiLine_Contents = ""
+local SlabDebug_Tree = {Title = "Tree", IsOpen = false, AutoSizeWindow = false, AllowResize = true}
 
 local SlabDebug_Windows_Categories = {"Inspector", "Stack"}
 local SlabDebug_Windows_Category = "Inspector"
@@ -219,6 +221,8 @@ end
 
 local function DrawStyleEditor()
 	Slab.BeginWindow('SlabDebug_StyleEditor', SlabDebug_StyleEditor)
+	local X, Y = Slab.GetWindowPosition()
+	local W, H = Slab.GetWindowSize()
 
 	local Style = Slab.GetStyle()
 	local Names = Style.API.GetStyleNames()
@@ -281,7 +285,7 @@ local function DrawStyleEditor()
 			Slab.Text(K)
 			Slab.SetLayoutColumn(2)
 			if Slab.Input('SlabDebug_Style_' .. K, {Text = tostring(V), ReturnOnText = false, NumbersOnly = true}) then
-				Style[Label] = Slab.GetInputNumber()
+				Style[K] = Slab.GetInputNumber()
 			end
 		end
 	end
@@ -289,7 +293,7 @@ local function DrawStyleEditor()
 	Slab.EndWindow()
 
 	if Style_EditingColor ~= nil then
-		local Result = Slab.ColorPicker({Color = Style_ColorStore, Refresh = Refresh})
+		local Result = Slab.ColorPicker({Color = Style_ColorStore, X = X + W, Y = Y})
 		Style_EditingColor[1] = Result.Color[1]
 		Style_EditingColor[2] = Result.Color[2]
 		Style_EditingColor[3] = Result.Color[3]
@@ -312,7 +316,7 @@ local function DrawStyleEditor()
 		local Type = Style_FileDialog == 'new' and 'savefile' or Style_FileDialog == 'load' and 'openfile' or nil
 
 		if Type ~= nil then
-			local Path = love.filesystem.getRealDirectory(SLAB_PATH) .. "/" .. SLAB_PATH .. "Internal/Resources/Styles"
+			local Path = love.filesystem.getRealDirectory(SLAB_FILE_PATH) .. "/" .. SLAB_FILE_PATH .. "Internal/Resources/Styles"
 			local Result = Slab.FileDialog({AllowMultiSelect = false, Directory = Path, Type = Type, Filters = {{"*.style", "Styles"}}})
 
 			if Result.Button ~= "" then
@@ -574,6 +578,29 @@ function SlabDebug.MultiLine()
 	end
 end
 
+function SlabDebug.Tree()
+	if not SlabDebug_Tree.IsOpen then
+		return
+	end
+
+	local Info = Tree.GetDebugInfo()
+
+	Slab.BeginWindow('Tree', SlabDebug_Tree)
+	Slab.Text("Instances: " .. #Info)
+
+	Slab.BeginLayout('Tree_List_Layout', {ExpandW = true, ExpandH = true})
+	Slab.BeginListBox('Tree_List')
+	for I, V in ipairs(Info) do
+		Slab.BeginListBoxItem('Item_' .. I)
+		Slab.Text(V)
+		Slab.EndListBoxItem()
+	end
+	Slab.EndListBox()
+	Slab.EndLayout()
+
+	Slab.EndWindow()
+end
+
 local function MenuItemWindow(Options)
 	if Slab.MenuItemChecked(Options.Title, Options.IsOpen) then
 		Options.IsOpen = not Options.IsOpen
@@ -596,6 +623,7 @@ function SlabDebug.Menu()
 		MenuItemWindow(SlabDebug_StyleEditor)
 		MenuItemWindow(SlabDebug_Input)
 		MenuItemWindow(SlabDebug_MultiLine)
+		MenuItemWindow(SlabDebug_Tree)
 
 		Stats.SetEnabled(SlabDebug_Performance.IsOpen)
 
@@ -615,6 +643,7 @@ function SlabDebug.Begin()
 	SlabDebug.StyleEditor()
 	SlabDebug.Input()
 	SlabDebug.MultiLine()
+	SlabDebug.Tree()
 end
 
 return SlabDebug

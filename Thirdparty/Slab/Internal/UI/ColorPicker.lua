@@ -255,6 +255,8 @@ function ColorPicker.Begin(Options)
 	Options = Options == nil and {} or Options
 	Options.Color = Options.Color == nil and {1.0, 1.0, 1.0, 1.0} or Options.Color
 	Options.Refresh = Options.Refresh == nil and false or Options.Refresh
+	Options.X = Options.X == nil and nil or Options.X
+	Options.Y = Options.Y == nil and nil or Options.Y
 
 	if SaturationMeshes == nil then
 		InitializeSaturationMeshes()
@@ -268,7 +270,7 @@ function ColorPicker.Begin(Options)
 		InitializeAlphaMesh()
 	end
 
-	Window.Begin('ColorPicker', {Title = "Color Picker"})
+	Window.Begin('ColorPicker', {Title = "Color Picker", X = Options.X, Y = Options.Y})
 
 	if Window.IsAppearing() or Options.Refresh then
 		CurrentColor[1] = Options.Color[1]
@@ -422,7 +424,7 @@ function ColorPicker.Begin(Options)
 	local ColorW = (WinX + WinW) - ColorX
 	Cursor.SetPosition(ColorX, Y)
 	Image.Begin('ColorPicker_CurrentAlpha', {
-		Path = SLAB_PATH .. "/Internal/Resources/Textures/Transparency.png",
+		Path = SLAB_FILE_PATH .. "/Internal/Resources/Textures/Transparency.png",
 		SubW = ColorW,
 		SubH = ColorH,
 		WrapH = "repeat",
@@ -438,7 +440,7 @@ function ColorPicker.Begin(Options)
 
 	Cursor.SetPosition(ColorX, Y)
 	Image.Begin('ColorPicker_CurrentAlpha', {
-		Path = SLAB_PATH .. "/Internal/Resources/Textures/Transparency.png",
+		Path = SLAB_FILE_PATH .. "/Internal/Resources/Textures/Transparency.png",
 		SubW = ColorW,
 		SubH = ColorH,
 		WrapH = "repeat",

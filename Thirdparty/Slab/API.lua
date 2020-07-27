@@ -28,6 +28,9 @@ if SLAB_PATH == nil then
 	SLAB_PATH = (...):match("(.-)[^%.]+$") 
 end
 
+SLAB_FILE_PATH = debug.getinfo(1, 'S').source:match("^@(.+)/")
+SLAB_FILE_PATH = SLAB_FILE_PATH == nil and "" or SLAB_FILE_PATH
+
 local Button = require(SLAB_PATH .. '.Internal.UI.Button')
 local CheckBox = require(SLAB_PATH .. '.Internal.UI.CheckBox')
 local ColorPicker = require(SLAB_PATH .. '.Internal.UI.ColorPicker')
@@ -35,6 +38,7 @@ local ComboBox = require(SLAB_PATH .. '.Internal.UI.ComboBox')
 local Config = require(SLAB_PATH .. '.Internal.Core.Config')
 local Cursor = require(SLAB_PATH .. '.Internal.Core.Cursor')
 local Dialog = require(SLAB_PATH .. '.Internal.UI.Dialog')
+local Dock = require(SLAB_PATH .. '.Internal.UI.Dock')
 local DrawCommands = require(SLAB_PATH .. '.Internal.Core.DrawCommands')
 local Image = require(SLAB_PATH .. '.Internal.UI.Image')
 local Input = require(SLAB_PATH .. '.Internal.UI.Input')
@@ -115,10 +119,13 @@ local Window = require(SLAB_PATH .. '.Internal.UI.Window')
 		GetTextHeight
 		CheckBox
 		Input
+		InputNumberDrag
+		InputNumberSlider
 		GetInputText
 		GetInputNumber
 		GetInputCursorPos
 		IsInputFocused
+		IsAnyInputFocused
 		SetInputFocus
 		SetInputCursorPos
 		SetInputCursorPosLine
@@ -203,15 +210,23 @@ local Window = require(SLAB_PATH .. '.Internal.UI.Window')
 		Scroll:
 			SetScrollSpeed
 			GetScrollSpeed
+
+		Shader:
+			PushShader
+			PopShader
+
+		Dock:
+			EnableDocks
+			DisableDocks
+			SetDockOptions
 --]]
 local Slab = {}
 
 -- Slab version numbers.
 local Version_Major = 0
-local Version_Minor = 6
-local Version_Revision = 4
+local Version_Minor = 7
+local Version_Revision = 0
 
-local FrameNumber = 0
 local FrameStatHandle = nil
 
 -- The path to save the UI state to a file. This will default to the base source directory.
@@ -223,6 +238,7 @@ local function LoadState()
 	if INIStatePath ~= nil then
 		local Result, Error = Config.LoadFile(INIStatePath)
 		if Result ~= nil then
+			Dock.Load(Result)
 			Tree.Load(Result)
 			Window.Load(Result)
 		elseif Verbose then
@@ -234,6 +250,7 @@ end
 local function SaveState()
 	if INIStatePath ~= nil then
 		local Table = {}
+		Dock.Save(Table)
 		Tree.Save(Table)
 		Window.Save(Table)
 		Config.Save(INIStatePath, Table)
@@ -322,8 +339,6 @@ end
 	Return: None.
 --]]
 function Slab.Update(dt)
-	FrameNumber = FrameNumber + 1
-
 	Stats.Reset()
 	FrameStatHandle = Stats.Begin('Frame', 'Slab')
 	local StatHandle = Stats.Begin('Update', 'Slab')
@@ -333,7 +348,6 @@ function Slab.Update(dt)
 	Input.Update(dt)
 	DrawCommands.Reset()
 	Window.Reset()
-	Window.SetFrameNumber(FrameNumber)
 	LayoutManager.Validate()
 
 	if MenuState.IsOpened then
@@ -360,6 +374,14 @@ function Slab.Draw()
 
 	Window.Validate()
 
+	local MovingInstance = Window.GetMovingInstance()
+	if MovingInstance ~= nil then
+		Dock.DrawOverlay()
+		Dock.SetPendingWindow(MovingInstance)
+	else
+		Dock.Commit()
+	end
+
 	if MenuState.RequestClose then
 		Menu.Close()
 		MenuBar.Clear()
@@ -371,7 +393,10 @@ function Slab.Draw()
 		Button.ClearClicked()
 	end
 
+	love.graphics.push()
+	love.graphics.origin()
 	DrawCommands.Execute()
+	love.graphics.pop()
 
 	Stats.End(StatHandle)
 	Stats.End(FrameStatHandle)
@@ -745,6 +770,7 @@ end
 		IncludeBorders: [Boolean] Whether to extend the separator to include the window borders. This is false by default.
 		H: [Number] The height of the separator. This doesn't change the line thickness, rather, specifies the cursor advancement
 			in the Y direction.
+		Thickness: [Number] The thickness of the line rendered. The default value is 1.0.
 
 	Return: None.
 --]]
@@ -808,6 +834,7 @@ end
 		IsSelected: [Boolean] Forces the hover background to be rendered.
 		SelectOnHover: [Boolean] Returns true if the user is hovering over the hot zone of this text.
 		HoverColor: [Table] The color to render the background if the IsSelected option is true.
+		URL: [String] A URL address to open when this text control is clicked.
 
 	Return: [Boolean] Returns true if SelectOnHover option is set to true. False otherwise.
 --]]
@@ -956,12 +983,71 @@ end
 		MultiLineW: [Number] The width for which the lines of text should be wrapped at.
 		Highlight: [Table] A list of key-values that define what words to highlight what color. Strings should be used for
 			the word to highlight and the value should be a table defining the color.
+		Step: [Number] The step amount for numeric controls when the user click and drags. The default value is 1.0.
+		NoDrag: [Boolean] Determines whether this numberic control allows the user to click and drag to alter the value.
+		UseSlider: [Boolean] If enabled, displays a slider inside the input control. This will only be drawn if the NumbersOnly
+			option is set to true. The position of the slider inside the control determines the value based on the MinNumber
+			and MaxNumber option.
 
 	Return: [Boolean] Returns true if the user has pressed the return key while focused on this input box. If ReturnOnText
 		is set to true, then this function will return true whenever the user has input any character into the input box.
 --]]
 function Slab.Input(Id, Options)
 	return Input.Begin(Id, Options)
+end
+
+--[[
+	InputNumberDrag
+
+	This is a wrapper function for calling the Input function which sets the proper options to set up the input box for
+	displaying and editing numbers. The user will be able to click and drag the control to alter the value. Double-clicking
+	inside this control will allow for manually editing the value.
+
+	Id: [String] A string that uniquely identifies this Input within the context of the window.
+	Value: [Number] The value to display in the control.
+	Min: [Number] The minimum value that can be set for this number control. If nil, then this value will be set to -math.huge.
+	Max: [Number] The maximum value that can be set for this number control. If nil, then this value will be set to math.huge.
+	Options: [Table] List of options for how this input control is displayed. See Slab.Input for all options.
+
+	Return: [Boolean] Returns true whenever this valued is modified.
+--]]
+function Slab.InputNumberDrag(Id, Value, Min, Max, Step, Options)
+	Options = Options == nil and {} or Options
+	Options.Text = tostring(Value)
+	Options.MinNumber = Min
+	Options.MaxNumber = Max
+	Options.NumbersOnly = true
+	Options.UseSlider = false
+	Options.NoDrag = false
+	Options.ReturnOnText = false
+	return Slab.Input(Id, Options)
+end
+
+--[[
+	InputNumberSlider
+
+	This is a wrapper function for calling the Input function which sets the proper options to set up the input box for
+	displaying and editing numbers. This will also force the control to display a slider, which determines what the value
+	stored is based on the Min and Max options. Double-clicking inside this control will allow for manually editing
+	the value.
+
+	Id: [String] A string that uniquely identifies this Input within the context of the window.
+	Value: [Number] The value to display in the control.
+	Min: [Number] The minimum value that can be set for this number control. If nil, then this value will be set to -math.huge.
+	Max: [Number] The maximum value that can be set for this number control. If nil, then this value will be set to math.huge.
+	Options: [Table] List of options for how this input control is displayed. See Slab.Input for all options.
+
+	Return: [Boolean] Returns true whenever this valued is modified.
+--]]
+function Slab.InputNumberSlider(Id, Value, Min, Max, Options)
+	Options = Options == nil and {} or Options
+	Options.Text = tostring(Value)
+	Options.MinNumber = Min
+	Options.MaxNumber = Max
+	Options.NumbersOnly = true
+	Options.UseSlider = true
+	Options.ReturnOnText = false
+	return Slab.Input(Id, Options)
 end
 
 --[[
@@ -1021,6 +1107,17 @@ function Slab.IsInputFocused(Id)
 end
 
 --[[
+	IsAnyInputFocused
+
+	Returns whether any input control is focused or not.
+
+	Return: [Boolean] True if there is an input control focused. False otherwise.
+--]]
+function Slab.IsAnyInputFocused()
+	return Input.IsAnyFocused()
+end
+
+--[[
 	SetInputFocus
 
 	Sets the focus of the input control to the control with the given Id. The focus is set at the beginning
@@ -1068,7 +1165,8 @@ end
 	order for this tree item to behave properly. The hot zone of this tree item will be the height of the label and the width
 	of the window by default.
 
-	Id: [String] A string uniquely identifying this tree item within the context of the window.
+	Id: [String/Table] A string or table uniquely identifying this tree item within the context of the window. If the given Id
+		is a table, then the internal Tree entry for this table will be removed once the table has been garbage collected.
 	Options: [Table] List of options for how this tree item will behave.
 		Label: [String] The text to be rendered for this tree item.
 		Tooltip: [String] The text to be rendered when the user hovers over this tree item.
@@ -2058,6 +2156,70 @@ end
 --]]
 function Slab.GetScrollSpeed()
 	return Region.GetWheelSpeed()
+end
+
+--[[
+	PushShader
+
+	Pushes a shader effect to be applied to any following controls before a call to PopShader. Any shader effect that is still active
+	will be cleared at the end of Slab's draw call.
+
+	Shader: [Object] The shader object created with the love.graphics.newShader function. This object should be managed by the caller.
+
+	Return: None.
+--]]
+function Slab.PushShader(Shader)
+	DrawCommands.PushShader(Shader)
+end
+
+--[[
+	PopShader
+
+	Pops the currently active shader effect. Will enable the next active shader on the stack. If none exists, no shader is applied.
+
+	Return: None.
+--]]
+function Slab.PopShader()
+	DrawCommands.PopShader()
+end
+
+--[[
+	EnableDocks
+
+	Enables the docking functionality for a particular side of the viewport.
+
+	List: [String/Table] A single item or list of items to enable for docking. The valid options are 'Left', 'Right', or 'Bottom'.
+
+	Return: None.
+--]]
+function Slab.EnableDocks(List)
+	Dock.Toggle(List, true)
+end
+
+--[[
+	DisableDocks
+
+	Disables the docking functionality for a particular side of the viewport.
+
+	List: [String/Table] A single item or list of items to disable for docking. The valid options are 'Left', 'Right', or 'Bottom'.
+
+	Return: None.
+--]]
+function Slab.DisableDocks(List)
+	Dock.Toggle(List, false)
+end
+
+--[[
+	SetDockOptions
+
+	Set options for a dock type.
+
+	Type: [String] The type of dock to set options for. This can be 'Left', 'Right', or 'Bottom'.
+	Options: [Table] List of options that control how a dock behaves.
+		NoSavedSettings: [Boolean] Flag to disable saving a dock's settings to the state INI file.
+--]]
+function Slab.SetDockOptions(Type, Options)
+	Dock.SetOptions(Type, Options)
 end
 
 return Slab

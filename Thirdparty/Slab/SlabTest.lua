@@ -86,9 +86,8 @@ local function DrawButtons()
 	Slab.Separator()
 
 	Slab.Textf(
-		"Buttons can also be invisible. Below is a rectangle with an invisible button so that the designer can " ..
-		"implement a custom button but still rely on the button behavior. Below is a custom rectangle drawn with an " ..
-		"invisible button drawn at the same location.")
+		"Buttons can also be invisible so that the designer can implement a custom button but still rely on the " ..
+		"button behavior. Below is a an invisible button and a custom rectangle drawn at the same location.")
 	local X, Y = Slab.GetCursorPos()
 	Slab.Rectangle({Mode = 'line', W = 50.0, H = 50.0, Color = {1, 1, 1, 1}})
 	Slab.SetCursorPos(X, Y)
@@ -181,6 +180,15 @@ local function DrawText()
 	if Slab.TextSelectable("This text has been clicked " .. DrawText_NumClicked_TextOnly .. " time(s).", {IsSelectableTextOnly = true}) then
 		DrawText_NumClicked_TextOnly = DrawText_NumClicked_TextOnly + 1
 	end
+
+	Slab.NewLine()
+	Slab.Separator()
+
+	Slab.Textf(
+		"Text controls can be configured to contain URL links. When this control is clicked, Slab will open the given URL " ..
+		"with the user's default web browser.")
+
+	Slab.Text("Love 2D", {URL = "http://love2d.org"})
 end
 
 local DrawCheckBox_Checked = false
@@ -371,6 +379,13 @@ local DrawInput_Basic = "Hello World"
 local DrawInput_Basic_Return = "Hello World"
 local DrawInput_Basic_Numbers = 0
 local DrawInput_Basic_Numbers_Clamped = 0.5
+local DrawInput_Basic_Numbers_Clamped_Min = 0.0
+local DrawInput_Basic_Numbers_Clamped_Max = 1.0
+local DrawInput_Basic_Numbers_Clamped_Step = 0.01
+local DrawInput_Basic_Numbers_NoDrag = 50
+local DrawInput_Basic_Numbers_Slider = 50
+local DrawInput_Basic_Numbers_Slider_Min = 0
+local DrawInput_Basic_Numbers_Slider_Max = 100
 local DrawInput_MultiLine =
 [[
 function Foo()
@@ -422,7 +437,10 @@ local function DrawInput()
 	Slab.NewLine()
 	Slab.Separator()
 
-	Slab.Textf("Input controls can be configured to only take numeric values.")
+	Slab.Textf(
+		"Input controls can be configured to only take numeric values. Input controls that are configured this way " ..
+		"will allow the user to click and drag the control to alter the value by default. The user must double-click the "..
+		"control to manually enter a valid number.")
 
 	if Slab.Input('DrawInput_Basic_Numbers', {Text = tostring(DrawInput_Basic_Numbers), NumbersOnly = true}) then
 		DrawInput_Basic_Numbers = Slab.GetInputNumber()
@@ -432,10 +450,95 @@ local function DrawInput()
 
 	Slab.Textf(
 		"These numeric controls can also have min and/or max values set. Below is an example where the " ..
-		"numeric input control is clamped from 0.0 to 1.0.")
+		"numeric input control is clamped from 0.0 to 1.0. The drag step is also modified to be smaller for more precision.")
 
-	if Slab.Input('DrawInput_Basic_Numbers_Clamped', {Text = tostring(DrawInput_Basic_Numbers_Clamped), NumbersOnly = true, MinNumber = 0.0, MaxNumber = 1.0}) then
+	Slab.Text("Min")
+	Slab.SameLine()
+	local DrawInput_Basic_Numbers_Clamped_Min_Options =
+	{
+		Text = tostring(DrawInput_Basic_Numbers_Clamped_Min),
+		MaxNumber = DrawInput_Basic_Numbers_Clamped_Max,
+		Step = DrawInput_Basic_Numbers_Clamped_Step,
+		NumbersOnly = true,
+		W = 50
+	}
+	if Slab.Input('DrawInput_Basic_Numbers_Clamped_Min', DrawInput_Basic_Numbers_Clamped_Min_Options) then
+		DrawInput_Basic_Numbers_Clamped_Min = Slab.GetInputNumber()
+	end
+
+	Slab.SameLine()
+	Slab.Text("Max")
+	Slab.SameLine()
+	local DrawInput_Basic_Numbers_Clamped_Max_Options =
+	{
+		Text = tostring(DrawInput_Basic_Numbers_Clamped_Max),
+		MinNumber = DrawInput_Basic_Numbers_Clamped_Min,
+		Step = DrawInput_Basic_Numbers_Clamped_Step,
+		NumbersOnly = true,
+		W = 50
+	}
+	if Slab.Input('DrawInput_Basic_Numbers_Clamped_Max', DrawInput_Basic_Numbers_Clamped_Max_Options) then
+		DrawInput_Basic_Numbers_Clamped_Max = Slab.GetInputNumber()
+	end
+
+	Slab.SameLine()
+	Slab.Text("Step")
+	Slab.SameLine()
+	local DrawInput_Basic_Numbers_Clamped_Step_Options =
+	{
+		Text = tostring(DrawInput_Basic_Numbers_Clamped_Step),
+		MinNumber = 0,
+		Step = 0.01,
+		NumbersOnly = true,
+		W = 50
+	}
+	if Slab.Input('DrawInput_Basic_Numbers_Clamped_Step', DrawInput_Basic_Numbers_Clamped_Step_Options) then
+		DrawInput_Basic_Numbers_Clamped_Step = Slab.GetInputNumber()
+	end
+
+	local DrawInput_Basic_Numbers_Clamped_Options =
+	{
+		Text = tostring(DrawInput_Basic_Numbers_Clamped),
+		NumbersOnly = true,
+		MinNumber = DrawInput_Basic_Numbers_Clamped_Min,
+		MaxNumber = DrawInput_Basic_Numbers_Clamped_Max,
+		Step = DrawInput_Basic_Numbers_Clamped_Step
+	}
+	if Slab.Input('DrawInput_Basic_Numbers_Clamped', DrawInput_Basic_Numbers_Clamped_Options) then
 		DrawInput_Basic_Numbers_Clamped = Slab.GetInputNumber()
+	end
+
+	Slab.NewLine()
+
+	Slab.Textf(
+		"The click and drag functionality of numeric controls can also be disabled. This will make the input control behave like a " ..
+		"standard text input control.")
+
+	if Slab.Input('DrawInput_Basic_Numbers_NoDrag', {Text = tostring(DrawInput_Basic_Numbers_NoDrag), NumbersOnly = true, NoDrag = true}) then
+		DrawInput_Basic_Numbers_NoDrag = Slab.GetInputNumber()
+	end
+
+	Slab.NewLine()
+
+	Slab.Textf(
+		"A slider can also be used for these numeric input controls. When configured this way, the value is altered based on where the " ..
+		"user clicks and drags inside the control.")
+
+	Slab.Text("Min")
+	Slab.SameLine()
+	if Slab.InputNumberDrag('DrawInput_Basic_Numbers_Slider_Min', DrawInput_Basic_Numbers_Slider_Min, nil, DrawInput_Basic_Numbers_Slider_Max, {W = 50}) then
+		DrawInput_Basic_Numbers_Slider_Min = Slab.GetInputNumber()
+	end
+
+	Slab.SameLine()
+	Slab.Text("Max")
+	Slab.SameLine()
+	if Slab.InputNumberDrag('DrawInput_Basic_Numbers_Slider_Max', DrawInput_Basic_Numbers_Slider_Max, DrawInput_Basic_Numbers_Slider_Min, nil, {W = 50}) then
+		DrawInput_Basic_Numbers_Slider_Max = Slab.GetInputNumber()
+	end
+
+	if Slab.InputNumberSlider('DrawInput_Basic_Numbers_Slider', DrawInput_Basic_Numbers_Slider, DrawInput_Basic_Numbers_Slider_Min, DrawInput_Basic_Numbers_Slider_Max) then
+		DrawInput_Basic_Numbers_Slider = Slab.GetInputNumber()
 	end
 
 	Slab.NewLine()
@@ -544,8 +647,8 @@ local function DrawInput()
 	end
 end
 
-local DrawImage_Path = string.gsub(SLAB_PATH, "%.", "/") .. "/Internal/Resources/Textures/power.png"
-local DrawImage_Path_Icons = string.gsub(SLAB_PATH, "%.", "/") .. "/Internal/Resources/Textures/gameicons.png"
+local DrawImage_Path = SLAB_FILE_PATH .. "/Internal/Resources/Textures/power.png"
+local DrawImage_Path_Icons = SLAB_FILE_PATH .. "/Internal/Resources/Textures/gameicons.png"
 local DrawImage_Color = {1, 0, 0, 1}
 local DrawImage_Color_Edit = false
 local DrawImage_Scale = 1.0
@@ -859,8 +962,9 @@ local function DrawListBox()
 	Slab.EndListBox()
 end
 
-local DrawTree_Icon_Path = SLAB_PATH .. "/Internal/Resources/Textures/Folder.png"
+local DrawTree_Icon_Path = SLAB_FILE_PATH .. "/Internal/Resources/Textures/Folder.png"
 local DrawTree_Opened_Selected = 1
+local DrawTree_Tables = nil
 
 local function DrawTree()
 	Slab.Textf(
@@ -948,6 +1052,62 @@ local function DrawTree()
 		end
 
 		Slab.EndTree()
+	end
+
+	Slab.NewLine()
+	Slab.Separator()
+
+	Slab.Textf(
+		"Tree Ids can also be specified as a table. This allows the user to use a transient table to identify a particular tree " ..
+		"element. The tree system has been updated so that any Ids that are used as tables will have the key be removed when the " ..
+		"referenced table is garbage collected. This gives the user the ability to create thousands of tree elements and have " ..
+		"the tree system keep the number of persistent elements to a minimum. The default label used for these elements will be " ..
+		"the memory location of the table, so it is highly recommended to set the 'Label' option for the table. These table " ..
+		"elements will also be forced to disable saving settings to disk as the referenced key is a table and is transient. " ..
+		"As of version 0.7, this feature is only available for tree controls.")
+	Slab.NewLine()
+	Slab.Textf(
+		"The example below shows 5 tables that have been instanced and have an associated tree element. The right-click context " ..
+		"menu for the root allows for additions to this list. The right-click context menu for each item contains the option " ..
+		"to remove the individual element from the list and have that table garbage collected. This removal will also remove the " ..
+		"associated tree element.")
+
+	Slab.NewLine()
+
+	if DrawTree_Tables == nil then
+		DrawTree_Tables = {}
+		for I = 1, 5, 1 do
+			table.insert(DrawTree_Tables, {})
+		end
+	end
+
+	local RemoveIndex = -1
+	if Slab.BeginTree('Root', {IsOpen = true}) then
+		if Slab.BeginContextMenuItem() then
+			if Slab.MenuItem("Add") then
+				table.insert(DrawTree_Tables, {})
+			end
+
+			Slab.EndContextMenu()
+		end
+
+		for I, V in ipairs(DrawTree_Tables) do
+			Slab.BeginTree(V, {IsLeaf = true})
+
+			if Slab.BeginContextMenuItem() then
+				if Slab.MenuItem("Remove") then
+					RemoveIndex = I
+				end
+
+				Slab.EndContextMenu()
+			end
+		end
+
+		Slab.EndTree()
+	end
+
+	if RemoveIndex > 0 then
+		table.remove(DrawTree_Tables, RemoveIndex)
 	end
 end
 
@@ -1727,7 +1887,7 @@ local DrawTooltip_CheckBox = false
 local DrawTooltip_Radio = 1
 local DrawTooltip_ComboBox_Items = {"Button", "Check Box", "Combo Box", "Image", "Input", "Text", "Tree"}
 local DrawTooltip_ComboBox_Selected = "Button"
-local DrawTooltip_Image = SLAB_PATH .. "/Internal/Resources/Textures/power.png"
+local DrawTooltip_Image = SLAB_FILE_PATH .. "/Internal/Resources/Textures/power.png"
 local DrawTooltip_Input = "This is an input box."
 
 local function DrawTooltip()
@@ -1989,7 +2149,7 @@ local function DrawLayout()
 end
 
 local DrawFonts_Roboto = nil
-local DrawFonts_Roboto_Path = string.gsub(SLAB_PATH, "%.", "/") .. "/Internal/Resources/Fonts/Roboto-Regular.ttf"
+local DrawFonts_Roboto_Path = SLAB_FILE_PATH .. "/Internal/Resources/Fonts/Roboto-Regular.ttf"
 
 local function DrawFonts()
 	if DrawFonts_Roboto == nil then
@@ -2036,6 +2196,72 @@ local function DrawScroll()
 	Slab.EndListBox()
 end
 
+local DrawShader_Object = nil
+local DrawShader_Time = 0.0
+local DrawShader_Source =
+[[extern number time;
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
+{
+	vec4 TexColor = Texel(texture, texture_coords);
+    return vec4((1.0+sin(time))/2.0, abs(cos(time)), abs(sin(time)), 1.0) * TexColor;
+}]]
+local DrawShader_Highlight =
+{
+	['vec2'] = {0, 0, 1, 1},
+	['vec3'] = {0, 0, 1, 1},
+	['vec4'] = {0, 0, 1, 1},
+	['mat4'] = {0, 0, 1, 1}
+}
+
+local function DrawShader()
+	if DrawShader_Object == nil then
+		DrawShader_Object = love.graphics.newShader(DrawShader_Source)
+	end
+
+	DrawShader_Time = DrawShader_Time + love.timer.getDelta()
+
+	if DrawShader_Object ~= nil then
+		DrawShader_Object:send("time", DrawShader_Time)
+	end
+
+	Slab.Textf(
+		"Shader effects can be applied to any control through the PushShader/PopShader API calls. Any controls created after " ..
+		"a PushShader call will have its effects applied. The next PopShader call will disable the current effect and apply " ..
+		"the previous shader on the stack if one is present. The shader object to be pushed must be managed by the user and must be " ..
+		"valid when Slab.Draw is called. Below is an example of a shader effect that changes the pixel color over time.")
+
+	Slab.NewLine()
+
+	local W, H = Slab.GetWindowActiveSize()
+	local Options =
+	{
+		Text = DrawShader_Source,
+		ReturnOnText = false,
+		MultiLine = true,
+		W = W,
+		H = 150,
+		Highlight = DrawShader_Highlight
+	}
+	Slab.Input('DrawShader_Source', Options)
+	if Slab.Button('Compile') then
+		DrawShader_Source = Slab.GetInputText();
+
+		if DrawShader_Object ~= nil then
+			DrawShader_Object:release()
+		end
+
+		DrawShader_Object = love.graphics.newShader(DrawShader_Source)
+	end
+
+	Slab.NewLine()
+
+	Slab.PushShader(DrawShader_Object)
+	Slab.Image('DrawShader_Image', {Path = DrawImage_Path})
+	Slab.Text("Text")
+	Slab.Button("Button")
+	Slab.PopShader()
+end
+
 local SlabTest_Options = {Title = "Slab", AutoSizeWindow = false, W = 800.0, H = 600.0, IsOpen = true}
 
 function SlabTest.MainMenuBar()
@@ -2079,7 +2305,8 @@ local Categories = {
 	{"Stats", DrawStats},
 	{"Layout", DrawLayout},
 	{"Fonts", DrawFonts},
-	{"Scroll", DrawScroll}
+	{"Scroll", DrawScroll},
+	{"Shaders", DrawShader}
 }
 
 local Selected = nil
