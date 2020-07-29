@@ -1,13 +1,12 @@
 local pl            = require 'pl'
 local pretty        = require 'pl.pretty'
-local config        = require 'Engine.config_file'
 local Agent         = require 'Engine.classes.class_agent'
 local Collection    = require 'Engine.classes.class_collection'
-local Relational    = require 'Engine.classes.class_relational'
+local Params        = require 'Engine.classes.class_params'
 local Patch         = require 'Engine.classes.class_patch'
 local utils         = require 'Engine.utilities'
-local graphicengine = require 'Visual.graphicengine'
 local utl           = require 'pl.utils'
+local graphicengine = require 'Visual.graphicengine'
 local lambda        = utl.string_lambda
 local first_n       = utils.first_n
 local last_n        = utils.last_n
@@ -17,6 +16,7 @@ local n_of          = utils.n_of
 local ask           = utils.ask
 local setup         = utils.setup
 local run           = utils.run
+local create_patches= utils.create_patches
 
 
 -- "COMUNICATION_T_T"
@@ -58,11 +58,11 @@ local function go_to_random_neighbour(x)
     local choose  = math.random(#changes)
 
     -- Agents that cross a boundary will appear on the opposite side of the grid
-    x.xcor = (x.xcor + changes[choose][1]) % config.xsize
-    x.ycor = (x.ycor + changes[choose][2]) % config.ysize
+    x.xcor = (x.xcor + changes[choose][1]) % Config.xsize
+    x.ycor = (x.ycor + changes[choose][2]) % Config.ysize
 
-    if x.xcor == 0 then x.xcor = config.xsize end
-    if x.ycor == 0 then x.ycor = config.ysize end
+    if x.xcor == 0 then x.xcor = Config.xsize end
+    if x.ycor == 0 then x.ycor = Config.ysize end
 end
 
 
@@ -85,9 +85,18 @@ local function comunicate(x)
 
 end
 
+Config = Params({
+    ['start'] = true,
+    ['go']    = true,
+    ['ticks'] = 200,
+    ['xsize'] = 15,
+    ['ysize'] = 15
+})
 
--- The anonymous function in this call is executed once by the setup function
--- defined in utilities.lua
+Config.create_boolean("test1", true)
+Config.create_slider("test2", 0.0, 10.0, 0.05, 5.0)
+Config.create_input("test3", 17.0)
+
 setup = function()
 
     -- Create a new collection
@@ -96,8 +105,8 @@ setup = function()
     -- Populate the collection with Agents.
     People:create_n( 10, function()
         return Agent({
-            ['xcor']    = math.random(config.xsize),
-            ['ycor']    = math.random(config.ysize),
+            ['xcor']    = math.random(Config.xsize),
+            ['ycor']    = math.random(Config.ysize),
             ['message'] = false
         })
     end)
@@ -107,7 +116,7 @@ setup = function()
         agent.color = "blue"
     end)
 
-    config.go = true
+    Config.go = true
 
     return People.agents
 
@@ -116,12 +125,12 @@ end
 -- This function is executed until the stop condition is reached, or until
 -- the number of iterations equals the number of ticks specified inf config_file
 run = function()
-    if not config.go then
+    if not Config.go then
         do return end
     end
     -- Stop condition
     if #People:with(lambda '|x| x.message == false') == 0 then
-        config.go = false
+        Config.go = false
         pretty.dump(People.agents)
         return
     end
@@ -136,13 +145,9 @@ end
 
 -- Setup and start visualization
 GraphicEngine.set_coordinate_scale(20)
-GraphicEngine.set_world_dimensions(config.xsize + 2, config.ysize + 2)
+GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_time_between_steps(0)
-GraphicEngine.set_simulation_params({
-    firstval = {type = "boolean"},
-    secondval = {type = "float", min = 0.0, max = 10.0},
-    thirdval = {type = "enum", options = {"First Option", "Second Option", "Third Option"}}
-})
+GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(setup)
 GraphicEngine.set_step_function(run)
 GraphicEngine.init()

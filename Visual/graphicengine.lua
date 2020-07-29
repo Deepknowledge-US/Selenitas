@@ -5,7 +5,6 @@ local agents = nil
 local setup_func = nil
 local step_func = nil
 local simulation_params = nil
-local sim_params_values = nil
 local initialized = false
 local go = false
 
@@ -52,22 +51,28 @@ local function update_ui(dt)
         go = not go
     end
     -- Parse simulation params
-    for k, v in pairs(simulation_params) do
+    for k, v in pairs(simulation_params.ui_settings) do
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.CheckBox(sim_params_values[k] or false, "Enabled") then
-                sim_params_values[k] = (not sim_params_values[k]) or false
+            if Slab.CheckBox(simulation_params[k], "Enabled") then
+                simulation_params[k] = not simulation_params[k]
             end
-        elseif v.type == "float" then
+        elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberSlider(k .. "Slider", sim_params_values[k] or 0.0, v.min + 0.0000001, v.max, {}) then
-                sim_params_values[k] = Slab.GetInputNumber()
+            -- TODO: parse step
+            if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min + 0.0000001, v.max, {}) then
+                simulation_params[k] = Slab.GetInputNumber()
+            end
+        elseif v.type == "input" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            if Slab.InputNumberDrag(k .. "InputNumber", simulation_params[k], nil, nil, {}) then
+                simulation_params[k] = Slab.GetInputNumber()
             end
         elseif v.type == "enum" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
             for i, e in ipairs(v.options) do
-                if Slab.RadioButton(e, {Index = i, SelectedIndex = sim_params_values[k] or 1}) then
-                    sim_params_values[k] = i
+                if Slab.RadioButton(e, {Index = i, SelectedIndex = simulation_params[k]}) then
+                    simulation_params[k] = i
                 end
             end
         else
@@ -95,14 +100,15 @@ local function set_time_between_steps(t)
 end
 
 -- Expected input:
+-- An object of type Params. It includes an UI setting table like this:
 -- {
 --    "param_1_name" : {type = "boolean"},
---    "param_2_name" : {type = "float", min = minval, max = maxval},
---    "param_3_name" : {type = "enum", options = {enum_val_1, enum_val_2, enum_val_3}}
+--    "param_2_name" : {type = "slider", min = minval, max = maxval, step = step},
+--    "param_3_name" : {type = "enum", options = {enum_val_1, enum_val_2, enum_val_3}},
+--    "param_4_name" : {type = "input"}
 --}
 local function set_simulation_params(p)
     simulation_params = p
-    sim_params_values = {}
 end
 
 local function set_viewport_size(w, h)
