@@ -1,8 +1,6 @@
 local class  = require 'pl.class'
 
--- Creation example:
--- local agent_1 = Agent({})
--- local agent_2 = Agent({ ['xcor'] = 1000, ['ycor'] = 1 })
+-- This class allows users to create elements in interface
 
 local Params = class.Params {
     _init = function(self,o)
@@ -15,13 +13,13 @@ local Params = class.Params {
         return self
     end;
 
-    create_boolean = function(name)
+    create_boolean = function(name, value)
     end;
 
-    create_slider = function(name, min, max)
+    create_slider = function(name, min, max, step, value)
     end;
 
-    create_input = function(name)
+    create_input = function(name, value)
     end;
 }
 
