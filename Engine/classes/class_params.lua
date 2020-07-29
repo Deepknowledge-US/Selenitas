@@ -13,17 +13,17 @@ local Params = class.Params {
         return self
     end;
 
-    create_boolean = function(name, value)
+    create_boolean = function(self, name, value)
         self[name] = value
         self.ui_settings[name] = {type = "boolean"}
     end;
 
-    create_slider = function(name, min, max, step, value)
+    create_slider = function(self, name, min, max, step, value)
         self[name] = value
         self.ui_settings[name] = { type = "slider", min = min, max = max, step = step}
     end;
 
-    create_input = function(name, value)
+    create_input = function(self, name, value)
         self[name] = value
         self.ui_settings[name] = { type = "input" }
     end;

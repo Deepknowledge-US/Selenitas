@@ -93,10 +93,6 @@ Config = Params({
     ['ysize'] = 15
 })
 
-Config.create_boolean("test1", true)
-Config.create_slider("test2", 0.0, 10.0, 0.05, 5.0)
-Config.create_input("test3", 17.0)
-
 setup = function()
 
     -- Create a new collection
