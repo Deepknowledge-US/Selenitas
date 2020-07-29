@@ -15,5 +15,6 @@ Dependencies:
 - Penlight
     https://github.com/Tieske/Penlight
 
-
+- Slab
+    https://github.com/coding-jackalope/Slab
 
