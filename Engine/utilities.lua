@@ -1,4 +1,4 @@
-local config    = require 'Engine.config_file'
+-- local config    = require 'Engine.config_file'
 local Collection= require 'Engine.classes.class_collection'
 local Patch     = require 'Engine.classes.class_patch'
 local pretty    = require 'pl.pretty'
@@ -94,6 +94,13 @@ function utils.member_of(item, elements)
     return false
 end
 
+function utils.shuffle(list)
+    local array = list
+    for i = #array,2, -1 do
+        local j = math.random(i)
+        array[i], array[j] = array[j], array[i]
+    end
+end;
 
 -------------------------------
 
@@ -102,18 +109,18 @@ end
 -- ========================= --
 
 
-function utils.create_patches()
-    local patches  = Collection()
-
-    local x,y      = config.xsize , config.ysize
-    for i=1,x do
-        for j = 1,y do
-            local link_id = i .. ',' .. j
-            patches:add( Patch({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
+function utils.create_patches(x,y)
+    if x*y > 0 then
+        local patches  = Collection()
+        for i=1,x do
+            for j = 1,y do
+                local link_id = i .. ',' .. j
+                patches:add( Patch({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
+            end
         end
+        patches:shuffle()
+        return patches
     end
-    patches:shuffle()
-    return patches
 end
 
 
@@ -157,32 +164,74 @@ function utils.one_of(elements)
 end
 
 -- Select n random elements in a collection
-function utils.n_of(n,collection)
-    local elements = collection.agents
-    local res, aux = {},{}
-    math.randomseed(os.time())
+-- function utils.n_of(n,collection)
+--     local elements = collection.agents
+--     local res, aux = {},{}
+--     math.randomseed(os.time())
 
-    if n <= #elements / 2 then
-        while #res < n do 
-            local chosen = elements[ math.random(#elements)]
-            if not utils.member_of(chosen,res) then
-                table.insert(res,chosen)
-            end
+--     if n <= #elements / 2 then
+--         while #res < n do 
+--             local chosen = elements[ math.random(#elements)]
+--             if not utils.member_of(chosen,res) then
+--                 table.insert(res,chosen)
+--             end
+--         end
+--     else
+--         while #aux < #elements - n do
+--             local chosen = elements[ math.random(#elements)]
+--             if not utils.member_of(chosen,aux) then
+--                 table.insert(aux,chosen)
+--             end
+--         end
+--         for _,v in pairs(elements) do 
+--             if not utils.member_of(v,aux) then
+--                 table.insert(res,v)
+--             end
+--         end
+
+--     end
+--     return res
+-- end
+
+-- Select n random elements in a collection or a table
+function utils.n_of(n,collection)
+
+    local res, aux={},{}
+    local elements = collection.order
+
+    -- pretty.dump(elements)
+
+    if elements ~= nil then
+        utils.shuffle(elements)
+        local n_ids = utils.first_n(n,elements)
+        for _,v in pairs(n_ids) do
+            table.insert(res,collection.agents[v])
         end
     else
-        while #aux < #elements - n do
-            local chosen = elements[ math.random(#elements)]
-            if not utils.member_of(chosen,aux) then
-                table.insert(aux,chosen)
+        if n > #collection / 2 then
+            while #aux < # collection - n do
+                local chosen = collection[ math.random(#elements)]
+                if not utils.member_of(chosen,aux) then
+                    table.insert(aux,chosen)
+                end
             end
-        end
-        for _,v in pairs(elements) do 
-            if not utils.member_of(v,aux) then
-                table.insert(res,v)
+
+            for _,v in pairs(elements) do 
+                if not utils.member_of(v,aux) then
+                    table.insert(res,v)
+                end
+            end
+        else
+            while #res < n do
+                local chosen = collection[ math.random(#elements)]
+                if not utils.member_of(chosen,res) then
+                    table.insert(res,chosen)
+                end
             end
         end
 
     end
+
     return res
 end
 
@@ -236,21 +285,23 @@ function utils.go_to_random_neighbour(x)
     local choose  = math.random(#changes)
 
     -- Agents that cross a boundary will appear on the opposite side of the grid
-    x.xcor = (x.xcor + changes[choose][1]) % config.xsize
-    x.xcor = x.xcor > 0 and x.xcor or config.xsize
+    x.xcor = (x.xcor + changes[choose][1]) % Config.xsize
+    x.xcor = x.xcor > 0 and x.xcor or Config.xsize
 
-    x.ycor = (x.ycor + changes[choose][2]) % config.ysize
-    x.ycor = x.ycor > 0 and x.ycor or config.ysize
+    x.ycor = (x.ycor + changes[choose][2]) % Config.ysize
+    x.ycor = x.ycor > 0 and x.ycor or Config.ysize
 
 end
 
 
 -- This function encapsulates the anonymous function defined in the "setup" call of the
 -- file main_code.lua.
--- It creates a grid of patches with the parameters defined by user in config_file.lua
+-- It creates a grid of patches with the parameters defined by user in Config object
 -- Then it executes once the anonymous function defined in the "setup" call of the main_code.lua file.
 
 function utils.setup( funct )
+    math.randomseed(os.time())
+    T = 0
     funct()
 end
 
@@ -259,18 +310,16 @@ end
 -- This function encapsulates the anonymous function defined in the "run" call of the
 -- file main_code.lua.
 -- It is running until one of the stop condition is reached.
--- config.ticks simulate the ticks slider in netlogo.
--- config.go simulate the go button in NetLogo interface.
+-- Config.ticks simulate the ticks slider in netlogo.
+-- Config.go simulate the go button in NetLogo interface.
 
 function utils.run(funct)
-    math.randomseed(os.time())
-    T = 0
-    while config.go do -- While the 'go' button is pushed
-        if T < config.ticks then
+    while Config.go do -- While the 'go' button is pushed
+        if T < Config.ticks then
             funct()
             T=T+1
         else
-            config.go = false
+            Config.go = false
         end
     end
 end

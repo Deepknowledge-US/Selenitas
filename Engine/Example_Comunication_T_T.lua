@@ -1,9 +1,8 @@
 local pl            = require 'pl'
 local pretty        = require 'pl.pretty'
-local config        = require 'Engine.config_file'
 local Agent         = require 'Engine.classes.class_agent'
 local Collection    = require 'Engine.classes.class_collection'
-local Relational    = require 'Engine.classes.class_relational'
+local Params        = require 'Engine.classes.class_params'
 local Patch         = require 'Engine.classes.class_patch'
 local utils         = require 'Engine.utilities'
 local utl           = require 'pl.utils'
@@ -16,6 +15,7 @@ local n_of          = utils.n_of
 local ask           = utils.ask
 local setup         = utils.setup
 local run           = utils.run
+local create_patches= utils.create_patches
 
 
 -- "COMUNICATION_T_T"
@@ -37,9 +37,9 @@ local function print_current_config()
         end)
     end)
 
-    for i = config.ysize,1,-1 do
+    for i = Config.ysize,1,-1 do
         local line = ""
-        for j = 1, config.xsize do
+        for j = 1, Config.xsize do
             line = line .. Patches.agents[j..','..i].label .. ', '
         end
         print(line)
@@ -59,11 +59,11 @@ local function go_to_random_neighbour(x)
     local choose  = math.random(#changes)
 
     -- Agents that cross a boundary will appear on the opposite side of the grid
-    x.xcor = (x.xcor + changes[choose][1]) % config.xsize
-    x.ycor = (x.ycor + changes[choose][2]) % config.ysize
+    x.xcor = (x.xcor + changes[choose][1]) % Config.xsize
+    x.ycor = (x.ycor + changes[choose][2]) % Config.ysize
 
-    if x.xcor == 0 then x.xcor = config.xsize end
-    if x.ycor == 0 then x.ycor = config.ysize end
+    if x.xcor == 0 then x.xcor = Config.xsize end
+    if x.ycor == 0 then x.ycor = Config.ysize end
 end
 
 
@@ -86,9 +86,23 @@ local function comunicate(x)
 end
 
 
+Config = Params({
+    ['start'] = true,
+    ['go']    = true,
+    ['ticks'] = 200,
+    ['xsize'] = 15,
+    ['ysize'] = 15
+})
+
 -- The anonymous function in this call is executed once by the setup function
 -- defined in utilities.lua
 setup(function()
+
+    -- Params is a class which contains the parameters of the interface (sliders, inputs, booleans,etc)
+
+    
+
+    Patches = create_patches(Config.xsize, Config.ysize)
 
     -- Create a new collection
     People = Collection()
@@ -96,8 +110,8 @@ setup(function()
     -- Populate the collection with Agents.
     People:create_n( 10, function()
         return Agent({
-            ['xcor']    = math.random(config.xsize),
-            ['ycor']    = math.random(config.ysize),
+            ['xcor']    = math.random(Config.xsize),
+            ['ycor']    = math.random(Config.ysize),
             ['message'] = false
         })
     end)
@@ -110,13 +124,14 @@ end)
 
 
 -- This function is executed until the stop condition is reached, or until
--- the number of iterations equals the number of ticks specified inf config_file
+-- the number of iterations equals the number of ticks specified inf Config object
 run(function()
+
+    print("========= tick ".. T+1 .. " ===========")
 
     -- Stop condition
     if #People:with(lambda '|x| x.message == false') == 0 then
-        config.go = false
-        pretty.dump(People.agents)
+        Config.go = false
         return
     end
 
@@ -128,6 +143,8 @@ run(function()
 
     print_current_config()
 
+    print("=============================")
+    print(#People:with(lambda '|x| x.message == false'))
 end)
 
 
