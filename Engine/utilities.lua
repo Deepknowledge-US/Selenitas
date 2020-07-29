@@ -1,4 +1,3 @@
--- local config    = require 'Engine.config_file'
 local Collection= require 'Engine.classes.class_collection'
 local Patch     = require 'Engine.classes.class_patch'
 local pretty    = require 'pl.pretty'
@@ -108,19 +107,18 @@ end;
 -- UTILITIES FOR COLLECTIONS --
 -- ========================= --
 
+-- TODO: 3rd dimension
+function utils.create_patches(x,y,z)
+    local patches  = Collection()
 
-function utils.create_patches(x,y)
-    if x*y > 0 then
-        local patches  = Collection()
-        for i=1,x do
-            for j = 1,y do
-                local link_id = i .. ',' .. j
-                patches:add( Patch({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
-            end
+    for i=1,x do
+        for j = 1,y do
+            local link_id = i .. ',' .. j
+            patches:add( Patch({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
         end
-        patches:shuffle()
-        return patches
     end
+    patches:shuffle()
+    return patches
 end
 
 
@@ -249,10 +247,10 @@ end
 function utils.fd(agent, num)
 
     local s = sin(rad(agent.head))
-    agent.xcor = agent.xcor + s * num
+    agent.xcor = (agent.xcor + s * num) % Config.xsize
 
     local c = cos(rad(agent.head))
-    agent.ycor = agent.ycor + c * num
+    agent.ycor = (agent.ycor + c * num) % Config.ysize
 
 end
 
@@ -260,10 +258,12 @@ end
 function utils.fd_grid(agent, num)
 
     local s = sin(rad(agent.head))
-    agent.xcor = math.ceil(agent.xcor + s * num)
+    agent.xcor = math.ceil( (agent.xcor + s * num) % Config.xsize )
+    if agent.xcor == 0 then agent.xcor = Config.xsize end
 
     local c = cos(rad(agent.head))
-    agent.ycor = math.ceil(agent.ycor + c * num)
+    agent.ycor = math.ceil( (agent.ycor + c * num) % Config.ysize )
+    if agent.ycor == 0 then agent.ycor = Config.ysize end
 
 end
 
@@ -296,12 +296,12 @@ end
 
 -- This function encapsulates the anonymous function defined in the "setup" call of the
 -- file main_code.lua.
--- It creates a grid of patches with the parameters defined by user in Config object
--- Then it executes once the anonymous function defined in the "setup" call of the main_code.lua file.
+-- It creates a grid of patches with the parameters defined in Config object.
+-- Then, it executes once the anonymous function defined in the "setup" call of the main file.
 
 function utils.setup( funct )
     math.randomseed(os.time())
-    T = 0
+    T = 1
     funct()
 end
 
@@ -315,7 +315,7 @@ end
 
 function utils.run(funct)
     while Config.go do -- While the 'go' button is pushed
-        if T < Config.ticks then
+        if T <= Config.ticks then
             funct()
             T=T+1
         else

@@ -1,9 +1,7 @@
-local pl            = require 'pl'
-local pretty        = require 'pl.pretty'
-local config        = require 'Engine.config_file'
 local Collection    = require 'Engine.classes.class_collection'
 local Agent         = require 'Engine.classes.class_agent'
-local Relational    = require 'Engine.classes.class_relational'
+local Params        = require 'Engine.classes.class_params'
+local Link          = require 'Engine.classes.class_link'
 local Patch         = require 'Engine.classes.class_patch'
 local utils         = require 'Engine.utilities'
 local utl           = require 'pl.utils'
@@ -17,7 +15,19 @@ local n_of          = utils.n_of
 local ask           = utils.ask
 local setup         = utils.setup
 local run           = utils.run
+local create_patches= utils.create_patches
 
+-- The Configuration object.
+Config = Params({
+    ['start'] = true,
+    ['go']    = true,
+    ['ticks'] = 100,
+    ['xsize'] = 60,
+    ['ysize'] = 60
+})
+
+-- Optional: Create patches
+Patches = create_patches(Config.xsize,Config.ysize)
 
 
 -- This function count and print the number of agents in each patch.
@@ -27,19 +37,13 @@ local run           = utils.run
 local function current_config()
 
 
-    -- ask(Patches, function(patch)
-    --     patch.label = #Agents:with( function(person)
-    --         return person.xcor == patch.xcor and person.ycor == patch.ycor
-    --     end)
-    -- end)
-
-    for i = config.ysize,1,-1 do
-        local line = ""
-        for j = 1, config.xsize do
-            line = line .. Patches.all[j..','..i].label .. ', '
-        end
-        print(line)
-    end
+    -- for i = Config.ysize,1,-1 do
+    --     local line = ""
+    --     for j = 1, Config.xsize do
+    --         line = line .. Patches.all[j..','..i].label .. ', '
+    --     end
+    --     print(line)
+    -- end
 end
 
 

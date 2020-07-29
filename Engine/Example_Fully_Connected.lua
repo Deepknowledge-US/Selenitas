@@ -1,38 +1,38 @@
-local pl            = require 'pl'
-local pretty        = require 'pl.pretty'
-local config        = require 'Engine.config_file'
-local Collection    = require 'Engine.classes.class_collection'
-local Agent         = require 'Engine.classes.class_agent'
-local Relational    = require 'Engine.classes.class_relational'
-local Patch         = require 'Engine.classes.class_patch'
-local utils         = require 'Engine.utilities'
-local utl           = require 'pl.utils'
-local lamb          = utl.bind1
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local rt            = utils.rt
-local fd            = utils.fd
-local fd_grid       = utils.fd_grid
-local create_patches= utils.create_patches
+local Collection_Agents = require 'Engine.classes.class_collection_agents'
+local Collection_Links  = require 'Engine.classes.class_collection_links'
+local Params            = require 'Engine.classes.class_params'
+local Link              = require 'Engine.classes.class_link'
+local utils             = require 'Engine.utilities'
+local ask               = utils.ask
+local setup             = utils.setup
+local run               = utils.run
+local rt                = utils.rt
+local fd_grid           = utils.fd_grid
+local create_patches    = utils.create_patches
+
+
+Config = Params({
+    ['start'] = true,
+    ['go']    = true,
+    ['ticks'] = 100,
+    ['xsize'] = 15,
+    ['ysize'] = 15
+
+})
 
 
 local function print_current_config()
-    for i=config.ysize,1,-1 do
+    for i=Config.ysize,1,-1 do
         local line = ""
-        for j = 1,config.xsize do
+        for j = 1,Config.xsize do
             local label = Patches.agents[j..','..i].label == 0 and Patches.agents[j..','..i].label or '_'
             line = line .. label .. ','
         end
         print(line)
     end
-
-    pretty.dump(Links.agents)
-    print(#Links.order)
-
 end
 
-local x,y = config.xsize,config.ysize
+local x,y  =  Config.xsize, Config.ysize
 local size =  x > y and math.floor(x/2) or math.floor(y/2)
 
 local function layout_circle(collection, radius)
@@ -57,53 +57,50 @@ local function layout_circle(collection, radius)
 
 end
 
-
-
-
 setup(function()
 
-    Patches = create_patches()
+    Patches = create_patches(Config.xsize, Config.ysize)
 
-    Agents = Collection()
-    Agents:create_n( 10, function()
-        return Agent({
+    Nodes = Collection_Agents()
+    Nodes:create_n( 10, function()
+        return {
             ['xcor']    = size,
             ['ycor']    = size,
             ['head']    = 0
-        })
+        }
     end)
 
-    layout_circle(Agents, size - 1 )
+    layout_circle(Nodes, size - 1 )
 
     -- A new collection to store the links
-    Links = Collection()
+    Links = Collection_Links()
 
     -- Each agent will create a link with the other agents.
-    ask(Agents, function(agent)
-        ask(Agents:with( function(other_agent) return agent ~= other_agent end), function(other_agent)
+    ask(Nodes, function(agent)
+        ask(Nodes:others(agent), function(another_agent)
             Links:add(
-                Relational({
+                Link({
                     ['end1'] = agent,
-                    ['end2'] = other_agent
+                    ['end2'] = another_agent
                 })
             )
         end)
     end)
 
+    ask(Nodes, function(x)
+        Patches.agents[x.xcor .. ',' .. x.ycor].label = 0
+    end)
+
+    -- print(one_of(Nodes)[1])
+    print(Links)
 end)
 
 
 run(function()
-    print('\n\n========== tick '.. T + 1 .. ' ===========')
-
-
-    ask(Agents, function(x)
-        Patches.agents[x.xcor .. ',' .. x.ycor].label = 0
-    end)
+    print('\n\n========== tick '.. T .. ' ===========')
 
     print_current_config()
-    config.go = false
-
+    Config.go = false
 
     print('=============================\n')
 end)

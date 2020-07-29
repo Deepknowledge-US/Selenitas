@@ -1,15 +1,12 @@
 local class  = require 'pl.class'
 
-local Patch = class.Patch{
+local Link = class.Link{
 
     _init = function(self,o)
-        local c     = o or {}
-        self        = c
-        self.xcor   = c.xcor or 0
-        self.ycor   = c.ycor or 0
-        self.label  = c.label or ''
-        self.color  = c.color or 'black'
-        self.shape  = c.xcor or 'square'
+        local c   = o or {}
+        self      = c
+        self.end1 = c.end1 or {}
+        self.end2 = c.end2 or {}
         return self
     end;
 
@@ -34,4 +31,5 @@ local Patch = class.Patch{
 
 }
 
-return Patch
+
+return Link

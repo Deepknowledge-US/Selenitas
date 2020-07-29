@@ -12,16 +12,16 @@ local Agent  = require 'Engine.classes.class_agent'
 -- the order of actuation in each iteration
 
 -- All the methods of a collection must be called with the ":" operator. 
--- e.g  my_collection:remove(id_of_agent)
+-- e.g  my_collection:kill(id_of_agent)
 -- e.g. of creation and use:
 
 -- Agents = Collection()
--- Agents:create_n(1000, function() 
---     return Agent({
+-- Agents:create_n(1000, function()
+--     return {
 --         ['property_1'] = val_1
 --         ['property_2'] = val_2
 --         ...
---     })
+--     }
 -- end)
 
 local Collection = class.Collection {
@@ -33,6 +33,7 @@ local Collection = class.Collection {
                 self.order[#self.order+1] = k
             end
         end
+        self.size = #self.order
         return self
     end;
 
@@ -48,15 +49,20 @@ local Collection = class.Collection {
     end;
 
     __tostring = function(self)
-        local res = ""
+        local res = "{\n"
         for k,v in pairs(self) do
 
             if type(v) == 'table' then
-                res = res .. k .. ': table\n'
+                res = res .. '\t'  .. k .. ': {\n'
+                for k2,v2 in pairs(v) do
+                    res = res .. '\t\t' .. k2 .. ': ' .. type(v2) .. '\n'
+                end
+                res = res .. '\t}\n'
             else
-                res = res .. k .. ': ' .. v .. '\n'
+                res = res .. '\t' .. k .. ': ' .. v .. '\n'
             end
         end
+        res = res .. '}'
         return res
     end;
 
@@ -72,10 +78,11 @@ local Collection = class.Collection {
     end;
 
     kill = function(self,agent)
-        for k,v in pairs(self.order) do
+        for k,v in ipairs(self.order) do
             if v == agent.id and self.agents[v] == agent then
                 self.agents[agent.id] = nil
                 table.remove(self.order, k)
+                self.size = self.size-1
                 break
             end
         end
@@ -87,6 +94,11 @@ local Collection = class.Collection {
             local j = math.random(i)
             array[i], array[j] = array[j], array[i]
         end
+    end;
+
+
+    others = function(self,agent)
+        return self:with( function(x) return x ~= agent end )
     end;
 
     one_of_others = function(self,agent)

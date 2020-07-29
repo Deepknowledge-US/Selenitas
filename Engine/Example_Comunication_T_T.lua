@@ -1,8 +1,7 @@
 local pl            = require 'pl'
 local pretty        = require 'pl.pretty'
-local Agent         = require 'Engine.classes.class_agent'
-local Collection    = require 'Engine.classes.class_collection'
 local Params        = require 'Engine.classes.class_params'
+local Collection    = require 'Engine.classes.class_collection_agents'
 local Patch         = require 'Engine.classes.class_patch'
 local utils         = require 'Engine.utilities'
 local utl           = require 'pl.utils'
@@ -24,7 +23,14 @@ local create_patches= utils.create_patches
 -- Agents will share the message with others in the same patch.
 -- The simulation ends when all agents have the message.
 
+Config = Params({
+    ['start'] = true,
+    ['go']    = true,
+    ['ticks'] = 100,
+    ['xsize'] = 15,
+    ['ysize'] = 15
 
+})
 
 
 -- Count and print the number of agents in each patch
@@ -86,52 +92,41 @@ local function comunicate(x)
 end
 
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 200,
-    ['xsize'] = 15,
-    ['ysize'] = 15
-})
+
 
 -- The anonymous function in this call is executed once by the setup function
 -- defined in utilities.lua
 setup(function()
 
-    -- Params is a class which contains the parameters of the interface (sliders, inputs, booleans,etc)
-
-    
-
-    Patches = create_patches(Config.xsize, Config.ysize)
+    Patches = create_patches(Config.xsize,Config.ysize)
 
     -- Create a new collection
     People = Collection()
 
     -- Populate the collection with Agents.
     People:create_n( 10, function()
-        return Agent({
+        return {
             ['xcor']    = math.random(Config.xsize),
             ['ycor']    = math.random(Config.ysize),
             ['message'] = false
-        })
+        }
     end)
 
-    ask(one_of(People), function(agent)
-        agent.message = true
-    end)
+    -- ask(one_of(People), function(agent)
+    --     agent.message = true
+    -- end)
 
 end)
 
 
 -- This function is executed until the stop condition is reached, or until
--- the number of iterations equals the number of ticks specified inf Config object
+-- the number of iterations equals the number of ticks specified inf config_file
 run(function()
-
-    print("========= tick ".. T+1 .. " ===========")
 
     -- Stop condition
     if #People:with(lambda '|x| x.message == false') == 0 then
         Config.go = false
+        pretty.dump(People.agents)
         return
     end
 
@@ -143,8 +138,6 @@ run(function()
 
     print_current_config()
 
-    print("=============================")
-    print(#People:with(lambda '|x| x.message == false'))
 end)
 
 
