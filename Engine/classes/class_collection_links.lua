@@ -6,11 +6,14 @@ local pretty     = require 'pl.pretty'
 
 local CL = class.Collection_Links(Collection)
 
+-- When a new link collection is created, its father's init function is called.
+-- This allows the new Collection_Links to use all the methods of the Collection class.
 CL._init = function(self,c)
     self:super(c)
     return self
 end
 
+-- This function overwrites the add method in the father's class
 CL.add = function(self,object,id)
 
     -- If the input is a Link, the object is added to the collection,
@@ -36,6 +39,8 @@ CL.add = function(self,object,id)
     end
 end;
 
+
+-- This function overwrites the create_n method in the father's class
 CL.create_n = function(self,num, funct)
     for i=1,num do
         self:add( Link( funct() ) )

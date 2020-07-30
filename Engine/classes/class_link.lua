@@ -2,6 +2,9 @@ local class  = require 'pl.class'
 
 local Link = class.Link{
 
+    --[[
+        When a new Link is created, some properties are given to it (If we do not have done it yet)
+    ]]
     _init = function(self,o)
         local c   = o or {}
         self      = c
@@ -10,7 +13,7 @@ local Link = class.Link{
         return self
     end;
 
-
+    -- This function is called when we do a print(a_link). String representation of the object.
     __tostring = function(self)
         local res = "{\n"
         for k,v in pairs(self) do

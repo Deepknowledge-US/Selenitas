@@ -1,6 +1,6 @@
 local class  = require 'pl.class'
 
--- This class allows users to create elements in interface
+-- This class will allow users to create elements in interface
 
 local Params = class.Params {
     _init = function(self,o)

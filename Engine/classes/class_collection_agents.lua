@@ -6,11 +6,15 @@ local Collection= require'Engine.classes.class_collection'
 
 local CA = class.Collection_Agents(Collection)
 
+
+-- When a new agent collection is created, its father's init function is called.
+-- This allows the new Collection_Agents to use all the methods of the Collection class.
 CA._init = function(self,c)
     self:super(c)
     return self
 end
 
+-- This function overwrites the add method of the Collection class
 CA.add = function(self,object,id)
     local tam       = self.size + 1
     local k         = id or object.id or tam
@@ -34,6 +38,7 @@ CA.add = function(self,object,id)
 end
 
 
+-- This function overwrites the create_n method of the Collection class
 CA.create_n = function(self,num, funct)
     for i=1,num do
         self:add( Agent( funct() ) )

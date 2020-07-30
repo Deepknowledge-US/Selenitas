@@ -6,11 +6,14 @@ local Collection= require'Engine.classes.class_collection'
 
 local CP = class.Collection_Patches(Collection)
 
+-- When a new patch collection is created, its father's init function is called.
+-- This allows the new Collection_Patches to use all the methods of the Collection class.
 CP._init = function(self,c)
     self:super(c)
     return self
 end
 
+-- This function overwrites the add method of the Collection class
 CP.add = function(self,object,id)
     local tam       = self.size + 1
     local k         = id or object.id or tam
@@ -33,7 +36,7 @@ CP.add = function(self,object,id)
     self.agents[k].id  = k
 end
 
-
+-- This function overwrites the create_n method of the Collection class
 CP.create_n = function(self,num, funct)
     for i=1,num do
         self:add( Patch( funct() ) )

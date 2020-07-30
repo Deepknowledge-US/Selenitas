@@ -2,6 +2,9 @@ local class  = require 'pl.class'
 
 local Patch = class.Patch{
 
+    --[[
+        When a new Patch is created, some properties are given to it (If we do not have done it yet)
+    ]]--
     _init = function(self,o)
         local c     = o or {}
         self        = c
@@ -14,6 +17,8 @@ local Patch = class.Patch{
     end;
 
 
+    -- String representation of a Patch.
+    -- To call this function just use "print(a_patch)".
     __tostring = function(self)
         local res = "{\n"
         for k,v in pairs(self) do
