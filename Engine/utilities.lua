@@ -53,33 +53,41 @@ end
 
 
 -- ==================== --
--- UTILITIES FOR TABLES --
+-- UTILITIES FOR LISTS  --
 -- ==================== --
 
-function utils.first_n(n,table)
+-- This function returns the first n elements of a list
+function utils.first_n(n,list)
     local res = {}
-    if n >= #table then
-        return table
+    if n >= #list then
+        return list
     else
         for i=1,n do
-            res[i] = table[i]
+            res[i] = list[i]
         end
     end
     return res
 end
 
 
-function utils.last_n(n,table)
+-- This function returns the last n elements of a list
+function utils.last_n(n,list)
     local res = {}
-    if n >= #table then
-        return table
+    if n >= #list then
+        return list
     else
-        for i = #table-(n-1) , #table do
-            res[#res+1] = table[i]
+        for i = #list-(n-1) , #list do
+            res[#res+1] = list[i]
         end
     end
     return res
 end
+--------------------------
+
+
+-- ==================== --
+-- UTILITIES FOR TABLES --
+-- ==================== --
 
 -- Given an item and a set of elements or a collection, decide if item is included in the set.
 function utils.member_of(item, elements)
@@ -93,6 +101,7 @@ function utils.member_of(item, elements)
     return false
 end
 
+-- Simple method to shuffle a list. It consist on permutations of the objects in a list.
 function utils.shuffle(list)
     local array = list
     for i = #array,2, -1 do
@@ -107,7 +116,11 @@ end;
 -- UTILITIES FOR COLLECTIONS --
 -- ========================= --
 
--- TODO: 3rd dimension
+
+--[[
+    This function create a new collection of patches. The size of the grid is determined by x and y 
+    TODO: 3rd dimension
+]]
 function utils.create_patches(x,y,z)
     local patches  = Collection()
 
@@ -147,7 +160,8 @@ function utils.die(agent, Agents)
     Agents:kill(agent)
 end
 
--- Caution!! this function returns a list which contains a single element
+-- Caution!! this function returns a list containing a single element. This is necessary becouse "ask" function receives
+-- a table as the first parameter to iterate on its elements.
 function utils.one_of(elements)
     if elements.order then
         local target = elements.order
@@ -158,46 +172,13 @@ function utils.one_of(elements)
         local chosen = math.random(#target)
         return {elements[chosen]}
     end
-    
 end
-
--- Select n random elements in a collection
--- function utils.n_of(n,collection)
---     local elements = collection.agents
---     local res, aux = {},{}
---     math.randomseed(os.time())
-
---     if n <= #elements / 2 then
---         while #res < n do 
---             local chosen = elements[ math.random(#elements)]
---             if not utils.member_of(chosen,res) then
---                 table.insert(res,chosen)
---             end
---         end
---     else
---         while #aux < #elements - n do
---             local chosen = elements[ math.random(#elements)]
---             if not utils.member_of(chosen,aux) then
---                 table.insert(aux,chosen)
---             end
---         end
---         for _,v in pairs(elements) do 
---             if not utils.member_of(v,aux) then
---                 table.insert(res,v)
---             end
---         end
-
---     end
---     return res
--- end
 
 -- Select n random elements in a collection or a table
 function utils.n_of(n,collection)
 
     local res, aux={},{}
     local elements = collection.order
-
-    -- pretty.dump(elements)
 
     if elements ~= nil then
         utils.shuffle(elements)
