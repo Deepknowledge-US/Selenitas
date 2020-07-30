@@ -36,9 +36,9 @@ local function print_current_config()
         end)
     end)
 
-    for i = config.ysize,1,-1 do
+    for i = Config.ysize,1,-1 do
         local line = ""
-        for j = 1, config.xsize do
+        for j = 1, Config.xsize do
             line = line .. Patches.agents[j..','..i].label .. ', '
         end
         print(line)
