@@ -13,7 +13,8 @@ Config = Params({
     ['go']    = true,
     ['ticks'] = 300,
     ['xsize'] = 15,
-    ['ysize'] = 15
+    ['ysize'] = 15,
+    ['stride']= 3
 })
 
 
@@ -32,6 +33,20 @@ Config = Params({
 -- Representation of the world in a non graphical environment.
 -- It prints the patches labels which contains the number of agents in the patch
 local function print_current_config()
+
+
+    print('\n========= tick: '.. T ..' =========')
+    -- Reset the labels of the patches
+    ask(Patches, function(patch)
+        patch.label = 0
+    end)
+    
+    -- Each agent increments in 1 the value of the patch in its position.
+    ask(Agents, function(agent)
+        local target_link = Patches.agents[agent.xcor .. ',' .. agent.ycor]
+        target_link.label = target_link.label + 1
+    end)
+
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
@@ -39,6 +54,7 @@ local function print_current_config()
         end
         print(line)
     end
+    print('=============================\n')
 end
 
 
@@ -49,10 +65,10 @@ local histogram = {}
 -- then the agent advance in 1.5 units
 local function wander(agent)
     rt(agent, math.random(360))
-    fd_grid(agent, 1.5)
+    fd_grid(agent, Config.stride)
 end
 
--- Agents has an "age" parameter to simulate its age, this function increment in 1 its value
+-- Agents have an "age" parameter to simulate its age, this function increment in 1 its value
 -- and kills the agent when it reach 51 years
 local function grow_old(agent)
     agent.age = agent.age + 1
@@ -95,7 +111,7 @@ setup(function()
 
     -- All agents will advance 3 units in the faced direction
     ask(Agents, function(agent)
-        fd_grid(agent,3)
+        fd_grid(agent,Config.stride)
     end)
 
 end)
@@ -104,8 +120,6 @@ end)
 -- The run function is executed until a stop condition in reached
 -- At the moment we have discrete iterations
 run(function()
-
-    print('\n========= tick: '.. T ..' =========')
 
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
     if Agents.size == 0 or T == Config.ticks then
@@ -116,24 +130,20 @@ run(function()
         return
     end
 
-
     -- In each iteration each agent moves randomly in a radius, then "grow_old" increases its age,
     -- finally it has a chance to clone itself
-    ask(Agents, function(agent)
-        wander(agent)
-        grow_old(agent)
-        reproduce(agent)
+
+    ask( Agents, function(agent)
+        agent:does(wander, grow_old, reproduce)
     end)
 
-    -- Reset the labels of the patches
-    ask(Patches, function(patch)
-        patch.label = 0
-    end)
-    -- Each agent increments in 1 the value of the patch in its position.
-    ask(Agents, function(agent)
-        local target_link = Patches.agents[agent.xcor .. ',' .. agent.ycor]
-        target_link.label = target_link.label + 1
-    end)
+    -- -- This is another way to do it:
+    -- ask(Agents, function(agent)
+    --     wander(agent)
+    --     grow_old(agent)
+    --     reproduce(agent)
+    -- end)
+
 
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of
@@ -142,7 +152,8 @@ run(function()
 
     print_current_config()
 
-    print('=============================\n')
+
+
 end)
 
 

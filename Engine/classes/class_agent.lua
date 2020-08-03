@@ -29,9 +29,38 @@ local Agent = class.Agent {
         return self
     end;
 
--- Naive function to print Agents. When we call "print(instance_of_agent)" this function is
--- colled to print the agent. Use print() instead of pretty.dump()
+--[[
+    This function applies to the agent a series of functions consecutively.
+    The number of functions gived as parameters is not predetermined.
+    Caution! we are assuming functions with one ore less parameters as inputs.
+]]--
+    does = function(self, ...)
+        for i = 1,select('#', ...)do
+            local funct = select( i, ... )
+            funct(self)
+        end
+    end;
 
+
+--[[
+    Agents are able to keep a list of neighbors in their "linked" parameter.
+    We can have more than one link between A and B, but B will appear only once in A.linked
+    (the same for B.linked and A)
+]]--
+    add_neigh = function(self, agent)
+        for i = 1, #self.linked do
+            if self.linked[i] == agent then
+                return
+            end
+        end
+        self.linked[#self.linked+1] = agent
+    end;
+
+
+--[[
+    Naive function to print Agents. When we call "print(instance_of_agent)" this function is
+    colled to print the agent. Use print() instead of pretty.dump()
+]]--
     __tostring = function(self)
         local res = "{\n"
         for k,v in pairs(self) do
@@ -49,21 +78,6 @@ local Agent = class.Agent {
         return res
     end;
 
-
-
---[[
-    Agents are able to keep a list of neighbors in their "linked" parameter.
-    We can have more than one link between A and B, but B will appear only once in A.linked
-    (the same for B.linked and A)
-]]--
-    add_neigh = function(self, agent)
-        for i = 1, #self.linked do
-            if self.linked[i] == agent then
-                return
-            end
-        end
-        self.linked[#self.linked+1] = agent
-    end
 }
 
 return Agent

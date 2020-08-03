@@ -27,6 +27,8 @@ Config = Params({
 
 -- A function to represent the space in a non graphical environment
 local function print_current_config()
+
+    print('\n\n========== tick '.. T .. ' ===========')
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
@@ -35,6 +37,7 @@ local function print_current_config()
         end
         print(line)
     end
+    print('=============================\n')
 end
 
 local x,y  =  Config.xsize, Config.ysize
@@ -87,11 +90,10 @@ setup(function()
     -- Each agent will create a link with the other agents.
     ask(Nodes, function(agent)
         ask(Nodes:others(agent), function(another_agent)
-            Links:add(
-                Link({
+            Links:add({
                     ['end1'] = agent,
                     ['end2'] = another_agent
-                })
+                }
             )
         end)
     end)
@@ -108,12 +110,10 @@ end)
 
 
 run(function()
-    print('\n\n========== tick '.. T .. ' ===========')
 
     print_current_config()
     Config.go = false
-
-    print('=============================\n')
+    print(Links)
 end)
 
 

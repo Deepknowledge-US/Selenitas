@@ -13,7 +13,16 @@ CL._init = function(self,c)
     return self
 end
 
--- This function overwrites the add method in the father's class
+--[[
+    This function overwrites the add method in the father's class
+
+    CAUTION!
+
+    When an agent A has as neighbour an agent B, both agents will hold a reference to the other 
+    object in its linked table.
+    Some functions as pretty.dump() iterates recursively over the tables or metatables present 
+    in an object, so if we try pretty.dump(A) it produces a cycle.
+]]
 CL.add = function(self,object,id)
 
     -- If the input is a Link, the object is added to the collection,

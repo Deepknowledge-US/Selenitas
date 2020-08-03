@@ -267,12 +267,13 @@ local Collection = class.Collection {
 ]]--
     __tostring = function(self)
         local res = "{\n"
-        for k,v in pairs(self) do
+        for k,v in pairs(self.agents) do
 
             if type(v) == 'table' then
                 res = res .. '\t'  .. k .. ': {\n'
                 for k2,v2 in pairs(v) do
-                    res = res .. '\t\t' .. k2 .. ': ' .. type(v2) .. '\n'
+                    local v2_aux = type(v2) == 'table' and type(v2) or v2
+                    res = res .. '\t\t' .. k2 .. ': ' .. tostring(v2_aux) .. '\n'
                 end
                 res = res .. '\t}\n'
             else

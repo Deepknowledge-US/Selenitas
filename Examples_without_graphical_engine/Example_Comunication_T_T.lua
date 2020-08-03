@@ -2,18 +2,13 @@ local pl            = require 'pl'
 local pretty        = require 'pl.pretty'
 local Params        = require 'Engine.classes.class_params'
 local Collection    = require 'Engine.classes.class_collection_agents'
-local Patch         = require 'Engine.classes.class_patch'
 local utils         = require 'Engine.utilities'
 local utl           = require 'pl.utils'
 local lambda        = utl.string_lambda
-local first_n       = utils.first_n
-local last_n        = utils.last_n
-local member_of     = utils.member_of
-local one_of        = utils.one_of
-local n_of          = utils.n_of
 local ask           = utils.ask
 local setup         = utils.setup
 local run           = utils.run
+local one_of        = utils.one_of
 local create_patches= utils.create_patches
 
 
@@ -23,34 +18,18 @@ local create_patches= utils.create_patches
 -- Agents will share the message with others in the same patch.
 -- The simulation ends when all agents have the message.
 
+
+-- An instance of Params class is needed to define some usefull parameters.
 Config = Params({
     ['start'] = true,
     ['go']    = true,
-    ['ticks'] = 100,
+    ['ticks'] = 200,
     ['xsize'] = 15,
     ['ysize'] = 15
 
 })
 
 
--- Count and print the number of agents in each patch
-
-local function print_current_config()
-
-    ask(Patches, function(patch)
-        patch.label = #People:with( function(person)
-            return person.xcor == patch.xcor and person.ycor == patch.ycor
-        end)
-    end)
-
-    for i = Config.ysize,1,-1 do
-        local line = ""
-        for j = 1, Config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ', '
-        end
-        print(line)
-    end
-end
 
 
 -- Each patch has 8 neighbour. This function updates the xcor and ycor params of an angent
@@ -58,7 +37,6 @@ end
 --  0 x 0   ->   0 0 0
 --  0 0 0        0 0 0
 -- We are considering that the extremes of the grid of pathes are connected.
-
 local function go_to_random_neighbour(x)
 
     local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
@@ -74,22 +52,55 @@ end
 
 
 -- Agents with the message will share it with other agents in the same patch
-local function comunicate(x)
+local function comunicate(agent)
 
-    if x.message then
-        local my_x, my_y = x.xcor, x.ycor
+    if agent.message then
         ask(
-            People:with(function(other)
-                return x ~= other and other.xcor == my_x and other.ycor == my_y
-            end),
+            People:others(agent),
 
-            function(other)        
-                other.message = true
+            function(other)
+                if other.xcor == agent.xcor and other.ycor == agent.ycor then
+                    other.message = true
+                end
             end
         )
     end
 
 end
+
+
+-- This function is only needed in a non graphical environment to print current configuration of the system.
+local function print_current_config()
+
+    print('\n\n========== tick '.. T .. ' ===========')
+
+    -- Reset patches value
+    ask(Patches, function(patch)
+        patch.label = 0
+    end)
+
+    -- Each agent will increment in 1 the value of its current patch
+    ask(People, function(person)
+        local x,y = person.xcor, person.ycor
+        local target = Patches.agents[x..','..y]
+        target.label = target.label + 1
+    end)
+
+    -- Print the number of agents in each patch
+    for i = Config.ysize,1,-1 do
+        local line = ""
+        for j = 1, Config.xsize do
+            line = line .. Patches.agents[j..','..i].label .. ', '
+        end
+        print(line)
+    end
+
+    print('\n\n=============================')
+end
+
+
+
+
 
 
 
@@ -98,12 +109,13 @@ end
 -- defined in utilities.lua
 setup(function()
 
+    -- Create a grid of patches with the specified dimensions
     Patches = create_patches(Config.xsize,Config.ysize)
 
-    -- Create a new collection
+    -- Create a new collection of agents
     People = Collection()
 
-    -- Populate the collection with Agents.
+    -- Populate the collection with Agents. Each agent will be randomly positioned.
     People:create_n( 10, function()
         return {
             ['xcor']    = math.random(Config.xsize),
@@ -112,9 +124,10 @@ setup(function()
         }
     end)
 
-    -- ask(one_of(People), function(agent)
-    --     agent.message = true
-    -- end)
+    -- A message is given to one of the agents
+    ask(one_of(People), function(agent)
+        agent.message = true
+    end)
 
 end)
 
@@ -123,13 +136,14 @@ end)
 -- the number of iterations equals the number of ticks specified inf config_file
 run(function()
 
-    -- Stop condition
+    -- Stop condition: All agents have the message
     if #People:with(lambda '|x| x.message == false') == 0 then
         Config.go = false
-        pretty.dump(People.agents)
+        print(People)
         return
     end
 
+    -- In each iteration, agents go to a random neighbour and try to share the message
     ask(People, function(person)
         go_to_random_neighbour(person)
         comunicate(person)

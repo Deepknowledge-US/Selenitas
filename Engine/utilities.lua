@@ -15,12 +15,14 @@ local utils = {}
 -- FUNCTIONS FOR READING FILES AND STRINGS --
 -- ======================================= --
 
+-- This function checks if a file exists
 local function file_exists(file)
     local f = io.open(file, "rb")
     if f then f:close() end
     return f ~= nil
 end
 
+-- Each line in a file will be added to a table, this function returns the table with all lines in a file
 function utils.lines_from(file)
     if not file_exists(file) then return {} end
     local lines = {}
@@ -30,7 +32,7 @@ function utils.lines_from(file)
     return lines
 end
 
-
+-- Split a string ("pString") using "pPattern" as splitter. eg: split("hello,world!", ",") -> {"hello" , "world!"}
 function utils.split(pString, pPattern)
     local Table = {}
     local fpat = "(.-)" .. pPattern
@@ -145,8 +147,8 @@ end
 -- It Applies a function to all elements. Works with collections or with tables.
 function utils.ask(elements, funct)
     if elements.order then
-        for _,v in pairs(elements.agents)do
-            funct(v)
+        for _,v in ipairs(elements.order)do
+            funct( elements.agents[v] )
         end
     else
         for _,v in pairs(elements)do
@@ -216,7 +218,7 @@ end
 
 -- A right turn of "num" degrees
 function utils.rt(agent, num)
-    agent.head = agent.head + num
+    agent.head = (agent.head + num) % 360
 end
 
 -- A left turn of "num" degrees
