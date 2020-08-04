@@ -1,5 +1,5 @@
 # Selenitas
-A Lua Library to build Multiagent Systems (inspired in NetLogo)
+A MiltiAgent System Framework built on top of [Lua](http://www.lua.org) and Löve.
 
 Dependencies:
 
