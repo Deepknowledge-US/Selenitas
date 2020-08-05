@@ -1,6 +1,4 @@
 local class  = require 'pl.class'
-local pretty = require 'pl.pretty'
-local Agent  = require 'Engine.classes.class_agent'
 
 
 --[[

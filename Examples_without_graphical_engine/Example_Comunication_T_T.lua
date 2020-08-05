@@ -1,15 +1,19 @@
 local pl            = require 'pl'
 local pretty        = require 'pl.pretty'
 local Params        = require 'Engine.classes.class_params'
-local Collection    = require 'Engine.classes.class_collection_agents'
-local utils         = require 'Engine.utilities'
+local Collection    = require 'Engine.classes.class_collection_mobil'
+local _main         = require 'Engine.utilities.utl_main'
+local _coll         = require 'Engine.utilities.utl_collections'
+local _act          = require 'Engine.utilities.utl_actions'
+local _fltr         = require 'Engine.utilities.utl_filters'
 local utl           = require 'pl.utils'
 local lambda        = utl.string_lambda
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local one_of        = utils.one_of
-local create_patches= utils.create_patches
+local ask           = _coll.ask
+local setup         = _main.setup
+local run           = _main.run
+local one_of        = _fltr.one_of
+local gtrn          = _act.gtrn
+local create_patches= _coll.create_patches
 
 
 -- "COMUNICATION_T_T"
@@ -31,26 +35,6 @@ Config = Params({
 
 
 
-
--- Each patch has 8 neighbour. This function updates the xcor and ycor params of an angent
---  0 0 0        0 0 x
---  0 x 0   ->   0 0 0
---  0 0 0        0 0 0
--- We are considering that the extremes of the grid of pathes are connected.
-local function go_to_random_neighbour(x)
-
-    local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
-    local choose  = math.random(#changes)
-
-    -- Agents that cross a boundary will appear on the opposite side of the grid
-    x.xcor = (x.xcor + changes[choose][1]) % Config.xsize
-    x.ycor = (x.ycor + changes[choose][2]) % Config.ysize
-
-    if x.xcor == 0 then x.xcor = Config.xsize end
-    if x.ycor == 0 then x.ycor = Config.ysize end
-end
-
-
 -- Agents with the message will share it with other agents in the same patch
 local function comunicate(agent)
 
@@ -59,7 +43,7 @@ local function comunicate(agent)
             People:others(agent),
 
             function(other)
-                if other.xcor == agent.xcor and other.ycor == agent.ycor then
+                if other:xcor() == agent:xcor() and other:ycor() == agent:ycor() then
                     other.message = true
                 end
             end
@@ -81,7 +65,7 @@ local function print_current_config()
 
     -- Each agent will increment in 1 the value of its current patch
     ask(People, function(person)
-        local x,y = person.xcor, person.ycor
+        local x,y = person:xcor(), person:ycor()
         local target = Patches.agents[x..','..y]
         target.label = target.label + 1
     end)
@@ -99,12 +83,6 @@ local function print_current_config()
 end
 
 
-
-
-
-
-
-
 -- The anonymous function in this call is executed once by the setup function
 -- defined in utilities.lua
 setup(function()
@@ -118,8 +96,7 @@ setup(function()
     -- Populate the collection with Agents. Each agent will be randomly positioned.
     People:create_n( 10, function()
         return {
-            ['xcor']    = math.random(Config.xsize),
-            ['ycor']    = math.random(Config.ysize),
+            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
             ['message'] = false
         }
     end)
@@ -145,7 +122,7 @@ run(function()
 
     -- In each iteration, agents go to a random neighbour and try to share the message
     ask(People, function(person)
-        go_to_random_neighbour(person)
+        gtrn(person)
         comunicate(person)
     end)
 
