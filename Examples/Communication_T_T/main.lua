@@ -87,7 +87,7 @@ end
 
 Config = Params({
     ['start'] = true,
-    ['go']    = true,
+    ['go']    = false,
     ['ticks'] = 200,
     ['xsize'] = 15,
     ['ysize'] = 15

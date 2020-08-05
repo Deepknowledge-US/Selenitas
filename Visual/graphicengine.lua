@@ -51,11 +51,20 @@ local function update_ui(dt)
         end
         go = false
     end
+
+     -- Show "step" button
+     if Slab.Button("Step") then
+        if step_func then
+            step_func()
+        end
+    end
+
     -- Change "go" button label if it's already running
     local go_button_label = go and "Stop" or "Go"
     if Slab.Button(go_button_label) then
         go = not go
     end
+
     -- Parse simulation params
     for k, v in pairs(simulation_params.ui_settings) do
         -- Checkbox
