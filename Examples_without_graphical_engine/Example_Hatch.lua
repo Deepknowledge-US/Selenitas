@@ -1,12 +1,27 @@
-local Agents_Collection= require 'Engine.classes.class_collection_agents'
+local Agents_Collection= require 'Engine.classes.class_collection_mobil'
 local Params        = require 'Engine.classes.class_params'
-local utils         = require 'Engine.utilities'
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local rt            = utils.rt
-local fd_grid       = utils.fd_grid
-local create_patches= utils.create_patches
+
+
+local _main         = require 'Engine.utilities.utl_main'
+local _coll         = require 'Engine.utilities.utl_collections'
+local _fltr         = require 'Engine.utilities.utl_filters'
+local _chk          = require 'Engine.utilities.utl_checks'
+local _act          = require 'Engine.utilities.utl_actions'
+
+local first_n       = _fltr.first_n
+local last_n        = _fltr.last_n
+local member_of     = _chk.member_of
+local one_of        = _fltr.one_of
+local n_of          = _fltr.n_of
+local ask           = _coll.ask
+local fd            = _act.fd
+local fd_grid       = _act.fd_grid
+local rt            = _act.rt
+local lt            = _act.lt
+
+local setup         = _main.setup
+local run           = _main.run
+local create_patches= _coll.create_patches
 
 Config = Params({
     ['start'] = true,
@@ -43,7 +58,7 @@ local function print_current_config()
     
     -- Each agent increments in 1 the value of the patch in its position.
     ask(Agents, function(agent)
-        local target_link = Patches.agents[agent.xcor .. ',' .. agent.ycor]
+        local target_link = Patches.agents[agent:xcor() .. ',' .. agent:ycor()]
         target_link.label = target_link.label + 1
     end)
 
@@ -101,8 +116,7 @@ setup(function()
     -- specified in the table (and the parameters obteined just for be an Agent instance)
     Agents:create_n( 3, function()
         return {
-            ['xcor']    = math.random(Config.xsize),
-            ['ycor']    = math.random(Config.ysize),
+            ['pos']     ={math.random(Config.xsize),math.random(Config.ysize)},
             ['head']    = math.random(360),
             ['age']     = 0,
             ['color']   = 'pink'

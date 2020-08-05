@@ -1,12 +1,28 @@
 local pl            = require 'pl'
-local Collection    = require 'Engine.classes.class_collection_agents'
+local Collection    = require 'Engine.classes.class_collection_mobil'
 local Params        = require 'Engine.classes.class_params'
-local utils         = require 'Engine.utilities'
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local rt            = utils.rt
-local gtrn          = utils.go_to_random_neighbour
+
+local _main         = require 'Engine.utilities.utl_main'
+local _coll         = require 'Engine.utilities.utl_collections'
+local _fltr         = require 'Engine.utilities.utl_filters'
+local _chk          = require 'Engine.utilities.utl_checks'
+local _act          = require 'Engine.utilities.utl_actions'
+
+local first_n       = _fltr.first_n
+local last_n        = _fltr.last_n
+local member_of     = _chk.member_of
+local one_of        = _fltr.one_of
+local n_of          = _fltr.n_of
+local ask           = _coll.ask
+local fd            = _act.fd
+local fd_grid       = _act.fd_grid
+local rt            = _act.rt
+local lt            = _act.lt
+local gtrn          = _act.gtrn
+
+local setup         = _main.setup
+local run           = _main.run
+local create_patches= _coll.create_patches
 
 Config = Params({
     ['start'] = true,
@@ -59,7 +75,7 @@ local function print_current_config()
     -- Each agent will increment the counter of the histogram table depending on its position.
     ask(Agents, function(agent)
         for k,v in ipairs(bar_breaks) do
-            if agent.xcor <= v then
+            if agent:xcor() <= v then
                 histogram[v] = histogram[v] + 1
                 break
             end
@@ -81,8 +97,7 @@ setup(function()
     -- Populate the collection with Agents and move them to the center of the grid
     Agents:create_n( 1000, function()
         return {
-            ['xcor']    = math.floor(Config.xsize / 2),
-            ['ycor']    = math.floor(Config.ysize / 2)
+            ['pos'] = {math.floor(Config.xsize / 2), math.floor(Config.ysize / 2)}
         }
     end)
 
@@ -97,7 +112,7 @@ run(function()
 
     -- We are asking all agents to go to a random neighbour in the grid
     ask(Agents, function(x)
-        gtrn(x)
+        x:gtrn()
     end)
 
     print_current_config()

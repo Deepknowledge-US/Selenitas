@@ -1,40 +1,29 @@
 local class      = require 'pl.class'
 local Collection = require 'Engine.classes.class_collection'
-local Link       = require 'Engine.classes.class_link'
-local pretty     = require 'pl.pretty'
+local Rel        = require 'Engine.classes.class_relational'
 
 
-local CL = class.Collection_Links(Collection)
+local CR = class.Collection_Relational(Collection)
 
 -- When a new link collection is created, its father's init function is called.
 -- This allows the new Collection_Links to use all the methods of the Collection class.
-CL._init = function(self,c)
+CR._init = function(self,c)
     self:super(c)
     return self
 end
 
 --[[
     This function overwrites the add method in the father's class
-
-    CAUTION!
-
-    When an agent A has as neighbour an agent B, both agents will hold a reference to the other 
-    object in its linked table.
-    Some functions as pretty.dump() iterates recursively over the tables or metatables present 
-    in an object, so if we try pretty.dump(A) it produces a cycle.
 ]]
-CL.add = function(self,object,id)
+CR.add = function(self,object,id)
 
     -- If the input is a Link, the object is added to the collection,
     -- otherwise, a new Link is created using the input table.
     if pcall( function() return object.end1 and object.end2 end ) then
 
-        local o1,id1  = object.end1, object.end1.id
-        local o2,id2  = object.end2, object.end2.id
+        local id1  = object.end1.id
+        local id2  = object.end2.id
         local link_id = id1..','..id2
-
-        o1:add_neigh(o2)
-        o2:add_neigh(o1)
 
         if not self.agents[link_id] then
             table.insert(self.order,link_id)
@@ -50,11 +39,11 @@ end;
 
 
 -- This function overwrites the create_n method in the father's class
-CL.create_n = function(self,num, funct)
+CR.create_n = function(self,num, funct)
     for i=1,num do
-        self:add( Link( funct() ) )
+        self:add( Rel( funct() ) )
     end
 end;
 
 
-return CL
+return CR

@@ -1,14 +1,28 @@
-local Collection_Agents = require 'Engine.classes.class_collection_agents'
-local Collection_Links  = require 'Engine.classes.class_collection_links'
+local Collection_Agents = require 'Engine.classes.class_collection_mobil'
+local Collection_Links  = require 'Engine.classes.class_collection_relational'
 local Params            = require 'Engine.classes.class_params'
-local Link              = require 'Engine.classes.class_link'
-local utils             = require 'Engine.utilities'
-local ask               = utils.ask
-local setup             = utils.setup
-local run               = utils.run
-local rt                = utils.rt
-local fd_grid           = utils.fd_grid
-local create_patches    = utils.create_patches
+
+
+local _main         = require 'Engine.utilities.utl_main'
+local _coll         = require 'Engine.utilities.utl_collections'
+local _fltr         = require 'Engine.utilities.utl_filters'
+local _chk          = require 'Engine.utilities.utl_checks'
+local _act          = require 'Engine.utilities.utl_actions'
+
+local first_n       = _fltr.first_n
+local last_n        = _fltr.last_n
+local member_of     = _chk.member_of
+local one_of        = _fltr.one_of
+local n_of          = _fltr.n_of
+local ask           = _coll.ask
+local fd            = _act.fd
+local fd_grid       = _act.fd_grid
+local rt            = _act.rt
+local lt            = _act.lt
+
+local setup         = _main.setup
+local run           = _main.run
+local create_patches= _coll.create_patches
 
 
 Config = Params({
@@ -16,7 +30,8 @@ Config = Params({
     ['go']    = true,
     ['ticks'] = 100,
     ['xsize'] = 15,
-    ['ysize'] = 15
+    ['ysize'] = 15,
+    ['num_nodes'] = 10
 
 })
 
@@ -32,7 +47,7 @@ local function print_current_config()
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
-            local label = Patches.agents[j..','..i].label == 0 and Patches.agents[j..','..i].label or '_'
+            local label = Patches.agents[j..','..i].label == 'O' and Patches.agents[j..','..i].label or '_'
             line = line .. label .. ','
         end
         print(line)
@@ -74,10 +89,9 @@ setup(function()
     Patches = create_patches(Config.xsize, Config.ysize)
 
     Nodes = Collection_Agents()
-    Nodes:create_n( 10, function()
+    Nodes:create_n( Config.num_nodes, function()
         return {
-            ['xcor']    = size,
-            ['ycor']    = size,
+            ['pos']     = {size,size},
             ['head']    = 0
         }
     end)
@@ -101,19 +115,16 @@ setup(function()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
     ask(Nodes, function(x)
-        Patches.agents[x.xcor .. ',' .. x.ycor].label = 0
+        Patches.agents[x:xcor() .. ',' .. x:ycor()].label = 'O'
     end)
 
-    -- print(one_of(Nodes)[1])
-    print(Links)
 end)
 
 
 run(function()
-
     print_current_config()
     Config.go = false
-    print(Links)
+    print(#Links.order)
 end)
 
 

@@ -1,24 +1,19 @@
 local class  = require 'pl.class'
 
-local Patch = class.Patch{
+local Rel = class.Relational{
 
     --[[
-        When a new Patch is created, some properties are given to it (If we do not have done it yet)
-    ]]--
+        When a new Link is created, some properties are given to it (If we do not have done it yet)
+    ]]
     _init = function(self,o)
-        local c     = o or {}
-        self        = c
-        self.xcor   = c.xcor or 0
-        self.ycor   = c.ycor or 0
-        self.label  = c.label or ''
-        self.color  = c.color or 'black'
-        self.shape  = c.xcor or 'square'
+        local c   = o or {}
+        self      = c
+        self.end1 = c.end1 or {}
+        self.end2 = c.end2 or {}
         return self
     end;
 
-
-    -- String representation of a Patch.
-    -- To call this function just use "print(a_patch)".
+    -- This function is called when we do a print(a_link). String representation of the object.
     __tostring = function(self)
         local res = "{\n"
         for k,v in pairs(self) do
@@ -39,4 +34,5 @@ local Patch = class.Patch{
 
 }
 
-return Patch
+
+return Rel
