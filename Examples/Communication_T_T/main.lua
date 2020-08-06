@@ -62,7 +62,7 @@ local function comunicate(x)
 
             function(other)        
                 other.message = true
-                other.color = "blue"
+                other.color = {0, 0, 1, 1}
             end
         )
     end
@@ -84,7 +84,7 @@ setup = function()
 
     ask(one_of(People), function(agent)
         agent.message = true
-        agent.color = "blue"
+        agent.color = {0, 0, 1, 1}
     end)
 
     Config.go = true

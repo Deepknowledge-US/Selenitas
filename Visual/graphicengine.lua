@@ -150,32 +150,6 @@ local function set_background_color(r, g, b)
     love.graphics.setBackgroundColor(r, g, b)
 end
 
--- Gets RGB in [0..1] format from predefined color strings
-local function get_rgb_color(p_color_str)
-    if p_color_str == "red" then
-        return {1, 0, 0, 1}
-    elseif p_color_str == "green" then
-        return {0, 1, 0, 1}
-    elseif p_color_str == "blue" then
-        return {0, 0, 1, 1}
-    elseif p_color_str == "green" then
-        return {0, 1, 0, 1}
-    elseif p_color_str == "yellow" then
-        return {1, 1, 0, 1}
-    elseif p_color_str == "cyan" then
-        return {0, 1, 1, 1}
-    elseif p_color_str == "magenta" then
-        return {1, 0, 1, 1}
-    elseif p_color_str == "pink" then
-        return {1, 0.41, 0.7, 1}
-    elseif p_color_str == "black" then
-        return {0, 0, 0, 1}
-    else
-        -- Default to white
-        return {1, 1, 1, 1}
-    end
-end
-
 -- Main update function
 function love.update(dt)
     update_ui(dt)
@@ -206,7 +180,7 @@ function love.draw()
 
     -- Draw agents
     for _, a in pairs(agents) do
-        love.graphics.setColor(get_rgb_color(a.color))
+        love.graphics.setColor(a.color)
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
         local x = (a:xcor() * coord_scale) + ui_width
