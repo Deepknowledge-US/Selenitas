@@ -1,4 +1,5 @@
 local Slab = require "Thirdparty.Slab.Slab"
+local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
 
 -- Simulation info
 local agents = nil
