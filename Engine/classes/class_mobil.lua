@@ -47,6 +47,7 @@ local Mobil = class.Mobil {
             local funct = select( i, ... )
             funct(self)
         end
+        return self
     end;
 
     xcor = function(self)
@@ -87,35 +88,39 @@ local Mobil = class.Mobil {
 
     -- A right turn of "num" degrees
     rt = function(self, num)
-        self.head = (self.head + num) % 360
+        self.head[1] = (self.head[1] + num) % 360
+        return self
     end;
 
     -- A left turn of "num" degrees
     lt = function(self, num)
-        self.head = (self.head + num) % 360
+        self.head[1] = (self.head[1] + num) % 360
+        return self
     end;
 
     -- Advance in the faced direction. The distance is specified with num
     fd = function(self, num)
 
-        local s = sin(rad(self.head))
+        local s = sin(rad(self.head[1]))
         self.pos[1] = (self:xcor() + s * num) % Config.xsize
 
-        local c = cos(rad(self.head))
+        local c = cos(rad(self.head[1]))
         self.pos[2] = (self:ycor() + c * num) % Config.ysize
 
+        return self
     end;
 
     -- Advance in a grid in the faced direction
     fd_grid = function(self, num)
 
-        local s = sin(rad(self.head))
+        local s = sin(rad(self.head[1]))
         self.pos[1] = math.ceil( (self:xcor() + s * num) % Config.xsize )
         if self:xcor() == 0 then self.pos[1] = Config.xsize end
 
-        local c = cos(rad(self.head))
+        local c = cos(rad(self.head[1]))
         self.pos[2] = math.ceil( (self:ycor() + c * num) % Config.ysize )
         if self:ycor() == 0 then self.pos[2] = Config.ysize end
+        return self
 
     end;
 
@@ -137,10 +142,14 @@ local Mobil = class.Mobil {
         self.pos[2] = (self:ycor() + changes[choose][2]) % Config.ysize
         self.pos[2] = self:ycor() > 0 and self:ycor() or Config.ysize
 
+        return self
+
     end;
 
     move_to = function(self, another_agent)
         self.pos = another_agent.pos
+
+        return self
     end;
 
     dist_euc = function(self, point)

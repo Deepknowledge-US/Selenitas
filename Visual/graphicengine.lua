@@ -200,8 +200,8 @@ function love.draw()
         love.graphics.setColor(get_rgb_color(a.color))
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
-        local x = (a.xcor * coord_scale) + ui_width
-        local y = a.ycor * coord_scale
+        local x = (a:xcor() * coord_scale) + ui_width
+        local y = a:ycor() * coord_scale
         if a.shape == "triangle" then
             love.graphics.polygon("fill",
                 x, y - 5,

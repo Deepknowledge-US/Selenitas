@@ -70,6 +70,7 @@ end
 
 local function print_current_config()
 
+    print('========= tick '.. T ..' ==========')
     reset_histogram()
 
     -- Each agent will increment the counter of the histogram table depending on its position.
@@ -85,6 +86,7 @@ local function print_current_config()
     for k,v in ipairs(bar_breaks)do
         print(v, histogram[v])
     end
+    print('===========================')
 
 end
 
@@ -108,16 +110,12 @@ end)
 
 run(function()
 
-    print('========= tick '.. T ..' ==========')
-
     -- We are asking all agents to go to a random neighbour in the grid
     ask(Agents, function(x)
         x:gtrn()
     end)
 
     print_current_config()
-
-    print('===========================')
 
 end)
 

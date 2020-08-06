@@ -1,7 +1,7 @@
 local graphicengine = require 'Visual.graphicengine'
 
-local Collection    = require 'Engine.classes.class_collection_agents'
-local Patches       = require 'Engine.classes.class_collection_patches'
+local Collection    = require 'Engine.classes.class_collection_mobil'
+local Patches       = require 'Engine.classes.class_collection_cell'
 local Params        = require 'Engine.classes.class_params'
 local utl           = require 'pl.utils'
 local lamb          = utl.bind1
@@ -54,10 +54,10 @@ Config = Params({
 local function comunicate(x)
 
     if x.message then
-        local my_x, my_y = x.xcor, x.ycor
+        local my_x, my_y = x:xcor(), x:ycor()
         ask(
             People:with(function(other)
-                return x ~= other and other.xcor == my_x and other.ycor == my_y
+                return x ~= other and other:xcor() == my_x and other:ycor() == my_y
             end),
 
             function(other)        
@@ -77,8 +77,7 @@ setup = function()
     -- Populate the collection with Agents.
     People:create_n( 10, function()
         return {
-            ['xcor']    = math.random(Config.xsize),
-            ['ycor']    = math.random(Config.ysize),
+            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
             ['message'] = false
         }
     end)

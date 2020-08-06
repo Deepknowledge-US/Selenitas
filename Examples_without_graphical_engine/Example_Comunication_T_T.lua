@@ -74,7 +74,7 @@ local function print_current_config()
     for i = Config.ysize,1,-1 do
         local line = ""
         for j = 1, Config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ', '
+            line = line .. Patches.agents[j..','..i].label .. ','
         end
         print(line)
     end
@@ -116,13 +116,13 @@ run(function()
     -- Stop condition: All agents have the message
     if #People:with(lambda '|x| x.message == false') == 0 then
         Config.go = false
-        print(People)
         return
     end
 
     -- In each iteration, agents go to a random neighbour and try to share the message
     ask(People, function(person)
-        gtrn(person)
+        -- gtrn(person)
+        person:rt(math.random(360)):fd_grid(2)
         comunicate(person)
     end)
 
