@@ -1,6 +1,4 @@
 local pl            = require 'pl'
-local Collection    = require 'Engine.classes.class_collection_mobil'
-local Params        = require 'Engine.classes.class_params'
 
 local _main         = require 'Engine.utilities.utl_main'
 local _coll         = require 'Engine.utilities.utl_collections'
@@ -70,7 +68,7 @@ end
 
 local function print_current_config()
 
-    print('========= tick '.. T ..' ==========')
+    print('========= tick ' .. __Ticks .. ' ==========')
     reset_histogram()
 
     -- Each agent will increment the counter of the histogram table depending on its position.
@@ -94,7 +92,7 @@ end
 
 setup(function()
     -- Create a new collection
-    Agents = Collection()
+    Agents = CollectionMobil()
 
     -- Populate the collection with Agents and move them to the center of the grid
     Agents:create_n( 1000, function()

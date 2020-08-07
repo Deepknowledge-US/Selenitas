@@ -1,8 +1,18 @@
--- local Collection= require 'Engine.classes.class_collection'
--- local Patch     = require 'Engine.classes.class_patch'
--- local pretty    = require 'pl.pretty'
--- local utl       = require 'pl.utils'
--- local lambda    = utl.string_lambda
+
+-- Global variables
+Params      = require 'Engine.classes.Params'
+
+Cell        = require 'Engine.classes.Cell'
+Mobil       = require 'Engine.classes.Mobil'
+Relational  = require 'Engine.classes.Relational'
+
+Collection              = require 'Engine.classes.Collection'
+CollectionCell          = require 'Engine.classes.CollectionCell'
+CollectionMobil         = require 'Engine.classes.CollectionMobil'
+CollectionRelational    = require 'Engine.classes.CollectionRelational'
+
+
+
 
 local utils = {}
 
@@ -16,7 +26,7 @@ local utils = {}
 
 function utils.setup( funct )
     math.randomseed(os.time())
-    T = 1
+    __Ticks = 1
     funct()
 end
 
@@ -30,9 +40,9 @@ end
 
 function utils.run(funct)
     while Config.go do -- While the 'go' button is pushed
-        if T <= Config.ticks then
+        if __Ticks <= Config.ticks then
             funct()
-            T=T+1
+            __Ticks = __Ticks+1
         else
             Config.go = false
         end

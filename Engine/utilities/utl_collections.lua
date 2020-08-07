@@ -1,5 +1,5 @@
-local Collection_Cell = require 'Engine.classes.class_collection_cell'
-local Cell     = require 'Engine.classes.class_cell'
+local Collection_Cell = require 'Engine.classes.CollectionCell'
+local Cell     = require 'Engine.classes.Cell'
 
 local utl_coll = {}
 
@@ -17,7 +17,7 @@ function utl_coll.create_patches(x,y,z)
     for i=1,x do
         for j = 1,y do
             local link_id = i .. ',' .. j
-            cells:add( Cell({ ['id'] = link_id, ['xcor'] = i, ['ycor'] = j })  )
+            cells:add( Cell({ ['pos'] = {i,j} })  )
         end
     end
     cells:shuffle()

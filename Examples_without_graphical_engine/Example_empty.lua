@@ -1,6 +1,3 @@
-local Mobiles       = require 'Engine.classes.class_collection_mobil'
-local Patches       = require 'Engine.classes.class_collection_relational'
-local Params        = require 'Engine.classes.class_params'
 local utl           = require 'pl.utils'
 local lamb          = utl.bind1
 local lambda        = utl.string_lambda
@@ -79,7 +76,7 @@ setup(function()
 
     ------------------------------------
 
-    Agents = Mobiles()
+    Agents = CollectionMobil()
     for i=1,10 do
         Agents:add({
             ['pos'] = {
@@ -100,12 +97,14 @@ run(function()
         local euc = x:dist_euc_to_agent( other )
         local manh = x:dist_manh_to_agent( other )
 
-        print('ag1:')
-        pd(x.pos)
-        print('ag2:')
-        pd(other.pos)
-        print('euclidean: ',euc)
-        print('manhathan:', manh)
+        -- print('ag1:')
+        -- pd(x.pos)
+        -- print('ag2:')
+        -- pd(other.pos)
+        -- print('euclidean: ',euc)
+        -- print('manhathan:', manh)
+
+
     end)
     ------------------------------------
 

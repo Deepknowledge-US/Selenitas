@@ -1,7 +1,5 @@
 local pl            = require 'pl'
 local pretty        = require 'pl.pretty'
-local Params        = require 'Engine.classes.class_params'
-local Collection    = require 'Engine.classes.class_collection_mobil'
 local _main         = require 'Engine.utilities.utl_main'
 local _coll         = require 'Engine.utilities.utl_collections'
 local _act          = require 'Engine.utilities.utl_actions'
@@ -27,9 +25,10 @@ local create_patches= _coll.create_patches
 Config = Params({
     ['start'] = true,
     ['go']    = true,
-    ['ticks'] = 200,
+    ['ticks'] = 5,
     ['xsize'] = 15,
-    ['ysize'] = 15
+    ['ysize'] = 15,
+    ['__num_agents'] = 1
 
 })
 
@@ -56,25 +55,23 @@ end
 -- This function is only needed in a non graphical environment to print current configuration of the system.
 local function print_current_config()
 
-    print('\n\n========== tick '.. T .. ' ===========')
+    print('\n\n========== tick '.. __Ticks .. ' ===========')
 
-    -- Reset patches value
-    ask(Patches, function(patch)
-        patch.label = 0
+    ask(Patches, function(cell)
+        cell.label = #People:with(function(ag)
+            return ag:xcor() == cell:xcor() and ag:ycor() == cell:ycor()
+        end)
     end)
 
-    -- Each agent will increment in 1 the value of its current patch
-    ask(People, function(person)
-        local x,y = person:xcor(), person:ycor()
-        local target = Patches.agents[x..','..y]
-        target.label = target.label + 1
-    end)
 
     -- Print the number of agents in each patch
     for i = Config.ysize,1,-1 do
         local line = ""
         for j = 1, Config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ','
+            local target = one_of(Patches:with(function(cell)
+                return cell:xcor() == i and cell:ycor() == j
+            end))[1]
+            line = line .. target.label .. ','
         end
         print(line)
     end
@@ -87,11 +84,12 @@ end
 -- defined in utilities.lua
 setup(function()
 
+    print(Config.xsize,Config.ysize)
     -- Create a grid of patches with the specified dimensions
     Patches = create_patches(Config.xsize,Config.ysize)
 
     -- Create a new collection of agents
-    People = Collection()
+    People = CollectionMobil()
 
     -- Populate the collection with Agents. Each agent will be randomly positioned.
     People:create_n( 10, function()
@@ -116,6 +114,7 @@ run(function()
     -- Stop condition: All agents have the message
     if #People:with(lambda '|x| x.message == false') == 0 then
         Config.go = false
+        -- print(People2)
         return
     end
 

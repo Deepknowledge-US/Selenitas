@@ -4,12 +4,13 @@ local class  = require 'pl.class'
 
 local Params = class.Params {
     _init = function(self,o)
-        local c     = o or {}
-        self        = c
-        self.ticks  = c.ticks or 0
-        self.xcor   = c.xsize or 0
-        self.ycor   = c.ysize or 0
-        self.ui_settings = {}
+        local c           = o or {}
+        self              = c
+        self.ticks        = c.ticks or 0
+        self.xsize        = c.xsize or 0
+        self.ysize        = c.ysize or 0
+        self.__num_agents = 1
+        self.ui_settings  = {}
         return self
     end;
 

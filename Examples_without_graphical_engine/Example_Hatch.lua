@@ -1,6 +1,3 @@
-local Agents_Collection= require 'Engine.classes.class_collection_mobil'
-local Params        = require 'Engine.classes.class_params'
-
 
 local _main         = require 'Engine.utilities.utl_main'
 local _coll         = require 'Engine.utilities.utl_collections'
@@ -22,6 +19,8 @@ local lt            = _act.lt
 local setup         = _main.setup
 local run           = _main.run
 local create_patches= _coll.create_patches
+
+local pr = require 'pl.pretty'
 
 Config = Params({
     ['start'] = true,
@@ -48,24 +47,25 @@ Config = Params({
 -- Representation of the world in a non graphical environment.
 -- It prints the patches labels which contains the number of agents in the patch
 local function print_current_config()
+    -- pr.dump(Patches)
 
-
-    print('\n========= tick: '.. T ..' =========')
+    print('\n========= tick: '.. __Ticks ..' =========')
     -- Reset the labels of the patches
     ask(Patches, function(patch)
         patch.label = 0
     end)
     
     -- Each agent increments in 1 the value of the patch in its position.
-    ask(Agents, function(agent)
-        local target_link = Patches.agents[agent:xcor() .. ',' .. agent:ycor()]
+    ask(Agents, function(ag)
+        local target_link = one_of( Patches:with(function(x) return x:xcor() == ag:xcor() and  x:ycor() == ag:ycor() end) )[1]
         target_link.label = target_link.label + 1
     end)
 
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ','
+            local target = one_of( Patches:with(function(x) return x:xcor() == i and x:ycor() == j end) )[1]
+            line = line .. target.label .. ','
         end
         print(line)
     end
@@ -110,7 +110,7 @@ setup(function()
     Patches = create_patches(Config.xsize, Config.ysize)
 
     -- Create a collection of agents
-    Agents = Agents_Collection()
+    Agents = CollectionMobil()
 
     -- Populate the collection with 3 agents. Each agent will have the parameters
     -- specified in the table (and the parameters obteined just for be an Agent instance)
@@ -128,6 +128,8 @@ setup(function()
         fd_grid(agent,Config.stride)
     end)
 
+    -- pr.dump(Patches)
+
 end)
 
 
@@ -136,7 +138,8 @@ end)
 run(function()
 
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
-    if Agents.size == 0 or T == Config.ticks then
+    if #Agents.order == 0 or __Ticks == Config.ticks then
+        print('adios')
         Config.go = false
         for k,v in ipairs(histogram)do
             print('t: '..k,' n: '..v)
@@ -162,8 +165,9 @@ run(function()
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of
     -- agents along the iterations.
-    table.insert(histogram, Agents.size)
+    table.insert(histogram, #Agents.order)
 
+    -- print('hola')
     print_current_config()
 
 

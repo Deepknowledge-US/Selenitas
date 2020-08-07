@@ -1,4 +1,4 @@
-local class  = require 'pl.class'
+local class     = require 'pl.class'
 local sin       = math.sin
 local cos       = math.cos
 local rad       = math.rad
@@ -33,6 +33,10 @@ local Mobil = class.Mobil {
         self.z_order    = c.z_order     or 1
         self.label      = c.label       or ''
         self.label_color= c.label_color or {1,1,1,1}
+        self.inLinks    = c.inLinks     or {}
+        self.outLinks   = c.outLinks    or {}
+        self.inNeighs   = c.inNeighs    or {}
+        self.outNeighs  = c.outNeighs   or {}
 
         return self
     end;

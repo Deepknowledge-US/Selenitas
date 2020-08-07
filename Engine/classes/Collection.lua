@@ -99,15 +99,15 @@ local Collection = class.Collection {
     if we have not passed a second parameter and the object does not have an id, it is 
     assigned a non currently used numerical id.
 ]]--
-    add = function(self,object,id)
-        local tam       = self.size + 1
-        local k         = id or object.id or self:search_free_id(tam)
-        if not self.agents[k] then
-            table.insert(self.order,k)
-            self.size = tam        end
-        self.agents[k]     = object
-        self.agents[k].id  = k
-    end;
+    -- add = function(self,object,id)
+    --     local tam       = self.size + 1
+    --     local k         = id or object.id or self:search_free_id(tam)
+    --     if not self.agents[k] then
+    --         table.insert(self.order,k)
+    --         self.size = tam        end
+    --     self.agents[k]     = object
+    --     self.agents[k].id  = k
+    -- end;
 
 
 

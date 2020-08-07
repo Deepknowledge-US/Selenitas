@@ -1,9 +1,9 @@
 local class     = require 'pl.class'
 local pretty    = require 'pl.pretty'
-local Agent     = require 'Engine.classes.class_agent'
-local Link      = require 'Engine.classes.class_link'
-local Patch     = require 'Engine.classes.class_patch'
-local Collection= require 'Engine.classes.class_collection'
+local Agent     = require 'Engine.classes.Mobil'
+local Link      = require 'Engine.classes.Relational'
+local Cell      = require 'Engine.classes.Cell'
+local Collection= require 'Engine.classes.Collection'
 
 
 local CG = class.Collection_Global(Collection)
