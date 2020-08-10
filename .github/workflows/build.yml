@@ -27,8 +27,7 @@ jobs:
         cd artifacts
         export ARTIFACTS_DIR=$(pwd)
         cd $GITHUB_WORKSPACE
-        zip -9 -r Selenitas.love .
-        mv Selenitas.love $MAIN_DIR
+        zip -9 -r -q Selenitas.love .
         cd $MAIN_DIR
         cp Selenitas.love $ARTIFACTS_DIR
     
@@ -40,7 +39,7 @@ jobs:
     - name: Build for Windows
       run: |
         cd love-11.3-win64
-        cat love.exe ../Selenitas.love > Selenitas.exe
+        cat love.exe $($ARTIFACTS_DIR)/Selenitas.love > Selenitas.exe
         cd ..
         mkdir selenitas-windows
         cp love-11.3-win64/*.dll selenitas-windows
