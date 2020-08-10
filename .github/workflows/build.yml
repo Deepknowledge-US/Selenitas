@@ -22,22 +22,20 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Create .love file
       run: |
-        export MAIN_DIR=$(pwd)
-        mkdir artifacts
-        cd artifacts
-        export ARTIFACTS_DIR=$(pwd)
         cd $GITHUB_WORKSPACE
         zip -9 -r -q Selenitas.love .
-        cd $MAIN_DIR
-        cp Selenitas.love $ARTIFACTS_DIR
+        mkdir artifacts
+        cp Selenitas.love artifacts
     
     - name: Get love.exe
       run: |
+        cd $GITHUB_WORKSPACE
         wget https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
         unzip -D love-11.3-win64.zip
         
     - name: Build for Windows
       run: |
+        cd $GITHUB_WORKSPACE
         cd love-11.3-win64
         cat love.exe artifacts/Selenitas.love > Selenitas.exe
         cd ..
@@ -45,9 +43,8 @@ jobs:
         cp love-11.3-win64/*.dll selenitas-windows
         cp love-11.3-win64/Selenitas.exe selenitas-windows
         cp love-11.3-win64/license.txt selenitas-windows
-        cd ..
         zip -9 -r selenitas-windows.zip selenitas-windows
-        cp selenitas-windows.zip $ARTIFACTS_DIR
+        cp selenitas-windows.zip artifacts
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
