@@ -37,7 +37,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         cd love-11.3-win64
-        cat love.exe artifacts/Selenitas.love > Selenitas.exe
+        cat love.exe ../artifacts/Selenitas.love > Selenitas.exe
         cd ..
         mkdir selenitas-windows
         cp love-11.3-win64/*.dll selenitas-windows
