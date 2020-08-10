@@ -17,25 +17,51 @@ local _time_acc = 0
 local coord_scale = 1 -- coordinate scaling for better visualization
 local ui_width = 152 -- width in pixels of UI column
 local ui_height = 400 -- height of UI column
+local menu_bar_width = 20 -- approximate width of horizontal menu bar
+
+-- File handling
+local file_loaded_path = nil
 
 local function init()
     -- TODO: read user settings
     -- The engine is explictly initialized to avoid running 
     -- LOVE loop since startup
-    initialized = true
     love.window.setTitle("Selenitas")
-    Slab.Initialize({})
+    if not initialized then
+        Slab.Initialize({})
+    end
+    initialized = true
 end
 
 local function update_ui(dt)
     -- Re-draw UI in each step
     Slab.Update(dt)
 
+    -- Build menu bar
+    if Slab.BeginMainMenuBar() then
+        if Slab.BeginMenu("File") then
+            if Slab.MenuItem("Load file...") then
+                -- TODO: load file
+            end
+            if file_loaded_path then
+                if Slab.MenuItem("Reload file") then
+                    -- TODO: reload last loaded file
+                end
+            end
+            Slab.Separator()
+            if Slab.MenuItem("Quit") then
+                love.event.quit()
+            end
+            Slab.EndMenu()
+        end
+        Slab.EndMenuBar()
+    end
+
     -- Create panel for UI with fixed size
     Slab.BeginWindow("Simulation", {
         Title = "Simulation",
         X = 2,
-        Y = 2,
+        Y = menu_bar_width,
         W = ui_width,
         H = ui_height,
         AllowMove = false,
@@ -67,36 +93,38 @@ local function update_ui(dt)
     end
 
     -- Parse simulation params
-    for k, v in pairs(simulation_params.ui_settings) do
-        -- Checkbox
-        if v.type == "boolean" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.CheckBox(simulation_params[k], "Enabled") then
-                simulation_params[k] = not simulation_params[k]
-            end
-        -- Slider
-        elseif v.type == "slider" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            -- TODO: parse step
-            if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min + 0.0000001, v.max, {}) then
-                simulation_params[k] = Slab.GetInputNumber()
-            end
-        -- Number input
-        elseif v.type == "input" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberDrag(k .. "InputNumber", simulation_params[k], nil, nil, {}) then
-                simulation_params[k] = Slab.GetInputNumber()
-            end
-        -- Radio buttons
-        elseif v.type == "enum" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            for i, e in ipairs(v.options) do
-                if Slab.RadioButton(e, {Index = i, SelectedIndex = simulation_params[k]}) then
-                    simulation_params[k] = i
+    if simulation_params then
+        for k, v in pairs(simulation_params.ui_settings) do
+            -- Checkbox
+            if v.type == "boolean" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                if Slab.CheckBox(simulation_params[k], "Enabled") then
+                    simulation_params[k] = not simulation_params[k]
                 end
+            -- Slider
+            elseif v.type == "slider" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                -- TODO: parse step
+                if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min + 0.0000001, v.max, {}) then
+                    simulation_params[k] = Slab.GetInputNumber()
+                end
+            -- Number input
+            elseif v.type == "input" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                if Slab.InputNumberDrag(k .. "InputNumber", simulation_params[k], nil, nil, {}) then
+                    simulation_params[k] = Slab.GetInputNumber()
+                end
+            -- Radio buttons
+            elseif v.type == "enum" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                for i, e in ipairs(v.options) do
+                    if Slab.RadioButton(e, {Index = i, SelectedIndex = simulation_params[k]}) then
+                        simulation_params[k] = i
+                    end
+                end
+            else
+                print("UI Control of type \"" .. v.type .. "\" is not recognized.")
             end
-        else
-            print("UI Control of type \"" .. v.type .. "\" is not recognized.")
         end
     end
     Slab.EndLayout()
@@ -185,7 +213,7 @@ function love.draw()
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
         local x = (a:xcor() * coord_scale) + ui_width
-        local y = a:ycor() * coord_scale
+        local y = a:ycor() * coord_scale + menu_bar_width
         if a.shape == "triangle" then
             love.graphics.polygon("fill",
                 x, y - 5,
