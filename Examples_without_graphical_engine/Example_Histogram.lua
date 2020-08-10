@@ -1,26 +1,7 @@
-local pl            = require 'pl'
+require 'Engine.utilities.utl_main'
 
-local _main         = require 'Engine.utilities.utl_main'
-local _coll         = require 'Engine.utilities.utl_collections'
-local _fltr         = require 'Engine.utilities.utl_filters'
-local _chk          = require 'Engine.utilities.utl_checks'
-local _act          = require 'Engine.utilities.utl_actions'
+local pl   = require 'pl'
 
-local first_n       = _fltr.first_n
-local last_n        = _fltr.last_n
-local member_of     = _chk.member_of
-local one_of        = _fltr.one_of
-local n_of          = _fltr.n_of
-local ask           = _coll.ask
-local fd            = _act.fd
-local fd_grid       = _act.fd_grid
-local rt            = _act.rt
-local lt            = _act.lt
-local gtrn          = _act.gtrn
-
-local setup         = _main.setup
-local run           = _main.run
-local create_patches= _coll.create_patches
 
 Config = Params({
     ['start'] = true,
@@ -68,7 +49,7 @@ end
 
 local function print_current_config()
 
-    print('========= tick ' .. __Ticks .. ' ==========')
+    print('========= tick ' .. __ticks .. ' ==========')
     reset_histogram()
 
     -- Each agent will increment the counter of the histogram table depending on its position.
@@ -92,7 +73,7 @@ end
 
 setup(function()
     -- Create a new collection
-    Agents = CollectionMobil()
+    Agents = FamilyMobil()
 
     -- Populate the collection with Agents and move them to the center of the grid
     Agents:create_n( 1000, function()

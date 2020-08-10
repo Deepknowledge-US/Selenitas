@@ -3,19 +3,14 @@
 local utl_filters = {}
 
 
--- Caution!! this function returns a list containing a single element. This is necessary becouse "ask" function receives
--- a table as the first parameter to iterate on its elements.
+-- It returns a random selectec element of a family or collection
 function utl_filters.one_of(elements)
-    if elements.order then
-        local target = elements.order
-        local chosen = math.random(#target)
-        return {elements.agents[ elements.order[chosen] ]}
-    else
-        local target = elements
-        local chosen = math.random(#target)
-        return {elements[chosen]}
-    end
+    local candidates = elements.order
+    local chosen = math.random(#candidates)
+    return elements.agents[ elements.order[chosen] ]
 end
+
+
 
 -- Select n random elements in a collection or a table
 function utl_filters.n_of(n,collection)
@@ -58,6 +53,32 @@ function utl_filters.n_of(n,collection)
 end
 
 
+-- This function returns the first n elements of a list
+function utl_filters.first_n(n,list)
+    local res = {}
+    if n >= #list then
+        return list
+    else
+        for i=1,n do
+            res[i] = list[i]
+        end
+    end
+    return res
+end
+
+
+-- This function returns the last n elements of a list
+function utl_filters.last_n(n,list)
+    local res = {}
+    if n >= #list then
+        return list
+    else
+        for i = #list-(n-1) , #list do
+            res[#res+1] = list[i]
+        end
+    end
+    return res
+end
 
 
 return utl_filters

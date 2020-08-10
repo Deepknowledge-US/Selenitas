@@ -1,35 +1,15 @@
 local pretty            = require 'pl.pretty'
 local pd                = pretty.dump
 
-
-local _main         = require 'Engine.utilities.utl_main'
-local _coll         = require 'Engine.utilities.utl_collections'
-local _fltr         = require 'Engine.utilities.utl_filters'
-local _chk          = require 'Engine.utilities.utl_checks'
-local _act          = require 'Engine.utilities.utl_actions'
-
-local first_n       = _fltr.first_n
-local last_n        = _fltr.last_n
-local member_of     = _chk.member_of
-local one_of        = _fltr.one_of
-local n_of          = _fltr.n_of
-local ask           = _coll.ask
-local fd            = _act.fd
-local fd_grid       = _act.fd_grid
-local rt            = _act.rt
-local lt            = _act.lt
-
-local setup         = _main.setup
-local run           = _main.run
-local create_patches= _coll.create_patches
+require 'Engine.utilities.utl_main'
 
 
 Config = Params({
     ['start'] = true,
     ['go']    = true,
     ['ticks'] = 100,
-    ['xsize'] = 15,
-    ['ysize'] = 15,
+    ['xsize'] = 16,
+    ['ysize'] = 16,
     ['num_nodes'] = 10
 
 })
@@ -42,11 +22,11 @@ Config = Params({
 -- A function to represent the space in a non graphical environment
 local function print_current_config()
 
-    print('\n\n========== tick '.. __Ticks .. ' ===========')
+    print('\n\n========== tick '.. __ticks .. ' ===========')
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
-            local target = one_of(Patches:with( function(x) return x:xcor() == i and x:ycor() == j end ) )[1]
+            local target = one_of(Patches:with( function(x) return x:xcor() == i and x:ycor() == j end ) )
             local label = target.label == 'O' and target.label or '_'
             line = line .. label .. ','
         end
@@ -88,7 +68,7 @@ setup(function()
 
     Patches = create_patches(Config.xsize, Config.ysize)
 
-    Nodes = CollectionMobil()
+    Nodes = FamilyMobil()
     Nodes:create_n( Config.num_nodes, function()
         return {
             ['pos']     = {size,size},
@@ -99,7 +79,7 @@ setup(function()
     layout_circle(Nodes, size - 1 )
 
     -- A new collection to store the links
-    Links = CollectionRelational()
+    Links = FamilyRelational()
 
     -- Each agent will create a link with the other agents.
     ask(Nodes, function(agent)
@@ -116,7 +96,6 @@ setup(function()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
     ask(Nodes, function(x)
-        -- print(x.xcor,x.ycor)
         ask(
             one_of(Patches:with( function(c) return c:xcor() == x:xcor() and c:ycor() == x:ycor() end ))
             , function(o)

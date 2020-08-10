@@ -45,37 +45,6 @@ end
 --------------------------
 
 
--- ==================== --
--- UTILITIES FOR LISTS  --
--- ==================== --
-
--- This function returns the first n elements of a list
-function utl_sf.first_n(n,list)
-    local res = {}
-    if n >= #list then
-        return list
-    else
-        for i=1,n do
-            res[i] = list[i]
-        end
-    end
-    return res
-end
-
-
--- This function returns the last n elements of a list
-function utl_sf.last_n(n,list)
-    local res = {}
-    if n >= #list then
-        return list
-    else
-        for i = #list-(n-1) , #list do
-            res[#res+1] = list[i]
-        end
-    end
-    return res
-end
-
 
 
 return utl_sf

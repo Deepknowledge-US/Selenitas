@@ -1,13 +1,14 @@
 local class      = require 'pl.class'
-local Collection = require 'Engine.classes.Collection'
+local Collection = require 'Engine.classes.Family'
 local Rel        = require 'Engine.classes.Relational'
+local Collection = require 'Engine.classes.Collection'
 
 
-local CR = class.Collection_Relational(Collection)
+local FR = class.FamilyRelational(Family)
 
 -- When a new link collection is created, its father's init function is called.
 -- This allows the new Collection_Links to use all the methods of the Collection class.
-CR._init = function(self,c)
+FR._init = function(self,c)
     self:super(c)
     return self
 end
@@ -15,7 +16,7 @@ end
 --[[
     This function overwrites the add method in the father's class
 ]]
-CR.add = function(self,object)
+FR.add = function(self,object)
 
     -- If the input is a Link, the object is added to the collection,
     -- otherwise, a new Link is created using the input table.
@@ -60,11 +61,33 @@ end;
 
 
 -- This function overwrites the create_n method in the father's class
-CR.create_n = function(self,num, funct)
+FR.create_n = function(self,num, funct)
     for i=1,num do
         self:add( Rel( funct() ) )
     end
+    if funct ~= nil then
+        --TODO
+    end
 end;
 
+--[[
+A filter function.
+It returns a collection of agents of the family that satisfy the predicate gived as parameter.
 
-return CR
+Links_1:with( function(l)
+    return l.target == some_agent
+end)
+
+This will result in a collection of Agents of the family Links_1 with a target equals to the agent 'some_agent'
+]]--
+FR.with = function(self,funct)
+    local res = Collection(self)
+    for _,v in pairs(self.agents) do
+        if funct(v) then
+            res:add(v)
+        end
+    end
+    return res
+end
+
+return FR

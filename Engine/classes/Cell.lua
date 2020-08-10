@@ -1,4 +1,5 @@
-local class  = require 'pl.class'
+local class = require 'pl.class'
+local Agent = require 'Engine.classes.Agent'
 
 
 -- * Agentes Estructurales (*cells*):
@@ -13,59 +14,40 @@ local class  = require 'pl.class'
 --   * `visible? <Bool>` : Indica si el agente es visible o no en la representación visual.
 --   * `z_order <Num>` : Establece el orden de dibujado en la representación visual.
 
-local Cell = class.Cell{
+local Cell = class.Cell(Agent)
 
-    --[[
-        When a new Patch is created, some properties are given to it (If we do not have done it yet)
-    ]]--
-    _init = function(self,o)
-        local c     = o or {}
-        self        = c
-        self.pos    = c.pos   or {0,0,0}
-        self.label  = c.label or ''
-        self.label_color = c.color or {1,1,1,1}
-        self.color  = c.color or {0,0,0,1}
-        self.shape  = c.xcor or 'square'
-        self.region = c.region or {}
-        self.neighbors = c.neighbors or {}
-        self.visible = c.visible or true
-        self.z_order = c.z_order or 0
 
-        return self
-    end;
+--[[
+    When a new Patch is created, some properties are given to it (If we do not have done it yet)
+]]--
+Cell._init = function(self,o)
+    self:super()
+    local c     = o or {}
+    self        = c
+    self.pos    = c.pos   or {0,0,0}
+    self.label  = c.label or ''
+    self.label_color = c.color or {1,1,1,1}
+    self.color  = c.color or {0,0,0,1}
+    self.shape  = c.xcor or 'square'
+    self.region = c.region or {}
+    self.neighbors = c.neighbors or {}
+    self.visible = c.visible or true
+    self.z_order = c.z_order or 0
 
-    xcor = function(self)
-        return self.pos[1]
-    end;
+    return self
+end;
 
-    ycor = function(self)
-        return self.pos[2]
-    end;
 
-    zcor = function(self)
-        return self.pos[3]
-    end;
+Cell.xcor = function(self)
+    return self.pos[1]
+end
 
-    -- String representation of a Patch.
-    -- To call this function just use "print(a_patch)".
-    __tostring = function(self)
-        local res = "{\n"
-        for k,v in pairs(self) do
+Cell.ycor = function(self)
+    return self.pos[2]
+end
 
-            if type(v) == 'table' then
-                res = res .. '\t'  .. k .. ': {\n'
-                for k2,v2 in pairs(v) do
-                    res = res .. '\t\t' .. k2 .. ': ' .. type(v2) .. '\n'
-                end
-                res = res .. '\t}\n'
-            else
-                res = res .. '\t' .. k .. ': ' .. tostring(v) .. '\n'
-            end
-        end
-        res = res .. '}'
-        return res
-    end;
-
-}
+Cell.zcor = function(self)
+    return self.pos[3]
+end
 
 return Cell

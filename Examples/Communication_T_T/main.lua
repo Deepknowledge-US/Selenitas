@@ -1,32 +1,11 @@
 local graphicengine = require 'Visual.graphicengine'
 
-local Collection    = require 'Engine.classes.class_collection_mobil'
-local Patches       = require 'Engine.classes.class_collection_cell'
-local Params        = require 'Engine.classes.class_params'
+require 'Engine.utilities.utl_main'
+
 local utl           = require 'pl.utils'
 local lamb          = utl.bind1
 local lambda        = utl.string_lambda
 
-local _main         = require 'Engine.utilities.utl_main'
-local _coll         = require 'Engine.utilities.utl_collections'
-local _fltr         = require 'Engine.utilities.utl_filters'
-local _chk          = require 'Engine.utilities.utl_checks'
-local _act          = require 'Engine.utilities.utl_actions'
-
-local first_n       = _fltr.first_n
-local last_n        = _fltr.last_n
-local member_of     = _chk.member_of
-local one_of        = _fltr.one_of
-local n_of          = _fltr.n_of
-local ask           = _coll.ask
-local gtrn          = _act.gtrn
-local fd            = _act.fd
-local rt            = _act.rt
-local lt            = _act.lt
-
-local setup         = _main.setup
-local run           = _main.run
-local create_patches= _coll.create_patches
 
 
 Config = Params({
@@ -36,9 +15,6 @@ Config = Params({
     ['xsize'] = 15,
     ['ysize'] = 15
 })
-
-
-
 
 
 
@@ -62,7 +38,7 @@ local function comunicate(x)
 
             function(other)        
                 other.message = true
-                other.color = {0, 0, 1, 1}
+                other.color = {0,0,1,1}
             end
         )
     end
@@ -72,7 +48,7 @@ end
 
 setup = function()
     -- Create a new collection
-    People = Collection()
+    People = FamilyMobil()
 
     -- Populate the collection with Agents.
     People:create_n( 10, function()
@@ -84,7 +60,7 @@ setup = function()
 
     ask(one_of(People), function(agent)
         agent.message = true
-        agent.color = {0, 0, 1, 1}
+        agent.color = {0,0,1,1}
     end)
 
     Config.go = true
@@ -99,7 +75,7 @@ run = function()
         do return end
     end
     -- Stop condition
-    if #People:with(lambda '|x| x.message == false') == 0 then
+    if People:with(lambda '|x| x.message == false').size == 0 then
         Config.go = false
         return
     end
@@ -109,7 +85,6 @@ run = function()
         comunicate(person)
     end)
 
-    --print_current_config()
 end
 
 -- Setup and start visualization
