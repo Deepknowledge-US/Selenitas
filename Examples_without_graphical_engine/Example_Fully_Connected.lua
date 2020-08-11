@@ -109,7 +109,7 @@ end)
 run(function()
     print_current_config()
     Config.go = false
-    -- pd(Links)
+    -- print(Links)
 end)
 
 

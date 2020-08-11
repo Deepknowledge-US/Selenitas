@@ -9,18 +9,22 @@ local Cell = class.Cell(Agent)
     When a new Cell is created, some properties are given to it (If we do not have done it yet)
 ]]--
 Cell._init = function(self,o)
+
     self:super()
-    local c         = o or {}
-    self            = c
-    self.pos        = c.pos         or {0,0,0}
-    self.label      = c.label       or ''
-    self.label_color= c.color       or {1,1,1,1}
-    self.color      = c.color       or {0,0,0,1}
-    self.shape      = c.shape       or 'square'
-    self.region     = c.region      or {}
-    self.neighbors  = c.neighbors   or {}
-    self.visible    = c.visible     or true
-    self.z_order    = c.z_order     or 0
+
+    for k,v in pairs(o) do
+        self[k] = v
+    end
+
+    self.pos        = o.pos         or {0,0,0}
+    self.label      = o.label       or ''
+    self.label_color= o.color       or {1,1,1,1}
+    self.color      = o.color       or {0,0,0,1}
+    self.shape      = o.shape       or 'square'
+    self.region     = o.region      or {}
+    self.neighbors  = o.neighbors   or {}
+    self.visible    = o.visible     or true
+    self.z_order    = o.z_order     or 0
 
     return self
 end;

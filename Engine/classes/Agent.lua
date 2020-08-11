@@ -6,6 +6,12 @@ local class     = require 'Thirdparty.pl.class'
 
 local Agent = class.Agent {
     _init = function(self)
+        
+        self.in_links   = {}
+        self.out_links  = {}
+        self.in_neighs  = {}
+        self.out_neighs = {}
+
         return self
     end;
 

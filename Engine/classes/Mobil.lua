@@ -9,22 +9,22 @@ local rad       = math.rad
 local Mobil = class.Mobil(Agent)
 
 Mobil._init = function(self,o)
+
     self:super()
-    local c         = o or {}
-    self            = c
-    self.pos        = c.pos         or {0, 0, 0}
-    self.color      = c.color       or {0.5,0.5,0.5,1}
-    self.head       = c.head        or {0,0}
-    self.shape      = c.shape       or 'triangle'
-    self.size       = c.size        or 1
-    self.visible    = c.visible     or true
-    self.z_order    = c.z_order     or 1
-    self.label      = c.label       or ''
-    self.label_color= c.label_color or {1,1,1,1}
-    self.in_links   = c.in_links     or {}
-    self.out_links  = c.out_links    or {}
-    self.in_neighs  = c.in_neighs    or {}
-    self.out_neighs = c.out_neighs   or {}
+
+    for k,v in pairs(o) do
+        self[k] = v
+    end
+
+    self.pos        = o.pos         or {0, 0, 0}
+    self.color      = o.color       or {0.5,0.5,0.5,1}
+    self.head       = o.head        or {0,0}
+    self.shape      = o.shape       or 'triangle'
+    self.size       = o.size        or 1
+    self.visible    = o.visible     or true
+    self.z_order    = o.z_order     or 1
+    self.label      = o.label       or ''
+    self.label_color= o.label_color or {1,1,1,1}
 
     return self
 end
