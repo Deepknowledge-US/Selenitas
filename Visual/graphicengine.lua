@@ -1,4 +1,5 @@
 local Slab = require "Thirdparty.Slab.Slab"
+local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
 
 -- Simulation info
 local agents = nil
@@ -16,25 +17,79 @@ local _time_acc = 0
 local coord_scale = 1 -- coordinate scaling for better visualization
 local ui_width = 152 -- width in pixels of UI column
 local ui_height = 400 -- height of UI column
+local menu_bar_width = 20 -- approximate width of horizontal menu bar
+
+-- File handling
+local file_loaded_path = nil
+local show_file_picker = false
 
 local function init()
     -- TODO: read user settings
-    -- The engine is explictly initialized to avoid running 
+    -- The engine is explictly initialized to avoid running
     -- LOVE loop since startup
-    initialized = true
     love.window.setTitle("Selenitas")
-    Slab.Initialize({})
+    initialized = true
+end
+
+local function _reset()
+    -- Simulation info
+    agents = nil
+    setup_func = nil
+    step_func = nil
+    simulation_params = nil
+    initialized = false
+    go = false
+end
+
+local function load_simulation_file(file_path)
+    _reset()
+    file_loaded_path = file_path
+    dofile(file_loaded_path)
 end
 
 local function update_ui(dt)
     -- Re-draw UI in each step
     Slab.Update(dt)
 
+    -- Build menu bar
+    if Slab.BeginMainMenuBar() then
+        -- "File" section
+        if Slab.BeginMenu("File") then
+            if Slab.MenuItem("Load file...") then
+                show_file_picker = true
+            end
+            -- Show "Reload file" option if file was loaded
+            if file_loaded_path then
+                if Slab.MenuItem("Reload file") then
+                    load_simulation_file(file_loaded_path)
+                end
+            end
+            Slab.Separator()
+            if Slab.MenuItem("Quit") then
+                love.event.quit()
+            end
+            Slab.EndMenu()
+        end
+        Slab.EndMenuBar()
+    end
+
+    -- Show file picker if Selected
+    if show_file_picker then
+        local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
+        if result.Button ~= "" then
+            show_file_picker = false
+            if result.Button == "OK" then
+                -- Load selected file
+                load_simulation_file(result.Files[1])
+            end
+        end
+    end
+
     -- Create panel for UI with fixed size
     Slab.BeginWindow("Simulation", {
         Title = "Simulation",
         X = 2,
-        Y = 2,
+        Y = menu_bar_width,
         W = ui_width,
         H = ui_height,
         AllowMove = false,
@@ -51,42 +106,53 @@ local function update_ui(dt)
         end
         go = false
     end
+
+     -- Show "step" button
+     if Slab.Button("Step") then
+        if step_func then
+            step_func()
+        end
+    end
+
     -- Change "go" button label if it's already running
     local go_button_label = go and "Stop" or "Go"
     if Slab.Button(go_button_label) then
         go = not go
     end
+
     -- Parse simulation params
-    for k, v in pairs(simulation_params.ui_settings) do
-        -- Checkbox
-        if v.type == "boolean" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.CheckBox(simulation_params[k], "Enabled") then
-                simulation_params[k] = not simulation_params[k]
-            end
-        -- Slider
-        elseif v.type == "slider" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            -- TODO: parse step
-            if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min + 0.0000001, v.max, {}) then
-                simulation_params[k] = Slab.GetInputNumber()
-            end
-        -- Number input
-        elseif v.type == "input" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberDrag(k .. "InputNumber", simulation_params[k], nil, nil, {}) then
-                simulation_params[k] = Slab.GetInputNumber()
-            end
-        -- Radio buttons
-        elseif v.type == "enum" then
-            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            for i, e in ipairs(v.options) do
-                if Slab.RadioButton(e, {Index = i, SelectedIndex = simulation_params[k]}) then
-                    simulation_params[k] = i
+    if simulation_params then
+        for k, v in pairs(simulation_params.ui_settings) do
+            -- Checkbox
+            if v.type == "boolean" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                if Slab.CheckBox(simulation_params[k], "Enabled") then
+                    simulation_params[k] = not simulation_params[k]
                 end
+            -- Slider
+            elseif v.type == "slider" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                -- TODO: parse step
+                if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min + 0.0000001, v.max, {}) then
+                    simulation_params[k] = Slab.GetInputNumber()
+                end
+            -- Number input
+            elseif v.type == "input" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                if Slab.InputNumberDrag(k .. "InputNumber", simulation_params[k], nil, nil, {}) then
+                    simulation_params[k] = Slab.GetInputNumber()
+                end
+            -- Radio buttons
+            elseif v.type == "enum" then
+                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+                for i, e in ipairs(v.options) do
+                    if Slab.RadioButton(e, {Index = i, SelectedIndex = simulation_params[k]}) then
+                        simulation_params[k] = i
+                    end
+                end
+            else
+                print("UI Control of type \"" .. v.type .. "\" is not recognized.")
             end
-        else
-            print("UI Control of type \"" .. v.type .. "\" is not recognized.")
         end
     end
     Slab.EndLayout()
@@ -141,30 +207,9 @@ local function set_background_color(r, g, b)
     love.graphics.setBackgroundColor(r, g, b)
 end
 
--- Gets RGB in [0..1] format from predefined color strings
-local function get_rgb_color(p_color_str)
-    if p_color_str == "red" then
-        return {1, 0, 0, 1}
-    elseif p_color_str == "green" then
-        return {0, 1, 0, 1}
-    elseif p_color_str == "blue" then
-        return {0, 0, 1, 1}
-    elseif p_color_str == "green" then
-        return {0, 1, 0, 1}
-    elseif p_color_str == "yellow" then
-        return {1, 1, 0, 1}
-    elseif p_color_str == "cyan" then
-        return {0, 1, 1, 1}
-    elseif p_color_str == "magenta" then
-        return {1, 0, 1, 1}
-    elseif p_color_str == "pink" then
-        return {1, 0.41, 0.7, 1}
-    elseif p_color_str == "black" then
-        return {0, 0, 0, 1}
-    else
-        -- Default to white
-        return {1, 1, 1, 1}
-    end
+-- LOVE2D load function
+function love.load()
+    Slab.Initialize({})
 end
 
 -- Main update function
@@ -197,11 +242,11 @@ function love.draw()
 
     -- Draw agents
     for _, a in pairs(agents) do
-        love.graphics.setColor(get_rgb_color(a.color))
+        love.graphics.setColor(a.color)
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
-        local x = (a.xcor * coord_scale) + ui_width
-        local y = a.ycor * coord_scale
+        local x = (a:xcor() * coord_scale) + ui_width
+        local y = a:ycor() * coord_scale + menu_bar_width
         if a.shape == "triangle" then
             love.graphics.polygon("fill",
                 x, y - 5,
@@ -225,6 +270,7 @@ end
 -- Public functions
 GraphicEngine = {
     init = init,
+    load_simulation_file = load_simulation_file,
     set_world_dimensions = set_world_dimensions,
     set_background_color = set_background_color,
     set_coordinate_scale = set_coordinate_scale,

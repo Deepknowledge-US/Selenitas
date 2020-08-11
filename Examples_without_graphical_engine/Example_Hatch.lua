@@ -1,12 +1,7 @@
-local Agents_Collection= require 'Engine.classes.class_collection_agents'
-local Params        = require 'Engine.classes.class_params'
-local utils         = require 'Engine.utilities'
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local rt            = utils.rt
-local fd_grid       = utils.fd_grid
-local create_patches= utils.create_patches
+
+require 'Engine.utilities.utl_main'
+
+local pr = require 'pl.pretty'
 
 Config = Params({
     ['start'] = true,
@@ -18,39 +13,26 @@ Config = Params({
 })
 
 
---[[
-    In this example we are going to init the simulation with 3 agents in the virtual environment.
-    The color of an agent determines if it has the capability to clone itself (pink for those how
-    are capable)
-    In each iteration the agents move randomly, increment its age in 1 and if they are too old they die
-    There is also a chance to clone itself in each iteration (only for pink agents)
-]]
 
-
-
-
-
--- Representation of the world in a non graphical environment.
--- It prints the patches labels which contains the number of agents in the patch
 local function print_current_config()
 
-
-    print('\n========= tick: '.. T ..' =========')
+    print('\n========= tick: '.. __ticks ..' =========')
     -- Reset the labels of the patches
     ask(Patches, function(patch)
         patch.label = 0
     end)
     
     -- Each agent increments in 1 the value of the patch in its position.
-    ask(Agents, function(agent)
-        local target_link = Patches.agents[agent.xcor .. ',' .. agent.ycor]
+    ask(Agents, function(ag)
+        local target_link = one_of( Patches:with(function(x) return x:xcor() == ag:xcor() and  x:ycor() == ag:ycor() end) )
         target_link.label = target_link.label + 1
     end)
 
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ','
+            local target = one_of( Patches:with(function(x) return x:xcor() == i and x:ycor() == j end) )
+            line = line .. target.label .. ','
         end
         print(line)
     end
@@ -62,7 +44,7 @@ local histogram = {}
 
 
 -- This function applies to an agent a random turn in clock direction,
--- then the agent advance in 1.5 units
+-- then the agent advance a number of units equals to Config.stride
 local function wander(agent)
     rt(agent, math.random(360))
     fd_grid(agent, Config.stride)
@@ -77,12 +59,24 @@ local function grow_old(agent)
     end
 end
 
+local same_color = function(c1,c2)
+    if #c1 ~= 4 or #c1 ~= 4 then
+        return false
+    end
+    for i=1,4 do
+        if c1[i] ~= c2[i] then
+            return false
+        end
+    end
+    return true
+end
+
 -- Only pink agents are capable of cloning themselves.
 -- Cloned agents only have a 10% chance of being pink.
 local function reproduce(agent)
-    if agent.color == 'pink' and math.random(5) == 1 then
+    if same_color(agent.color, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
         Agents:clone_n_act(1,agent, function(x)
-            x.color = math.random(10) > 1 and 'blue' or 'pink'
+            x.color = math.random(10) > 1 and {0,0,1,1} or {0.5,0.5,0.5,1}
             x.age   = 0
         end)
     end
@@ -95,17 +89,16 @@ setup(function()
     Patches = create_patches(Config.xsize, Config.ysize)
 
     -- Create a collection of agents
-    Agents = Agents_Collection()
+    Agents = FamilyMobil()
 
     -- Populate the collection with 3 agents. Each agent will have the parameters
     -- specified in the table (and the parameters obteined just for be an Agent instance)
     Agents:create_n( 3, function()
         return {
-            ['xcor']    = math.random(Config.xsize),
-            ['ycor']    = math.random(Config.ysize),
+            ['pos']     ={math.random(Config.xsize),math.random(Config.ysize)},
             ['head']    = math.random(360),
             ['age']     = 0,
-            ['color']   = 'pink'
+            ['color']   = {0.5,0.5,0.5,1}
         }
     end)
 
@@ -114,6 +107,8 @@ setup(function()
         fd_grid(agent,Config.stride)
     end)
 
+    -- pr.dump(Patches)
+
 end)
 
 
@@ -121,8 +116,10 @@ end)
 -- At the moment we have discrete iterations
 run(function()
 
+    
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
-    if Agents.size == 0 or T == Config.ticks then
+    if #Agents.order == 0 or __ticks == Config.ticks then
+        print('adios')
         Config.go = false
         for k,v in ipairs(histogram)do
             print('t: '..k,' n: '..v)
@@ -148,8 +145,9 @@ run(function()
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of
     -- agents along the iterations.
-    table.insert(histogram, Agents.size)
+    table.insert(histogram, #Agents.order)
 
+    -- print('hola')
     print_current_config()
 
 

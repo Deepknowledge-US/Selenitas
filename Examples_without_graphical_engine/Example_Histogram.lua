@@ -1,12 +1,7 @@
-local pl            = require 'pl'
-local Collection    = require 'Engine.classes.class_collection_agents'
-local Params        = require 'Engine.classes.class_params'
-local utils         = require 'Engine.utilities'
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local rt            = utils.rt
-local gtrn          = utils.go_to_random_neighbour
+require 'Engine.utilities.utl_main'
+
+local pl   = require 'pl'
+
 
 Config = Params({
     ['start'] = true,
@@ -54,12 +49,13 @@ end
 
 local function print_current_config()
 
+    print('========= tick ' .. __ticks .. ' ==========')
     reset_histogram()
 
     -- Each agent will increment the counter of the histogram table depending on its position.
     ask(Agents, function(agent)
         for k,v in ipairs(bar_breaks) do
-            if agent.xcor <= v then
+            if agent:xcor() <= v then
                 histogram[v] = histogram[v] + 1
                 break
             end
@@ -69,6 +65,7 @@ local function print_current_config()
     for k,v in ipairs(bar_breaks)do
         print(v, histogram[v])
     end
+    print('===========================')
 
 end
 
@@ -76,13 +73,12 @@ end
 
 setup(function()
     -- Create a new collection
-    Agents = Collection()
+    Agents = FamilyMobil()
 
     -- Populate the collection with Agents and move them to the center of the grid
     Agents:create_n( 1000, function()
         return {
-            ['xcor']    = math.floor(Config.xsize / 2),
-            ['ycor']    = math.floor(Config.ysize / 2)
+            ['pos'] = {math.floor(Config.xsize / 2), math.floor(Config.ysize / 2)}
         }
     end)
 
@@ -93,16 +89,12 @@ end)
 
 run(function()
 
-    print('========= tick '.. T ..' ==========')
-
     -- We are asking all agents to go to a random neighbour in the grid
     ask(Agents, function(x)
-        gtrn(x)
+        x:gtrn()
     end)
 
     print_current_config()
-
-    print('===========================')
 
 end)
 

@@ -1,15 +1,8 @@
-local pl            = require 'pl'
-local pretty        = require 'pl.pretty'
-local Params        = require 'Engine.classes.class_params'
-local Collection    = require 'Engine.classes.class_collection_agents'
-local utils         = require 'Engine.utilities'
-local utl           = require 'pl.utils'
+require 'Engine.utilities.utl_main'
+
+local pretty        = require 'Thirdparty.pl.pretty'
+local utl           = require 'Thirdparty.pl.utils'
 local lambda        = utl.string_lambda
-local ask           = utils.ask
-local setup         = utils.setup
-local run           = utils.run
-local one_of        = utils.one_of
-local create_patches= utils.create_patches
 
 
 -- "COMUNICATION_T_T"
@@ -25,30 +18,11 @@ Config = Params({
     ['go']    = true,
     ['ticks'] = 200,
     ['xsize'] = 15,
-    ['ysize'] = 15
+    ['ysize'] = 15,
+    ['__num_agents'] = 1
 
 })
 
-
-
-
--- Each patch has 8 neighbour. This function updates the xcor and ycor params of an angent
---  0 0 0        0 0 x
---  0 x 0   ->   0 0 0
---  0 0 0        0 0 0
--- We are considering that the extremes of the grid of pathes are connected.
-local function go_to_random_neighbour(x)
-
-    local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
-    local choose  = math.random(#changes)
-
-    -- Agents that cross a boundary will appear on the opposite side of the grid
-    x.xcor = (x.xcor + changes[choose][1]) % Config.xsize
-    x.ycor = (x.ycor + changes[choose][2]) % Config.ysize
-
-    if x.xcor == 0 then x.xcor = Config.xsize end
-    if x.ycor == 0 then x.ycor = Config.ysize end
-end
 
 
 -- Agents with the message will share it with other agents in the same patch
@@ -59,7 +33,7 @@ local function comunicate(agent)
             People:others(agent),
 
             function(other)
-                if other.xcor == agent.xcor and other.ycor == agent.ycor then
+                if other:xcor() == agent:xcor() and other:ycor() == agent:ycor() then
                     other.message = true
                 end
             end
@@ -72,37 +46,28 @@ end
 -- This function is only needed in a non graphical environment to print current configuration of the system.
 local function print_current_config()
 
-    print('\n\n========== tick '.. T .. ' ===========')
+    print('\n\n========== tick '.. __ticks .. ' ===========')
 
-    -- Reset patches value
-    ask(Patches, function(patch)
-        patch.label = 0
-    end)
-
-    -- Each agent will increment in 1 the value of its current patch
-    ask(People, function(person)
-        local x,y = person.xcor, person.ycor
-        local target = Patches.agents[x..','..y]
-        target.label = target.label + 1
+    ask(Patches, function(cell)
+        cell.label = People:with(function(ag)
+            return ag:xcor() == cell:xcor() and ag:ycor() == cell:ycor()
+        end).size
     end)
 
     -- Print the number of agents in each patch
     for i = Config.ysize,1,-1 do
         local line = ""
         for j = 1, Config.xsize do
-            line = line .. Patches.agents[j..','..i].label .. ', '
+            local target = one_of(Patches:with(function(cell)
+                return cell:xcor() == i and cell:ycor() == j
+            end))
+            line = line .. target.label .. ','
         end
         print(line)
     end
 
     print('\n\n=============================')
 end
-
-
-
-
-
-
 
 
 -- The anonymous function in this call is executed once by the setup function
@@ -113,13 +78,12 @@ setup(function()
     Patches = create_patches(Config.xsize,Config.ysize)
 
     -- Create a new collection of agents
-    People = Collection()
+    People = FamilyMobil()
 
     -- Populate the collection with Agents. Each agent will be randomly positioned.
     People:create_n( 10, function()
         return {
-            ['xcor']    = math.random(Config.xsize),
-            ['ycor']    = math.random(Config.ysize),
+            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
             ['message'] = false
         }
     end)
@@ -129,6 +93,7 @@ setup(function()
         agent.message = true
     end)
 
+
 end)
 
 
@@ -137,15 +102,14 @@ end)
 run(function()
 
     -- Stop condition: All agents have the message
-    if #People:with(lambda '|x| x.message == false') == 0 then
+    if People:with(function(x) return x.message == false end).size == 0 then
         Config.go = false
-        print(People)
         return
     end
 
     -- In each iteration, agents go to a random neighbour and try to share the message
     ask(People, function(person)
-        go_to_random_neighbour(person)
+        person:rt(math.random(360)):fd_grid(2)
         comunicate(person)
     end)
 

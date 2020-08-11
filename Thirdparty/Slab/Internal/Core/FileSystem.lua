@@ -49,6 +49,16 @@ local GetDirectoryItems = nil
 local Exists = nil
 local IsDirectory = nil
 
+-- These functions are needed to determine if some symbols are missing. Sad but real.
+
+function access(table, param)
+    return table[param];
+end
+
+function errorAtAccess(table, param)
+    return not pcall(access, table, param);
+end
+
 --[[
 	The following code is based on the following sources:
 
@@ -266,20 +276,32 @@ else
 		return Result
 	end
 
-	Exists = function(Path)
-		local Buffer = Stat()
-		return FFI.C.stat64(Path, Buffer) == 0
-	end
+        if (errorAtAccess(FFI.C, "stat64")) then
+            Exists = function(Path)
+                return love.filesystem.getInfo(path) ~= nil;
+            end
 
-	IsDirectory = function(Path)
-		local Buffer = Stat()
+            IsDirectory = function(path)
+                local info = love.filesystem.getInfo(path);
+                if info == nil then return false end
+                return info.type == "directory";
+            end
+        else
+            Exists = function(Path)
+                    local Buffer = Stat()
+                    return FFI.C.stat64(Path, Buffer) == 0
+            end
 
-		if FFI.C.stat64(Path, Buffer) == 0 then
-			return Bit.band(Buffer.st_mode, 0xf000) == FFI.C.S_IFDIR
-		end
+            IsDirectory = function(Path)
+                    local Buffer = Stat()
 
-		return false
-	end
+                    if FFI.C.stat64(Path, Buffer) == 0 then
+                            return Bit.band(Buffer.st_mode, 0xf000) == FFI.C.S_IFDIR
+                    end
+
+                    return false
+            end
+        end
 end
 
 function FileSystem.Separator()

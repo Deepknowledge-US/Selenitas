@@ -1,22 +1,16 @@
-local Collection_Agents = require 'Engine.classes.class_collection_agents'
-local Collection_Links  = require 'Engine.classes.class_collection_links'
-local Params            = require 'Engine.classes.class_params'
-local Link              = require 'Engine.classes.class_link'
-local utils             = require 'Engine.utilities'
-local ask               = utils.ask
-local setup             = utils.setup
-local run               = utils.run
-local rt                = utils.rt
-local fd_grid           = utils.fd_grid
-local create_patches    = utils.create_patches
+local pretty            = require 'pl.pretty'
+local pd                = pretty.dump
+
+require 'Engine.utilities.utl_main'
 
 
 Config = Params({
     ['start'] = true,
     ['go']    = true,
     ['ticks'] = 100,
-    ['xsize'] = 15,
-    ['ysize'] = 15
+    ['xsize'] = 16,
+    ['ysize'] = 16,
+    ['num_nodes'] = 10
 
 })
 
@@ -28,11 +22,12 @@ Config = Params({
 -- A function to represent the space in a non graphical environment
 local function print_current_config()
 
-    print('\n\n========== tick '.. T .. ' ===========')
+    print('\n\n========== tick '.. __ticks .. ' ===========')
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
-            local label = Patches.agents[j..','..i].label == 0 and Patches.agents[j..','..i].label or '_'
+            local target = one_of(Patches:with( function(x) return x:xcor() == i and x:ycor() == j end ) )
+            local label = target.label == 'O' and target.label or '_'
             line = line .. label .. ','
         end
         print(line)
@@ -73,11 +68,10 @@ setup(function()
 
     Patches = create_patches(Config.xsize, Config.ysize)
 
-    Nodes = Collection_Agents()
-    Nodes:create_n( 10, function()
+    Nodes = FamilyMobil()
+    Nodes:create_n( Config.num_nodes, function()
         return {
-            ['xcor']    = size,
-            ['ycor']    = size,
+            ['pos']     = {size,size},
             ['head']    = 0
         }
     end)
@@ -85,14 +79,15 @@ setup(function()
     layout_circle(Nodes, size - 1 )
 
     -- A new collection to store the links
-    Links = Collection_Links()
+    Links = FamilyRelational()
 
     -- Each agent will create a link with the other agents.
     ask(Nodes, function(agent)
         ask(Nodes:others(agent), function(another_agent)
             Links:add({
-                    ['end1'] = agent,
-                    ['end2'] = another_agent
+                    ['source'] = agent,
+                    ['target'] = another_agent,
+                    ['legend'] = agent.id .. ',' .. another_agent.id
                 }
             )
         end)
@@ -101,19 +96,20 @@ setup(function()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
     ask(Nodes, function(x)
-        Patches.agents[x.xcor .. ',' .. x.ycor].label = 0
+        ask(
+            one_of(Patches:with( function(c) return c:xcor() == x:xcor() and c:ycor() == x:ycor() end ))
+            , function(o)
+            o.label = 'O'
+        end)
     end)
 
-    -- print(one_of(Nodes)[1])
-    print(Links)
 end)
 
 
 run(function()
-
     print_current_config()
     Config.go = false
-    print(Links)
+    -- print(Links)
 end)
 
 
