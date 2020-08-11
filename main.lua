@@ -1,10 +1,8 @@
 local ge = require "Visual.graphicengine"
 
-if not arg[2] then
-    -- Load default window
-    ge.init()
-    --dofile("Examples/Communication_T_T/main.lua")
-else
-    -- Run file specified by command line
-    dofile(arg[2])
+-- Load default window
+ge.init()
+if arg[2] then
+    -- If file was specified in command line, load that file
+    ge.load_simulation_file(arg[2])
 end

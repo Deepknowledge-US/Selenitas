@@ -41,6 +41,12 @@ local function _reset()
     go = false
 end
 
+local function load_simulation_file(file_path)
+    _reset()
+    file_loaded_path = file_path
+    dofile(file_loaded_path)
+end
+
 local function update_ui(dt)
     -- Re-draw UI in each step
     Slab.Update(dt)
@@ -52,10 +58,10 @@ local function update_ui(dt)
             if Slab.MenuItem("Load file...") then
                 show_file_picker = true
             end
+            -- Show "Reload file" option if file was loaded
             if file_loaded_path then
                 if Slab.MenuItem("Reload file") then
-                    _reset()
-                    dofile(file_loaded_path)
+                    load_simulation_file(file_loaded_path)
                 end
             end
             Slab.Separator()
@@ -74,8 +80,7 @@ local function update_ui(dt)
             show_file_picker = false
             if result.Button == "OK" then
                 -- Load selected file
-                file_loaded_path = result.Files[1]
-                dofile(file_loaded_path)
+                load_simulation_file(result.Files[1])
             end
         end
     end
@@ -265,6 +270,7 @@ end
 -- Public functions
 GraphicEngine = {
     init = init,
+    load_simulation_file = load_simulation_file,
     set_world_dimensions = set_world_dimensions,
     set_background_color = set_background_color,
     set_coordinate_scale = set_coordinate_scale,
