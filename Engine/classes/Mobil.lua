@@ -21,10 +21,10 @@ Mobil._init = function(self,o)
     self.z_order    = c.z_order     or 1
     self.label      = c.label       or ''
     self.label_color= c.label_color or {1,1,1,1}
-    self.inLinks    = c.inLinks     or {}
-    self.outLinks   = c.outLinks    or {}
-    self.inNeighs   = c.inNeighs    or {}
-    self.outNeighs  = c.outNeighs   or {}
+    self.in_links   = c.in_links     or {}
+    self.out_links  = c.out_links    or {}
+    self.in_neighs  = c.in_neighs    or {}
+    self.out_neighs = c.out_neighs   or {}
 
     return self
 end

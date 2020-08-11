@@ -18,31 +18,39 @@ end
 ]]
 FR.add = function(self,object)
 
-    -- If the input is a Link, the object is added to the collection,
-    -- otherwise, a new Link is created using the input table.
+    -- A new Link is created using the input table. If this table does not have a source and a target an error is returned.
     if pcall( function() return object.source and object.target end ) then
 
-        local id1,id2 = object.source.id, object.target.id
+        local obj1,id1 = object.source, object.source.id
+        local obj2,id2 = object.target, object.target.id
+
+        local new_id  = Config:__new_id()
+
         local values  = {}
         for k,v in pairs(object) do
-            if k ~= 'source' and  k ~= 'target' then
-                values[k] = v
-            end
+            values[k] = v
         end
 
-        -- We have to create new tables if there is no links related to id1 or id2 yet
-        if self.agents[id1] == nil then
-            self.agents[id1] = { ['_in'] = {}, ['_out'] = {} }
+        -- New link added to family. Update agents table, order list and size.
+        self.agents[new_id] = Relational(values)
+        self.agents[new_id].id = new_id
+        table.insert(self.order, new_id)
+        self.size = self.size + 1
+
+        -- If first time being neighbors this way, create a table to the new neighbor
+        if obj1.out_neighs[id2] == nil then
+            obj1.out_neighs[id2] = {}
         end
-        if self.agents[id2] == nil then
-            self.agents[id2] = { ['_in'] = {}, ['_out'] = {} }
+        if obj2.in_neighs[id1] == nil then
+            obj2.in_neighs[id1] = {}
         end
 
-        self.agents[id1]._out[id2] = values
-        self.agents[id2]._in[id1]  = values
+        -- Update the neighbors and links tables of the related agents
+        table.insert(obj1.out_neighs[id2], new_id)
+        table.insert(obj2.in_neighs[id1], new_id)
 
-        -- TODO
-
+        table.insert(obj1.out_links, new_id)
+        table.insert(obj2.in_links, new_id)
 
     else
         print("Error while adding new link:", object)
