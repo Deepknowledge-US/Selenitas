@@ -21,16 +21,24 @@ local menu_bar_width = 20 -- approximate width of horizontal menu bar
 
 -- File handling
 local file_loaded_path = nil
+local show_file_picker = false
 
 local function init()
     -- TODO: read user settings
-    -- The engine is explictly initialized to avoid running 
+    -- The engine is explictly initialized to avoid running
     -- LOVE loop since startup
     love.window.setTitle("Selenitas")
-    if not initialized then
-        Slab.Initialize({})
-    end
     initialized = true
+end
+
+local function _reset()
+    -- Simulation info
+    agents = nil
+    setup_func = nil
+    step_func = nil
+    simulation_params = nil
+    initialized = false
+    go = false
 end
 
 local function update_ui(dt)
@@ -39,13 +47,15 @@ local function update_ui(dt)
 
     -- Build menu bar
     if Slab.BeginMainMenuBar() then
+        -- "File" section
         if Slab.BeginMenu("File") then
             if Slab.MenuItem("Load file...") then
-                -- TODO: load file
+                show_file_picker = true
             end
             if file_loaded_path then
                 if Slab.MenuItem("Reload file") then
-                    -- TODO: reload last loaded file
+                    _reset()
+                    dofile(file_loaded_path)
                 end
             end
             Slab.Separator()
@@ -55,6 +65,19 @@ local function update_ui(dt)
             Slab.EndMenu()
         end
         Slab.EndMenuBar()
+    end
+
+    -- Show file picker if Selected
+    if show_file_picker then
+        local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
+        if result.Button ~= "" then
+            show_file_picker = false
+            if result.Button == "OK" then
+                -- Load selected file
+                file_loaded_path = result.Files[1]
+                dofile(file_loaded_path)
+            end
+        end
     end
 
     -- Create panel for UI with fixed size
@@ -177,6 +200,11 @@ end
 -- Sets background color in RGB [0..1] format
 local function set_background_color(r, g, b)
     love.graphics.setBackgroundColor(r, g, b)
+end
+
+-- LOVE2D load function
+function love.load()
+    Slab.Initialize({})
 end
 
 -- Main update function
