@@ -1,9 +1,7 @@
-local class     = require 'pl.class'
+local class     = require 'Thirdparty.pl.class'
 local sin       = math.sin
 local cos       = math.cos
 local rad       = math.rad
-local pretty    = require 'pl.pretty'
-local pd = pretty.dump
 
 --[[
     When a new agent is created, it is given some properties (if we haven't already done so)
@@ -129,8 +127,6 @@ Mobil.dist_euc = function(self, point)
     local pos = self.pos
     local res = 0
     if #pos ~= #point then
-        -- pd(pos)
-        -- pd(point)
         return 'Error in dist_euc: Diferent number of coordinates'
     end
     for i = 1,#pos do
@@ -147,7 +143,7 @@ Mobil.dist_manh = function(self, point)
     local pos = self.pos
     local res = 0
     if #pos ~= #point then
-        return 'Error in dist_euc: Diferent number of coordinates'
+        return 'Error in dist_manh: Diferent number of coordinates'
     end
 
     for i=1,#pos do

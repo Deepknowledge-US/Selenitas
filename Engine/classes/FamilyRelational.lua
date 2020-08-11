@@ -1,5 +1,4 @@
-local class      = require 'pl.class'
-local Collection = require 'Engine.classes.Family'
+local class      = require 'Thirdparty.pl.class'
 local Rel        = require 'Engine.classes.Relational'
 local Collection = require 'Engine.classes.Collection'
 
@@ -14,7 +13,8 @@ FR._init = function(self,c)
 end
 
 --[[
-    This function overwrites the add method in the father's class
+    This function overwrites the add method in the father's class.
+    TODO
 ]]
 FR.add = function(self,object)
 
@@ -41,18 +41,8 @@ FR.add = function(self,object)
         self.agents[id1]._out[id2] = values
         self.agents[id2]._in[id1]  = values
 
+        -- TODO
 
-        -- local id1  = object.end1.id
-        -- local id2  = object.end2.id
-
-        -- local link_id = id1..','..id2
-
-        -- if not self.agents[link_id] then
-        --     table.insert(self.order,link_id)
-        --     self.size = self.size+1
-        -- end
-
-        -- self.agents[link_id] = object
 
     else
         print("Error while adding new link:", object)

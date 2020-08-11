@@ -1,9 +1,4 @@
-local class     = require 'pl.class'
-local sin       = math.sin
-local cos       = math.cos
-local rad       = math.rad
-local pretty    = require 'pl.pretty'
-local pd = pretty.dump
+local class     = require 'Thirdparty.pl.class'
 
 --[[
     Mobiles, Relationals and Cells are Agents also.

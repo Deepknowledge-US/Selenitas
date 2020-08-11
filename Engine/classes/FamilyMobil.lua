@@ -1,7 +1,6 @@
-local class     = require 'pl.class'
-local pretty    = require 'pl.pretty'
+local class     = require 'Thirdparty.pl.class'
 local Mobil     = require 'Engine.classes.Mobil'
-local Collection        = require 'Engine.classes.Collection'
+local Collection= require 'Engine.classes.Collection'
 
 
 
@@ -19,11 +18,9 @@ end
 FM.add = function(self,object)
 
     local new_agent
-    local key = Config.__num_agents
-    Config.__num_agents = Config.__num_agents + 1
+    local key  = Config:__new_id()
 
-    -- If the input is an Agent, the object is added to the collection,
-    -- otherwise, a new Agent is created using the input table.
+    -- If the input is a Mobil agent, the object is added to the collection, otherwise, a new Mobil is created using the input table.
     if pcall( function() return object.is_a(self,Mobil) end ) then
         new_agent = object
     else
@@ -65,7 +62,7 @@ end
 
 --[[
 A filter function.
-It returns a collection of agents of the family that satisfy the predicate gived as parameter.
+It returns a Collection of agents of the Family that satisfy the predicate gived as parameter.
 
 Agents1:with( function(target)
     return target:xcor() >= 4

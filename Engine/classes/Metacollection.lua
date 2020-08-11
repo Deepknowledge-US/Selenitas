@@ -1,5 +1,5 @@
-local class     = require 'pl.class'
-local pretty    = require 'pl.pretty'
+local class     = require 'Thirdparty.pl.class'
+local pretty    = require 'Thirdparty.pl.pretty'
 local Agent     = require 'Engine.classes.Mobil'
 local Link      = require 'Engine.classes.Relational'
 local Cell      = require 'Engine.classes.Cell'

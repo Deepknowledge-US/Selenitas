@@ -1,4 +1,4 @@
-local class  = require 'pl.class'
+local class  = require 'Thirdparty.pl.class'
 
 -- This class allows users to create elements in interface
 
@@ -9,9 +9,14 @@ local Params = class.Params {
         self.ticks        = c.ticks or 0
         self.xsize        = c.xsize or 0
         self.ysize        = c.ysize or 0
-        self.__num_agents = 1
+        self.__num_agents = 0
         self.ui_settings  = {}
         return self
+    end;
+
+    __new_id = function(self)
+        self.__num_agents = self.__num_agents + 1
+        return self.__num_agents
     end;
 
     create_boolean = function(self, name, value)

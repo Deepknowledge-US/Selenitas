@@ -1,4 +1,4 @@
-local class  = require 'pl.class'
+local class  = require 'Thirdparty.pl.class'
 
 --[[
     Families are the main structures of the sistem. It consists in two tables of Agents and some methods to manipulate them
@@ -10,16 +10,14 @@ local Family = class.Family()
 Family._init = function(self)
     self.order  = {}
     self.agents = {}
-    self.size = 0
+    self.size   = 0
+
     return self
 end;
 
 
 --[[
-Killing an agent consist in giving a nil value to the keys of the tables related with it.
-First we search for the object id in the position:id table, then we search the object in
-the id:object table.
-Finally, we remove the object in both tables and update the size of the collection.
+    TODO - kill and purge
 ]]--
 Family.kill = function(self,agent)
     for k,v in ipairs(self.order) do

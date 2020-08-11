@@ -1,8 +1,7 @@
 require 'Engine.utilities.utl_main'
 
-local pl            = require 'pl'
-local pretty        = require 'pl.pretty'
-local utl           = require 'pl.utils'
+local pretty        = require 'Thirdparty.pl.pretty'
+local utl           = require 'Thirdparty.pl.utils'
 local lambda        = utl.string_lambda
 
 

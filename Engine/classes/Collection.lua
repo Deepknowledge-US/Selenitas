@@ -1,4 +1,4 @@
-local class  = require 'pl.class'
+local class  = require 'Thirdparty.pl.class'
 
 
 local Collection = class.Collection(Family)
@@ -7,10 +7,9 @@ local Collection = class.Collection(Family)
 ]]
 Collection._init = function(self,family)
     self:super()
-    self.agents = {}
-    self.order  = {}
-    self.size   = 0
-
+    self.agents     = {}
+    self.order      = {}
+    self.size       = 0
     self.family     = family
     self.create_n   = family.create_n
     self.with       = family.with
