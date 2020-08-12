@@ -251,7 +251,7 @@ function love.draw()
         -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
         if a.shape == "triangle" then
             love.graphics.draw(ResourceManager.images.triangle, x, y, 0, 0.1)
-        elseif a.shape == "rectangle" then
+        elseif a.shape == "square" then
             love.graphics.draw(ResourceManager.images.rectangle, x, y, 0, 0.1)
         else
             -- Default to circle
