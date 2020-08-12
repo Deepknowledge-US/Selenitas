@@ -247,23 +247,17 @@ function love.draw()
         -- to account for UI column
         local x = (a:xcor() * coord_scale) + ui_width
         local y = a:ycor() * coord_scale + menu_bar_width
+
+        -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
         if a.shape == "triangle" then
-            love.graphics.polygon("fill",
-                x, y - 5,
-                x + 5, y + 5,
-                x - 5, y + 5
-            )
+            love.graphics.draw(ResourceManager.images.triangle, x, y, 0, 0.1)
         elseif a.shape == "rectangle" then
-            love.graphics.polygon("fill",
-                x - 5, y - 5,
-                x + 5, y - 5,
-                x + 5, y + 5,
-                x - 5, y + 5
-            )
+            love.graphics.draw(ResourceManager.images.rectangle, x, y, 0, 0.1)
         else
             -- Default to circle
-            love.graphics.circle("fill", x, y, 5)
+            love.graphics.draw(ResourceManager.images.circle, x, y, 0, 0.1)
         end
+
     end
 end
 
