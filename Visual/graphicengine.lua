@@ -242,6 +242,10 @@ function love.draw()
 
     -- Draw agents
     for _, a in pairs(agents) do
+        if not a.visible then
+            goto continue
+        end
+
         love.graphics.setColor(a.color)
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
@@ -258,6 +262,7 @@ function love.draw()
             love.graphics.draw(ResourceManager.images.circle, x, y, 0, 0.1)
         end
 
+        ::continue::
     end
 end
 
