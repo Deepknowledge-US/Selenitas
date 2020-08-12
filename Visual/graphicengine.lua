@@ -105,12 +105,13 @@ local function update_ui(dt)
         if setup_func then
             agents = setup_func()
         end
-        go = false
+        go = false -- Reset 'go' in case Setup button is pressed more than once
     end
 
      -- Show "step" button
      if Slab.Button("Step") then
-        if step_func then
+        if step_func and agents then
+            -- If `agents` is set, setup function has been run and step function can run without crashing
             step_func()
         end
     end
@@ -251,7 +252,7 @@ function love.draw()
 
         -- Handle agent color
         love.graphics.setColor(a.color)
-        
+
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
         local x = (a:xcor() * coord_scale) + ui_width
