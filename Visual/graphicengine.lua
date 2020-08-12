@@ -109,16 +109,15 @@ local function update_ui(dt)
     end
 
      -- Show "step" button
-     if Slab.Button("Step") then
-        if step_func and agents then
-            -- If `agents` is set, setup function has been run and step function can run without crashing
+     if Slab.Button("Step", {Disabled = agents == nil}) then
+        if step_func then
             step_func()
         end
     end
 
     -- Change "go" button label if it's already running
     local go_button_label = go and "Stop" or "Go"
-    if Slab.Button(go_button_label) then
+    if Slab.Button(go_button_label, {Disabled = agents == nil}) then
         go = not go
     end
 
