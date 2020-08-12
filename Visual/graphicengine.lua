@@ -28,6 +28,7 @@ local function init()
     -- The engine is explictly initialized to avoid running
     -- LOVE loop since startup
     love.window.setTitle("Selenitas")
+    love.graphics.setNewFont(7) -- labels font
     initialized = true
 end
 
@@ -242,16 +243,21 @@ function love.draw()
 
     -- Draw agents
     for _, a in pairs(agents) do
+
+        -- Handle agent visibility
         if not a.visible then
             goto continue
         end
 
+        -- Handle agent color
         love.graphics.setColor(a.color)
+        
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
         local x = (a:xcor() * coord_scale) + ui_width
         local y = a:ycor() * coord_scale + menu_bar_width
 
+        -- Handle agent shape and scale (TODO: rotation)
         -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
         if a.shape == "triangle" then
             love.graphics.draw(ResourceManager.images.triangle, x, y, 0, 0.1 * a.scale)
@@ -261,6 +267,10 @@ function love.draw()
             -- Default to circle
             love.graphics.draw(ResourceManager.images.circle, x, y, 0, 0.1 * a.scale)
         end
+
+        -- Handle agent label
+        love.graphics.setColor(a.label_color)
+        love.graphics.printf(a.label, x - 45, y + 10, 100, 'center')
 
         ::continue::
     end
