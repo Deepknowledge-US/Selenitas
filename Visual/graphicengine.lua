@@ -17,11 +17,12 @@ local examples = {
 local time_between_steps = 0
 local _time_acc = 0
 
--- Drawing params
+-- Drawing & UI params
 local coord_scale = 1 -- coordinate scaling for better visualization
 local ui_width = 152 -- width in pixels of UI column
 local ui_height = 400 -- height of UI column
 local menu_bar_width = 20 -- approximate width of horizontal menu bar
+local show_about_dialog = false
 
 -- File handling
 local file_loaded_path = nil
@@ -92,10 +93,30 @@ local function update_ui(dt)
             Slab.EndMenu()
         end
 
+        -- "Help" section
+        if Slab.BeginMenu("Help") then
+          
+            if Slab.MenuItem("Selenitas User Manual") then
+                love.system.openURL("https://github.com/fsancho/Selenitas/wiki")
+            end
+
+            if Slab.MenuItem("Report issue") then
+                love.system.openURL("https://github.com/fsancho/Selenitas/issues")
+            end 
+
+            Slab.Separator()
+
+            if Slab.MenuItem("About...") then
+                show_about_dialog = true
+            end
+
+            Slab.EndMenu()
+        end
+
         Slab.EndMenuBar()
     end
 
-    -- Show file picker if Selected
+    -- Show file picker if selected
     if show_file_picker then
         local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
         if result.Button ~= "" then
@@ -105,6 +126,25 @@ local function update_ui(dt)
                 load_simulation_file(result.Files[1])
             end
         end
+    end
+
+    -- Show about dialog if selected
+    if show_about_dialog then
+        Slab.OpenDialog("About")
+        Slab.BeginDialog("About", {Title = "About"})
+        Slab.BeginLayout("AboutLayout", {AlignX = "center"})
+        Slab.Text("Selenitas (alpha)")
+        Slab.NewLine()
+        Slab.Text("Webpage: ")
+        Slab.SameLine()
+        Slab.Text("https://github.com/fsancho/Selenitas", {URL = "https://github.com/fsancho/Selenitas"})
+        Slab.NewLine()
+        if Slab.Button("OK") then
+            show_about_dialog = false
+            Slab.CloseDialog()
+        end
+        Slab.EndLayout()
+        Slab.EndDialog()
     end
 
     -- Create panel for UI with fixed size
