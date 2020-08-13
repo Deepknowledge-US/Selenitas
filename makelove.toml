@@ -1,0 +1,27 @@
+name = "Selenitas"
+default_targets = ["win64", "appimage"]
+build_directory = "build"
+
+love_files = [
+    "::git-ls-tree::",
+    "-*/.*",
+]
+
+[archive_files]
+"README.md" = "README.md"
+"LICENSE" = "LICENSE"
+
+[windows.exe_metadata]
+FileDescription = "{name}"
+FileVersion = "{version}"
+CompanyName = "Universidad de Sevilla"
+LegalCopyright = "Copyright © 2020 Universidad de Sevilla"
+ProductName = "{name}"
+
+artifacts = "directory"
+
+[linux]
+# These values are included in the .desktop file
+[linux.desktop_file_metadata]
+Comment="Multiagent simulation framework"
+Categories="Education;Science;"

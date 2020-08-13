@@ -26,6 +26,7 @@ local show_about_dialog = false
 
 -- File handling
 local file_loaded_path = nil
+local file_loaded = false
 local show_file_picker = false
 
 local function init()
@@ -50,6 +51,7 @@ end
 local function load_simulation_file(file_path)
     _reset()
     file_loaded_path = file_path
+    file_loaded = true
     dofile(file_loaded_path)
 end
 
@@ -77,7 +79,9 @@ local function update_ui(dt)
             if Slab.BeginMenu("Load example") then
                 for _,e in ipairs(examples) do
                     if Slab.MenuItem(e) then
-                        load_simulation_file("Examples/" .. e .. ".lua")
+                        _reset()
+                        local a = ResourceManager.examples[e]
+                        file_loaded = true
                     end
                 end
                 Slab.EndMenu()
@@ -102,7 +106,7 @@ local function update_ui(dt)
 
             if Slab.MenuItem("Report issue") then
                 love.system.openURL("https://github.com/fsancho/Selenitas/issues")
-            end 
+            end
 
             Slab.Separator()
 
@@ -162,7 +166,7 @@ local function update_ui(dt)
     Slab.BeginLayout("Layout", {
         ExpandW = true
     })
-    if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
+    if Slab.Button("Setup", {Disabled = not file_loaded}) then
         if setup_func then
             agents = setup_func()
         end
