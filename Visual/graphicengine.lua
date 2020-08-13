@@ -8,6 +8,10 @@ local step_func = nil
 local simulation_params = nil
 local initialized = false
 local go = false
+local examples = {
+    "Communication_T_T",
+    "Hatch"
+}
 
 -- Time handling
 local time_between_steps = 0
@@ -54,23 +58,40 @@ local function update_ui(dt)
 
     -- Build menu bar
     if Slab.BeginMainMenuBar() then
+
         -- "File" section
         if Slab.BeginMenu("File") then
             if Slab.MenuItem("Load file...") then
                 show_file_picker = true
             end
+
             -- Show "Reload file" option if file was loaded
             if file_loaded_path then
                 if Slab.MenuItem("Reload file") then
                     load_simulation_file(file_loaded_path)
                 end
             end
+
+            -- "Load example" submenu
+            if Slab.BeginMenu("Load example") then
+                for _,e in ipairs(examples) do
+                    if Slab.MenuItem(e) then
+                        load_simulation_file("Examples/" .. e .. ".lua")
+                    end
+                end
+                Slab.EndMenu()
+            end
+
             Slab.Separator()
+
+            -- Quit button
             if Slab.MenuItem("Quit") then
                 love.event.quit()
             end
+
             Slab.EndMenu()
         end
+
         Slab.EndMenuBar()
     end
 
@@ -101,7 +122,7 @@ local function update_ui(dt)
     Slab.BeginLayout("Layout", {
         ExpandW = true
     })
-    if Slab.Button("Setup") then
+    if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
             agents = setup_func()
         end
@@ -234,11 +255,8 @@ end
 
 -- Drawing function
 function love.draw()
-    -- Draw UI
-    Slab.Draw()
-
     if (not initialized) or (not agents) then
-        do return end
+        goto skip
     end
 
     -- Draw agents
@@ -274,6 +292,10 @@ function love.draw()
 
         ::continue::
     end
+
+    ::skip::
+    -- Draw UI
+    Slab.Draw()
 end
 
 -- Public functions
