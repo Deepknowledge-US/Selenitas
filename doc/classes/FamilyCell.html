@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Agent.html">Agent</a></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
+  <li><a href="../classes/Collection.html">Collection</a></li>
+  <li><a href="../classes/Family.html">Family</a></li>
+  <li><strong>FamilyCell</strong></li>
+  <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
+  <li><a href="../classes/Metacollection.html">Metacollection</a></li>
+  <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Params.html">Params</a></li>
+  <li><a href="../classes/Relational.html">Relational</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>FamilyCell</code></h1>
+<p>A Family to hold Cell agents, new elements will be added to the collection as Cell instances.</p>
+<p></p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#FamilyCell:_init">FamilyCell:_init ()</a></td>
+	<td class="summary">FamilyCell constructor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#FamilyCell:add">FamilyCell:add (object)</a></td>
+	<td class="summary">Add a new Cell to the family.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#FamilyCell:create_n">FamilyCell:create_n (num, funct)</a></td>
+	<td class="summary">Create n new Cells in the family.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#FamilyCell:with">FamilyCell:with (pred)</a></td>
+	<td class="summary">It returns a Collection of agents of the family that satisfy the predicate gived as parameter.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "FamilyCell:_init"></a>
+    <strong>FamilyCell:_init ()</strong>
+    </dt>
+    <dd>
+    FamilyCell constructor.  When a new Cell Family is created, its father's init function is called. This allows the new Collection_Patches to use all the methods of the Collection class.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A new instance of FamilyCell class.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">New_Instance = FamilyCell()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "FamilyCell:add"></a>
+    <strong>FamilyCell:add (object)</strong>
+    </dt>
+    <dd>
+    Add a new Cell to the family.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">object</span>
+         A table with the params of the new Cell
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+    <span class="keyword">for</span> j=<span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+         Cells_family:add( {[<span class="string">'pos'</span>]={i,j}} )
+    <span class="keyword">end</span>
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "FamilyCell:create_n"></a>
+    <strong>FamilyCell:create_n (num, funct)</strong>
+    </dt>
+    <dd>
+    Create n new Cells in the family.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">num</span>
+         The number of agents that will be added to the family
+        </li>
+        <li><span class="parameter">funct</span>
+         An anonymous function that will be executed to create the Cell.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Cells:create_n( <span class="number">10</span>, <span class="keyword">function</span>()
+    <span class="keyword">return</span> {
+        [<span class="string">'pos'</span>] = {<span class="global">math</span>.random[<span class="number">100</span>],<span class="global">math</span>.random[<span class="number">100</span>]}
+    }
+<span class="keyword">end</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "FamilyCell:with"></a>
+    <strong>FamilyCell:with (pred)</strong>
+    </dt>
+    <dd>
+    It returns a Collection of agents of the family that satisfy the predicate gived as parameter.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pred</span>
+         A predicate of pertenence to a set
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A Collection of agents that satisfies a predicate
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Cells_1:with( <span class="keyword">function</span>(cell)
+    <span class="keyword">return</span> cell:xcor() == <span class="number">1</span> <span class="keyword">and</span> cell:ycor() == <span class="number">1</span>
+<span class="keyword">end</span>)
+<span class="comment">-- This will result in a collection of Agents of the family Cells_1 with a value of 1 in its xcor and 1 in its ycor</span></pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-08-14 10:14:47 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -1,12 +1,22 @@
+------------------
+-- Family Class is the basis class from which we build the families of agents.
+-- Families are the main structures of the system. It consists in a table of Agents, a list of ids and some methods to manipulate the agents.
+-- self.agents is a table 'object_id: object' and we use it to find an element quickily.
+-- self.order  is an ordered table 'position:id' and we use it to determine the actuation order in each iteration. This table is shuffled in each iteration.
+--
+-- @classmod
+-- Family
+
 local class  = require 'Thirdparty.pl.class'
 
---[[
-    Families are the main structures of the sistem. It consists in two tables of Agents and some methods to manipulate them
-    self.agents is a table 'object_id: object' and we use it to find an element quickily
-    self.order  is an ordered table 'position:id' and we use it to determine the actuation order in each iteration. This table is shuffled in each iteration.
-    ]]--
 local Family = class.Family()
 
+
+------------------
+-- Family constructor
+-- @function _init
+-- @return A new instance of Family class.
+-- @usage New_Instance = Family()
 Family._init = function(self)
     self.order  = {}
     self.agents = {}
@@ -32,10 +42,11 @@ end;
 
 
 
---[[
-At the moment, this is our mechanism to randomize actuation turns in agents.
-It consist in permutations of the ids in the position:id tables
-]]--
+------------------
+-- It consist in permutations of the ids in the position:id tables using Fisher-Yates algorithm.
+-- @function Instance:shuffle
+-- @return Nothing.
+-- @usage Instance:shuffle()
 Family.shuffle = function(self)
     local array = self.order
     for i = #array,2, -1 do
@@ -45,22 +56,23 @@ Family.shuffle = function(self)
 end;
 
 
-
---[[
-A filter function.
-Given an agent, it returns all the other agents in the collection.
-]]--
+------------------
+-- Given an agent, it returns all the other agents in the family.
+-- @function Instance:others
+-- @param agent An Agent instance.
+-- @return A Collection containing all Agents of the Family except the agent gived as parameter.
+-- @usage Instance:others(agent)
 Family.others = function(self,agent)
     return self:with( function(x) return x ~= agent end )
 end;
 
 
-
---[[
-A filter function.
-Given an agent, it returns,randomly, one of the other agents in the collection,
-or nil if there is no other agent.
-]]--
+------------------
+-- Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.
+-- @function Instance:one_of_others
+-- @param agent is an Agent instance.
+-- @return An Agent instance of the Family distinct of the agent gived as parameter.
+-- @usage Instance:one_of_others(agent)
 Family.one_of_others = function(self,agent)
 
     if #self.order < 2 then return nil end
@@ -74,12 +86,11 @@ Family.one_of_others = function(self,agent)
     return candidate
 end;
 
-
---[[
-This function returns a clone of the agent gived as parameter.
-Is an auxiliar function used by "clone_n_act" to obtain an object that 
-then is added to the collection.
-]]--
+------------------
+-- This function returns a clone of the agent gived as parameter. Is an auxiliar function used by 'clone_n_act' to obtain an object that is added to the Family later.
+-- @function Instance:clone
+-- @param agent is an Agent instance.
+-- @return A new object, clone of the one gived as parameter. The only difference will be the id, unique for any agent or clone.
 Family.clone = function(self, agent ) -- deep-copy a table
     if type(agent) ~= "table" then return agent end
     local meta = getmetatable(agent)
@@ -97,19 +108,20 @@ end;
 
 
 
---[[
-This function creates a number of clones of an agent and then it applies a function to them.
-It uses the auxiliar function "clone" to obtain the clones and the auxiliar 
-function "search_free_id" to give a new id to the clones.
 
-Agents1:clone_n_act(1, agent, function(x)
-    x.color = 'red'
-end)
 
-If we just want to create same agents we can call this function without the last parameter:
-
-Agents1:clone_n_act(3, agent)
-]]--
+------------------
+-- This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them. It uses the auxiliar function "clone" to obtain the clones and the auxiliar function "search_free_id" to give a new id to the clones.
+-- @function Instance:clone_n_act
+-- @param num is the number of clones we want.
+-- @param agent is the Agent instance the clones are created from
+-- @param funct is an optional param, and it is an anonymous function. If present, the function is applied to the clones.
+-- @usage
+--  Agents1:clone_n_act(1, agent, function(x)
+--      x.color = 'red'
+--  end)
+--  -- If we just want to create same agents, we can call this function without the last parameter:
+--  Agents1:clone_n_act(3, agent)
 Family.clone_n_act = function(self,num, agent, funct)
     local res = {}
 
@@ -128,9 +140,11 @@ end;
 
 
 
---[[
-A function to print the collection. If we do print( a_collection ) this function is called.
-]]--
+------------------
+-- A function to print the Family.
+-- @function __tostring
+-- @return A string representation of the Family
+-- @usage print(Instance)
 Family.__tostring = function(self)
     local res = "{\n"
     for k,v in pairs(self.agents) do

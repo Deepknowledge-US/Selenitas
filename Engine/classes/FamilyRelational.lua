@@ -1,3 +1,8 @@
+------------------
+-- A Family to hold Relational agents, new elements will be added to the collection as Relational instances.
+-- @classmod
+-- FamilyRelational
+
 local class      = require 'Thirdparty.pl.class'
 local Rel        = require 'Engine.classes.Relational'
 local Collection = require 'Engine.classes.Collection'
@@ -5,17 +10,30 @@ local Collection = require 'Engine.classes.Collection'
 
 local FR = class.FamilyRelational(Family)
 
--- When a new link collection is created, its father's init function is called.
--- This allows the new Collection_Links to use all the methods of the Collection class.
+
+------------------
+-- FamilyRelational constructor. When a new Relational Family is created, its father's init function is called. This allows the new instance to use all the methods of the Family class.
+-- @function _init
+-- @return A new instance of FamilyRelational class.
+-- @usage New_Instance = FamilyRelational()
 FR._init = function(self,c)
     self:super(c)
     return self
 end
 
---[[
-    This function overwrites the add method in the father's class.
-    TODO
-]]
+
+------------------
+-- Add a new Relational agent to the family.
+-- @function add
+-- @param object A table with the params of the new Relational
+-- @return Nothing
+-- @usage
+-- Links:add({
+--     ['source'] = one_of(Nodes),
+--     ['target'] = one_of(Nodes)
+-- })
+-- end
+-- -- This will result in a new instance of Relational in the family Links
 FR.add = function(self,object)
 
     -- A new Link is created using the input table. If this table does not have a source and a target an error is returned.
@@ -58,7 +76,23 @@ FR.add = function(self,object)
 end;
 
 
--- This function overwrites the create_n method in the father's class
+
+------------------
+-- Create n new Relational agents in the family.
+-- @function create_n
+-- @param num The number of agents that will be added to the family
+-- @param funct An anonymous function that will be executed to create each Relational.
+-- @return Nothing
+-- @usage
+-- Links:create_n( 10, function()
+--     local src = one_of(Nodes)
+--     local tgt = Nodes:one_of_others(src)
+--     return {
+--         ['source'] = src,
+--         ['target'] = tgt
+--     }
+-- end)
+-- -- This will result in 10 new links between 2 distinct agents of the family Nodes.
 FR.create_n = function(self,num, funct)
     for i=1,num do
         self:add( Rel( funct() ) )
@@ -68,16 +102,16 @@ FR.create_n = function(self,num, funct)
     end
 end;
 
---[[
-A filter function.
-It returns a collection of agents of the family that satisfy the predicate gived as parameter.
-
-Links_1:with( function(l)
-    return l.target == some_agent
-end)
-
-This will result in a collection of Agents of the family Links_1 with a target equals to the agent 'some_agent'
-]]--
+------------------
+-- It returns a Collection of agents of the family that satisfy the predicate gived as parameter.
+-- @function with
+-- @param funct A predicate of pertenence to a set
+-- @return A Collection of agents that satisfies a predicate
+-- @usage
+-- Links_1:with( function(l)
+--     return l.target == some_agent
+-- end)
+-- This will result in a collection of Agents of the family Links_1 with a target equals to the agent 'some_agent'
 FR.with = function(self,funct)
     local res = Collection(self)
     for _,v in pairs(self.agents) do

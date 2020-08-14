@@ -1,10 +1,16 @@
+------------------
+-- Collections are auxiliar structures to generate subsets of the agents of a Family. They are instance of main class Family, so a Collection will have all methods of a Family to manipulate agents.
+-- @classmod
+-- Collection
+
 local class  = require 'Thirdparty.pl.class'
-
-
 local Collection = class.Collection(Family)
---[[
-    A collection is a set of agents of a family, the family is gived as a parameter in the constructor and is used to update some methods of the collection, it is also usefull when we need to know the main family of the agents in a collection.
-]]
+
+------------------
+-- Collection constructor. It is usually called by some Family methods. A Collection is a set of agents from a Family.
+-- @function _init
+-- @param family Is the reference to the Family that has created the Collection and is used to update some methods of the collection. It is also usefull when we need to know the main family of the agents in a collection.
+-- @return A new instance of Collection.
 Collection._init = function(self,family)
     self:super()
     self.agents     = {}
@@ -18,7 +24,12 @@ Collection._init = function(self,family)
 end
 
 
+------------------
 -- This function overwrites the add method of the Family class. This add does not increment global number of agents.
+-- @function add
+-- @param object Is an instance of Agent which is member of any Family, this agent will be added to the Collection.
+-- @return nothing
+-- @usage Coll_instance:add(existing_agent)
 Collection.add = function(self,object)
 
     local old_agent = object

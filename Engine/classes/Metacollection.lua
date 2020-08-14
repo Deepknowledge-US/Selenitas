@@ -1,3 +1,6 @@
+---@classmod
+-- Metacollection
+
 local class     = require 'Thirdparty.pl.class'
 local pretty    = require 'Thirdparty.pl.pretty'
 local Agent     = require 'Engine.classes.Mobil'
@@ -10,6 +13,7 @@ local CG = class.MetaCollection(Collection)
 
 CG._init = function(self,c)
     self:super()
+    self.families = {}
     return self
 end
 
