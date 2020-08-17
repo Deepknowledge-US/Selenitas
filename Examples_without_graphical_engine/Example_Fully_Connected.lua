@@ -1,6 +1,3 @@
-local pretty            = require 'pl.pretty'
-local pd                = pretty.dump
-
 require 'Engine.utilities.utl_main'
 
 
@@ -10,8 +7,7 @@ Config = Params({
     ['ticks'] = 100,
     ['xsize'] = 16,
     ['ysize'] = 16,
-    ['num_nodes'] = 10
-
+    ['num_nodes'] = 5
 })
 
 --[[
@@ -22,17 +18,53 @@ Config = Params({
 -- A function to represent the space in a non graphical environment
 local function print_current_config()
 
+
+    -- This function prints a 0 in the grid position of a node.
+    -- A representation of the world in a non graphical environment.
+    ask(Patches, function(p)
+        p.label = '_'
+    end)
+    ask(Nodes, function(x)
+        ask(
+            one_of(Patches:with( function(c) return c:xcor() == x:xcor() and c:ycor() == x:ycor() end ))
+            , function(o)
+            o.label = 'O'
+        end)
+    end)
+
     print('\n\n========== tick '.. __ticks .. ' ===========')
     for i=Config.ysize,1,-1 do
         local line = ""
         for j = 1,Config.xsize do
             local target = one_of(Patches:with( function(x) return x:xcor() == i and x:ycor() == j end ) )
-            local label = target.label == 'O' and target.label or '_'
-            line = line .. label .. ','
+            -- local label = target.label == 'O' and target.label or '_'
+            line = line .. target.label .. ','
         end
         print(line)
     end
     print('=============================\n')
+
+
+    -- local str = {}
+    -- for i=1,#Patches.order do
+    --     str[i] = '_'
+    -- end
+    -- for i=1,#Nodes.order do
+    --     local node = Nodes.agents[Nodes.order[i]]
+    --     local x,y  = node:xcor(),node:ycor()
+    --     local pos  = y*10 + x
+    --     print('pos',pos)
+
+    --     str[pos]   = 'O'
+    -- end
+    -- print('AKIIIII')
+    -- for i=Config.ysize,1,-1 do
+    --     local line = ""
+    --     for j = 1,Config.xsize do
+    --         line = line .. str[i*10+j] .. ','
+    --     end
+    --     print(line)
+    -- end
 end
 
 local x,y  =  Config.xsize, Config.ysize
@@ -93,21 +125,33 @@ setup(function()
         end)
     end)
 
-    -- This function prints a 0 in the grid position of a node.
-    -- A representation of the world in a non graphical environment.
-    ask(Nodes, function(x)
-        ask(
-            one_of(Patches:with( function(c) return c:xcor() == x:xcor() and c:ycor() == x:ycor() end ))
-            , function(o)
-            o.label = 'O'
-        end)
-    end)
 
 end)
 
+local function print_aux()
+    print('Nodes order:')
+    pd(Nodes.order)
+    for k,v in pairs(Links.agents)do
+        print('link id:', k)
+    end
+end
 
 run(function()
+
     print_current_config()
+    -- print_aux()
+
+    local target = one_of(Nodes)
+    Nodes:kill(target)
+    print('target id: '..target.id)
+
+    print_current_config()
+    -- print_aux()
+
+    purge_agents()
+    print_current_config()
+    -- print_aux()
+
     Config.go = false
     -- print(Links)
 end)

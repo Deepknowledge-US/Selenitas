@@ -4,13 +4,9 @@
 -- FamilyMobil
 
 local class     = require 'Thirdparty.pl.class'
-local Mobil     = require 'Engine.classes.Mobil'
 local Collection= require 'Engine.classes.Collection'
 
-
-
 local FM = class.FamilyMobil(Family)
-
 
 ------------------
 -- FamilyMobil constructor. When a new Mobil Family is created, its father's init function is called. This allows the new instance to use all the methods of the Family class.
@@ -19,6 +15,7 @@ local FM = class.FamilyMobil(Family)
 -- @usage New_Instance = FamilyMobil()
 FM._init = function(self)
     self:super()
+    table.insert(Config.__all_families, self)
     return self
 end
 
@@ -45,6 +42,7 @@ FM.add = function(self,object)
     end
 
     table.insert(self.order,key)
+    self.size = self.size + 1
 
     self.agents[key]        = new_agent
     self.agents[key].id     = key
@@ -72,8 +70,6 @@ FM.create_n = function(self,num, funct)
         --TODO
     end
 end
-
-
 
 ------------------
 -- A filter function. It returns a Collection of agents of the family that satisfy the predicate gived as parameter.

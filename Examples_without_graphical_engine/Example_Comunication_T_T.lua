@@ -18,8 +18,7 @@ Config = Params({
     ['go']    = true,
     ['ticks'] = 200,
     ['xsize'] = 15,
-    ['ysize'] = 15,
-    ['__num_agents'] = 1
+    ['ysize'] = 15
 
 })
 
@@ -48,7 +47,7 @@ local function print_current_config()
 
     print('\n\n========== tick '.. __ticks .. ' ===========')
 
-    ask(Patches, function(cell)
+    ask_coroutine(Patches, function(cell)
         cell.label = People:with(function(ag)
             return ag:xcor() == cell:xcor() and ag:ycor() == cell:ycor()
         end).size
@@ -89,7 +88,7 @@ setup(function()
     end)
 
     -- A message is given to one of the agents
-    ask(one_of(People), function(agent)
+    ask_coroutine(one_of(People), function(agent)
         agent.message = true
     end)
 

@@ -4,13 +4,11 @@
 -- FamilyCell
 
 local class     = require 'Thirdparty.pl.class'
-local Cell      = require 'Engine.classes.Cell'
-local Family    = require 'Engine.classes.Family'
+
 local Collection= require 'Engine.classes.Collection'
 
 
 local FC = class.FamilyCell(Family)
-
 
 ------------------
 -- FamilyCell constructor. When a new Cell Family is created, its father's init function is called. This allows the new Collection_Patches to use all the methods of the Collection class.
@@ -19,6 +17,7 @@ local FC = class.FamilyCell(Family)
 -- @usage New_Instance = FamilyCell()
 FC._init = function(self,c)
     self:super(c)
+    table.insert(Config.__all_families, self)
     return self
 end
 
@@ -45,12 +44,12 @@ FC.add = function(self,object)
     end
 
     table.insert(self.order,k)
+    self.size = self.size + 1
 
     self.agents[k]        = new_agent
     self.agents[k].id     = k
     self.agents[k].family = self
 end
-
 
 ------------------
 -- Create n new Cells in the family.
@@ -64,12 +63,16 @@ end
 --         ['pos'] = {math.random[100],math.random[100]}
 --     }
 -- end)
+--
+-- -- If you are not confortable with anonymous functions you can use a 'for' to add new agents to the family. This is equivalent to:
+-- for i=1,10 do
+--     Cells:add({ ['pos'] = {math.random[100],math.random[100]} })
+-- end
 FC.create_n = function(self,num, funct)
     for i=1,num do
         self:add(Cell( funct() ))
     end
 end
-
 
 ------------------
 -- It returns a Collection of agents of the family that satisfy the predicate gived as parameter.

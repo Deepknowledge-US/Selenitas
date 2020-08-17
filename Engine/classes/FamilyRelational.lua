@@ -4,12 +4,11 @@
 -- FamilyRelational
 
 local class      = require 'Thirdparty.pl.class'
-local Rel        = require 'Engine.classes.Relational'
+
 local Collection = require 'Engine.classes.Collection'
 
 
 local FR = class.FamilyRelational(Family)
-
 
 ------------------
 -- FamilyRelational constructor. When a new Relational Family is created, its father's init function is called. This allows the new instance to use all the methods of the Family class.
@@ -18,9 +17,9 @@ local FR = class.FamilyRelational(Family)
 -- @usage New_Instance = FamilyRelational()
 FR._init = function(self,c)
     self:super(c)
+    table.insert(Config.__all_families, self)
     return self
 end
-
 
 ------------------
 -- Add a new Relational agent to the family.
@@ -42,20 +41,21 @@ FR.add = function(self,object)
         local obj1,id1 = object.source, object.source.id
         local obj2,id2 = object.target, object.target.id
 
-        local new_id  = Config:__new_id()
+        local new_id   = Config:__new_id()
+        local new_rel  = {}
 
-        local values  = {}
         for k,v in pairs(object) do
-            values[k] = v
+            new_rel[k] = v
         end
+        new_rel.id = new_id
+        new_rel.family = self
 
         -- New link added to family. Update agents table, order list and size.
-        self.agents[new_id] = Relational(values)
-        self.agents[new_id].id = new_id
+        self.agents[new_id] = Relational(new_rel)
         table.insert(self.order, new_id)
         self.size = self.size + 1
 
-        -- If first time being neighbors this way, create a table to the new neighbor
+        -- If first time being neighbors this way, create a table to the new neighbor.
         if obj1.out_neighs[id2] == nil then
             obj1.out_neighs[id2] = {}
         end
@@ -75,8 +75,6 @@ FR.add = function(self,object)
     end
 end;
 
-
-
 ------------------
 -- Create n new Relational agents in the family.
 -- @function create_n
@@ -95,7 +93,7 @@ end;
 -- -- This will result in 10 new links between 2 distinct agents of the family Nodes.
 FR.create_n = function(self,num, funct)
     for i=1,num do
-        self:add( Rel( funct() ) )
+        self:add( Relational( funct() ) )
     end
     if funct ~= nil then
         --TODO

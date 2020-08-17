@@ -11,13 +11,14 @@ local class  = require 'Thirdparty.pl.class'
 
 local Family = class.Family()
 
-
 ------------------
--- Family constructor
+-- Family constructor.
 -- @function _init
 -- @return A new instance of Family class.
 -- @usage New_Instance = Family()
 Family._init = function(self)
+    self.__to_purge = {}
+
     self.order  = {}
     self.agents = {}
     self.size   = 0
@@ -25,14 +26,17 @@ Family._init = function(self)
     return self
 end;
 
-
---[[
-    TODO - kill and purge
-]]--
+------------------
+-- Killing an agent consist in get its id out of the order list of the family, it also be included in a list of agents to purge and its parameter alive will be set to false.
+-- @function kill
+-- @return Nothing.
+-- @usage Nodes:kill(a_node)
 Family.kill = function(self,agent)
     for k,v in ipairs(self.order) do
-        if v == agent.id and self.agents[v] == agent then
-            self.agents[agent.id] = nil
+        if v == agent.id then
+            local target = self.agents[agent.id]
+            target.alive = false
+            table.insert(self.__to_purge, target)
             table.remove(self.order, k)
             self.size = self.size-1
             break
@@ -40,7 +44,20 @@ Family.kill = function(self,agent)
     end
 end;
 
-
+------------------
+-- To purge an agent consist in delete the agent of the family (A value of nil in the agents table) and delete all its links with other agents.
+-- @function __purge_agents
+-- @return Nothing.
+-- @usage
+-- -- This function is called by the method purge_agents(), so, to do a purge of died agents call 'purge_agents()' instead:
+-- __purge_agents()
+-- @see collections.purge_agents
+Family.__purge_agents = function(self)
+    for _,v in pairs(self.__to_purge) do
+        v:__purge()
+    end
+    self.__to_purge = {}
+end
 
 ------------------
 -- It consist in permutations of the ids in the position:id tables using Fisher-Yates algorithm.
@@ -55,7 +72,6 @@ Family.shuffle = function(self)
     end
 end;
 
-
 ------------------
 -- Given an agent, it returns all the other agents in the family.
 -- @function Instance:others
@@ -65,7 +81,6 @@ end;
 Family.others = function(self,agent)
     return self:with( function(x) return x ~= agent end )
 end;
-
 
 ------------------
 -- Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.
@@ -106,10 +121,6 @@ Family.clone = function(self, agent ) -- deep-copy a table
     return target
 end;
 
-
-
-
-
 ------------------
 -- This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them. It uses the auxiliar function "clone" to obtain the clones and the auxiliar function "search_free_id" to give a new id to the clones.
 -- @function Instance:clone_n_act
@@ -138,8 +149,6 @@ Family.clone_n_act = function(self,num, agent, funct)
     end
 end;
 
-
-
 ------------------
 -- A function to print the Family.
 -- @function __tostring
@@ -163,6 +172,30 @@ Family.__tostring = function(self)
     res = res .. '}'
     return res
 end;
+
+Family.ask = function(self)end
+
+Family.with = function(self,pred)
+    for _,v in pairs(self.agents) do
+        
+    end
+end
+
+Family.n_of = function(self)end
+Family.one_of = function(self)end
+Family.up_to_n_of = function(self)end -- selecciona al azar hasta n agentes de col
+Family.all = function(self)end
+Family.exists = function(self)end -- devuelve true si algún agente de col verifica pd: col
+Family.max_n_of = function(self)end --devuelve los n agentes de col con valores máximos de f: col -> Num .
+Family.max_one_of = function(self)end
+
+Family.min_n_of = function(self)end --devuelve los n agentes de col con valores mínimos de f: col -> Num .
+Family.min_one_of = function(self)end
+
+
+Family.with_max = function(self)end -- devuelve todos los agentes de col que toman el valor máximo de f: col -> Num .
+Family.with_min = function(self)end -- devuelve todos los agentes de col que toman el valor mínimo de f: col -> Num 
+Family.is_in = function(self)end -- devuelve true si el agente ag está en col
 
 
 return Family

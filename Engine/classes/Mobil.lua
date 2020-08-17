@@ -36,7 +36,6 @@ Mobil._init = function(self,o)
     return self
 end
 
-
 ------------------
 -- This function applies to the agent a series of functions consecutively. The number of functions gived as parameters is not predetermined. Caution! we are assuming functions with one ore less parameters as inputs.
 -- @function does
@@ -86,8 +85,9 @@ Mobil.zcor = function(self)
     return self.pos[3]
 end
 
-
-
+Mobil.same_pos = function(self,ag2)
+    return self:xcor() == ag2:xcor() and self:ycor() == ag2:ycor() and self:zcor() == ag2:zcor()
+end
 
 ------------------
 -- It produces a right turn in the agent
@@ -151,18 +151,22 @@ Mobil.fd_grid = function(self, num)
 
 end
 
-
 ------------------
--- Ask the agent to go to a random neighbor in a grid, neighbors are determined by moore neighborhood.
+-- Ask the agent to go to a random neighbor in a 2D grid, neighbors are determined by moore neighborhood.
 -- @function gtrn
 -- @return The Agent that has called the function.
 -- @usage
 -- an_agent:gtrn()
--- -- Agent will be moved to one of its patch neighbours (8 neighbours are considered).
+--
+-- -- an_agent will be moved to one of its patch neighbours (8 neighbours are considered).
 -- --  0 0 0        0 0 x
 -- --  0 x 0   ->   0 0 0
 -- --  0 0 0        0 0 0
 -- -- Extremes of the grid are conected.
+--
+-- -- As the agent is returned, we can do something like that:
+-- an_agent:gtrn():search_food()
+-- -- Assuming that we have defined a method 'search_food' in our agents
 Mobil.gtrn = function(self)
 
     local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
@@ -216,7 +220,6 @@ Mobil.dist_euc = function(self, point)
     return math.sqrt(res)
 end
 
-
 ------------------
 -- This function give us the euclidean distance from the agent to another agent.
 -- @function dist_euc_to_agent
@@ -227,7 +230,6 @@ end
 Mobil.dist_euc_to_agent = function(self, agent)
     return self:dist_euc(agent.pos)
 end
-
 
 ------------------
 -- This function give us the manhattan distance from the agent to another point.

@@ -1,3 +1,7 @@
+------------------
+-- @module
+-- main
+
 
 -- Global variables
 
@@ -18,7 +22,9 @@ split           = __str_fls.split
 
 __fam           = require 'Engine.utilities.utl_collections'
 create_patches  = __fam.create_patches
+purge_agents    = __fam.purge_agents
 clone_n_act     = __fam.clone_n_act
+ask_coroutine   = __fam.ask_coroutine
 ask             = __fam.ask
 die             = __fam.die
 
@@ -39,12 +45,27 @@ gtrn            = __act.gtrn
 rt              = __act.rt
 lt              = __act.lt
 
+-- Utils from Penlight
+tablex  = require 'pl.tablex'
+pretty  = require 'pl.pretty'
+pd      = pretty.dump
 
--- This function encapsulates the anonymous function defined in the "setup" call of the
--- file main_code.lua.
--- It creates a grid of patches with the parameters defined in Config object.
--- Then, it executes once the anonymous function defined in the "setup" call of the main file.
-
+------------------
+-- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
+-- @function setup
+-- @param funct An anonymous function.
+-- @return Nothing, unless we specified it in the anonymous function.
+-- @usage
+-- setup(function() 
+--     Cells = create_patches(100,100)
+--     Agents= FamilyMobil()
+--     for i=1,50 do
+--         Agents:add({
+--             ['pos'] = one_of(Cells).pos
+--         })
+--     end
+-- end)
+-- -- This will result in a grid of 100x100, and 50 agents randomly positioned in the grid.
 setup = function( funct )
     math.randomseed(os.time())
     __ticks = 1
@@ -59,6 +80,24 @@ end
 -- Config.ticks simulate the ticks slider in netlogo.
 -- Config.go simulate the go button in NetLogo interface.
 
+------------------
+-- This function is called until we reach a stop condition. Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
+-- @function run
+-- @param funct, An anonymous function
+-- @return Nothing
+-- @usage
+-- run(function()
+--     if Agents.size == 0 then
+--         Config.go = false
+--     end
+--
+--     ask(Agents, function(ag)
+--         ag:gtrn()
+--         if(ag.pos == {0,0}) then die(ag) end
+--     end)
+--
+--     purge_agents()
+-- end)
 run = function(funct)
     while Config.go do -- While the 'go' button is pushed
         if __ticks <= Config.ticks then

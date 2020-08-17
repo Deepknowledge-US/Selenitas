@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/actions.html">actions</a></li>
+  <li><a href="../modules/checks.html">checks</a></li>
+  <li><a href="../modules/collections.html">collections</a></li>
+  <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/pl.app.html">pl.app</a></li>
+  <li><a href="../modules/pl.array2d.html">pl.array2d</a></li>
+  <li><a href="../modules/pl.class.html">pl.class</a></li>
+  <li><a href="../modules/pl.compat.html">pl.compat</a></li>
+  <li><a href="../modules/pl.comprehension.html">pl.comprehension</a></li>
+  <li><a href="../modules/pl.config.html">pl.config</a></li>
+  <li><a href="../modules/pl.data.html">pl.data</a></li>
+  <li><a href="../modules/pl.dir.html">pl.dir</a></li>
+  <li><a href="../modules/pl.file.html">pl.file</a></li>
+  <li><a href="../modules/pl.func.html">pl.func</a></li>
+  <li><a href="../modules/Thirdparty.pl.import_into.html">Thirdparty.pl.import_into</a></li>
+  <li><a href="../modules/pl.html">pl</a></li>
+  <li><a href="../modules/pl.input.html">pl.input</a></li>
+  <li><a href="../modules/pl.lapp.html">pl.lapp</a></li>
+  <li><a href="../modules/pl.lexer.html">pl.lexer</a></li>
+  <li><a href="../modules/pl.luabalanced.html">pl.luabalanced</a></li>
+  <li><a href="../modules/pl.operator.html">pl.operator</a></li>
+  <li><a href="../modules/pl.path.html">pl.path</a></li>
+  <li><a href="../modules/pl.permute.html">pl.permute</a></li>
+  <li><a href="../modules/pl.pretty.html">pl.pretty</a></li>
+  <li><a href="../modules/pl.seq.html">pl.seq</a></li>
+  <li><a href="../modules/pl.sip.html">pl.sip</a></li>
+  <li><a href="../modules/pl.strict.html">pl.strict</a></li>
+  <li><a href="../modules/pl.stringio.html">pl.stringio</a></li>
+  <li><a href="../modules/pl.stringx.html">pl.stringx</a></li>
+  <li><a href="../modules/pl.tablex.html">pl.tablex</a></li>
+  <li><a href="../modules/pl.template.html">pl.template</a></li>
+  <li><strong>pl.test</strong></li>
+  <li><a href="../modules/pl.text.html">pl.text</a></li>
+  <li><a href="../modules/Thirdparty.pl.types.html">Thirdparty.pl.types</a></li>
+  <li><a href="../modules/pl.url.html">pl.url</a></li>
+  <li><a href="../modules/pl.utils.html">pl.utils</a></li>
+  <li><a href="../modules/pl.xml.html">pl.xml</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Agent.html">Agent</a></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
+  <li><a href="../classes/Collection.html">Collection</a></li>
+  <li><a href="../classes/Family.html">Family</a></li>
+  <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
+  <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
+  <li><a href="../classes/Metacollection.html">Metacollection</a></li>
+  <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Params.html">Params</a></li>
+  <li><a href="../classes/Relational.html">Relational</a></li>
+  <li><a href="../classes/pl.Date.html">pl.Date</a></li>
+  <li><a href="../classes/pl.List.html">pl.List</a></li>
+  <li><a href="../classes/pl.Map.html">pl.Map</a></li>
+  <li><a href="../classes/pl.MultiMap.html">pl.MultiMap</a></li>
+  <li><a href="../classes/pl.OrderedMap.html">pl.OrderedMap</a></li>
+  <li><a href="../classes/pl.Set.html">pl.Set</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>pl.test</code></h1>
+<p>Useful test utilities.</p>
+<p>
+<p>    test.asserteq({1,2},{1,2}) -- can compare tables
+    test.asserteq(1.2,1.19,0.02) -- compare FP numbers within precision
+    T = test.tuple -- used for comparing multiple results
+    test.asserteq(T(string.find(" me","me")),T(2,3))
+<p> Dependencies: `pl.utils`, `pl.tablex`, `pl.pretty`, `pl.path`, `debug`</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#error_handler">error_handler (file, line, got_text, needed_text, msg)</a></td>
+	<td class="summary">error handling for test results.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#complain">complain (x, y, msg, where)</a></td>
+	<td class="summary">general test complain message.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#asserteq">asserteq (x, y, eps, where)</a></td>
+	<td class="summary">like assert, except takes two arguments that must be equal and can be tables.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#assertmatch">assertmatch (s1, s2, where)</a></td>
+	<td class="summary">assert that the first string matches the second.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#assertraise">assertraise (fn, e, where)</a></td>
+	<td class="summary">assert that the function raises a particular error.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#asserteq2">asserteq2 (x1, x2, y1, y2, where)</a></td>
+	<td class="summary">a version of asserteq that takes two pairs of values.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tuple">tuple (...)</a></td>
+	<td class="summary">encode an arbitrary argument list as a tuple.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#timer">timer (msg, n, fun, ...)</a></td>
+	<td class="summary">Time a function.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "error_handler"></a>
+    <strong>error_handler (file, line, got_text, needed_text, msg)</strong>
+    </dt>
+    <dd>
+    error handling for test results.
+ By default, this writes to stderr and exits the program.
+ Re-define this function to raise an error and/or redirect output
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">file</span>
+
+        </li>
+        <li><span class="parameter">line</span>
+
+        </li>
+        <li><span class="parameter">got_text</span>
+
+        </li>
+        <li><span class="parameter">needed_text</span>
+
+        </li>
+        <li><span class="parameter">msg</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "complain"></a>
+    <strong>complain (x, y, msg, where)</strong>
+    </dt>
+    <dd>
+    general test complain message.
+ Useful for composing new test functions (see tests/tablex.lua for an example)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         a value
+        </li>
+        <li><span class="parameter">y</span>
+         value to compare first value against
+        </li>
+        <li><span class="parameter">msg</span>
+         message
+        </li>
+        <li><span class="parameter">where</span>
+         extra level offset for errors
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "asserteq"></a>
+    <strong>asserteq (x, y, eps, where)</strong>
+    </dt>
+    <dd>
+    like assert, except takes two arguments that must be equal and can be tables.
+ If they are plain tables, it will use tablex.deepcompare.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         any value
+        </li>
+        <li><span class="parameter">y</span>
+         a value equal to x
+        </li>
+        <li><span class="parameter">eps</span>
+         an optional tolerance for numerical comparisons
+        </li>
+        <li><span class="parameter">where</span>
+         extra level offset
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "assertmatch"></a>
+    <strong>assertmatch (s1, s2, where)</strong>
+    </dt>
+    <dd>
+    assert that the first string matches the second.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">s1</span>
+         a string
+        </li>
+        <li><span class="parameter">s2</span>
+         a string
+        </li>
+        <li><span class="parameter">where</span>
+         extra level offset
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "assertraise"></a>
+    <strong>assertraise (fn, e, where)</strong>
+    </dt>
+    <dd>
+    assert that the function raises a particular error.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fn</span>
+         a function or a table of the form {function,arg1,...}
+        </li>
+        <li><span class="parameter">e</span>
+         a string to match the error against
+        </li>
+        <li><span class="parameter">where</span>
+         extra level offset
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "asserteq2"></a>
+    <strong>asserteq2 (x1, x2, y1, y2, where)</strong>
+    </dt>
+    <dd>
+    a version of asserteq that takes two pairs of values.
+ <code>x1==y1 and x2==y2</code> must be true. Useful for functions that naturally
+ return two values.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+         any value
+        </li>
+        <li><span class="parameter">x2</span>
+         any value
+        </li>
+        <li><span class="parameter">y1</span>
+         any value
+        </li>
+        <li><span class="parameter">y2</span>
+         any value
+        </li>
+        <li><span class="parameter">where</span>
+         extra level offset
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tuple"></a>
+    <strong>tuple (...)</strong>
+    </dt>
+    <dd>
+    encode an arbitrary argument list as a tuple.
+ This can be used to compare to other argument lists, which is
+ very useful for testing functions which return a number of values.
+ Unlike regular array-like tables ('sequences') they may contain nils.
+ Tuples understand equality and know how to print themselves out.
+ The # operator is defined to be the size, irrespecive of any nils,
+ and there is an `unpack` method.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">asserteq(tuple( (<span class="string">'ab'</span>):find <span class="string">'a'</span>), tuple(<span class="number">1</span>,<span class="number">1</span>))</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "timer"></a>
+    <strong>timer (msg, n, fun, ...)</strong>
+    </dt>
+    <dd>
+    Time a function.  Call the function a given number of times, and report the number of seconds taken,
+ together with a message.  Any extra arguments will be passed to the function.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">msg</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         a descriptive message
+        </li>
+        <li><span class="parameter">n</span>
+            <span class="types"><span class="type">int</span></span>
+         number of times to call the function
+        </li>
+        <li><span class="parameter">fun</span>
+            <span class="types"><span class="type">func</span></span>
+         the function
+        </li>
+        <li><span class="parameter">...</span>
+         optional arguments to fun
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-08-15 13:35:27 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

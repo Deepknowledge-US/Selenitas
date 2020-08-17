@@ -2,7 +2,6 @@ require 'Engine.utilities.utl_main'
 
 local pl   = require 'pl'
 
-
 Config = Params({
     ['start'] = true,
     ['go']    = true,
@@ -17,7 +16,6 @@ Config = Params({
     of agents in them. The agents are positioned in the center of the grid in the setup.
 
 ]]--
-
 
 local histogram     = {}
 local num_of_bars   = 7

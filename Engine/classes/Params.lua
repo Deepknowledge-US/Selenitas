@@ -21,16 +21,23 @@ local Params = class.Params()
 --     ['ysize'] = 15
 -- })
 Params._init = function(self,obj)
-    local c           = obj or {}
-    self              = c
-    self.ticks        = c.ticks or 0
-    self.xsize        = c.xsize or 0
-    self.ysize        = c.ysize or 0
-    self.__num_agents = 0
-    self.ui_settings  = {}
+    local c             = obj or {}
+    self                = c
+    self.ticks          = c.ticks or 0
+    self.xsize          = c.xsize or 0
+    self.ysize          = c.ysize or 0
+    self.__all_families = {}
+    self.__num_agents   = 0
+    self.ui_settings    = {}
     return self
 end;
 
+------------------
+-- This function controls the ids of the agents, when a new agent is created, an unique id is given to it, this function generates new ids. This function is called by families when adding new agents.
+-- @function __new_id
+-- @return Number, a unique id.
+-- @usage
+-- -- TODO
 Params.__new_id = function(self)
     self.__num_agents = self.__num_agents + 1
     return self.__num_agents

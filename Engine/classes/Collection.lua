@@ -4,6 +4,7 @@
 -- Collection
 
 local class  = require 'Thirdparty.pl.class'
+
 local Collection = class.Collection(Family)
 
 ------------------

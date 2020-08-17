@@ -4,7 +4,6 @@
 -- Cell
 
 local class = require 'Thirdparty.pl.class'
-local Agent = require 'Engine.classes.Agent'
 
 local Cell = class.Cell(Agent)
 
@@ -16,7 +15,7 @@ local Cell = class.Cell(Agent)
 -- @function _init
 -- @param p_table is a table of pairs 'name_of_attribute:value'
 -- @return A new instance of Cell class
--- @usage new_instance = Cell( {table_of_attributes} )
+-- @usage new_instance = Cell( {} )
 Cell._init = function(self,p_table)
 
     self:super()

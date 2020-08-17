@@ -6,6 +6,7 @@ local pr = require 'pl.pretty'
 Config = Params({
     ['start'] = true,
     ['go']    = true,
+    ['max_age']= 50,
     ['ticks'] = 300,
     ['xsize'] = 15,
     ['ysize'] = 15,
@@ -37,6 +38,11 @@ local function print_current_config()
         print(line)
     end
     print('=============================\n')
+
+    print(#Agents.__to_purge)
+    -- for k,v in pairs(Agents.__to_purge)do
+    --     print(k, v.id)
+    -- end
 end
 
 
@@ -54,7 +60,7 @@ end
 -- and kills the agent when it reach 51 years
 local function grow_old(agent)
     agent.age = agent.age + 1
-    if agent.age > 50 then
+    if agent.age > Config.max_age then
         Agents:kill(agent)
     end
 end
@@ -150,7 +156,10 @@ run(function()
     -- print('hola')
     print_current_config()
 
-
+    if math.fmod(__ticks, 10) == 0 then
+        print('purgado')
+        purge_agents(Agents)
+    end
 
 end)
 
