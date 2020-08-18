@@ -1,5 +1,8 @@
 local ge = require "Visual.graphicengine"
 
+-- Add Thirdparty folder to package path
+package.path = package.path .. ';Thirdparty/?.lua'
+
 -- Load default window
 ge.init()
 --if arg[2] then
