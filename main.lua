@@ -1,7 +1,7 @@
 local ge = require "Visual.graphicengine"
 
 -- Add Thirdparty folder to package path
-package.path = package.path .. ';Thirdparty/?.lua'
+love.filesystem.setRequirePath(love.filesystem.getRequirePath() .. ';Thirdparty/?.lua')
 
 -- Load default window
 ge.init()
