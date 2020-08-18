@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install python3 python3-pip wine
+        sudo apt install python3 python3-pip wine-stable
         pip3 install makelove
   
     - name: Build
