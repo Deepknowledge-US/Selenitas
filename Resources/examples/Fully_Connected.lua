@@ -35,10 +35,10 @@ local function layout_circle(collection, radius)
         rt(current_agent, degrees)
 
         -- Use this in a continuous space
-        -- fd(current_agent, radius)
+        fd(current_agent, radius)
 
         -- Use this in a discrete space
-        fd_grid(current_agent, radius)
+        --fd_grid(current_agent, radius)
 
         degrees = degrees + step
     end
@@ -68,7 +68,7 @@ setup = function()
             Links:add({
                     ['source'] = agent,
                     ['target'] = another_agent,
-                    ['label'] = agent.id .. ',' .. another_agent.id,
+                    ['label'] = "",--agent.id .. ',' .. another_agent.id,
                     ['visible'] = true,
                     ['color'] = {0.75, 0, 0, 1}
                 }
