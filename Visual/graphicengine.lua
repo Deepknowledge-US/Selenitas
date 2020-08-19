@@ -8,10 +8,6 @@ local step_func = nil
 local simulation_params = nil
 local initialized = false
 local go = false
-local examples = {
-    "Communication_T_T",
-    "Hatch"
-}
 
 -- Time handling
 local time_between_steps = 0
@@ -55,6 +51,16 @@ local function load_simulation_file(file_path)
     dofile(file_loaded_path)
 end
 
+-- List of files in "examples" resource folder
+local function list_examples()
+    local ret = {}
+    for i, f in ipairs(love.filesystem.getDirectoryItems("Resources/examples")) do
+        local name = string.gsub(f, ".lua", "")
+        table.insert(ret, name)
+    end
+    return ret
+end
+
 local function update_ui(dt)
     -- Re-draw UI in each step
     Slab.Update(dt)
@@ -77,7 +83,7 @@ local function update_ui(dt)
 
             -- "Load example" submenu
             if Slab.BeginMenu("Load example") then
-                for _,e in ipairs(examples) do
+                for _,e in ipairs(list_examples()) do
                     if Slab.MenuItem(e) then
                         _reset()
                         local a = ResourceManager.examples[e]
