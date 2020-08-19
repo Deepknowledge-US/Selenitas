@@ -65,7 +65,6 @@ setup = function()
 
     Config.go = true
 
-    return People.agents
 end
 
 -- This function is executed until the stop condition is reached, or until

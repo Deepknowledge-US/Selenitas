@@ -81,9 +81,6 @@ setup = function()
         fd_grid(agent,Config.stride)
     end)
 
-    -- pr.dump(Patches)
-    return Agents.agents
-
 end
 
 

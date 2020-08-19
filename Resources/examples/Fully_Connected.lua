@@ -68,7 +68,9 @@ setup = function()
             Links:add({
                     ['source'] = agent,
                     ['target'] = another_agent,
-                    ['legend'] = agent.id .. ',' .. another_agent.id
+                    ['label'] = agent.id .. ',' .. another_agent.id,
+                    ['visible'] = true,
+                    ['color'] = {0.75, 0, 0, 1}
                 }
             )
         end)

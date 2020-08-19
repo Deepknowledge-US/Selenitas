@@ -29,16 +29,16 @@ Rel._init = function(self,obj)
         self[k] = v
     end
 
-    self.type       = obj.type      or 'standard'
-    self.source     = obj.source    or {}
-    self.target     = obj.target    or {}
-    self.color      = obj.color     or {0.5, 0.5, 0.5, 1}
-    self.label      = obj.label     or ''
-    self.label_color= obj.color     or {1,1,1,1}
-    self.thickness  = obj.thickness or 1
-    self.shape      = obj.shape     or 'line'
-    self.visible    = obj.visible   or false
-    self.z_order    = obj.z_order   or 0
+    self.type       = obj.type        or 'standard'
+    self.source     = obj.source      or {}
+    self.target     = obj.target      or {}
+    self.color      = obj.color       or {0.5, 0.5, 0.5, 1}
+    self.label      = obj.label       or ''
+    self.label_color= obj.label_color or {1,1,1,1}
+    self.thickness  = obj.thickness   or 1
+    self.shape      = obj.shape       or 'line'
+    self.visible    = obj.visible     or false
+    self.z_order    = obj.z_order     or 0
     return self
 end;
 
