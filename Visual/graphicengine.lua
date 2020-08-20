@@ -1,5 +1,6 @@
 local Slab = require "Thirdparty.Slab.Slab"
 local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
+local FileUtils = require("Visual.fileutils")
 
 -- Simulation info
 local agents = nil
@@ -23,7 +24,6 @@ local show_about_dialog = false
 
 -- File handling
 local file_loaded_path = nil
-local file_loaded = false
 local show_file_picker = false
 
 local function init()
@@ -49,7 +49,6 @@ end
 local function load_simulation_file(file_path)
     _reset()
     file_loaded_path = file_path
-    file_loaded = true
     dofile(file_loaded_path)
 end
 
@@ -83,13 +82,31 @@ local function update_ui(dt)
                 end
             end
 
+            -- Show "Edit loaded file" option if file was loaded
+            if file_loaded_path then
+                if Slab.MenuItem("Edit loaded file") then
+                    FileUtils.open_in_editor(file_loaded_path)
+                end
+            end
+
             -- "Load example" submenu
             if Slab.BeginMenu("Load example") then
                 for _,e in ipairs(list_examples()) do
                     if Slab.MenuItem(e) then
+                        -- Create save directory if it doesn't exist
+                        if not FileUtils.exists(love.filesystem.getSaveDirectory() .. "/files") then
+                            love.filesystem.createDirectory("files")
+                        end
+                        -- Copy file to save directory
+                        local src = "Resources/examples/" .. e .. ".lua"
+                        local dst = "files/" .. e .. ".lua" -- contained in Save directory
+                        FileUtils.copy_to_save_dir(src, dst)
+                        file_loaded_path =
+                            love.filesystem.getSaveDirectory() .. "/" .. dst
+                        -- Reset variables and run example
+                        -- (just calling it is enough for it to be run because of how 'cargo' library loads it)
                         _reset()
-                        local a = ResourceManager.examples[e]
-                        file_loaded = true
+                        _ = ResourceManager.examples[e]
                     end
                 end
                 Slab.EndMenu()
@@ -174,7 +191,7 @@ local function update_ui(dt)
     Slab.BeginLayout("Layout", {
         ExpandW = true
     })
-    if Slab.Button("Setup", {Disabled = not file_loaded}) then
+    if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
             setup_func()
             -- Get agents and links lists
