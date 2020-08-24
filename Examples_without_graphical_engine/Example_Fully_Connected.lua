@@ -76,7 +76,7 @@ local size =  x > y and math.floor(x/2) or math.floor(y/2)
 -- equals to "degrees" variable and increment the value of "degrees" with "step".
 local function layout_circle(collection, radius)
 
-    local num = #collection.order
+    local num = collection.count
     local step = 360 / num
     local degrees = 0
 
@@ -125,12 +125,9 @@ setup(function()
         end)
     end)
 
-
 end)
 
 local function print_aux()
-    print('Nodes order:')
-    pd(Nodes.order)
     for k,v in pairs(Links.agents)do
         print('link id:', k)
     end

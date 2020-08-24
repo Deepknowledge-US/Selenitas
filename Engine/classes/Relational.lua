@@ -42,5 +42,10 @@ Rel._init = function(self,obj)
     return self
 end;
 
-
+Rel.ends = function(self)
+    local res = Collection(self.target.family)
+    res:add(self.target)
+    res:add(self.source)
+    return res
+end
 return Rel

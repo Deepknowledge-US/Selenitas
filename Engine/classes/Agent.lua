@@ -112,6 +112,13 @@ Agent.__purge = function(self)
 end
 
 ------------------
+Agent.ask = function(self,funct)
+    if self.alive then
+        funct(self)
+    end
+end
+
+------------------
 -- A function to print the Agent. If we do print(an_agent) this function is called.
 -- @function __tostring
 -- @return A string representation of the agent.

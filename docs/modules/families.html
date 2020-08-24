@@ -40,8 +40,9 @@
 <ul class="nowrap">
   <li><a href="../modules/actions.html">actions</a></li>
   <li><a href="../modules/checks.html">checks</a></li>
-  <li><strong>collections</strong></li>
+  <li><strong>families</strong></li>
   <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
 </ul>
@@ -64,7 +65,7 @@
 
 <div id="content">
 
-<h1>Module <code>collections</code></h1>
+<h1>Module <code>families</code></h1>
 <p></p>
 <p></p>
 
@@ -76,20 +77,32 @@
 	<td class="summary">A function to create a bidimensional grid of patches quickily</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#ask">ask (elements)</a></td>
+	<td class="name" nowrap><a href="#ask_ordered">ask_ordered (elements)</a></td>
 	<td class="summary">Applies a function to all elements.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#die">die (agent, family)</a></td>
-	<td class="summary">Marks an agent as die by given a value of false to its param 'alive'.</td>
+	<td class="name" nowrap><a href="#ask">ask (fam, funct)</a></td>
+	<td class="summary">Applies an anonymous function to a Family of agents.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#clone_n_act">clone_n_act (n, agent, family, funct)</a></td>
+	<td class="name" nowrap><a href="#ask_n">ask_n (n, fam, funct)</a></td>
+	<td class="summary">It works same way as "ask", but this function applies the action only at n random selected elements of the family.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#clone_n">clone_n (family, n, agent, funct)</a></td>
 	<td class="summary">This function encapsulates a call to the function clone_n_act in the Family given as parameter.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#purge_agents">purge_agents (...)</a></td>
 	<td class="summary">This function delete from the system all agents marked as not alive (a value of false in its parameter 'alive'), it will also delete all the relational agents that involve a not-alive agent.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#__producer">__producer (list, list)</a></td>
+	<td class="summary">Internal function to make the iterator.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#__consumer">__consumer (list, index)</a></td>
+	<td class="summary">Beside the producer, this functions are a coroutine to implement the Fisher-Yates shuffle.</td>
 	</tr>
 </table>
 
@@ -133,8 +146,8 @@
 
 </dd>
     <dt>
-    <a name = "ask"></a>
-    <strong>ask (elements)</strong>
+    <a name = "ask_ordered"></a>
+    <strong>ask_ordered (elements)</strong>
     </dt>
     <dd>
     Applies a function to all elements.  Works with Families or with subsets of families (Collections).
@@ -154,6 +167,10 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:ask_ordered">Family.ask_ordered</a>
+    </ul>
 
     <h3>Usage:</h3>
     <ul>
@@ -164,20 +181,20 @@
 
 </dd>
     <dt>
-    <a name = "die"></a>
-    <strong>die (agent, family)</strong>
+    <a name = "ask"></a>
+    <strong>ask (fam, funct)</strong>
     </dt>
     <dd>
-    Marks an agent as die by given a value of false to its param 'alive'.  Agents with alive=false does not do actions when we ask to the agents in the family to do something, but they still are present in the table 'agents' of its family and all its links with other agents are presents in the simulation. If you want to totally remove an agent and its relations with others of the simulation you have to do 'purge_agents()'.
+    Applies an anonymous function to a Family of agents.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">agent</span>
-         The agent we want to mark as die.
+        <li><span class="parameter">fam</span>
+         A Family instance. Note that Collections are also Families.
         </li>
-        <li><span class="parameter">family</span>
-         The family the agent belongs to. Optional param, if not gived
+        <li><span class="parameter">funct</span>
+         Anonymous function that will be applied to the agents of the family.
         </li>
     </ul>
 
@@ -188,20 +205,59 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:ask">Family.ask</a>
+    </ul>
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">ask(Nodes, <span class="keyword">function</span>(node)
-    <span class="keyword">if</span> node.color == {<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>} <span class="keyword">then</span>
-        die(node, Nodes)
-    <span class="keyword">end</span>
-<span class="keyword">end</span>)</pre>
+        <pre class="example">ask(A_family, <span class="keyword">function</span>(ag) ag:fd(<span class="number">1.3</span>) <span class="keyword">end</span>)</pre>
     </ul>
 
 </dd>
     <dt>
-    <a name = "clone_n_act"></a>
-    <strong>clone_n_act (n, agent, family, funct)</strong>
+    <a name = "ask_n"></a>
+    <strong>ask_n (n, fam, funct)</strong>
+    </dt>
+    <dd>
+    It works same way as "ask", but this function applies the action only at n random selected elements of the family.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">n</span>
+         Number of agents to be asked.
+        </li>
+        <li><span class="parameter">fam</span>
+         Family where the agents will be asked..
+        </li>
+        <li><span class="parameter">funct</span>
+         Anonymous function that will be applied to the agents.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:ask_n">Family.ask_n</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">ask_n(Agents, <span class="keyword">function</span>(ag) ag:fd(<span class="number">2.1</span>) <span class="keyword">end</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "clone_n"></a>
+    <strong>clone_n (family, n, agent, funct)</strong>
     </dt>
     <dd>
     This function encapsulates a call to the function clone_n_act in the Family given as parameter.
@@ -209,14 +265,14 @@
 
     <h3>Parameters:</h3>
     <ul>
+        <li><span class="parameter">family</span>
+         The Family where the agent belongs to and where the clones will be added.
+        </li>
         <li><span class="parameter">n</span>
          Number. The number of agents to clone
         </li>
         <li><span class="parameter">agent</span>
          The Agent instance used as model to create the clones
-        </li>
-        <li><span class="parameter">family</span>
-         The Family where the agent belongs to and where the clones will be added.
         </li>
         <li><span class="parameter">funct</span>
          Optional. An anonymous function to ask the clones to do something
@@ -230,10 +286,14 @@
     </ol>
 
 
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:clone_n">Family.clone_n</a>
+    </ul>
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">clone_n_act(<span class="number">3</span>, ag1, ag1_family, <span class="keyword">function</span>(clone)
+        <pre class="example">clone_n(<span class="number">3</span>, ag1, ag1_family, <span class="keyword">function</span>(clone)
     clone:gtrn()
 <span class="keyword">end</span>)</pre>
     </ul>
@@ -268,6 +328,73 @@
     </ul>
 
 </dd>
+    <dt>
+    <a name = "__producer"></a>
+    <strong>__producer (list, list)</strong>
+    </dt>
+    <dd>
+    Internal function to make the iterator.  It yields a random item of the list gived as parameter every time it is called. This function is called by a consumer function when a new element is needed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">list</span>
+         A index of the list
+        </li>
+        <li><span class="parameter">list</span>
+         A index of the list
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A random element in a position lower or equal to "index" parameter
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> status, number = <span class="global">coroutine</span>.resume(utl_fam.__producer(list, index))</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "__consumer"></a>
+    <strong>__consumer (list, index)</strong>
+    </dt>
+    <dd>
+    Beside the producer, this functions are a coroutine to implement the Fisher-Yates shuffle.  __consumer calls the __producer to take a new element of the list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">list</span>
+         A list of elements.
+        </li>
+        <li><span class="parameter">index</span>
+         A position in the list.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        A new element of the list
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">for</span> i=#list,<span class="number">1</span>,-<span class="number">1</span> <span class="keyword">do</span>
+    <span class="keyword">local</span> new_element = __consumer(list,i)
+    <span class="global">print</span>(new_element)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
 </dl>
 
 
@@ -275,7 +402,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-17 12:37:53 </i>
+<i style="float:right;">Last updated 2020-08-24 11:54:46 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

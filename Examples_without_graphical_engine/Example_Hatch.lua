@@ -54,6 +54,7 @@ local histogram = {}
 local function wander(agent)
     rt(agent, math.random(360))
     fd_grid(agent, Config.stride)
+    return agent
 end
 
 -- Agents have an "age" parameter to simulate its age, this function increment in 1 its value
@@ -61,30 +62,21 @@ end
 local function grow_old(agent)
     agent.age = agent.age + 1
     if agent.age > Config.max_age then
-        Agents:kill(agent)
+        die(agent)
     end
-end
-
-local same_color = function(c1,c2)
-    if #c1 ~= 4 or #c1 ~= 4 then
-        return false
-    end
-    for i=1,4 do
-        if c1[i] ~= c2[i] then
-            return false
-        end
-    end
-    return true
+    return agent
 end
 
 -- Only pink agents are capable of cloning themselves.
 -- Cloned agents only have a 10% chance of being pink.
 local function reproduce(agent)
-    if same_color(agent.color, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
-        Agents:clone_n_act(1,agent, function(x)
-            x.color = math.random(10) > 1 and {0,0,1,1} or {0.5,0.5,0.5,1}
-            x.age   = 0
-        end)
+    if agent.alive then
+        if same_rgb(agent, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
+            clone_n(Agents, 1, agent, function(x)
+                x.color = math.random(10) > 1 and {0,0,1,1} or {0.5,0.5,0.5,1}
+                x.age   = 0
+            end)
+        end
     end
 end
 
@@ -122,9 +114,8 @@ end)
 -- At the moment we have discrete iterations
 run(function()
 
-    
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
-    if #Agents.order == 0 or __ticks == Config.ticks then
+    if Agents.count == 0 or __ticks == Config.ticks then
         print('adios')
         Config.go = false
         for k,v in ipairs(histogram)do
@@ -151,12 +142,15 @@ run(function()
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of
     -- agents along the iterations.
-    table.insert(histogram, #Agents.order)
+    table.insert(histogram, Agents.count)
+
 
     -- print('hola')
-    print_current_config()
+    -- print_current_config()
 
     if math.fmod(__ticks, 10) == 0 then
+
+        print_current_config()
         print('purgado')
         purge_agents(Agents)
     end

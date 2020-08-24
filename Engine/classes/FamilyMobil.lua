@@ -41,12 +41,11 @@ FM.add = function(self,object)
         new_agent = Mobil(object)
     end
 
-    table.insert(self.order,key)
-    self.size = self.size + 1
+    new_agent.id     = key
+    new_agent.family = self
 
     self.agents[key]        = new_agent
-    self.agents[key].id     = key
-    self.agents[key].family = self
+    self.count = self.count + 1
 end
 
 ------------------
@@ -81,15 +80,15 @@ end
 --     return target:xcor() >= 4
 -- end)
 -- -- This will result in a collection of Agents of the family Agents1 with a value of 4 or more in its xcor
-FM.with = function(self,funct)
-    local res = Collection(self)
-    for _,v in pairs(self.agents) do
-        if funct(v) then
-            res:add(v)
-        end
-    end
-    return res
-end
+-- FM.with = function(self,funct)
+--     local res = Collection(self)
+--     for _,v in pairs(self.agents) do
+--         if funct(v) then
+--             res:add(v)
+--         end
+--     end
+--     return res
+-- end
 
 
 

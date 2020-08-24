@@ -10,15 +10,15 @@ local utl_actions = {}
 
 ------------------
 -- Fisher-Yates method to shuffle a list. It consist on permutations of the objects in a list.
--- @function shuffle
+-- @function array_shuffle
 -- @param list A list to shuffle
 -- @return Nothing
 -- @usage 
 -- local a_list = {1,2,3,4,5}
--- shuffle(a_list)
+-- array_shuffle(a_list)
 -- print(a_list)
 -- -- => {3,2,5,1,4}
-function utl_actions.shuffle(list)
+function utl_actions.array_shuffle(list)
     local array = list
     for i = #array,2, -1 do
         local j = math.random(i)
@@ -106,6 +106,33 @@ function utl_actions.gtrn(agent)
     agent.pos[2] = (agent:ycor() + changes[choose][2]) % Config.ysize
     agent.pos[2] = agent:ycor() > 0 and agent:ycor() or Config.ysize
 
+end
+
+------------------
+-- Marks an agent as die by given a value of false to its param 'alive'. Agents with alive=false does not do actions when we ask to the agents in the family to do something, but they still are present in the table 'agents' of its family and all its links with other agents are presents in the simulation. If you want to totally remove an agent and its relations with others of the simulation you have to do 'purge_agents()'.
+-- @function die
+-- @param agent The agent we want to mark as die.
+-- @param family The family the agent belongs to. Optional param, if not gived
+-- @return Nothing
+-- @usage
+-- ask(Nodes, function(node)
+--     if node.color == {1,1,1,1} then
+--         die(node, Nodes)
+-- --      Nodes:kill(node) -- This is equivalent.
+-- --      die(node)        -- This is also possible, and the agent will be searched and killed (but not purged) in every Family.
+--     end
+-- end)
+-- @see Family.kill
+function utl_actions.die(agent, family)
+    if family ~= nil then
+        family:kill(agent)
+    else
+        for i=1,#Config.__all_families do
+            if agent == Config.__all_families[i].agents[agent.id]  then
+                Config.__all_families[i]:kill(agent)
+            end
+        end
+    end
 end
 
 

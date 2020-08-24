@@ -43,12 +43,11 @@ FC.add = function(self,object)
         new_agent = Cell(object)
     end
 
-    table.insert(self.order,k)
-    self.size = self.size + 1
+    new_agent.id     = k
+    new_agent.family = self
 
-    self.agents[k]        = new_agent
-    self.agents[k].id     = k
-    self.agents[k].family = self
+    self.agents[k]   = new_agent
+    self.count       = self.count + 1
 end
 
 ------------------

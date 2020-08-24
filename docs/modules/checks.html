@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/actions.html">actions</a></li>
+  <li><strong>checks</strong></li>
+  <li><a href="../modules/families.html">families</a></li>
+  <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
+  <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Agent.html">Agent</a></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
+  <li><a href="../classes/Collection.html">Collection</a></li>
+  <li><a href="../classes/Family.html">Family</a></li>
+  <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
+  <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
+  <li><a href="../classes/Metacollection.html">Metacollection</a></li>
+  <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Params.html">Params</a></li>
+  <li><a href="../classes/Relational.html">Relational</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>checks</code></h1>
+<p></p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#is_in_list">is_in_list (item, elements)</a></td>
+	<td class="summary">Given an item and a set of elements or a collection, decide if item is included in the set.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#exists">exists (pred)</a></td>
+	<td class="summary">Returns true if any agent in the family validates a predicate.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#all">all (family, pred)</a></td>
+	<td class="summary">Checks if all agents in a family validates a condition.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#is_in">is_in (family, agent)</a></td>
+	<td class="summary">Checks if an agent is member of the family.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#same_rgb">same_rgb (object_1, object_2)</a></td>
+	<td class="summary">A check function to compare colors.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#same_rgba">same_rgba (object_1, object_2)</a></td>
+	<td class="summary">A check function to compare colors.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "is_in_list"></a>
+    <strong>is_in_list (item, elements)</strong>
+    </dt>
+    <dd>
+    Given an item and a set of elements or a collection, decide if item is included in the set.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">item</span>
+         An Object (usually an agent).
+        </li>
+        <li><span class="parameter">elements</span>
+         List of elements.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Boolean, true if 'item' is present in 'elements'
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> my_check = is_in_list( <span class="number">2</span>, {<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>})
+<span class="global">print</span>(my_check) <span class="comment">-- =&gt; true</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "exists"></a>
+    <strong>exists (pred)</strong>
+    </dt>
+    <dd>
+    Returns true if any agent in the family validates a predicate.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pred</span>
+         An anonymous function (boolean predicate).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Boolean: True if there is at least one agent that validates the predicate. It also returns in second place an Agent validating the predicate.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:exists">Family.exists</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> response = exists( A_family, <span class="keyword">function</span>(x) x.label ~= <span class="string">''</span> <span class="keyword">end</span> )
+<span class="keyword">if</span> response <span class="keyword">then</span>
+    <span class="global">print</span>(<span class="string">'There is almost an agent with a non empty label'</span>)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "all"></a>
+    <strong>all (family, pred)</strong>
+    </dt>
+    <dd>
+    Checks if all agents in a family validates a condition.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">family</span>
+         A family to check.
+        </li>
+        <li><span class="parameter">pred</span>
+         Anonymous function (boolean predicate).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Boolean. True if all agents in the family validate the condition.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:all">Family.all</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">all(A_family, <span class="keyword">function</span>(ag) ag.label == <span class="string">''</span> <span class="keyword">end</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "is_in"></a>
+    <strong>is_in (family, agent)</strong>
+    </dt>
+    <dd>
+    Checks if an agent is member of the family.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">family</span>
+         A family to check.
+        </li>
+        <li><span class="parameter">agent</span>
+         The Agent instance we want to check.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Boolean. True if the agent is in the family
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Family.html#Instance:is_in">Family.is_in</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> my_boolean = is_in(A_family, agent)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "same_rgb"></a>
+    <strong>same_rgb (object_1, object_2)</strong>
+    </dt>
+    <dd>
+    A check function to compare colors.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">object_1</span>
+         It may be an Agent or a 4 parameters vector (rgba).
+        </li>
+        <li><span class="parameter">object_2</span>
+         It may be an Agent or a 4 parameters vector (rgba).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Boolean, true if both colors have the same rgb components.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> check_color   = same_rgb(an_agent_instance, {<span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1</span>} )
+<span class="keyword">local</span> check_color_2 = same_rgb(an_agent_instance, another_agent )
+<span class="keyword">local</span> check_color_3 = same_rgb( {<span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1</span>}, {<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>} )</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "same_rgba"></a>
+    <strong>same_rgba (object_1, object_2)</strong>
+    </dt>
+    <dd>
+    A check function to compare colors.  This function compares also the alpha channel.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">object_1</span>
+         It may be an Agent or a 4 parameters vector (rgba).
+        </li>
+        <li><span class="parameter">object_2</span>
+         It may be an Agent or a 4 parameters vector (rgba).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Boolean, true if both colors have the same rgba components.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> check_color   = same_rgba(an_agent_instance, {<span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1</span>} )
+<span class="keyword">local</span> check_color_2 = same_rgba(an_agent_instance, another_agent )
+<span class="keyword">local</span> check_color_3 = same_rgba( {<span class="number">1</span>, <span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1</span>}, {<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>} )</pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-08-24 11:54:46 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

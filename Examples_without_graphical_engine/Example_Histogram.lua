@@ -68,7 +68,6 @@ local function print_current_config()
 end
 
 
-
 setup(function()
     -- Create a new collection
     Agents = FamilyMobil()

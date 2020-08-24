@@ -47,10 +47,10 @@ local function print_current_config()
 
     print('\n\n========== tick '.. __ticks .. ' ===========')
 
-    ask_coroutine(Patches, function(cell)
+    ask(Patches, function(cell)
         cell.label = People:with(function(ag)
             return ag:xcor() == cell:xcor() and ag:ycor() == cell:ycor()
-        end).size
+        end).count
     end)
 
     -- Print the number of agents in each patch
@@ -60,6 +60,7 @@ local function print_current_config()
             local target = one_of(Patches:with(function(cell)
                 return cell:xcor() == i and cell:ycor() == j
             end))
+            -- print(target:xcor(),target:ycor())
             line = line .. target.label .. ','
         end
         print(line)
@@ -88,7 +89,7 @@ setup(function()
     end)
 
     -- A message is given to one of the agents
-    ask_coroutine(one_of(People), function(agent)
+    ask(one_of(People), function(agent)
         agent.message = true
     end)
 
@@ -101,7 +102,7 @@ end)
 run(function()
 
     -- Stop condition: All agents have the message
-    if People:with(function(x) return x.message == false end).size == 0 then
+    if People:with(function(x) return x.message == false end).count == 0 then
         Config.go = false
         return
     end

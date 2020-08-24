@@ -9,6 +9,7 @@ Family           = require 'Engine.classes.Family'
 FamilyCell       = require 'Engine.classes.FamilyCell'
 FamilyMobil      = require 'Engine.classes.FamilyMobil'
 FamilyRelational = require 'Engine.classes.FamilyRelational'
+Collection       = require 'Engine.classes.Collection'
 
 Agent           = require 'Engine.classes.Agent'
 Cell            = require 'Engine.classes.Cell'
@@ -16,29 +17,38 @@ Mobil           = require 'Engine.classes.Mobil'
 Relational      = require 'Engine.classes.Relational'
 Params          = require 'Engine.classes.Params'
 
+__list_tables   = require 'Engine.utilities.utl_list_and_tables'
+list_copy       = __list_tables.list_copy
+
 __str_fls       = require 'Engine.utilities.utl_strings_and_files'
 lines_from      = __str_fls.lines_from
 split           = __str_fls.split
 
-__fam           = require 'Engine.utilities.utl_collections'
+__fam           = require 'Engine.utilities.utl_families'
 create_patches  = __fam.create_patches
 purge_agents    = __fam.purge_agents
-clone_n_act     = __fam.clone_n_act
-ask_coroutine   = __fam.ask_coroutine
+clone_n         = __fam.clone_n
+ask_ordered     = __fam.ask_ordered
+ask_n           = __fam.ask_n
 ask             = __fam.ask
-die             = __fam.die
+__producer      = __fam.__producer
+__consumer      = __fam.__consumer
 
 __fltr          = require 'Engine.utilities.utl_filters'
 first_n         = __fltr.first_n
 last_n          = __fltr.last_n
 one_of          = __fltr.one_of
 n_of            = __fltr.n_of
+up_to_n_of      = __fltr.up_to_n_of
 
 __chk           = require 'Engine.utilities.utl_checks'
-member_of       = __chk.member_of
+is_in_list      = __chk.is_in_list
+same_rgb        = __chk.same_rgb
+same_rgba       = __chk.same_rgba
 
 __act           = require 'Engine.utilities.utl_actions'
-shuffle         = __act.shuffle
+array_shuffle   = __act.array_shuffle
+die             = __act.die
 fd              = __act.fd
 fd_grid         = __act.fd_grid
 gtrn            = __act.gtrn
@@ -87,7 +97,7 @@ end
 -- @return Nothing
 -- @usage
 -- run(function()
---     if Agents.size == 0 then
+--     if Agents.count == 0 then
 --         Config.go = false
 --     end
 --

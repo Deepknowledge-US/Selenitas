@@ -13,8 +13,8 @@ local Cell = class.Cell(Agent)
 -- Cell constructor.
 -- When a new Cell is created, some properties are given to it (If we do not have done it yet)
 -- @function _init
--- @param p_table is a table of pairs 'name_of_attribute:value'
--- @return A new instance of Cell class
+-- @param p_table Table of pairs 'name_of_attribute:value'
+-- @return Agent. A new instance of Cell class.
 -- @usage new_instance = Cell( {} )
 Cell._init = function(self,p_table)
 
@@ -37,7 +37,6 @@ Cell._init = function(self,p_table)
     return self
 end;
 
-
 ------------------
 -- It returns the x coordinate of the Cell
 -- @function xcor
@@ -46,8 +45,6 @@ end;
 Cell.xcor = function(self)
     return self.pos[1]
 end
-
-
 
 ------------------
 -- It returns the y coordinate of the Cell
@@ -58,7 +55,6 @@ Cell.ycor = function(self)
     return self.pos[2]
 end
 
-
 ------------------
 -- It returns the z coordinate of the Cell
 -- @function zcor
@@ -66,6 +62,27 @@ end
 -- @usage instance:zcor()
 Cell.zcor = function(self)
     return self.pos[3]
+end
+
+------------------
+-- A function to determine if a position is in the region of the Cell.
+-- @function region
+-- @param pos A vector of n dimensions.
+-- @return true if pos is in the region of the cell. A square region of 1 unit side is considered by default.
+-- @usage instance:region()
+Cell.region = function(self,pos)
+    local x,y = pos[1],pos[2]
+
+    local x_up_limit, x_down_limit = self:xcor() + 0.5, self:xcor() - 0.5
+    local y_l_limit, y_r_limit     = self:ycor() - 0.5, self:ycor() + 0.5
+
+    if x_up_limit >= x and x > x_down_limit then
+        if y_l_limit >= y and y > y_r_limit then
+            return true
+        end
+    end
+    return false
+
 end
 
 return Cell

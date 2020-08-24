@@ -50,10 +50,9 @@ FR.add = function(self,object)
         new_rel.id = new_id
         new_rel.family = self
 
-        -- New link added to family. Update agents table, order list and size.
+        -- New link added to family. Update agents table and size.
         self.agents[new_id] = Relational(new_rel)
-        table.insert(self.order, new_id)
-        self.size = self.size + 1
+        self.count = self.count + 1
 
         -- If first time being neighbors this way, create a table to the new neighbor.
         if obj1.out_neighs[id2] == nil then
@@ -110,14 +109,14 @@ end;
 --     return l.target == some_agent
 -- end)
 -- This will result in a collection of Agents of the family Links_1 with a target equals to the agent 'some_agent'
-FR.with = function(self,funct)
-    local res = Collection(self)
-    for _,v in pairs(self.agents) do
-        if funct(v) then
-            res:add(v)
-        end
-    end
-    return res
-end
+-- FR.with = function(self,funct)
+--     local res = Collection(self)
+--     for _,v in pairs(self.agents) do
+--         if funct(v) then
+--             res:add(v)
+--         end
+--     end
+--     return res
+-- end
 
 return FR
