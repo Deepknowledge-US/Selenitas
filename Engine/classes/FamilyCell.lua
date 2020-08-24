@@ -67,6 +67,7 @@ end
 -- for i=1,10 do
 --     Cells:add({ ['pos'] = {math.random[100],math.random[100]} })
 -- end
+-- @see families.create_n
 FC.create_n = function(self,num, funct)
     for i=1,num do
         self:add(Cell( funct() ))

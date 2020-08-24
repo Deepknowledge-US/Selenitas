@@ -39,7 +39,7 @@ end
 -- @return Table of strings, as much as the pattern has splitted
 -- @usage my_table = split('hello, world!', ',')
 -- print(my_table)
--- {{hello},{world!}}
+-- {"hello","world!"}
 function utl_sf.split(pString, pPattern)
     local Table = {}
     local fpat = "(.-)" .. pPattern

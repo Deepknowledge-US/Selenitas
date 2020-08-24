@@ -33,6 +33,7 @@ end;
 -- @param num Number of degrees to turn.
 -- @return Nothing
 -- @usage rt(agent,180)
+-- @see Mobil.rt
 function utl_actions.rt(agent, num)
     agent.head = (agent.head + num) % 360
 end
@@ -44,6 +45,7 @@ end
 -- @param num Number of degrees to turn.
 -- @return Nothing
 -- @usage lt(agent,180)
+-- @see Mobil.lt
 function utl_actions.lt(agent, num)
     agent.head = (agent.head + num) % 360
 end
@@ -55,6 +57,7 @@ end
 -- @param num Number of units to advance.
 -- @return Nothing
 -- @usage fd(agent,2)
+-- @see Mobil.fd
 function utl_actions.fd(agent, num)
 
     local s = sin(rad(agent.head))
@@ -72,6 +75,7 @@ end
 -- @param num Number of units to advance.
 -- @return Nothing
 -- @usage fd_grid(agent,2)
+-- @see Mobil.fd_grid
 function utl_actions.fd_grid(agent, num)
 
     local s = sin(rad(agent.head))
@@ -85,27 +89,22 @@ function utl_actions.fd_grid(agent, num)
 end
 
 ------------------
--- Agent will be moved to one of its neighbors' patches (8 neighbors are considered).
---  0 0 0        0 0 x
---  0 x 0   ->   0 0 0
---  0 0 0        0 0 0
--- Extremes of the grid are conected.
+-- The agent moves to a random neighbour in a 2D grid.
 -- @function gtrn
 -- @param agent The agent we want to move
 -- @return Nothing
--- @usage gtrn(an_agent)
+-- @usage
+-- 
+-- -- Agent will be moved to one of its neighbors' patches (8 neighbors are considered).
+-- -- 0 0 0        0 0 x
+-- -- 0 x 0   ->   0 0 0
+-- -- 0 0 0        0 0 0
+-- -- Extremes of the grid are conected.
+--
+-- gtrn(an_agent)
+-- @see Mobil.gtrn
 function utl_actions.gtrn(agent)
-
-    local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
-    local choose  = math.random(#changes)
-
-    -- Agents that cross a boundary will appear on the opposite side of the grid
-    agent.pos[1] = (agent:xcor() + changes[choose][1]) % Config.xsize
-    agent.pos[1] = agent:xcor() > 0 and agent:xcor() or Config.xsize
-
-    agent.pos[2] = (agent:ycor() + changes[choose][2]) % Config.ysize
-    agent.pos[2] = agent:ycor() > 0 and agent:ycor() or Config.ysize
-
+    return agent:gtrn()
 end
 
 ------------------
