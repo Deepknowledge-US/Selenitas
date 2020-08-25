@@ -1,4 +1,5 @@
 ------------------
+-- Some methods to operate over families.
 -- @module
 -- families
 
@@ -161,9 +162,9 @@ function utl_fam.__producer(list, index)
 end
 
 ------------------
--- Beside the producer, this functions are a coroutine to implement the Fisher-Yates shuffle. __consumer calls the __producer to take a new element of the list.
+-- Beside __producer, this functions are a coroutine to implement the Fisher-Yates shuffle. __consumer calls the __producer to take a new element of the list.
 -- @function __consumer
--- @param list A list of elements.
+-- @param list A List of elements.
 -- @param index A position in the list.
 -- @return A new element of the list
 -- @usage

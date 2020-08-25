@@ -1,4 +1,5 @@
 ------------------
+-- Some filter methods.
 -- @module
 -- filters
 
@@ -125,9 +126,6 @@ end
 function utl_filters.one_of_others(family, agent)
     return family:one_of_others(agent)
 end
-
-
-
 
 ------------------
 -- Returns the agent with the minimum value for a gived function 

@@ -1,4 +1,5 @@
 ------------------
+-- Utilities to apply actions to agents or families mainly.
 -- @module
 -- actions
 
@@ -108,7 +109,7 @@ function utl_actions.gtrn(agent)
 end
 
 ------------------
--- Marks an agent as die by given a value of false to its param 'alive'. Agents with alive=false does not do actions when we ask to the agents in the family to do something, but they still are present in the table 'agents' of its family and all its links with other agents are presents in the simulation. If you want to totally remove an agent and its relations with others of the simulation you have to do 'purge_agents()'.
+-- It marks an agent as dead by giving a false value to its 'live' param.
 -- @function die
 -- @param agent The agent we want to mark as die.
 -- @param family The family the agent belongs to. Optional param, if not gived

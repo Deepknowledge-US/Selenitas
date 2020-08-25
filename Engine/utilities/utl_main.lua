@@ -1,4 +1,5 @@
 ------------------
+-- The main module. It offers some methods as global variables and the setup and run functions
 -- @module
 -- main
 

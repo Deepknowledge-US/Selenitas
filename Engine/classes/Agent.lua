@@ -1,5 +1,5 @@
 ------------------
--- A base class from which all other agents come
+-- Base agent class,  Mobiles, Cells and Relationals are instances of Agent also.
 -- @classmod
 -- Agent
 

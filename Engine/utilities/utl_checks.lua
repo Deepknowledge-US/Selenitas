@@ -1,4 +1,5 @@
 ------------------
+-- A set of check methods.
 -- @module
 -- checks
 

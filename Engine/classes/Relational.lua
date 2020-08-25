@@ -1,5 +1,5 @@
 ------------------
--- Relationals are agents used to create relations bettween two agents.
+-- Relationals are agents used to create relations between agents.
 -- @classmod
 -- Relational
 
@@ -42,10 +42,17 @@ Rel._init = function(self,obj)
     return self
 end;
 
+------------------
+-- Returns the agents related by the link.
+-- @function ends
+-- @return A Collection of agents related by the link.
+-- @usage
 Rel.ends = function(self)
     local res = Collection(self.target.family)
     res:add(self.target)
     res:add(self.source)
     return res
 end
+
+
 return Rel

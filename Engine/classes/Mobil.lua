@@ -1,5 +1,5 @@
 ------------------
--- Mobil agents has a position and some other properties and methods
+-- Mobil agents have some methods to interact with the environment.
 -- @classmod
 -- Mobil
 local class     = require 'Thirdparty.pl.class'

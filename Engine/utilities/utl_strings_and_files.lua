@@ -1,4 +1,5 @@
 ------------------
+-- Some functions to read files and operate with strings.
 -- @module
 -- strings_and_files
 

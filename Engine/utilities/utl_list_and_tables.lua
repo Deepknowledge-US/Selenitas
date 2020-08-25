@@ -1,4 +1,5 @@
 ------------------
+-- Utilities to operate over lists and tables
 -- @module
 -- list_and_tables
 
