@@ -47,11 +47,13 @@ end
 -- Only pink agents are capable of cloning themselves.
 -- Cloned agents only have a 10% chance of being pink.
 local function reproduce(agent)
-    if same_color(agent.color, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
-        Agents:clone_n_act(1,agent, function(x)
-            x.color = math.random(10) > 1 and {0,1,0,1} or {0.5,0.5,0.5,1}
-            x.age   = 0
-        end)
+    if agent.alive then
+        if same_rgb(agent, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
+            clone_n(Agents, 1, agent, function(x)
+                x.color = math.random(10) > 1 and {0,0,1,1} or {0.5,0.5,0.5,1}
+                x.age   = 0
+            end)
+        end
     end
 end
 
@@ -88,7 +90,7 @@ end
 -- At the moment we have discrete iterations
 run = function()    
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
-    if #Agents.order == 0 or __ticks == Config.ticks then
+    if Agents.count == 0 or __ticks == Config.ticks then
         Config.go = false
         --for k,v in ipairs(histogram)do
         --    print('t: '..k,' n: '..v)
@@ -114,7 +116,7 @@ run = function()
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of
     -- agents along the iterations.
-    table.insert(histogram, #Agents.order)
+    table.insert(histogram, Agents.count)
 
 end
 
