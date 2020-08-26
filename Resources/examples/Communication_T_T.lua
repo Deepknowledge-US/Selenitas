@@ -74,7 +74,7 @@ run = function()
         do return end
     end
     -- Stop condition
-    if People:with(lambda '|x| x.message == false').size == 0 then
+    if People:with(lambda '|x| x.message == false').count == 0 then
         Config.go = false
         return
     end

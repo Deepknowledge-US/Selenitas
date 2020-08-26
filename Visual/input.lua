@@ -22,10 +22,10 @@ local function add_mouse_moved_callback_func(f)
     table.insert(mouse_moved_callback_funcs, f)
 end
 
-function love.wheelmoved(x, y)
+function love.wheelmoved(dx, dy)
     -- Run callbacks
     for _, f in ipairs(scroll_callback_funcs) do
-        f(x, y)
+        f(dx, dy)
     end
 end
 

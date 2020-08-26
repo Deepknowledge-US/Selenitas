@@ -1,6 +1,8 @@
 local Slab = require "Thirdparty.Slab.Slab"
 local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
 local FileUtils = require("Visual.fileutils")
+local Camera = require("Thirdparty.brady.camera")
+local Input = require("Visual.input")
 
 -- Simulation info
 local agents = nil
@@ -15,23 +17,44 @@ local go = false
 local time_between_steps = 0
 local _time_acc = 0
 
+-- File handling
+local file_loaded_path = nil
+local show_file_picker = false
+
 -- Drawing & UI params
 local coord_scale = 1 -- coordinate scaling for better visualization
 local ui_width = 152 -- width in pixels of UI column
 local ui_height = 400 -- height of UI column
 local menu_bar_width = 20 -- approximate width of horizontal menu bar
 local show_about_dialog = false
-
--- File handling
-local file_loaded_path = nil
-local show_file_picker = false
+local camera = nil
+-- Callbacks for Input, registered in `init` function
+local drag_camera_callback_func = function(x, y, dx, dy)
+    if Input.is_mouse_button_pressed(2) then
+        camera:translate(dx, dy)
+    end
+end
+local zoom_camera_callback_func = function(dx, dy)
+    camera:scaleToPoint(1 + dy / 10)
+end
 
 local function init()
     -- TODO: read user settings
-    -- The engine is explictly initialized to avoid running
-    -- LOVE loop since startup
+
+    -- Window title
     love.window.setTitle("Selenitas")
-    love.graphics.setNewFont(7) -- labels font
+
+    -- Default font size for labels
+    love.graphics.setNewFont(7)
+
+    -- Set up camera
+    local w, h, _ = love.window.getMode()
+    camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
+
+    -- Input callbacks
+    Input.add_mouse_moved_callback_func(drag_camera_callback_func)
+    Input.add_scroll_callback_func(zoom_camera_callback_func)
+
     initialized = true
 end
 
@@ -122,9 +145,18 @@ local function update_ui(dt)
             Slab.EndMenu()
         end
 
+        if Slab.BeginMenu("View") then
+            if Slab.MenuItem("Reset camera") then
+                local w, h, _ = love.window.getMode()
+                camera:setTranslation(w / 2, h / 2)
+                camera:setScale(1)
+            end
+            Slab.EndMenu()
+        end
+
         -- "Help" section
         if Slab.BeginMenu("Help") then
-          
+
             if Slab.MenuItem("Selenitas User Manual") then
                 love.system.openURL("https://github.com/fsancho/Selenitas/wiki")
             end
@@ -181,7 +213,7 @@ local function update_ui(dt)
         Title = "Simulation",
         X = 2,
         Y = menu_bar_width,
-        W = ui_width,
+        W = ui_width - 2,
         H = ui_height,
         AllowMove = false,
         AutoSizeWindow = false,
@@ -292,7 +324,7 @@ end
 
 -- Sets world dimensions, taking into account coordinate scale factor
 local function set_world_dimensions(x, y)
-    set_viewport_size(ui_width + (x * coord_scale), y * coord_scale)
+    set_viewport_size(ui_width + (x * coord_scale), menu_bar_width + (y * coord_scale))
 end
 
 -- Coordinate scale factor. Useful for using small spaces in simulations
@@ -328,6 +360,8 @@ function love.update(dt)
     if step_func and go then
         step_func()
     end
+
+    camera:update()
 end
 
 -- Drawing function
@@ -336,30 +370,26 @@ function love.draw()
         goto skip
     end
 
-    -- Draw links first so they're drawn below agents
-    for _, l in pairs(links) do
+    camera:push()
 
+    -- Draw links first so they're drawn below agents
+    for _, l in pairs(links or {}) do
         -- Handle link visibility
         if not l.visible then
             goto continuelinks
         end
-
         -- Handle link color
         love.graphics.setColor(l.color)
-
         -- Link thickness
         love.graphics.setLineWidth(l.thickness)
-
         -- Agent coordinate is scaled and shifted in its x coordinate
         -- to account for UI column
         local sx = (l.source:xcor() * coord_scale) + ui_width
         local sy = (l.source:ycor() * coord_scale) + menu_bar_width
         local tx = (l.target:xcor() * coord_scale) + ui_width
         local ty = (l.target:ycor() * coord_scale) + menu_bar_width
-
         -- Draw line
         love.graphics.line(sx, sy, tx, ty)
-
         -- Draw label
         love.graphics.setColor(l.label_color)
         local dirx = tx - sx
@@ -367,7 +397,6 @@ function love.draw()
         local midx = sx + dirx * 0.5
         local midy = sy + diry * 0.5
         love.graphics.printf(l.label, midx - 45, midy, 100, 'center')
-
         ::continuelinks::
     end
 
@@ -389,7 +418,7 @@ function love.draw()
 
         -- Handle agent shape and scale (TODO: rotation)
         -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
-        local center_shift = 50 * 0.1 * a.scale -- pixels to shift in both coords to center the figure
+        local center_shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
         if a.shape == "triangle" then
             love.graphics.draw(ResourceManager.images.triangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
         elseif a.shape == "square" then
@@ -405,6 +434,8 @@ function love.draw()
 
         ::continueagents::
     end
+
+    camera:pop()
 
     ::skip::
     -- Draw UI
