@@ -60,8 +60,8 @@ end
 
 setup = function()
 
-    -- "create_patches" encapsulates the creation of the patches collection
-    Patches = create_patches(Config.xsize, Config.ysize)
+    -- "create_grid" encapsulates the creation of the patches collection
+    Patches = create_grid(Config.xsize, Config.ysize)
 
     -- Create a collection of agents
     Agents = FamilyMobil()

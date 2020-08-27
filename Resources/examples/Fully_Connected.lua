@@ -47,7 +47,7 @@ end
 
 setup = function()
 
-    Patches = create_patches(Config.xsize, Config.ysize)
+    Patches = create_grid(Config.xsize, Config.ysize)
 
     Nodes = FamilyMobil()
     Nodes:create_n( Config.num_nodes, function()
