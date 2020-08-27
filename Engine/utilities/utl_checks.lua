@@ -6,6 +6,56 @@
 local utl_checks = {}
 
 
+------------------
+-- Given an object this function does a safe check and returns true if the object is an Instance of Family (Collections are also families).
+-- @function is_family
+-- @param obj An object to check
+-- @usage
+--
+-- Agents = FamilyMobil()
+--
+-- is_family('hello') -- => false
+-- is_family( Agents ) -- => true
+function utl_checks.is_family(obj)
+    if pcall( function() return obj:is_a(Family) end ) then
+        return obj:is_a(Agent)
+    else
+        return false
+    end
+end
+
+------------------
+-- Given an item and a set of elements or a collection, decide if item is included in the set.
+-- @function is_agent
+-- @param obj An object to check
+-- @usage
+-- is_agent(4) -- => false
+-- is_agent( one_of(Cells) ) -- => true
+function utl_checks.is_agent(obj)
+    if pcall( function() return obj:is_a(Agent) end ) then
+        return obj:is_a(Agent)
+    else
+        return false
+    end
+end
+
+------------------
+-- Given an item and a set of elements or a collection, decide if item is included in the set.
+-- @function is_agent
+-- @param obj An object to check
+-- @usage
+-- Cells = create_grid(100,100)
+-- is_a(4,Agent) -- => false
+-- is_a( one_of(Cells), Agent )  -- => true
+-- is_a( one_of(Cells), Cell )   -- => true
+-- is_a( one_of(Cells), Family ) -- => false
+function utl_checks.is_instance(obj,cla)
+    if pcall( function() return obj:is_a(cla) end ) then
+        return obj:is_a(cla)
+    else
+        return false
+    end
+end
 
 
 ------------------

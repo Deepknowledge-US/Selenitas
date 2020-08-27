@@ -84,7 +84,7 @@ end
 setup(function()
 
     -- "create_patches" encapsulates the creation of the patches collection
-    Patches = create_patches(Config.xsize, Config.ysize)
+    Patches = create_grid(Config.xsize, Config.ysize)
 
     -- Create a collection of agents
     Agents = FamilyMobil()
@@ -105,6 +105,9 @@ setup(function()
         fd_grid(agent,Config.stride)
     end)
 
+    for k,v in pairs(one_of(Agents).current_cell)do
+        print(k,v)
+    end
     -- pr.dump(Patches)
 
 end)
@@ -150,8 +153,8 @@ run(function()
 
     if math.fmod(__ticks, 10) == 0 then
 
-        print_current_config()
-        print('purgado')
+        -- print_current_config()
+        -- print('purgado')
         purge_agents(Agents)
     end
 

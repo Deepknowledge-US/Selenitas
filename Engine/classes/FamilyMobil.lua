@@ -16,6 +16,7 @@ local FM = class.FamilyMobil(Family)
 FM._init = function(self)
     self:super()
     table.insert(Config.__all_families, self)
+    self.z_order = 3
     return self
 end
 
@@ -41,11 +42,12 @@ FM.add = function(self,object)
         new_agent = Mobil(object)
     end
 
-    new_agent.id     = key
-    new_agent.family = self
+    new_agent.id      = key
+    new_agent.family  = self
+    new_agent.z_order = self.z_order
 
-    self.agents[key]        = new_agent
-    self.count = self.count + 1
+    self.agents[key]  = new_agent
+    self.count        = self.count + 1
 end
 
 ------------------

@@ -18,6 +18,7 @@ local FR = class.FamilyRelational(Family)
 FR._init = function(self,c)
     self:super(c)
     table.insert(Config.__all_families, self)
+    self.z_order = 2
     return self
 end
 
@@ -47,8 +48,9 @@ FR.add = function(self,object)
         for k,v in pairs(object) do
             new_rel[k] = v
         end
-        new_rel.id = new_id
-        new_rel.family = self
+        new_rel.id      = new_id
+        new_rel.family  = self
+        new_rel.z_order = self.z_order
 
         -- New link added to family. Update agents table and size.
         self.agents[new_id] = Relational(new_rel)

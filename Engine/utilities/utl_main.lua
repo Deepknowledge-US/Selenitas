@@ -26,7 +26,7 @@ lines_from      = __str_fls.lines_from
 split           = __str_fls.split
 
 __fam           = require 'Engine.utilities.utl_families'
-create_patches  = __fam.create_patches
+create_grid     = __fam.create_grid
 purge_agents    = __fam.purge_agents
 clone_n         = __fam.clone_n
 ask_ordered     = __fam.ask_ordered
@@ -43,6 +43,9 @@ n_of            = __fltr.n_of
 up_to_n_of      = __fltr.up_to_n_of
 
 __chk           = require 'Engine.utilities.utl_checks'
+is_instance     = __chk.is_instance
+is_family       = __chk.is_family
+is_agent        = __chk.is_agent
 is_in_list      = __chk.is_in_list
 same_rgb        = __chk.same_rgb
 same_rgba       = __chk.same_rgba

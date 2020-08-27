@@ -15,14 +15,33 @@ local utl_fam = {}
 -- @return A FamilyCell instance
 -- @usage
 -- Patches = create_patches(100,100)
-function utl_fam.create_patches(x,y)
+function utl_fam.create_grid(x,y,cell_width,cell_height)
     local cells  = FamilyCell()
+
+    local w,h = cell_width or 1, cell_height or 1
 
     for i=1,x do
         for j = 1,y do
             cells:add( Cell({ ['pos'] = {i,j} })  )
         end
     end
+
+    local grid_neighs = { {-1,0},{1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1} }
+
+    cells:ask_ordered(function(cell)
+        local c_x,c_y = cell:xcor(),cell:ycor()
+        local neighs = {}
+
+        for i=1,8 do
+            local neigh_pos = { grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+            if neigh_pos[1] > 0 and neigh_pos[2] > 0 and neigh_pos[1] <= x and neigh_pos[2] <= y then
+                -- table.insert(neighs, cells:cell_in_pos(neigh_pos))
+                cell.neighbors:add( cells:cell_in_pos(neigh_pos) )
+            end
+        end
+        -- cell.neighbors = neighs
+    end)
+
     return cells
 end
 
@@ -83,6 +102,10 @@ end
 -- ask(A_family, function(ag) ag:fd(1.3) end)
 -- @see Family.ask
 function utl_fam.ask(fam, funct)
+    if is_instance(fam,Agent) then
+        funct(fam)
+        return
+    end
     fam:ask(funct)
 end
 

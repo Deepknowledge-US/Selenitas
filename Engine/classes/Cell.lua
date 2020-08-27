@@ -30,7 +30,8 @@ Cell._init = function(self,p_table)
     self.color      = p_table.color       or {0,0,0,1}
     self.shape      = p_table.shape       or 'square'
     self.region     = p_table.region      or {}
-    self.neighbors  = p_table.neighbors   or {}
+    self.neighbors  = p_table.neighbors   or Collection(FamilyCell)
+    self.residents  = p_table.residents   or Collection(FamilyCell)
     self.visible    = p_table.visible     or true
     self.z_order    = p_table.z_order     or 0
 
@@ -77,12 +78,11 @@ Cell.region = function(self,pos)
     local y_l_limit, y_r_limit     = self:ycor() - 0.5, self:ycor() + 0.5
 
     if x_up_limit >= x and x > x_down_limit then
-        if y_l_limit >= y and y > y_r_limit then
+        if y_r_limit >= y and y > y_l_limit then
             return true
         end
     end
     return false
-
 end
 
 return Cell

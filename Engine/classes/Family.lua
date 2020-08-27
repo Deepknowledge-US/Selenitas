@@ -113,7 +113,7 @@ end
 -- @usage Family:ask_ordered( function(ag) ag:rt(15):fd(1.5) end )
 -- @see families.ask_ordered
 Family.ask_ordered = function(self, funct)
-    for _,v in self.agents do
+    for _,v in pairs(self.agents) do
         funct(v)
     end
 end
@@ -271,6 +271,7 @@ end
 Family.one_of = function(self)
     local list_copy = self:alives_list()
     local target = list_copy[math.random(self.count)]
+    -- local target = list_copy[math.random(#list_copy)]
     return target
 end
 
@@ -509,15 +510,37 @@ Family.clone = function(self, agent) -- deep-copy a table
     local meta = getmetatable(agent)
     local target = {}
     for k, v in pairs(agent) do
-        if type(v) == "table" and k ~= "family" then
-            target[k] = self:clone(v)
-        else
+        if type(v) ~= "table" or is_instance(v,Agent) or is_instance(v,Family) then
             target[k] = v
+        else 
+            target[k] = self:clone(v)
         end
     end
     setmetatable(target, meta)
     return target
 end
+
+-- ------------------
+-- -- This function returns a clone of the agent gived as parameter. Is an auxiliar function used by 'clone_n_act' to obtain an object that is added to the Family later.
+-- -- @function Instance:clone
+-- -- @param agent is an Agent instance.
+-- -- @return A new object, clone of the one gived as parameter. The only difference will be the id, unique for any agent or clone.
+-- Family.clone = function(self, agent) -- deep-copy a table
+--     if type(agent) ~= "table" then
+--         return agent
+--     end
+--     local meta = getmetatable(agent)
+--     local target = {}
+--     for k, v in pairs(agent) do
+--         if type(v) == "table" and k ~= "family" then
+--             target[k] = self:clone(v)
+--         else
+--             target[k] = v
+--         end
+--     end
+--     setmetatable(target, meta)
+--     return target
+-- end
 
 ------------------
 -- Returns the list of alive agents in the Family

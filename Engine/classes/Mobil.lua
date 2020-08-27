@@ -23,15 +23,23 @@ Mobil._init = function(self,o)
         self[k] = v
     end
 
-    self.pos        = o.pos         or {0, 0, 0}
-    self.color      = o.color       or {0.5,0.5,0.5,1}
-    self.head       = o.head        or {0,0}
-    self.shape      = o.shape       or 'triangle'
-    self.scale      = o.scale       or 1
-    self.visible    = o.visible     or true
-    self.z_order    = o.z_order     or 1
-    self.label      = o.label       or ''
-    self.label_color= o.label_color or {1,1,1,1}
+    self.pos          = o.pos          or {0, 0, 0}
+    self.color        = o.color        or {0.5,0.5,0.5,1}
+    self.head         = o.head         or {0,0}
+    self.shape        = o.shape        or 'triangle'
+    self.scale        = o.scale        or 1
+    self.visible      = o.visible      or true
+    self.z_order      = o.z_order      or 1
+    self.label        = o.label        or ''
+    self.label_color  = o.label_color  or {1,1,1,1}
+    self.current_cell = o.current_cell or {}
+
+    -- self.update_cell(self.current_cell,self.pos)
+    local cell_fams = Mobil.find_families(FamilyCell)
+    for i=1,#cell_fams do
+        local my_cell = cell_fams[i]:cell_of(self.pos)
+        table.insert(self.current_cell, {cell_fams[i], my_cell} )
+    end
 
     return self
 end
@@ -53,6 +61,15 @@ Mobil.does = function(self, ...)
     end
     return self
 end
+
+
+
+
+--==============--
+--    GETERS    --
+--==============--
+
+
 
 ------------------
 -- Getter function to get the x coordinate of the agent
@@ -85,9 +102,51 @@ Mobil.zcor = function(self)
     return self.pos[3]
 end
 
+
+
+
+--==============--
+--    CHECKS    --
+--==============--
+
+
+
 Mobil.same_pos = function(self,ag2)
     return self:xcor() == ag2:xcor() and self:ycor() == ag2:ycor() and self:zcor() == ag2:zcor()
 end
+
+
+-- Mobil.chk_pos = function(self)
+--     return region
+-- end
+
+
+--==============--
+--   ACTIONS    --
+--==============--
+
+Mobil.find_families = function(fam_type)
+    local cell_fams, fams = {}, Config.__all_families
+    for i=1,#fams do
+        if fams[i]:is_a(fam_type) then
+            table.insert(cell_fams,fams[i])
+        end
+    end
+    return cell_fams
+end
+
+------------------
+-- Checks for FamiliCells and if is anyone, updates the parameter current_cell of the agent (if this is needed).
+-- @function update_cell
+-- @usage
+-- agent:update_cell()
+-- Mobil.update_cell = function(self,p)    
+--     print('PRIIIIIIINT',self.pos)
+--     for i=1,#cell_fams do
+--         table.insert(self.current_cell, {cell_fams[i], cell_fams[i]:cell_of(p) })
+--     end
+-- end
+
 
 ------------------
 -- It produces a right turn in the agent
@@ -200,6 +259,15 @@ Mobil.move_to = function(self, another_agent)
 
     return self
 end
+
+
+
+
+--==============--
+--  DISTANCES   --
+--==============--
+
+
 
 ------------------
 -- This function give us the euclidean distance from the agent to another point.

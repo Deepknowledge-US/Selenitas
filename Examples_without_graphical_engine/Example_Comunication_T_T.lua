@@ -47,10 +47,12 @@ local function print_current_config()
 
     print('\n\n========== tick '.. __ticks .. ' ===========')
 
-    ask(Patches, function(cell)
-        cell.label = People:with(function(ag)
-            return ag:xcor() == cell:xcor() and ag:ycor() == cell:ycor()
-        end).count
+    ask_ordered(Patches, function(x) x.label = 0 end)
+
+    ask_ordered(People, function(ag)
+        ask_ordered(Patches:cell_in_pos(ag.pos), function(p)
+            p.label = p.label + 1
+        end)
     end)
 
     -- Print the number of agents in each patch
@@ -75,7 +77,7 @@ end
 setup(function()
 
     -- Create a grid of patches with the specified dimensions
-    Patches = create_patches(Config.xsize,Config.ysize)
+    Patches = create_grid(Config.xsize,Config.ysize)
 
     -- Create a new collection of agents
     People = FamilyMobil()
