@@ -38,6 +38,10 @@ local zoom_camera_callback_func = function(dx, dy)
     camera:scaleToPoint(1 + dy / 10)
 end
 
+
+------------------
+-- inits the graphic engine using the configurations specified.
+-- @function init
 local function init()
     -- TODO: read user settings
 
@@ -290,17 +294,26 @@ local function update_ui(dt)
     Slab.EndWindow()
 end
 
--- Sets setup function. Called from the simulation main file
+------------------
+-- Sets setup function.
+-- @function set_setup_function
+-- @param f Setup function.
 local function set_setup_function(f)
     setup_func = f
 end
 
--- Sets step function. Called from the simulation file
+------------------
+-- Sets step function.
+-- @function set_step_function
+-- @param f Step function.
 local function set_step_function(f)
     step_func = f
 end
 
+------------------
 -- Sets time between steps in seconds for better visualization
+-- @function set_time_between_steps
+-- @param t time in seconds.
 local function set_time_between_steps(t)
     time_between_steps = t
 end
@@ -313,6 +326,12 @@ end
 --    "param_3_name" : {type = "enum", options = {enum_val_1, enum_val_2, enum_val_3}},
 --    "param_4_name" : {type = "input"}
 --}
+
+------------------
+-- Sets simulation parameters that can be exposed via the UI.
+-- The parameters exposed can then be modified using UI controls automatically created by the graphic engine.
+-- @function set_simulation_params
+-- @param p simulation parameters object. Check the Params class of the simulations engine for more information.
 local function set_simulation_params(p)
     simulation_params = p
 end
@@ -322,18 +341,29 @@ local function set_viewport_size(w, h)
     love.window.setMode(math.max(ui_width, w), math.max(ui_height, h), {})
 end
 
--- Sets world dimensions, taking into account coordinate scale factor
+------------------
+-- Sets world space in 2D, using pixels as unit. 
+-- For using different units, provide an scale using the set_coordinate_scale before calling this function.
+-- @function set_world_dimensions
+-- @param x the width of the space.
+-- @param y the height of the space.
 local function set_world_dimensions(x, y)
     set_viewport_size(ui_width + (x * coord_scale), menu_bar_width + (y * coord_scale))
 end
 
--- Coordinate scale factor. Useful for using small spaces in simulations
--- and scaling the space only during visualization
+------------------
+-- Allows scaling the world space for using units different to pixels.
+-- Must be called before setting the world dimensions. This scale also affects agents' positions.
+-- @param f Scaling factor. Must be a positive number.
 local function set_coordinate_scale(f)
     coord_scale = f
 end
 
--- Sets background color in RGB [0..1] format
+------------------
+-- Sets the world background color in RGB format. If this is not called, the background color will be black.
+-- @param r Red channel of the color. Must be in the 0..1 range.
+-- @param g Green channel of the color. Must be in the 0..1 range.
+-- @param b Blue channel of the color. Must be in the 0..1 range.
 local function set_background_color(r, g, b)
     love.graphics.setBackgroundColor(r, g, b)
 end
