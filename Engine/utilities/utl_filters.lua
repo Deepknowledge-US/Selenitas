@@ -209,5 +209,22 @@ function utl_filters.with_min(family,funct)
     return family:with_min(funct)
 end
 
+------------------
+-- Returns a Collection of agents with the min value for a gived function.
+-- @function agents_in
+function utl_filters.agents_in(cell)
+    return cell.my_agents
+end
+
+--TODO Esta debe estar como utilidad
+function utl_filters.find_families (fam_type)
+    local cell_fams, fams = {}, Config.__all_families
+    for i=1,#fams do
+        if fams[i]:is_a(fam_type) then
+            table.insert(cell_fams,fams[i])
+        end
+    end
+    return cell_fams
+end
 
 return utl_filters

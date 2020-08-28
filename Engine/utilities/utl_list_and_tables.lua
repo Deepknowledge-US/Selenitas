@@ -22,6 +22,30 @@ function utl_list.list_copy(table_)
     return res
 end
 
+------------------
+-- Removes elements in a table by givin a nil value and moving to the last position of the list.
+-- @function list_remove
+-- @param list List to remove a single element.
+-- @return List
+-- @usage
+-- list_remove({20,21,11,23,31}, 23) -- => {20,21,11,31}
+function utl_list.list_remove(list,element)
+    for i=#list,1 do
+        if list[i] == element then
+            list[i],list[#list] = list[#list], list[i]
+        end
+    end
+end
 
+------------------
+-- .
+-- @function list_remove_index
+-- @param list.
+-- @return List
+-- @usage
+function utl_list.list_remove_index(list,index)
+    list[index] = nil
+    list[index], list[#list] = list[#list],list[#index]
+end
 
 return utl_list

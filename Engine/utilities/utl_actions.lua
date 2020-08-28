@@ -28,7 +28,7 @@ function utl_actions.array_shuffle(list)
 end;
 
 ------------------
--- Produces a right turn in an agent of "num" degrees
+-- Produces a right turn in an agent of "num" radians
 -- @function rt
 -- @param agent The agent we want to turn.
 -- @param num Number of degrees to turn.
@@ -36,11 +36,11 @@ end;
 -- @usage rt(agent,180)
 -- @see Mobil.rt
 function utl_actions.rt(agent, num)
-    agent.head = (agent.head + num) % 360
+    agent.head[1] = (agent.head[1] + num)
 end
 
 ------------------
--- Produces a left turn in an agent of "num" degrees
+-- Produces a left turn in an agent of "num" radians
 -- @function lt
 -- @param agent The agent we want to turn.
 -- @param num Number of degrees to turn.
@@ -48,7 +48,7 @@ end
 -- @usage lt(agent,180)
 -- @see Mobil.lt
 function utl_actions.lt(agent, num)
-    agent.head = (agent.head + num) % 360
+    agent.head[1] = (agent.head[1] - num)
 end
 
 ------------------
@@ -61,10 +61,10 @@ end
 -- @see Mobil.fd
 function utl_actions.fd(agent, num)
 
-    local s = sin(rad(agent.head))
+    local s = sin(agent.head[1])
     agent.pos[1] = (agent:xcor() + s * num) % Config.xsize
 
-    local c = cos(rad(agent.head))
+    local c = cos(agent.head[1])
     agent.pos[2] = (agent:ycor() + c * num) % Config.ysize
 
 end
@@ -79,11 +79,11 @@ end
 -- @see Mobil.fd_grid
 function utl_actions.fd_grid(agent, num)
 
-    local s = sin(rad(agent.head))
+    local s = sin(agent.head[1])
     agent.pos[1] = math.ceil( (agent:xcor() + s * num) % Config.xsize )
     if agent:xcor() == 0 then agent.pos[1] = Config.xsize end
 
-    local c = cos(rad(agent.head))
+    local c = cos(agent.head[1])
     agent.pos[2] = math.ceil( (agent:ycor() + c * num) % Config.ysize )
     if agent:ycor() == 0 then agent.pos[2] = Config.ysize end
 

@@ -167,5 +167,29 @@ function utl_checks.same_rgba(object_1, object_2)
     end
 end
 
+------------------
+-- A check function to compare positions.
+-- @function same_pos
+-- @param object_1 It may be an Agent or a vector.
+-- @param object_2 It may be an Agent or a vector.
+-- @return Boolean, true if both positions are the same.
+-- @usage
+-- local same_pos   = same_rgba(an_agent_instance, {1, 1.5, 1.5,} )
+function utl_checks.same_pos(object_1, object_2)
+    local pos_1 = object_1:is_a(Agent) and object_1.pos or object_1
+    local pos_2 = object_2:is_a(Agent) and object_2.pos or object_2
+
+    if #pos_1 ~= #pos_1 then
+        return 'Error in same_pos(). Positions have different dimensions'
+    else
+        for i=1,#pos_1 do
+            if pos_1[i] ~= pos_2[i] then
+                return false
+            end
+        end
+        return true
+    end
+end
+
 
 return utl_checks

@@ -13,6 +13,7 @@ local Mobil = class.Mobil(Agent)
 ------------------
 -- Mobil agents are are the most common agent to work with.
 -- @function _init
+-- @param Table with the properties we want in the agent.
 -- @return A new instance of Agent class.
 -- @usage new_instance = Mobil()
 Mobil._init = function(self,o)
@@ -23,23 +24,16 @@ Mobil._init = function(self,o)
         self[k] = v
     end
 
-    self.pos          = o.pos          or {0, 0, 0}
-    self.color        = o.color        or {0.5,0.5,0.5,1}
-    self.head         = o.head         or {0,0}
-    self.shape        = o.shape        or 'triangle'
-    self.scale        = o.scale        or 1
-    self.visible      = o.visible      or true
-    self.z_order      = o.z_order      or 1
-    self.label        = o.label        or ''
-    self.label_color  = o.label_color  or {1,1,1,1}
-    self.current_cell = o.current_cell or {}
-
-    -- self.update_cell(self.current_cell,self.pos)
-    local cell_fams = Mobil.find_families(FamilyCell)
-    for i=1,#cell_fams do
-        local my_cell = cell_fams[i]:cell_of(self.pos)
-        table.insert(self.current_cell, {cell_fams[i], my_cell} )
-    end
+    self.pos            = o.pos           or {0, 0, 0}
+    self.color          = o.color         or {0.5,0.5,0.5,1}
+    self.head           = o.head          or {0,0}
+    self.shape          = o.shape         or 'triangle'
+    self.scale          = o.scale         or 1
+    self.visible        = o.visible       or true
+    self.z_order        = o.z_order       or 1
+    self.label          = o.label         or ''
+    self.label_color    = o.label_color   or {1,1,1,1}
+    self.current_cells  = o.current_cells or {}
 
     return self
 end
@@ -111,42 +105,39 @@ end
 
 
 
-Mobil.same_pos = function(self,ag2)
-    return self:xcor() == ag2:xcor() and self:ycor() == ag2:ycor() and self:zcor() == ag2:zcor()
+------------------
+-- Checks if the agent has the (exactly) same position as a vector or agent.
+-- @function same_pos
+-- @param ag_or_pos Agent or vector.
+-- @usage
+-- agent:same_pos({1,1})
+Mobil.same_pos = function(self,ag_or_pos)
+    return same_pos(self,ag_or_pos)
 end
 
-
--- Mobil.chk_pos = function(self)
---     return region
--- end
 
 
 --==============--
 --   ACTIONS    --
 --==============--
 
-Mobil.find_families = function(fam_type)
-    local cell_fams, fams = {}, Config.__all_families
-    for i=1,#fams do
-        if fams[i]:is_a(fam_type) then
-            table.insert(cell_fams,fams[i])
-        end
-    end
-    return cell_fams
-end
-
 ------------------
 -- Checks for FamiliCells and if is anyone, updates the parameter current_cell of the agent (if this is needed).
 -- @function update_cell
+-- @return the Agent who has update its cells.
 -- @usage
--- agent:update_cell()
--- Mobil.update_cell = function(self,p)    
---     print('PRIIIIIIINT',self.pos)
---     for i=1,#cell_fams do
---         table.insert(self.current_cell, {cell_fams[i], cell_fams[i]:cell_of(p) })
---     end
--- end
-
+-- agent:fd(4):update_cell()
+Mobil.update_cell = function(self)
+    for i=1,#self.current_cells do
+        local new_cell = self.current_cells[i].family:cell_of(self.pos)
+        if new_cell ~= self.current_cells[i] then
+            self.current_cells[i]:come_out(self)
+            self.current_cells[i] = new_cell
+            self.current_cells[i]:come_in(self)
+        end
+    end
+    return self
+end
 
 ------------------
 -- It produces a right turn in the agent
@@ -156,7 +147,7 @@ end
 -- @usage
 -- an_agent:rt(90)
 Mobil.rt = function(self, num)
-    self.head[1] = (self.head[1] + num) % 360
+    self.head[1] = (self.head[1] + num)
     return self
 end
 
@@ -168,7 +159,7 @@ end
 -- @usage
 -- an_agent:lt(30)
 Mobil.lt = function(self, num)
-    self.head[1] = (self.head[1] + num) % 360
+    self.head[1] = (self.head[1] + num)
     return self
 end
 
@@ -181,11 +172,12 @@ end
 -- an_agent:fd(3)
 Mobil.fd = function(self, num)
 
-    local s = sin(rad(self.head[1]))
+    local s = sin(self.head[1])
     self.pos[1] = (self:xcor() + s * num) % Config.xsize
 
-    local c = cos(rad(self.head[1]))
+    local c = cos(self.head[1])
     self.pos[2] = (self:ycor() + c * num) % Config.ysize
+    self:update_cell()
 
     return self
 end
@@ -199,11 +191,11 @@ end
 -- an_agent:fd_grid(3)
 Mobil.fd_grid = function(self, num)
 
-    local s = sin(rad(self.head[1]))
+    local s = sin(self.head[1])
     self.pos[1] = math.ceil( (self:xcor() + s * num) % Config.xsize )
     if self:xcor() == 0 then self.pos[1] = Config.xsize end
 
-    local c = cos(rad(self.head[1]))
+    local c = cos(self.head[1])
     self.pos[2] = math.ceil( (self:ycor() + c * num) % Config.ysize )
     if self:ycor() == 0 then self.pos[2] = Config.ysize end
     return self

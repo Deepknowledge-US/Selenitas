@@ -48,6 +48,13 @@ FM.add = function(self,object)
 
     self.agents[key]  = new_agent
     self.count        = self.count + 1
+
+    local cell_fams = find_families(FamilyCell)
+    for i=1,#cell_fams do
+        local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
+        table.insert(self.agents[key].current_cells, my_cell )
+        my_cell:come_in(self.agents[key])
+    end
 end
 
 ------------------
@@ -71,27 +78,6 @@ FM.create_n = function(self,num, funct)
         --TODO
     end
 end
-
-------------------
--- A filter function. It returns a Collection of agents of the family that satisfy the predicate gived as parameter.
--- @function with
--- @param funct A predicate of pertenence to a set
--- @return A Collection of agents that satisfies a predicate
--- @usage
--- Agents1:with( function(target)
---     return target:xcor() >= 4
--- end)
--- -- This will result in a collection of Agents of the family Agents1 with a value of 4 or more in its xcor
--- FM.with = function(self,funct)
---     local res = Collection(self)
---     for _,v in pairs(self.agents) do
---         if funct(v) then
---             res:add(v)
---         end
---     end
---     return res
--- end
-
 
 
 return FM

@@ -31,7 +31,7 @@ Cell._init = function(self,p_table)
     self.shape      = p_table.shape       or 'square'
     self.region     = p_table.region      or {}
     self.neighbors  = p_table.neighbors   or Collection(FamilyCell)
-    self.residents  = p_table.residents   or Collection(FamilyCell)
+    self.my_agents  = p_table.my_agents   or Collection(FamilyCell)
     self.visible    = p_table.visible     or true
     self.z_order    = p_table.z_order     or 0
 
@@ -83,6 +83,28 @@ Cell.region = function(self,pos)
         end
     end
     return false
+end
+
+------------------
+-- A function to update the Collection of agents in a Cell by adding an agent.
+-- @function come_in
+-- @param agent An Agent, new member of the Collection of agents with a position inside the region of the Cell.
+-- @return Nothing
+-- @usage
+-- Cell:come_in(an_agent)
+Cell.come_in = function(self, agent)
+    self.my_agents:add(agent)
+end
+
+------------------
+-- A function to update the Collection of agents in a Cell by removing an agent.
+-- @function come_out
+-- @param agent An Agent, current member of the Collection of agents with a position inside the region of the Cell. This agent will be removed of the Collection.
+-- @return Nothing
+-- @usage
+-- Cell:come_out(an_agent)
+Cell.come_out = function(self, agent)
+    self.my_agents:remove(agent)
 end
 
 return Cell

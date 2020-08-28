@@ -30,12 +30,26 @@ end
 -- @return nothing
 -- @usage Coll_instance:add(existing_agent)
 Collection.add = function(self,object)
-
     local old_agent = object
     local not_new_id= old_agent.id
 
     self.agents[not_new_id] = old_agent
     self.count = self.count + 1
 end
+
+------------------
+-- This function removes an element of the Collection by giving a value of nil to the reference of the object.
+-- @function remove
+-- @param agent
+-- @return Nothing
+-- @usage
+-- A_collection:remove(agent)
+Collection.remove = function(self, agent)
+    if self.agents[agent.id] then
+        self.agents[agent.id] = nil
+        self.count = self.count - 1
+    end
+end
+
 
 return Collection
