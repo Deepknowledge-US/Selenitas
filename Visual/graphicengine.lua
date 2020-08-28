@@ -1,3 +1,8 @@
+------------------
+-- Graphic Engine used to visualize implemented simulations.
+-- @module
+-- graphicengine
+
 local Slab = require "Thirdparty.Slab.Slab"
 local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
 local FileUtils = require("Visual.fileutils")
