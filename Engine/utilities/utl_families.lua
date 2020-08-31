@@ -95,17 +95,13 @@ end
 ------------------
 -- Applies an anonymous function to a Family of agents.
 -- @function ask
--- @param fam A Family instance. Note that Collections are also Families.
+-- @param fam A Family or Agent instance. Note that Collections are also Families.
 -- @param funct Anonymous function that will be applied to the agents of the family.
 -- @return Nothing
 -- @usage
 -- ask(A_family, function(ag) ag:fd(1.3) end)
 -- @see Family.ask
 function utl_fam.ask(fam, funct)
-    if is_instance(fam,Agent) then
-        funct(fam)
-        return
-    end
     fam:ask(funct)
 end
 
@@ -113,7 +109,7 @@ end
 -- It works same way as "ask", but this function applies the action only at n random selected elements of the family.
 -- @function ask_n
 -- @param n Number of agents to be asked.
--- @param fam Family where the agents will be asked..
+-- @param fam Family where the agents will be asked.
 -- @param funct Anonymous function that will be applied to the agents.
 -- @return Nothing
 -- @usage

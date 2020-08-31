@@ -36,7 +36,7 @@ end;
 -- @usage rt(agent,180)
 -- @see Mobil.rt
 function utl_actions.rt(agent, num)
-    agent.head[1] = (agent.head[1] + num)
+    return agent:rt(num)
 end
 
 ------------------
@@ -48,7 +48,7 @@ end
 -- @usage lt(agent,180)
 -- @see Mobil.lt
 function utl_actions.lt(agent, num)
-    agent.head[1] = (agent.head[1] - num)
+    return agent:lt(num)
 end
 
 ------------------
@@ -60,13 +60,7 @@ end
 -- @usage fd(agent,2)
 -- @see Mobil.fd
 function utl_actions.fd(agent, num)
-
-    local s = sin(agent.head[1])
-    agent.pos[1] = (agent:xcor() + s * num) % Config.xsize
-
-    local c = cos(agent.head[1])
-    agent.pos[2] = (agent:ycor() + c * num) % Config.ysize
-
+    return agent:fd(num)
 end
 
 ------------------
@@ -78,15 +72,7 @@ end
 -- @usage fd_grid(agent,2)
 -- @see Mobil.fd_grid
 function utl_actions.fd_grid(agent, num)
-
-    local s = sin(agent.head[1])
-    agent.pos[1] = math.ceil( (agent:xcor() + s * num) % Config.xsize )
-    if agent:xcor() == 0 then agent.pos[1] = Config.xsize end
-
-    local c = cos(agent.head[1])
-    agent.pos[2] = math.ceil( (agent:ycor() + c * num) % Config.ysize )
-    if agent:ycor() == 0 then agent.pos[2] = Config.ysize end
-
+    return agent:fd_grid(num)
 end
 
 ------------------

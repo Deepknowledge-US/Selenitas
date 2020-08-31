@@ -210,13 +210,24 @@ function utl_filters.with_min(family,funct)
 end
 
 ------------------
--- Returns a Collection of agents with the min value for a gived function.
+-- Returns a Collection of agents who have a relation with the cell (usually the agents in the region of the cell).
 -- @function agents_in
+-- @param cell Cell instance.
+-- @return Collection
+-- @usage
+-- ask( agents_in(a_cell), function(ag)
+--     ag.label = a_cell.label
+-- end)
 function utl_filters.agents_in(cell)
     return cell.my_agents
 end
 
---TODO Esta debe estar como utilidad
+------------------
+-- Returns a List of families of a concrete type.
+-- @function find_families
+-- @param fam_type A Family type: FamilyCell, FamilyMobil, or FamilyRelational.
+-- @usage 
+-- cell_fams = find_families(FamilyCell)
 function utl_filters.find_families (fam_type)
     local cell_fams, fams = {}, Config.__all_families
     for i=1,#fams do
