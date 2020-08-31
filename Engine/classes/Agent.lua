@@ -29,6 +29,23 @@ end;
 -- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
 -- @function __delete_in_neighs
 -- @return Nothing.
+Agent.is_in = function(self,fam)
+    return fam:is_in(self)
+end;
+
+Agent.pick = function(self,fam_or_agent)
+    return fam_or_agent
+end
+
+Agent.set_param = function(self,name,value)
+    self[name] = value
+    return self
+end
+
+------------------
+-- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
+-- @function __delete_in_neighs
+-- @return Nothing.
 Agent.__delete_in_neighs = function(self)
     for k,_ in pairs(self.in_neighs)do
         local target = self.family.agents[k]

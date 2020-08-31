@@ -120,7 +120,11 @@ FC.cell_of = function(self,table_)
         cell_pos = {cell_x,cell_y}
     end
 
-    return self:cell_in_pos(cell_pos)
+    if self:cell_in_pos(cell_pos) then
+        return self:cell_in_pos(cell_pos)
+    else
+        print('There is no Cell with position', cell_x,cell_y)
+    end
 end
 
 ------------------

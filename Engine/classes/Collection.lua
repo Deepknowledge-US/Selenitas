@@ -17,7 +17,7 @@ Collection._init = function(self,family)
     self.agents     = {}
     self.count       = 0
     self.family     = family
-    self.create_n   = family.create_n
+    -- self.create_n   = family.create_n
     self.with       = family.with
 
     return self
@@ -33,8 +33,12 @@ Collection.add = function(self,object)
     local old_agent = object
     local not_new_id= old_agent.id
 
-    self.agents[not_new_id] = old_agent
-    self.count = self.count + 1
+    if not self.agents[not_new_id] then
+        self.agents[not_new_id] = old_agent
+        self.count = self.count + 1
+    else
+        print('Warning: Collection.add: Attemp to insert an already existing agent')
+    end
 end
 
 ------------------
@@ -48,6 +52,8 @@ Collection.remove = function(self, agent)
     if self.agents[agent.id] then
         self.agents[agent.id] = nil
         self.count = self.count - 1
+    else
+        print('Error in Collection.remove: There is no agent in the collection with id:',agent.id )
     end
 end
 

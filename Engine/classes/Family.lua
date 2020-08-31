@@ -36,11 +36,27 @@ end
 -- @return Nothing.
 -- @usage Nodes:kill(a_node)
 -- @see actions.die
+Family.add_method = function(self, name, funct)
+    self[name] = funct
+    self:ask_ordered(function(ag)
+        ag[name] = self[name]
+    end)
+end
+
+------------------
+-- Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.
+-- @function kill
+-- @return Nothing.
+-- @usage Nodes:kill(a_node)
+-- @see actions.die
 Family.kill = function(self, agent)
     if agent ~= nil and agent.alive then
         self.agents[agent.id].alive = false
         table.insert(self.__to_purge, agent)
         self.count = self.count - 1
+        for i=1,#agent.current_cells do
+            agent.current_cells[i]:come_out(agent)
+        end
     end
 end
 

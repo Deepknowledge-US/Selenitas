@@ -46,12 +46,12 @@ local size =  x > y and math.floor(x/2) or math.floor(y/2)
 -- the number of agents to obtain the radians of separation between agents (step).
 -- Once this value is obtained, we iterate over the agents. Each agent turns a number of radians
 -- equals to "radians" variable and increment the value of "radians" with "step".
-local function layout_circle(collection, radius)
-    local num = collection.count
+local function layout_circle(family, radius)
+    local num = family.count
     local step = (math.pi * 2) / num
     local radians = 0
 
-    for k,v in pairs(collection.agents)do
+    for k,v in pairs(family.agents)do
         rt(v, radians)
         fd(v, radius)
         v:update_cell()

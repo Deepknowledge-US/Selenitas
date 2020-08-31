@@ -129,11 +129,14 @@ end
 -- agent:fd(4):update_cell()
 Mobil.update_cell = function(self)
     for i=1,#self.current_cells do
-        local new_cell = self.current_cells[i].family:cell_of(self.pos)
-        if new_cell ~= self.current_cells[i] then
-            self.current_cells[i]:come_out(self)
+
+        local cell      = self.current_cells[i]
+        local new_cell  = cell.family:cell_of(self.pos)
+
+        if new_cell ~= cell then
+            cell:come_out(self)
+            new_cell:come_in(self)
             self.current_cells[i] = new_cell
-            self.current_cells[i]:come_in(self)
         end
     end
     return self
@@ -159,7 +162,13 @@ end
 -- @usage
 -- an_agent:lt(30)
 Mobil.lt = function(self, num)
-    self.head[1] = (self.head[1] + num)
+    self.head[1] = (self.head[1] - num)
+    return self
+end
+
+Mobil.face = function(self, ag)
+    local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
+    self.head[1] = math.atan2(x,y)
     return self
 end
 
@@ -172,12 +181,13 @@ end
 -- an_agent:fd(3)
 Mobil.fd = function(self, num)
 
-    local s = sin(self.head[1])
-    self.pos[1] = (self:xcor() + s * num) % Config.xsize
+    local s,c = sin(self.head[1]), cos(self.head[1])
 
-    local c = cos(self.head[1])
+    self.pos[1] = (self:xcor() + s * num) % Config.xsize
     self.pos[2] = (self:ycor() + c * num) % Config.ysize
-    self:update_cell()
+
+    if self.pos[1] < 1 then self.pos[1] = Config.xsize end
+    if self.pos[2] < 1 then self.pos[2] = Config.ysize end
 
     return self
 end
@@ -191,13 +201,14 @@ end
 -- an_agent:fd_grid(3)
 Mobil.fd_grid = function(self, num)
 
-    local s = sin(self.head[1])
-    self.pos[1] = math.ceil( (self:xcor() + s * num) % Config.xsize )
-    if self:xcor() == 0 then self.pos[1] = Config.xsize end
+    local s,c = sin(self.head[1]), cos(self.head[1])
 
-    local c = cos(self.head[1])
+    self.pos[1] = math.ceil( (self:xcor() + s * num) % Config.xsize )
     self.pos[2] = math.ceil( (self:ycor() + c * num) % Config.ysize )
+
+    if self:xcor() == 0 then self.pos[1] = Config.xsize end
     if self:ycor() == 0 then self.pos[2] = Config.ysize end
+
     return self
 
 end
@@ -246,9 +257,8 @@ end
 -- an_ag:move_to(ag2):rt(90):fd(1)
 --
 -- -- This will position the agent near of another agent but not in the same position
-Mobil.move_to = function(self, another_agent)
-    self.pos = another_agent.pos
-
+Mobil.move_to = function(self, agent_or_vector)
+    self.pos = agent_or_vector.pos or agent_or_vector
     return self
 end
 
@@ -272,7 +282,7 @@ Mobil.dist_euc = function(self, point)
     local pos = self.pos
     local res = 0
     if #pos ~= #point then
-        return 'Error in dist_euc: Diferent number of coordinates'
+        return 'Error in dist_euc: Diferent number of dimensions'
     end
     for i = 1,#pos do
         res = res + (pos[i] - point[i])^2
