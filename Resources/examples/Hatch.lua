@@ -19,7 +19,7 @@ local histogram = {}
 -- This function applies to an agent a random turn in clock direction,
 -- then the agent advance a number of units equals to Config.stride
 local function wander(agent)
-    rt(agent, math.random(360))
+    rt(agent, math.random(2*math.pi))
     fd_grid(agent, Config.stride)
 end
 
@@ -71,7 +71,7 @@ setup = function()
     Agents:create_n( 3, function()
         return {
             ['pos']     ={math.random(Config.xsize),math.random(Config.ysize)},
-            ['head']    = math.random(360),
+            ['head']    = {math.random(2*math.pi),0},
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1},
             ['shape']   = "circle"
@@ -80,7 +80,7 @@ setup = function()
 
     -- All agents will advance 3 units in the faced direction
     ask(Agents, function(agent)
-        fd_grid(agent,Config.stride)
+        fd(agent,Config.stride)
     end)
 
 end
@@ -92,9 +92,6 @@ run = function()
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
     if Agents.count == 0 or __ticks == Config.ticks then
         Config.go = false
-        --for k,v in ipairs(histogram)do
-        --    print('t: '..k,' n: '..v)
-        --end
         return
     end
 
@@ -117,6 +114,8 @@ run = function()
     -- When the simulation ends, in "histogram" we have an evolution of the population of
     -- agents along the iterations.
     table.insert(histogram, Agents.count)
+
+    purge_agents(Agents)
 
 end
 

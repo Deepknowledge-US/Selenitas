@@ -26,7 +26,7 @@ local size =  x > y and math.floor(x/2) or math.floor(y/2)
 local function layout_circle(collection, radius)
 
     local num = collection.count
-    local step = 360 / num
+    local step = 2*math.pi / num
     local degrees = 0
 
     for k,v in pairs(collection.agents)do
@@ -34,11 +34,7 @@ local function layout_circle(collection, radius)
         local current_agent = collection.agents[k]
         rt(current_agent, degrees)
 
-        -- Use this in a continuous space
         fd(current_agent, radius)
-
-        -- Use this in a discrete space
-        --fd_grid(current_agent, radius)
 
         degrees = degrees + step
     end
@@ -53,7 +49,7 @@ setup = function()
     Nodes:create_n( Config.num_nodes, function()
         return {
             ['pos']     = {size,size},
-            ['head']    = 0
+            ['head']    = {0,0}
         }
     end)
 
