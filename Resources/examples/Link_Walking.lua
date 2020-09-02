@@ -29,7 +29,7 @@ SETUP = function()
     Walkers= FamilyMobil()
 
     local n_cells = fam_to_list(n_of(10,Cells))
-    print(#n_cells)
+    --print(#n_cells)
     ask(Cells, function(c)
         if is_in_list(c,n_cells) then
             c['visited'] = 'N'
@@ -75,7 +75,7 @@ SETUP = function()
     Walkers:add_method('search_next_node',function(self)
 
         local nn = Edges:get(self.curr_node.out_links[1]).target
-        print(nn.id)
+        --print(nn.id)
         self:face(nn)
         self.next_node = nn
     end)

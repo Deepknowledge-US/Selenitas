@@ -12,6 +12,7 @@ local Input = require("Visual.input")
 -- Simulation info
 local agents = nil
 local links = nil
+local cells = nil
 local setup_func = nil
 local step_func = nil
 local simulation_params = nil
@@ -71,6 +72,7 @@ local function _reset()
     -- Simulation info
     agents = nil
     links = nil
+    cells = nil
     setup_func = nil
     step_func = nil
     simulation_params = nil
@@ -241,6 +243,8 @@ local function update_ui(dt)
                     agents = f.agents -- f.agents is a "Mobil" collection
                 elseif f:is_a(FamilyRelational) then
                     links = f.agents -- f.agents is a "Relational" collection
+                elseif f:is_a(FamilyCell) then
+                    cells = f.agents -- f.agents is a "Cell" collection
                 end
             end
         end
@@ -407,7 +411,38 @@ function love.draw()
 
     camera:push()
 
-    -- Draw links first so they're drawn below agents
+    -- Draw cells
+    for _, c in pairs(cells or {}) do
+        if not c.visible then
+            goto continuecells
+        end
+
+        -- Handle cell color
+        love.graphics.setColor(c.color)
+
+        local x = (c:xcor() * coord_scale) + ui_width
+        local y = (c:ycor() * coord_scale) + menu_bar_width
+        if c.shape == "square" then
+            -- Squares are assumed to be 1x1
+            -- Each square is 4 lines
+            local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
+            local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
+            local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+            local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+            love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
+            love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
+            love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
+            love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
+        end
+
+        -- Draw label
+        love.graphics.setColor(c.label_color)
+        love.graphics.printf(c.label, x - 45, y, 100, 'center')
+
+        ::continuecells::
+    end
+
+    -- Draw links
     for _, l in pairs(links or {}) do
         -- Handle link visibility
         if not l.visible then
