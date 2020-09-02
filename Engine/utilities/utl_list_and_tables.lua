@@ -6,6 +6,20 @@
 
 local utl_list = {}
 
+------------------
+-- TODO.
+-- @function fam_to_list
+-- @param fam A Family instance.
+-- @return List
+-- @usage
+-- local list_of_agents = fam_to_list(Agents)
+function utl_list.fam_to_list(fam)
+    local res = {}
+    for _,v in pairs(fam.agents)do
+        table.insert(res,v)
+    end
+    return res
+end
 
 ------------------
 -- Returns a new list, copy of another list or a table.

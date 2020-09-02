@@ -54,5 +54,13 @@ Rel.ends = function(self)
     return res
 end
 
+Rel.target = function(self)
+    return self.target
+end
+
+Rel.source = function(self)
+    return self.source
+end
+
 
 return Rel

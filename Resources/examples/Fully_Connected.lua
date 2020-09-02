@@ -41,7 +41,7 @@ local function layout_circle(collection, radius)
 
 end
 
-setup = function()
+SETUP = function()
 
     Patches = create_grid(Config.xsize, Config.ysize)
 
@@ -72,11 +72,10 @@ setup = function()
         end)
     end)
 
-
 end
 
 
-run = function()
+RUN = function()
     local target = one_of(Nodes)
     Nodes:kill(target)
 
@@ -89,6 +88,6 @@ GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_time_between_steps(0)
 GraphicEngine.set_simulation_params(Config)
-GraphicEngine.set_setup_function(setup)
-GraphicEngine.set_step_function(run)
+GraphicEngine.set_setup_function(SETUP)
+GraphicEngine.set_step_function(RUN)
 GraphicEngine.init()

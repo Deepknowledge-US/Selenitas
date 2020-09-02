@@ -496,6 +496,15 @@ end
 -- @function Instance:count_all
 -- @return Number.
 -- @usage local number = My_family:count_all()
+Family.get = function(self, agent_id)
+    return self.agents[agent_id]
+end
+
+------------------
+-- Returns the total number of agents in the family (alives and killed agents that have not been purged yet). If you want the number of agets with live you can use the parameter "count" of families (Family.count)
+-- @function Instance:count_all
+-- @return Number.
+-- @usage local number = My_family:count_all()
 Family.count_all = function(self)
     return self.count + #self.__to_purge()
 end

@@ -74,7 +74,7 @@ end
 
 -- The anonymous function in this call is executed once by the setup function
 -- defined in utilities.lua
-setup(function()
+SETUP(function()
 
     -- Create a grid of patches with the specified dimensions
     Patches = create_grid(Config.xsize,Config.ysize)
@@ -101,7 +101,7 @@ end)
 
 -- This function is executed until the stop condition is reached, or until
 -- the number of iterations equals the number of ticks specified inf config_file
-run(function()
+RUN(function()
 
     -- Stop condition: All agents have the message
     if People:with(function(x) return x.message == false end).count == 0 then

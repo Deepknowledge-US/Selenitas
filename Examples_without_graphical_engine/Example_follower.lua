@@ -37,7 +37,7 @@ end
 
 
 
-setup(function()
+SETUP(function()
 
     print('\n\n\n\n\n')
     Cells = create_grid(Config.xsize, Config.ysize)
@@ -64,7 +64,7 @@ setup(function()
 end)
 
 
-run(function()
+RUN(function()
 
     if __ticks % 5 == 0 then
         Other

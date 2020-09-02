@@ -37,7 +37,7 @@ local histogram = {}
 
 
 
-setup(function()
+SETUP(function()
 
     -- "create_patches" encapsulates the creation of the patches collection
     Patches = create_grid(Config.xsize, Config.ysize)
@@ -100,7 +100,7 @@ end)
 
 -- The run function is executed until a stop condition in reached
 -- At the moment we have discrete iterations
-run(function()
+RUN(function()
 
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
     if Agents.count == 0 or __ticks == Config.ticks then
@@ -130,7 +130,7 @@ run(function()
 
     print_current_config()
     -- ask(Agents, function(x)print(x.id)end)
-    
+
     -- if math.fmod(__ticks, 10) == 0 then
     --     print_current_config()
     --     print('purgado')

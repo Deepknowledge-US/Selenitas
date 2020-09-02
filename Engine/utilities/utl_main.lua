@@ -22,6 +22,8 @@ __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 list_copy           = __list_tables.list_copy
 list_remove         = __list_tables.list_remove
 list_remove_index   = __list_tables.list_remove_index
+fam_to_list         = __list_tables.fam_to_list
+
 
 __str_fls           = require 'Engine.utilities.utl_strings_and_files'
 lines_from          = __str_fls.lines_from
@@ -85,7 +87,7 @@ pd      = pretty.dump
 --     end
 -- end)
 -- -- This will result in a grid of 100x100, and 50 agents randomly positioned in the grid.
-setup = function( funct )
+SETUP = function( funct )
     math.randomseed(os.time())
     __ticks = 1
     funct()
@@ -117,7 +119,7 @@ end
 --
 --     purge_agents()
 -- end)
-run = function(funct)
+RUN = function(funct)
     while Config.go do -- While the 'go' button is pushed
         if __ticks <= Config.ticks then
             funct()

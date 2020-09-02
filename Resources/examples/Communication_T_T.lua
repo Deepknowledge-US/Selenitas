@@ -46,7 +46,7 @@ local function comunicate(x)
 end
 
 
-setup = function()
+SETUP = function()
     -- Create a new collection
     People = FamilyMobil()
 
@@ -69,7 +69,7 @@ end
 
 -- This function is executed until the stop condition is reached, or until
 -- the number of iterations equals the number of ticks specified inf config_file
-run = function()
+RUN = function()
     if not Config.go then
         do return end
     end
@@ -91,6 +91,6 @@ GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_time_between_steps(0)
 GraphicEngine.set_simulation_params(Config)
-GraphicEngine.set_setup_function(setup)
-GraphicEngine.set_step_function(run)
+GraphicEngine.set_setup_function(SETUP)
+GraphicEngine.set_step_function(RUN)
 GraphicEngine.init()

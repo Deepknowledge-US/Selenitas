@@ -66,7 +66,7 @@ local function cell_n_pos(ag)
     end
 end
 
-setup(function()
+SETUP(function()
 
     Patches = create_grid(Config.xsize, Config.ysize)
 
@@ -103,7 +103,7 @@ local function print_aux()
     end
 end
 
-run(function()
+RUN(function()
 
     print_current_config()
 

@@ -123,7 +123,7 @@ FC.cell_of = function(self,table_)
     if self:cell_in_pos(cell_pos) then
         return self:cell_in_pos(cell_pos)
     else
-        print('There is no Cell with position', cell_x,cell_y)
+        print('There is no Cell with position', cell_pos[1],cell_pos[2],cell_pos[3])
     end
 end
 
@@ -132,8 +132,9 @@ end
 -- @function cell_in_pos
 -- @param table_ Agent or position vector.
 FC.cell_in_pos = function(self,table_)
+    local pos = table_.pos or table_
+
     for k,v in pairs(self.agents) do
-        local pos = table_.pos or table_
         if v.pos[1] == pos[1] and v.pos[2] == pos[2] and v.pos[3] == pos[3] then
             return v
         end
