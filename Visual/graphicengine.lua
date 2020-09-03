@@ -440,6 +440,20 @@ function love.draw()
             love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
             love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
             love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
+        elseif c.shape == "triangle" then
+            -- Each triangle is 3 lines
+            local top = {x, y - (0.5 * coord_scale)}
+            local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+            local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+            love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
+            love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
+            love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
+        elseif c.shape == "circle" then
+            -- Circle of radius=0.5
+            love.graphics.circle("line", x, y, 0.5 * coord_scale)
+        else
+            -- Shape is a generic polygon
+            love.graphics.polygon("line", c.shape)
         end
 
         -- Draw label
