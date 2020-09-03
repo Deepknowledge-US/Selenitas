@@ -266,7 +266,7 @@ local function update_ui(dt)
 
     -- Show "time between steps" slider
     Slab.Text("Time between steps", {Color = {0.258, 0.529, 0.956}})
-    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 50.0 + 0.000000001, {}) then
+    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 50.0 + 0.00000001, {}) then
         time_between_steps = Slab.GetInputNumber()
     end
 
@@ -284,8 +284,7 @@ local function update_ui(dt)
             -- Slider
             elseif v.type == "slider" then
                 Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-                -- TODO: parse step
-                if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min + 0.0000001, v.max, {}) then
+                if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min, v.max + 0.0000001, {Step = v.step}) then
                     simulation_params[k] = Slab.GetInputNumber()
                 end
             -- Number input
