@@ -30,10 +30,9 @@ Config = Params({
 local function comunicate(x)
 
     if x.message then
-        local my_x, my_y = x:xcor(), x:ycor()
         ask(
             People:with(function(other)
-                return x ~= other and other:xcor() == my_x and other:ycor() == my_y
+                return x:dist_euc_to_agent(other) <= 1
             end),
 
             function(other)        
@@ -80,7 +79,8 @@ RUN = function()
     end
 
     ask(People, function(person)
-        gtrn(person)
+        -- gtrn(person)
+        person:lt(math.random(__2pi)):fd(1)
         comunicate(person)
     end)
 

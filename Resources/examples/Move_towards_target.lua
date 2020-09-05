@@ -14,7 +14,8 @@ Config = Params({
     ['ysize'] = 50
 })
 
-Config:create_slider('nodes', 0, 100, 1, 22)
+Config:create_slider('houses', 0, 100, 1, 22)
+Config:create_slider('people', 10, 1000, 1, 25)
 Config:create_slider('speed', 0, 1, 0.01, 0.3)
 
 local x,y  =  Config.xsize, Config.ysize
@@ -43,39 +44,26 @@ end
 
 SETUP = function()
 
-    Nodes = FamilyMobil()
-    Nodes:create_n( Config.nodes, function()
+    Houses = FamilyMobil()
+    Houses:create_n( Config.houses, function()
         return {
             ['pos']     = {size,size},
-            ['head']    = {0,0}
+            ['visible'] = true
         }
     end)
 
-    layout_circle(Nodes, size - 1 )
+    layout_circle(Houses, size - 1 )
 
-    -- A new collection to store the links
-    Links = FamilyRelational()
-
-    -- Each agent will create a link with the other agents.
-    ask(Nodes, function(agent)
-        ask(Nodes:others(agent), function(another_agent)
-            Links:add({
-                    ['source'] = agent,
-                    ['target'] = another_agent,
-                    ['label'] = "",--agent.id .. ',' .. another_agent.id,
-                    ['visible'] = true,
-                    ['color'] = {0.75, 0, 0, 1}
-                }
-            )
-        end)
-    end)
-
+    People = FamilyMobil()
+    -- People:create_n(Config.people, function()
+    --     return {} -- Agents will have default properties
+    -- end)
 end
 
 
 RUN = function()
 
-    Config.go = false
+    -- Config.go = false
 end
 
 -- Setup and start visualization
