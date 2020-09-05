@@ -6,8 +6,8 @@ local pr = require 'pl.pretty'
 Config = Params({
     ['start'] = true,
     ['go']    = true,
-    ['max_age']= 5,
-    ['ticks'] = 10,
+    ['max_age']= 10,
+    ['ticks'] = 100,
     ['xsize'] = 15,
     ['ysize'] = 15,
     ['stride']= 1
@@ -19,9 +19,9 @@ local function print_current_config()
 
     print('\n========= tick: '.. __ticks ..' =========')
 
-    for i=Config.ysize,1,-1 do
+    for i=Config.ysize-1,0,-1 do
         local line = ""
-        for j = 1,Config.xsize do
+        for j = 0,Config.xsize-1 do
             local target = Patches:cell_of({j,i})
             line = line .. target.my_agents.count .. ','
         end
@@ -49,7 +49,7 @@ SETUP(function()
     -- specified in the table (and the parameters obteined just for be an Agent instance)
     Agents:create_n( 3, function()
         return {
-            ['pos']     ={math.random(Config.xsize),math.random(Config.ysize)},
+            ['pos']     = {math.random(Config.xsize-1),math.random(Config.ysize-1)},
             ['head']    = {math.random(360),nil},
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1}
@@ -61,7 +61,7 @@ SETUP(function()
     Agents:add_method('wander', function(agent)
         agent
             :rt( math.random(2*math.pi))
-            :fd_grid(Config.stride)
+            :fd(Config.stride)
             :update_cell()
         return agent
     end)
@@ -87,7 +87,7 @@ SETUP(function()
 
     -- All agents will advance in the faced direction
     ask(Agents, function(agent)
-        agent:fd_grid(Config.stride)
+        agent:fd(Config.stride)
         agent:update_cell()
     end)
 
@@ -115,7 +115,7 @@ RUN(function()
     ask(Agents, function(agent)
         agent
         :rt(math.random(2*math.pi))
-        :fd_grid(Config.stride)
+        :fd(Config.stride)
         :update_cell()
         :grow_old()
         :reproduce()

@@ -20,7 +20,7 @@ local initialized = false
 local go = false
 
 -- Time handling
-local time_between_steps = 0
+local time_between_steps = 0.3
 local _time_acc = 0
 
 -- File handling
@@ -266,9 +266,9 @@ local function update_ui(dt)
 
     -- Show "time between steps" slider
     Slab.Text("Time between steps", {Color = {0.258, 0.529, 0.956}})
-    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 50.0 + 0.00000001, {}) then
+    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 2.0 + 0.00000001, {}) then
         time_between_steps = Slab.GetInputNumber()
-    end
+        end
 
     Slab.Separator()
 

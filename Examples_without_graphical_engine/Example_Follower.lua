@@ -17,12 +17,12 @@ local function print_current_config()
 
     print('\n========= tick: '.. __ticks ..' =========')
 
-    for i=Config.ysize,1,-1 do
+    for i=Config.ysize-1,0,-1 do
         local line = ""
-        for j = 1,Config.xsize do
+        for j = 0,Config.xsize-1 do
             local target = Cells:cell_of({j,i})
             local label  = target.my_agents.count > 0 and target.my_agents.count or '_'
-            if target.my_agents:is_in(Choosen) then
+            if Choosen:is_in(target.my_agents) then
                 label = 0
             end
             line = line .. label .. ','
@@ -46,10 +46,9 @@ SETUP(function()
 
     Agents:create_n( 2, function()
         return {
-            ['pos']     ={Config.xsize,Config.ysize},
+            ['pos']     ={Config.xsize-1,Config.ysize-1},
             ['head']    = {0,nil},
-            ['age']     = 0,
-
+            ['age']     = 0
         }
     end)
 

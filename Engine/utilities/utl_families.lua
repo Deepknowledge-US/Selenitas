@@ -16,17 +16,29 @@ local utl_fam = {}
 -- @usage
 -- Patches = create_patches(100,100)
 function utl_fam.create_grid(x,y,cell_width,cell_height)
-    local cells  = FamilyCell()
 
-    local w,h = cell_width or 1, cell_height or 1
+    local w      = cell_width or 1
+    local h      = cell_height or 1
+    local half_w = w/2
+    local half_h = h/2
+    local cells  = FamilyCell( {['cell_width'] = w, ['cell_height'] = h} )
 
-    for i=1,x do
-        for j = 1,y do
-            cells:add( Cell({ ['pos'] = {i,j} })  )
+    for i=0,x-1 do
+        for j = 0,y-1 do
+            cells:add( Cell({ ['pos'] = {i + half_w, j + half_h} })  )
         end
     end
 
-    local grid_neighs = { {-1,0},{1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1} }
+    local grid_neighs = {
+         {-w, 0}
+        ,{ w, 0}
+        ,{ 0, h}
+        ,{ 0,-h}
+        ,{ w, h}
+        ,{ w,-h}
+        ,{-w, h}
+        ,{-w,-h}
+    }
 
     cells:ask_ordered(function(cell)
         local c_x,c_y = cell:xcor(),cell:ycor()
@@ -35,11 +47,9 @@ function utl_fam.create_grid(x,y,cell_width,cell_height)
         for i=1,8 do
             local neigh_pos = { grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
             if neigh_pos[1] > 0 and neigh_pos[2] > 0 and neigh_pos[1] <= x and neigh_pos[2] <= y then
-                -- table.insert(neighs, cells:cell_in_pos(neigh_pos))
                 cell.neighbors:add( cells:cell_in_pos(neigh_pos) )
             end
         end
-        -- cell.neighbors = neighs
     end)
 
     return cells

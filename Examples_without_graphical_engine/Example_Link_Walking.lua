@@ -17,9 +17,9 @@ local function print_current_config()
 
     print('\n========= tick: '.. __ticks ..' =========')
 
-    for i=Config.ysize,1,-1 do
+    for i=Config.ysize-1,0,-1 do
         local line = ""
-        for j = 1,Config.xsize do
+        for j = 0,Config.xsize-1 do
             local target = Cells:cell_of({j,i})
             local label  = target.visited
 
@@ -44,8 +44,6 @@ end
 
 
 SETUP(function()
-
-    print('\n\n\n\n\n')
     Cells  = create_grid(Config.xsize, Config.ysize)
     Nodes  = FamilyMobil()
     Edges  = FamilyRelational()
@@ -67,15 +65,22 @@ SETUP(function()
         })
     end
 
+    math.randomseed(os.clock())
     local list_of_nodes = fam_to_list(Nodes)
+    array_shuffle(list_of_nodes)
 
-    ask_ordered(Nodes, function(n1)
-        local choosen = list_of_nodes[math.random(#list_of_nodes)]
+    for i=1,#list_of_nodes-1 do
         Edges:add({
-            ['source'] = n1,
-            ['target'] = choosen
+            ['source']  = list_of_nodes[i],
+            ['target']  = list_of_nodes[i+1],
+            ['visible'] = true
         })
-    end)
+    end
+    Edges:add({
+        ['source'] = list_of_nodes[#list_of_nodes],
+        ['target'] = list_of_nodes[1],
+        ['visible']= true
+    })
 
     Walkers:create_n( 1, function()
         local node = one_of(Nodes)
@@ -88,46 +93,31 @@ SETUP(function()
     end)
 
     Walkers:add_method('search_next_node',function(self)
-        local nn = Edges:get(self.curr_node.out_links[1]).target
-        self.curr_node = self.next_node
-        self.next_node = nn
+        local nn = one_of(self.curr_node:out_link_neighbors())
         print(nn.id)
         self:face(nn)
+        self.next_node = nn
     end)
 
     Wlkr = one_of(Walkers)
-
-    -- local next_id = one_of(Mobil.)
-    -- Mobil.next_node = Nodes[next_id]
-
 
 end)
 
 
 RUN(function()
 
-
-    if Wlkr:dist_euc(Wlkr.curr_node.pos) < 1 then
-        Cells:cell_of({Wlkr:xcor(),Wlkr:ycor()})['visited'] = 'Y'
+    if Wlkr:dist_euc(Wlkr.next_node.pos) < 1.2 then
+        Wlkr.curr_node = Wlkr.next_node
+        Cells:cell_of(Wlkr.curr_node).visited = 'Y'
         Wlkr:search_next_node()
     end
     Wlkr:fd(1)
     Wlkr:update_cell()
 
-    print_current_config()
-    print(Wlkr.next_node:xcor(),Wlkr.next_node:ycor())
-
-    if __ticks > Config.ticks then
-        -- ask_ordered(Nodes,function(x)
-        --     print('\n\n',x.id)
-        --     for k,v in pairs(x.out_neighs)do
-        --         print(k)
-        --         for _,v2 in ipairs(v)do
-        --             print('link_id:',v2)
-        --         end
-        --     end
-        -- end)
+    Config.ticks = Config.ticks-1
+    if Config.ticks <= 0 then
         Config.go = false
     end
 
+    print_current_config()
 end)

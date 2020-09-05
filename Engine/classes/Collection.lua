@@ -12,13 +12,10 @@ local Collection = class.Collection(Family)
 -- @function _init
 -- @param family Is the reference to the Family that has created the Collection and is used to update some methods of the collection. It is also usefull when we need to know the main family of the agents in a collection.
 -- @return A new instance of Collection.
-Collection._init = function(self,family)
+Collection._init = function(self)
     self:super()
     self.agents     = {}
-    self.count       = 0
-    self.family     = family
-    -- self.create_n   = family.create_n
-    self.with       = family.with
+    self.count      = 0
 
     return self
 end

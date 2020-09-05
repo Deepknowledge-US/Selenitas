@@ -93,7 +93,7 @@ RUN(
         ask(
             Agents,
             function(x)
-                x:gtrn()
+                x:rt(math.random(1)):fd(1):update_cell()
             end
         )
 

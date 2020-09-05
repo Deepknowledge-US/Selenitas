@@ -11,10 +11,10 @@ Config = Params({
 })
 
 
-Nodes = Config:create_slider('nodes', 5, 500, 1, 20)
+Config:create_slider('houses', 5, 500, 1, 20)
 
 --[[
-    In this example we create n nodes and distribute them in the grid. Once this is done,
+    In this example we create n houses and distribute them in the grid. Once this is done,
     each node will create a link with the anothers.
 ]]--
 
@@ -25,7 +25,10 @@ local function print_current_config()
     ask(Patches, function(p)
         p.label = '_'
     end)
-    ask(Nodes, function(ag)
+    ask(People, function(ag)
+        ag.current_cells[1].label = 'I'
+    end)
+    ask(Houses, function(ag)
         ag.current_cells[1].label = 'O'
     end)
 
@@ -73,29 +76,26 @@ SETUP(function()
 
     Patches = create_grid(Config.xsize, Config.ysize)
 
-    Nodes = FamilyMobil()
-    Nodes:create_n( Config.nodes, function()
+    Houses = FamilyMobil()
+    Houses:create_n( Config.houses, function()
         return {
             ['pos']     = {size,size},
             ['head']    = {0,nil}
         }
     end)
+    layout_circle(Houses, size-1 )
 
-    layout_circle(Nodes, size-1 )
+    People = FamilyMobil()
+    People:create_n(1, function()
+        return {
+            ['pos'] = {math.random(Config.xsize),math.random(Config.ysize)},
+        }
+    end)
 
-    -- A new collection to store the links
-    Links = FamilyRelational()
-
-    -- Each agent will create a link with the other agents.
-    ask(Nodes, function(agent)
-        ask(Nodes:others(agent), function(another_agent)
-            Links:add({
-                    ['source'] = agent,
-                    ['target'] = another_agent,
-                    ['legend'] = agent.id .. ',' .. another_agent.id
-                }
-            )
-        end)
+    ask(People,function(pers)
+        local house = one_of(Houses)
+        pers:face(house)
+        pers.next_house = house
     end)
 
 end)
@@ -107,11 +107,21 @@ local function print_aux()
 end
 
 RUN(function()
+    ask(People,function(pers)
+        if pers:dist_euc_to_agent(pers.next_house) < 1 then
+            pers.current_house = pers.next_house
+            pers.next_house = one_of(Houses:others(pers.current_house))
+            pers:face(pers.next_house)
+        end
+        pers:fd(1):update_cell()
+    end)
 
     print_current_config()
 
-    Config.go = false
-    -- print(Links)
+    if Config.ticks <=0 then
+        Config.go = false
+    end
+        -- print(Links)
 end)
 
 

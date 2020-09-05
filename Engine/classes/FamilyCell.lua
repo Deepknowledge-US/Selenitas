@@ -5,9 +5,6 @@
 
 local class     = require 'Thirdparty.pl.class'
 
-local Collection= require 'Engine.classes.Collection'
-
-
 local FC = class.FamilyCell(Family)
 
 ------------------
@@ -19,6 +16,8 @@ FC._init = function(self,c)
     self:super(c)
     table.insert(Config.__all_families, self)
     self.z_order = 1
+    self.cell_width = c.cell_width or 1
+    self.cell_height= c.cell_height or 1
     return self
 end
 
@@ -77,71 +76,6 @@ FC.create_n = function(self,num, funct)
 end
 
 ------------------
--- It returns a Collection of agents of the family that satisfy the predicate gived as parameter.
--- @function with
--- @param pred A predicate of pertenence to a set
--- @return A Collection of agents that satisfies a predicate
--- @usage
--- Cells_1:with( function(cell)
---     return cell:xcor() == 1 and cell:ycor() == 1
--- end)
--- -- This will result in a collection of Agents of the family Cells_1 with a value of 1 in its xcor and 1 in its ycor
-FC.with = function(self,pred)
-    local res = Collection(self)
-    for _,v in pairs(self.agents) do
-        if pred(v) then
-            res:add(v)
-        end
-    end
-    return res
-end
-
-------------------
--- Given a vector position or an agent, it returns the Cell of the family to which the position belongs.
--- @function cell_of
--- @param table_ Agent or position vector
--- @usage
--- Family_of_cells = create_grid(10,10)
--- print(
---     Family_of_cells:cell_of( {3.16,5.98} )
--- )
--- => It will print the Cell with position {3,6}
-FC.cell_of = function(self,table_)
-    local pos, cell_pos = table_.pos or table_ , {}
-    local x,y,z = pos[1],pos[2],pos[3]
-
-    local cell_x = x%1 <= 0.5 and math.floor(x) or math.floor(x) + 1
-    local cell_y = y%1 <= 0.5 and math.floor(y) or math.floor(y) + 1
-
-    if z then
-        local cell_z = z%1 <= 0.5 and math.floor(z) or math.floor(z) + 1
-        cell_pos = {cell_x,cell_y,cell_z}
-    else
-        cell_pos = {cell_x,cell_y}
-    end
-
-    if self:cell_in_pos(cell_pos) then
-        return self:cell_in_pos(cell_pos)
-    else
-        print('There is no Cell with position', cell_pos[1],cell_pos[2],cell_pos[3])
-    end
-end
-
-------------------
--- It finds for a Cell in the family with the (exactly) same position as the one gived as parameter.
--- @function cell_in_pos
--- @param table_ Agent or position vector.
-FC.cell_in_pos = function(self,table_)
-    local pos = table_.pos or table_
-
-    for k,v in pairs(self.agents) do
-        if v.pos[1] == pos[1] and v.pos[2] == pos[2] and v.pos[3] == pos[3] then
-            return v
-        end
-    end
-end
-
-------------------
 -- Produces the diffusion of a parameter of each Cell between its neighbors.
 -- @function diffuse
 -- @param param Name of an Agent parameter, the one we want to diffuse.
@@ -176,6 +110,46 @@ FC.diffuse = function(self,param,perc,num)
         self:ask_ordered(function(cell)
             cell[param] = param_table[cell.id]
         end)
+    end
+end
+
+------------------
+-- Given a vector position or an agent, it returns the Cell of the family to which the position belongs.
+-- @function cell_of
+-- @param table_ Agent or position vector
+-- @usage
+-- Family_of_cells = create_grid(10,10)
+-- print(
+--     Family_of_cells:cell_of( {3.16,5.98} )
+-- )
+-- => It will print the Cell with position {3,6}
+FC.cell_of = function(self,table_)
+    local pos = table_.pos or table_
+    local x,y = pos[1],pos[2]
+    local w,h = self.cell_width, self.cell_height
+
+    local cell_x    = (x%w) <= w and math.floor(x/w) or math.floor(x/w) + 1
+    local cell_y    = (y%h) <= h and math.floor(y/h) or math.floor(y/h) + 1
+    local cell_pos  = {cell_x + w/2 ,cell_y + h/2}
+
+    if self:cell_in_pos(cell_pos) then
+        return self:cell_in_pos(cell_pos)
+    else
+        print('There is no Cell with position', cell_pos[1],cell_pos[2])
+    end
+end
+
+------------------
+-- It finds for a Cell in the family with the (exactly) same position as the one gived as parameter.
+-- @function cell_in_pos
+-- @param table_ Agent or position vector.
+FC.cell_in_pos = function(self,table_)
+    local pos = table_.pos or table_
+
+    for k,v in pairs(self.agents) do
+        if v.pos[1] == pos[1] and v.pos[2] == pos[2] and v.pos[3] == pos[3] then
+            return v
+        end
     end
 end
 

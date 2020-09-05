@@ -3,6 +3,11 @@
 -- @module
 -- main
 
+-- Math constants
+
+__2pi   = 2*math.pi
+
+
 
 -- Global variables
 

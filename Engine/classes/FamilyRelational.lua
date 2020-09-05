@@ -3,12 +3,9 @@
 -- @classmod
 -- FamilyRelational
 
-local class      = require 'Thirdparty.pl.class'
+local class = require 'Thirdparty.pl.class'
 
-local Collection = require 'Engine.classes.Collection'
-
-
-local FR = class.FamilyRelational(Family)
+local FR    = class.FamilyRelational(Family)
 
 ------------------
 -- FamilyRelational constructor. When a new Relational Family is created, its father's init function is called. This allows the new instance to use all the methods of the Family class.
@@ -65,11 +62,11 @@ FR.add = function(self,object)
         end
 
         -- Update the neighbors and links tables of the related agents
-        table.insert(obj1.out_neighs[id2], new_id)
-        table.insert(obj2.in_neighs[id1], new_id)
+        table.insert(obj1.out_neighs[id2], self.agents[new_id])
+        table.insert(obj2.in_neighs[id1], self.agents[new_id])
 
-        table.insert(obj1.out_links, new_id)
-        table.insert(obj2.in_links, new_id)
+        table.insert(obj1.out_links, self.agents[new_id])
+        table.insert(obj2.in_links, self.agents[new_id])
 
     else
         print("Error while adding new link:", object)
@@ -100,25 +97,5 @@ FR.create_n = function(self,num, funct)
         --TODO
     end
 end;
-
-------------------
--- It returns a Collection of agents of the family that satisfy the predicate gived as parameter.
--- @function with
--- @param funct A predicate of pertenence to a set
--- @return A Collection of agents that satisfies a predicate
--- @usage
--- Links_1:with( function(l)
---     return l.target == some_agent
--- end)
--- This will result in a collection of Agents of the family Links_1 with a target equals to the agent 'some_agent'
--- FR.with = function(self,funct)
---     local res = Collection(self)
---     for _,v in pairs(self.agents) do
---         if funct(v) then
---             res:add(v)
---         end
---     end
---     return res
--- end
 
 return FR

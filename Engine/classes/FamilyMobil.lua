@@ -4,7 +4,6 @@
 -- FamilyMobil
 
 local class     = require 'Thirdparty.pl.class'
-local Collection= require 'Engine.classes.Collection'
 
 local FM = class.FamilyMobil(Family)
 

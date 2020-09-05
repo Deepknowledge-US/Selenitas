@@ -29,9 +29,11 @@ Cell._init = function(self,p_table)
     self.label_color= p_table.color       or {1,1,1,1}
     self.color      = p_table.color       or {1,1,1,1}
     self.shape      = p_table.shape       or 'square'
+    self.width      = p_table.width       or 1
+    self.height     = p_table.height      or 1
     self.region     = p_table.region      or {}
-    self.neighbors  = p_table.neighbors   or Collection(FamilyCell)
-    self.my_agents  = p_table.my_agents   or Collection(FamilyCell)
+    self.neighbors  = p_table.neighbors   or Collection()
+    self.my_agents  = p_table.my_agents   or Collection()
     self.visible    = p_table.visible     or true
     self.z_order    = p_table.z_order     or 0
 
@@ -73,12 +75,13 @@ end
 -- @usage instance:region()
 Cell.region = function(self,pos)
     local x,y = pos[1],pos[2]
+    local width_limit, height_limit = self.width / 2, self.height / 2
 
-    local x_up_limit, x_down_limit = self:xcor() + 0.5, self:xcor() - 0.5
-    local y_l_limit, y_r_limit     = self:ycor() - 0.5, self:ycor() + 0.5
+    local x_right_limit, x_left_limit = self:xcor() + width_limit,  self:xcor() - width_limit
+    local y_down_limit,  y_up_limit   = self:ycor() - height_limit, self:ycor() + height_limit
 
-    if x_up_limit >= x and x > x_down_limit then
-        if y_r_limit >= y and y > y_l_limit then
+    if x_right_limit >= x and x > x_left_limit then
+        if y_up_limit >= y and y > y_down_limit then
             return true
         end
     end

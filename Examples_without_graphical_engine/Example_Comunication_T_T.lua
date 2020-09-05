@@ -32,7 +32,7 @@ local function comunicate(agent)
             People:others(agent),
 
             function(other)
-                if other:xcor() == agent:xcor() and other:ycor() == agent:ycor() then
+                if agent.current_cells[1] == other.current_cells[1] then
                     other.message = true
                 end
             end
@@ -50,19 +50,16 @@ local function print_current_config()
     ask_ordered(Patches, function(x) x.label = 0 end)
 
     ask_ordered(People, function(ag)
-        ask_ordered(Patches:cell_in_pos(ag.pos), function(p)
+        ask_ordered(Patches:cell_of(ag), function(p)
             p.label = p.label + 1
         end)
     end)
 
     -- Print the number of agents in each patch
-    for i = Config.ysize,1,-1 do
+    for i = Config.ysize-1,0,-1 do
         local line = ""
-        for j = 1, Config.xsize do
-            local target = one_of(Patches:with(function(cell)
-                return cell:xcor() == i and cell:ycor() == j
-            end))
-            -- print(target:xcor(),target:ycor())
+        for j = 0, Config.xsize-1 do
+            local target = Patches:cell_of({j,i})
             line = line .. target.label .. ','
         end
         print(line)
@@ -85,7 +82,7 @@ SETUP(function()
     -- Populate the collection with Agents. Each agent will be randomly positioned.
     People:create_n( 10, function()
         return {
-            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
+            ['pos']     = {math.random(Config.xsize-1),math.random(Config.ysize-1)},
             ['message'] = false
         }
     end)
@@ -111,7 +108,7 @@ RUN(function()
 
     -- In each iteration, agents go to a random neighbour and try to share the message
     ask(People, function(person)
-        person:rt(math.random(360)):fd_grid(2)
+        person:rt(math.random(360)):fd(1):update_cell()
         comunicate(person)
     end)
 
