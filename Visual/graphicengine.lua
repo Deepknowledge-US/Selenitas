@@ -518,7 +518,7 @@ function love.draw()
             local x = (a:xcor() * coord_scale) + ui_width
             local y = (a:ycor() * coord_scale) + menu_bar_width
 
-            -- Handle agent shape and scale (TODO: rotation)
+            -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
             local center_shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
             local rotation = -a.head[1] + 0.5 * math.pi
