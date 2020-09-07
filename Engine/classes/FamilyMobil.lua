@@ -51,8 +51,11 @@ FM.add = function(self,object)
     local cell_fams = find_families(FamilyCell)
     for i=1,#cell_fams do
         local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
-        self.agents[key].current_cells[i] = my_cell
-        my_cell:come_in(self.agents[key])
+        if my_cell then 
+            self.agents[key].current_cells[i] = my_cell
+            my_cell:come_in(self.agents[key])
+        end
+
     end
 end
 

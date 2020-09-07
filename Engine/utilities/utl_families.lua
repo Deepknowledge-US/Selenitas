@@ -3,7 +3,7 @@
 -- @module
 -- families
 
-local Cell     = require 'Engine.classes.Cell'
+local Cell = require "Engine.classes.Cell"
 
 local utl_fam = {}
 
@@ -15,51 +15,62 @@ local utl_fam = {}
 -- @return A FamilyCell instance
 -- @usage
 -- Patches = create_patches(100,100)
-function utl_fam.create_grid(x,y,cell_width,cell_height)
+function utl_fam.create_grid(x, y, offset_x, offset_y, cell_width, cell_height)
+    local w = cell_width or 1
+    local h = cell_height or 1
+    local half_w = w / 2
+    local half_h = h / 2
 
-    local w      = cell_width or 1
-    local h      = cell_height or 1
-    local half_w = w/2
-    local half_h = h/2
-    local cells  = FamilyCell( {['cell_width'] = w, ['cell_height'] = h} )
+    local step_x = offset_x or 0
+    local step_y = offset_y or 0
 
-    for i=0,x-1 do
-        for j = 0,y-1 do
-            cells:add( Cell({ ['pos'] = {i + half_w, j + half_h} })  )
+    local cells =
+        FamilyCell(
+        {
+            ["cell_width"]  = w,
+            ["cell_height"] = h,
+            ["offset_x"]    = step_x,
+            ["offset_y"]    = step_y
+        }
+    )
+
+    for i = 0 + step_x, x + step_x - 1 do
+        for j = 0 + step_y, x + step_y - 1 do
+            cells:add(Cell({["pos"] = {i + half_w, j + half_h}}))
         end
     end
 
     local grid_neighs = {
-         {-w, 0}
-        ,{ w, 0}
-        ,{ 0, h}
-        ,{ 0,-h}
-        ,{ w, h}
-        ,{ w,-h}
-        ,{-w, h}
-        ,{-w,-h}
+        {-w, 0},
+        {w, 0},
+        {0, h},
+        {0, -h},
+        {w, h},
+        {w, -h},
+        {-w, h},
+        {-w, -h}
     }
 
-    cells:ask_ordered(function(cell)
-        local c_x,c_y = cell:xcor(),cell:ycor()
-        local neighs = {}
+    cells:ask_ordered(
+        function(cell)
+            local c_x, c_y = cell:xcor(), cell:ycor()
+            local neighs = {}
 
-        for i=1,8 do
-            local neigh_pos = { grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
-            if neigh_pos[1] > 0 and neigh_pos[2] > 0 and neigh_pos[1] <= x and neigh_pos[2] <= y then
-                cell.neighbors:add( cells:cell_in_pos(neigh_pos) )
+            for i = 1, 8 do
+                local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+                if neigh_pos[1] > 0+step_x and neigh_pos[2] > 0+step_y and neigh_pos[1] <= x+step_x and neigh_pos[2] <= y+step_y then
+                    cell.neighbors:add(cells:cell_in_pos(neigh_pos))
+                end
             end
         end
-    end)
+    )
 
     return cells
 end
 
-
 --===================--
 --      ACTIONS      --
 --===================--
-
 
 ------------------
 -- Create n new Agents in the family. The type of the agent depends on the family it will be created.
@@ -74,8 +85,8 @@ end
 --         ['pos'] = {math.random[100],math.random[100]}
 --     }
 -- end)
-function utl_fam.create_n (family,num, funct)
-    family:create_n(num,funct)
+function utl_fam.create_n(family, num, funct)
+    family:create_n(num, funct)
 end
 
 ------------------
@@ -84,7 +95,7 @@ end
 -- @param elements A Family or a filtered Family to ask to do something.
 -- @return  Nothing
 -- @usage
--- ask(Nodes, function(node) 
+-- ask(Nodes, function(node)
 --     if Node:xcor() > 4 then Node.color = {0,0,0,1} end
 -- end)
 -- @see Family.ask_ordered
@@ -94,7 +105,7 @@ function utl_fam.ask_ordered(elements, funct)
             funct(elements)
         end
     else
-        for _,v in pairs(elements.agents)do
+        for _, v in pairs(elements.agents) do
             if v.alive then
                 funct(v)
             end
@@ -125,8 +136,8 @@ end
 -- @usage
 -- ask_n(Agents, function(ag) ag:fd(2.1) end)
 -- @see Family.ask_n
-function utl_fam.ask_n(n,fam, funct)
-    fam:ask_n(n,funct)
+function utl_fam.ask_n(n, fam, funct)
+    fam:ask_n(n, funct)
 end
 
 ------------------
@@ -142,8 +153,8 @@ end
 --     clone:gtrn()
 -- end)
 -- @see Family.clone_n
-function utl_fam.clone_n(family, n,agent, funct)
-    return family:clone_n(n,agent,funct)
+function utl_fam.clone_n(family, n, agent, funct)
+    return family:clone_n(n, agent, funct)
 end
 
 ------------------
@@ -155,12 +166,12 @@ end
 -- purge_agents(Prays, Predators)
 function utl_fam.purge_agents(...)
     if ... ~= nil then
-        for i = 1,select('#', ...)do
-            local family = select(i,...)
+        for i = 1, select("#", ...) do
+            local family = select(i, ...)
             family:__purge_agents()
         end
     else
-        for i = 1,#Config.__all_families do
+        for i = 1, #Config.__all_families do
             local family = Config.__all_families[i]
             family:__purge_agents()
         end
@@ -171,14 +182,13 @@ end
 --    COROUTINES     --
 --===================--
 
-
 ------------------
 -- Internal function to make the iterator. It yields a random item of the list gived as parameter every time it is called. This function is called by a consumer function when a new element is needed
 -- @function __producer
 -- @param list A list of elements
 -- @param list A index of the list
 -- @return A random element in a position lower or equal to "index" parameter
--- @usage 
+-- @usage
 -- local status, number = coroutine.resume(utl_fam.__producer(list, index))
 function utl_fam.__producer(list, index)
     return coroutine.create(
@@ -206,7 +216,5 @@ function utl_fam.__consumer(list, index)
     list[index] = nil
     return element
 end
-
-
 
 return utl_fam

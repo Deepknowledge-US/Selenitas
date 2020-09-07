@@ -12,8 +12,8 @@ Config = Params({
     ['start'] = true,
     ['go']    = true,
     ['ticks'] = 200,
-    ['xsize'] = 15,
-    ['ysize'] = 15
+    ['xsize'] = 30,
+    ['ysize'] = 30
 })
 
 
@@ -50,10 +50,11 @@ SETUP = function()
     People = FamilyMobil()
 
     -- Populate the collection with Agents.
-    People:create_n( 10, function()
+    People:create_n( 13, function()
         return {
             ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
-            ['message'] = false
+            ['message'] = false,
+            ['head']    = {math.random(__2pi),0}
         }
     end)
 
@@ -80,7 +81,7 @@ RUN = function()
 
     ask(People, function(person)
         -- gtrn(person)
-        person:lt(math.random(__2pi)):fd(1)
+        person:lt(math.random(-0.5,0.5)):fd(1)
         comunicate(person)
     end)
 
@@ -89,7 +90,7 @@ end
 -- Setup and start visualization
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
-GraphicEngine.set_time_between_steps(0)
+GraphicEngine.set_time_between_steps(0.25)
 GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)

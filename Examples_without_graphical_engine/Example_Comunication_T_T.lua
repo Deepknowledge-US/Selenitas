@@ -115,6 +115,9 @@ RUN(function()
 
     print_current_config()
 
+    -- local sum = function(a,b )return a+b end
+    -- print(sum(1,2))
+    -- print(1 sum 2 )
 end)
 
 
