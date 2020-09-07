@@ -26,7 +26,7 @@ Mobil._init = function(self,o)
 
     self.pos            = o.pos           or {0, 0, 0}
     self.color          = o.color         or {0.5,0.5,0.5,1}
-    self.head           = o.head          or {0,0}
+    self.head           = o.head          or {0.5 * math.pi, 0}
     self.shape          = o.shape         or 'triangle'
     self.scale          = o.scale         or 1
     self.visible        = o.visible       or true

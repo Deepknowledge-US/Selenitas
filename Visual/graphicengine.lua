@@ -239,6 +239,9 @@ local function update_ui(dt)
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
             setup_func()
+            agents_families = {}
+            links_families = {}
+            cells_families = {}
             -- Get agents and links lists
             for k, f in ipairs(simulation_params.__all_families) do
                 if f:is_a(FamilyMobil) then
@@ -518,13 +521,14 @@ function love.draw()
             -- Handle agent shape and scale (TODO: rotation)
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
             local center_shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
+            local rotation = -a.head[1] + 0.5 * math.pi
             if a.shape == "triangle" then
-                love.graphics.draw(ResourceManager.images.triangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
+                love.graphics.draw(ResourceManager.images.triangle, x - center_shift, y - center_shift, rotation, 0.1 * a.scale)
             elseif a.shape == "square" then
-                love.graphics.draw(ResourceManager.images.rectangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
+                love.graphics.draw(ResourceManager.images.rectangle, x - center_shift, y - center_shift, rotation, 0.1 * a.scale)
             else
                 -- Default to circle
-                love.graphics.draw(ResourceManager.images.circle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
+                love.graphics.draw(ResourceManager.images.circle, x - center_shift, y - center_shift, rotation, 0.1 * a.scale)
             end
 
             -- Handle agent label
