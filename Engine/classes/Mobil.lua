@@ -132,11 +132,11 @@ Mobil.update_cell = function(self)
 
         local cell      = self.current_cells[i]
         local new_cell  = cell.family:cell_of(self.pos)
+        self.current_cells[i] = new_cell
 
-        if new_cell ~= cell then
+        if new_cell and new_cell ~= cell then
             cell:come_out(self)
             new_cell:come_in(self)
-            self.current_cells[i] = new_cell
         end
     end
     return self

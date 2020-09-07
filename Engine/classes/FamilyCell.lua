@@ -132,11 +132,7 @@ FC.cell_of = function(self,table_)
     local cell_y    = (y%h) <= h and math.floor(y/h) or math.floor(y/h) + 1
     local cell_pos  = {cell_x + w/2 ,cell_y + h/2}
 
-    if self:cell_in_pos(cell_pos) then
-        return self:cell_in_pos(cell_pos)
-    else
-        print('There is no Cell with position', cell_pos[1],cell_pos[2])
-    end
+    return self:cell_in_pos(cell_pos)
 end
 
 ------------------
@@ -147,7 +143,7 @@ FC.cell_in_pos = function(self,table_)
     local pos = table_.pos or table_
 
     for k,v in pairs(self.agents) do
-        if v.pos[1] == pos[1] and v.pos[2] == pos[2] and v.pos[3] == pos[3] then
+        if v.pos[1] == pos[1] and v.pos[2] == pos[2] then
             return v
         end
     end
