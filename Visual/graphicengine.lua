@@ -10,13 +10,14 @@ local Camera = require("Thirdparty.brady.camera")
 local Input = require("Visual.input")
 
 -- Simulation info
-local agents = nil
-local links = nil
-local cells = nil
+local agents_families = {}
+local links_families = {}
+local cells_families = {}
 local setup_func = nil
 local step_func = nil
 local simulation_params = nil
 local initialized = false
+local setup_func_executed = false
 local go = false
 
 -- Time handling
@@ -70,13 +71,14 @@ end
 
 local function _reset()
     -- Simulation info
-    agents = nil
-    links = nil
-    cells = nil
+    agents_families = {}
+    links_families = {}
+    cells_families = {}
     setup_func = nil
     step_func = nil
     simulation_params = nil
     initialized = false
+    setup_func_executed = false
     go = false
 end
 
@@ -240,19 +242,20 @@ local function update_ui(dt)
             -- Get agents and links lists
             for k, f in ipairs(simulation_params.__all_families) do
                 if f:is_a(FamilyMobil) then
-                    agents = f.agents -- f.agents is a "Mobil" collection
+                    table.insert(agents_families, f.agents) -- f.agents is a "Mobil" collection
                 elseif f:is_a(FamilyRelational) then
-                    links = f.agents -- f.agents is a "Relational" collection
+                    table.insert(links_families, f.agents) -- f.agents is a "Relational" collection
                 elseif f:is_a(FamilyCell) then
-                    cells = f.agents -- f.agents is a "Cell" collection
+                    table.insert(cells_families, f.agents) -- f.agents is a "Cell" collection
                 end
             end
+            setup_func_executed = true
         end
         go = false -- Reset 'go' in case Setup button is pressed more than once
     end
 
      -- Show "step" button
-     if Slab.Button("Step", {Disabled = agents == nil}) then
+     if Slab.Button("Step", {Disabled = not setup_func_executed}) then
         if step_func then
             step_func()
         end
@@ -260,7 +263,7 @@ local function update_ui(dt)
 
     -- Change "go" button label if it's already running
     local go_button_label = go and "Stop" or "Go"
-    if Slab.Button(go_button_label, {Disabled = agents == nil}) then
+    if Slab.Button(go_button_label, {Disabled = not setup_func_executed}) then
         go = not go
     end
 
@@ -412,118 +415,124 @@ end
 
 -- Drawing function
 function love.draw()
-    if (not initialized) or (not agents) then
+    if (not initialized) or (not setup_func_executed) then
         goto skip
     end
 
     camera:push()
 
     -- Draw cells
-    for _, c in pairs(cells or {}) do
-        if not c.visible then
-            goto continuecells
+    for _, cells in pairs(cells_families or {}) do
+        for _, c in pairs(cells) do
+            if not c.visible then
+                goto continuecells
+            end
+
+            -- Handle cell color
+            love.graphics.setColor(c.color)
+
+            local x = (c:xcor() * coord_scale) + ui_width
+            local y = (c:ycor() * coord_scale) + menu_bar_width
+            if c.shape == "square" then
+                -- Squares are assumed to be 1x1
+                -- Each square is 4 lines
+                local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
+                local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
+                local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
+                love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
+                love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
+                love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
+            elseif c.shape == "triangle" then
+                -- Each triangle is 3 lines
+                local top = {x, y - (0.5 * coord_scale)}
+                local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
+                love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
+                love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
+            elseif c.shape == "circle" then
+                -- Circle of radius=0.5
+                love.graphics.circle("line", x, y, 0.5 * coord_scale)
+            else
+                -- Shape is a generic polygon
+                love.graphics.polygon("line", c.shape)
+            end
+
+            -- Draw label
+            love.graphics.setColor(c.label_color)
+            love.graphics.printf(c.label, x - 45, y, 100, 'center')
+
+            ::continuecells::
         end
-
-        -- Handle cell color
-        love.graphics.setColor(c.color)
-
-        local x = (c:xcor() * coord_scale) + ui_width
-        local y = (c:ycor() * coord_scale) + menu_bar_width
-        if c.shape == "square" then
-            -- Squares are assumed to be 1x1
-            -- Each square is 4 lines
-            local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
-            local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
-            local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
-            local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
-            love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
-            love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
-            love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
-            love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
-        elseif c.shape == "triangle" then
-            -- Each triangle is 3 lines
-            local top = {x, y - (0.5 * coord_scale)}
-            local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
-            local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
-            love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
-            love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
-            love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
-        elseif c.shape == "circle" then
-            -- Circle of radius=0.5
-            love.graphics.circle("line", x, y, 0.5 * coord_scale)
-        else
-            -- Shape is a generic polygon
-            love.graphics.polygon("line", c.shape)
-        end
-
-        -- Draw label
-        love.graphics.setColor(c.label_color)
-        love.graphics.printf(c.label, x - 45, y, 100, 'center')
-
-        ::continuecells::
     end
 
     -- Draw links
-    for _, l in pairs(links or {}) do
-        -- Handle link visibility
-        if not l.visible then
-            goto continuelinks
+    for _, links in pairs(links_families or {}) do
+        for _, l in pairs(links) do
+            -- Handle link visibility
+            if not l.visible then
+                goto continuelinks
+            end
+            -- Handle link color
+            love.graphics.setColor(l.color)
+            -- Link thickness
+            love.graphics.setLineWidth(l.thickness)
+            -- Agent coordinate is scaled and shifted in its x coordinate
+            -- to account for UI column
+            local sx = (l.source:xcor() * coord_scale) + ui_width
+            local sy = (l.source:ycor() * coord_scale) + menu_bar_width
+            local tx = (l.target:xcor() * coord_scale) + ui_width
+            local ty = (l.target:ycor() * coord_scale) + menu_bar_width
+            -- Draw line
+            love.graphics.line(sx, sy, tx, ty)
+            -- Draw label
+            love.graphics.setColor(l.label_color)
+            local dirx = tx - sx
+            local diry = ty - sy
+            local midx = sx + dirx * 0.5
+            local midy = sy + diry * 0.5
+            love.graphics.printf(l.label, midx - 45, midy, 100, 'center')
+            ::continuelinks::
         end
-        -- Handle link color
-        love.graphics.setColor(l.color)
-        -- Link thickness
-        love.graphics.setLineWidth(l.thickness)
-        -- Agent coordinate is scaled and shifted in its x coordinate
-        -- to account for UI column
-        local sx = (l.source:xcor() * coord_scale) + ui_width
-        local sy = (l.source:ycor() * coord_scale) + menu_bar_width
-        local tx = (l.target:xcor() * coord_scale) + ui_width
-        local ty = (l.target:ycor() * coord_scale) + menu_bar_width
-        -- Draw line
-        love.graphics.line(sx, sy, tx, ty)
-        -- Draw label
-        love.graphics.setColor(l.label_color)
-        local dirx = tx - sx
-        local diry = ty - sy
-        local midx = sx + dirx * 0.5
-        local midy = sy + diry * 0.5
-        love.graphics.printf(l.label, midx - 45, midy, 100, 'center')
-        ::continuelinks::
     end
 
     -- Draw agents
-    for _, a in pairs(agents) do
+    for _, agents in pairs(agents_families or {}) do
+        for _, a in pairs(agents) do
 
-        -- Handle agent visibility
-        if not a.visible then
-            goto continueagents
+            -- Handle agent visibility
+            if not a.visible then
+                goto continueagents
+            end
+
+            -- Handle agent color
+            love.graphics.setColor(a.color)
+
+            -- Agent coordinate is scaled and shifted in its x coordinate
+            -- to account for UI column
+            local x = (a:xcor() * coord_scale) + ui_width
+            local y = (a:ycor() * coord_scale) + menu_bar_width
+
+            -- Handle agent shape and scale (TODO: rotation)
+            -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
+            local center_shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
+            if a.shape == "triangle" then
+                love.graphics.draw(ResourceManager.images.triangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
+            elseif a.shape == "square" then
+                love.graphics.draw(ResourceManager.images.rectangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
+            else
+                -- Default to circle
+                love.graphics.draw(ResourceManager.images.circle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
+            end
+
+            -- Handle agent label
+            love.graphics.setColor(a.label_color)
+            love.graphics.printf(a.label, x - 45, y + 10, 100, 'center')
+
+            ::continueagents::
         end
-
-        -- Handle agent color
-        love.graphics.setColor(a.color)
-
-        -- Agent coordinate is scaled and shifted in its x coordinate
-        -- to account for UI column
-        local x = (a:xcor() * coord_scale) + ui_width
-        local y = (a:ycor() * coord_scale) + menu_bar_width
-
-        -- Handle agent shape and scale (TODO: rotation)
-        -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
-        local center_shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
-        if a.shape == "triangle" then
-            love.graphics.draw(ResourceManager.images.triangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
-        elseif a.shape == "square" then
-            love.graphics.draw(ResourceManager.images.rectangle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
-        else
-            -- Default to circle
-            love.graphics.draw(ResourceManager.images.circle, x - center_shift, y - center_shift, 0, 0.1 * a.scale)
-        end
-
-        -- Handle agent label
-        love.graphics.setColor(a.label_color)
-        love.graphics.printf(a.label, x - 45, y + 10, 100, 'center')
-
-        ::continueagents::
     end
 
     camera:pop()
