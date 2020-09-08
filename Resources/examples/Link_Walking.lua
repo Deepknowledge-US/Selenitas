@@ -23,7 +23,8 @@ SETUP = function()
         Nodes:add({
             ['pos'] = {math.random(Config.xsize-1), math.random(Config.ysize-1)},
             ['visible'] = true,
-            ['shape'] = 'circle'
+            ['shape'] = 'circle',
+            ['scale'] = 3,
         })
     end
 

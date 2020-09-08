@@ -10,13 +10,13 @@ Config = Params({
     ['start'] = true,
     ['go']    = true,
     ['ticks'] = 1,
+    ['speed'] = 0.1,
     ['xsize'] = 50,
     ['ysize'] = 50
 })
 
 Config:create_slider('houses', 0, 100, 1, 22)
 Config:create_slider('people', 10, 1000, 1, 25)
-Config:create_slider('speed', 0, 1, 0.01, 0.3)
 
 local x,y  =  Config.xsize, Config.ysize
 local size =  x > y and math.floor(x/2) or math.floor(y/2)
@@ -48,6 +48,9 @@ SETUP = function()
     Houses:create_n( Config.houses, function()
         return {
             ['pos']     = {size,size},
+            ['color']   = {0,0,1,1},
+            ['shape']   = "circle",
+            ['scale']   = 3,
             ['visible'] = true
         }
     end)
@@ -55,15 +58,33 @@ SETUP = function()
     layout_circle(Houses, size - 1 )
 
     People = FamilyMobil()
-    -- People:create_n(Config.people, function()
-    --     return {} -- Agents will have default properties
-    -- end)
+    People:create_n(Config.people, function()
+        return {
+            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)}
+        }
+    end)
+    ask(People,function(pers)
+        local house = one_of(Houses)
+        pers:face(house)
+        pers.next_house = house
+    end)
 end
 
 
 RUN = function()
+    ask(People,function(pers)
+        -- print(pers.next_house.id,pers:dist_euc_to_agent(pers.next_house))
+        if pers:dist_euc_to_agent(pers.next_house) <= 0.25 then
+            pers.current_house = pers.next_house
+            pers.next_house = one_of(Houses:others(pers.current_house))
+            pers:face(pers.next_house)
+        end
+        pers:fd(0.5):update_cell()
+    end)
 
-    -- Config.go = false
+    if Config.ticks <=0 then
+        Config.go = false
+    end
 end
 
 -- Setup and start visualization
