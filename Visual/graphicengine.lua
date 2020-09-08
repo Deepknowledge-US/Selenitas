@@ -425,6 +425,9 @@ function love.draw()
 
     camera:push()
 
+    -- Translate all coordinates to account for UI space
+    love.graphics.translate(ui_width, menu_bar_width)
+
     -- Draw cells
     for _, cells in pairs(cells_families or {}) do
         for _, c in pairs(cells) do
@@ -435,8 +438,8 @@ function love.draw()
             -- Handle cell color
             love.graphics.setColor(c.color)
 
-            local x = (c:xcor() * coord_scale) + ui_width
-            local y = (c:ycor() * coord_scale) + menu_bar_width
+            local x = c:xcor() * coord_scale
+            local y = c:ycor() * coord_scale
             if c.shape == "square" then
                 -- Squares are assumed to be 1x1
                 -- Each square is 4 lines
@@ -485,10 +488,10 @@ function love.draw()
             love.graphics.setLineWidth(l.thickness)
             -- Agent coordinate is scaled and shifted in its x coordinate
             -- to account for UI column
-            local sx = (l.source:xcor() * coord_scale) + ui_width
-            local sy = (l.source:ycor() * coord_scale) + menu_bar_width
-            local tx = (l.target:xcor() * coord_scale) + ui_width
-            local ty = (l.target:ycor() * coord_scale) + menu_bar_width
+            local sx = l.source:xcor() * coord_scale
+            local sy = l.source:ycor() * coord_scale
+            local tx = l.target:xcor() * coord_scale
+            local ty = l.target:ycor() * coord_scale
             -- Draw line
             love.graphics.line(sx, sy, tx, ty)
             -- Draw label
@@ -516,14 +519,14 @@ function love.draw()
 
             -- Agent coordinate is scaled and shifted in its x coordinate
             -- to account for UI column
-            local x = (a:xcor() * coord_scale) + ui_width
-            local y = (a:ycor() * coord_scale) + menu_bar_width
+            local x = a:xcor() * coord_scale
+            local y = a:ycor() * coord_scale
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
-            local shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
             local rot = -a.head[1] + 0.5 * math.pi
             local scl = 0.1 * a.scale
+            local shift = 50 * scl -- pixels to shift to center the figure
             if a.shape == "triangle" then
                 love.graphics.draw(ResourceManager.images.triangle, x, y, rot, scl, scl, shift, shift)
             elseif a.shape == "square" then
