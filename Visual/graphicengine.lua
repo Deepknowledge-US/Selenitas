@@ -521,15 +521,16 @@ function love.draw()
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
-            local center_shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
-            local rotation = -a.head[1] + 0.5 * math.pi
+            local shift = 50 * 0.1 * a.scale -- pixels to shift to center the figure
+            local rot = -a.head[1] + 0.5 * math.pi
+            local scl = 0.1 * a.scale
             if a.shape == "triangle" then
-                love.graphics.draw(ResourceManager.images.triangle, x - center_shift, y - center_shift, rotation, 0.1 * a.scale)
+                love.graphics.draw(ResourceManager.images.triangle, x, y, rot, scl, scl, shift, shift)
             elseif a.shape == "square" then
-                love.graphics.draw(ResourceManager.images.rectangle, x - center_shift, y - center_shift, rotation, 0.1 * a.scale)
+                love.graphics.draw(ResourceManager.images.rectangle, x, y, rot, scl, scl, shift, shift)
             else
                 -- Default to circle
-                love.graphics.draw(ResourceManager.images.circle, x - center_shift, y - center_shift, rotation, 0.1 * a.scale)
+                love.graphics.draw(ResourceManager.images.circle, x, y, rot, scl, scl, shift, shift)
             end
 
             -- Handle agent label
