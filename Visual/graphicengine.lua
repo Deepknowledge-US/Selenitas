@@ -526,7 +526,7 @@ function love.draw()
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
             local rot = -a.head[1] + 0.5 * math.pi
             local scl = 0.1 * a.scale
-            local shift = 50 * scl -- pixels to shift to center the figure
+            local shift = 50 -- pixels to shift to center the figure
             if a.shape == "triangle" then
                 love.graphics.draw(ResourceManager.images.triangle, x, y, rot, scl, scl, shift, shift)
             elseif a.shape == "square" then
