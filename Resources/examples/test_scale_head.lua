@@ -10,8 +10,8 @@ Config = Params({
     ['start'] = true,
     ['go']    = true,
     ['ticks'] = 1,
-    ['xsize'] = 50,
-    ['ysize'] = 50
+    ['xsize'] = 30,
+    ['ysize'] = 30
 })
 
 
@@ -34,6 +34,7 @@ local function layout_circle(collection, radius)
         current_agent:rt(degrees)
         current_agent:fd(radius)
 
+        current_agent.label = current_agent:xcor() .. ',' .. current_agent:ycor()
         degrees = degrees + step
     end
 
@@ -42,12 +43,23 @@ end
 SETUP = function()
 
     Nodes = FamilyMobil()
-    Nodes:create_n(4, function()
-        return {
+    -- Nodes:create_n(4, function()
+    --     return {
+    --         ['pos']     = {size,size},
+    --         ['head']    = {0,0}
+    --     }
+    -- end)
+
+    local col_step = 0.2
+    local col      = 0.1
+    for i = 1, 4 do
+        col = col + col_step
+        Nodes:add({
             ['pos']     = {size,size},
-            ['head']    = {0,0}
-        }
-    end)
+            ['head']    = {0,0},
+            ['color']   = {col,col,col,1},
+        })
+    end
 
     layout_circle(Nodes, size - 1 )
 
@@ -55,8 +67,8 @@ SETUP = function()
     Links = FamilyRelational()
 
     -- Each agent will create a link with the other agents.
-    ask(Nodes, function(agent)
-        ask(Nodes:others(agent), function(another_agent)
+    ask_ordered(Nodes, function(agent)
+        ask_ordered(Nodes:others(agent), function(another_agent)
             Links:add({
                     ['source'] = agent,
                     ['target'] = another_agent,
@@ -69,12 +81,31 @@ SETUP = function()
     end)
 
     Agents = FamilyMobil()
-    Agents:add({['pos']={25,25}})
+    Agents:add({['pos']={15,15}})
+
+    Checks = FamilyMobil()
+    local pos_incr = 2
+    local pos = 0
+    for i = 1,10 do
+        pos = pos + pos_incr
+        Checks:add({
+            ['pos']     =   {pos,pos},
+            ['shape']   =   "circle"
+        })
+    end
 
 end
 
 
 RUN = function()
+
+    ask(Agents,function(ag)
+        local target = one_of(Nodes)
+        ag:face(target)
+        print(target.pos[1],target.pos[2])
+
+        -- ag:rt(math.pi/2)
+    end)
 
     Config.go = false
 end
