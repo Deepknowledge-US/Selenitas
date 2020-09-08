@@ -238,10 +238,11 @@ local function update_ui(dt)
     })
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
-            setup_func()
+            simulation_params.__all_families = {}
             agents_families = {}
             links_families = {}
             cells_families = {}
+            setup_func()
             -- Get agents and links lists
             for k, f in ipairs(simulation_params.__all_families) do
                 if f:is_a(FamilyMobil) then
