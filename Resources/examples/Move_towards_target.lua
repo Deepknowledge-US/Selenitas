@@ -43,13 +43,14 @@ local function layout_circle(collection, radius)
 end
 
 SETUP = function()
-
+    math.randomseed(os.clock())
     Houses = FamilyMobil()
     Houses:create_n( Config.houses, function()
+        local tree_or_house = math.random(100)<=50 and "house" or "tree"
         return {
             ['pos']     = {size,size},
-            ['color']   = {0,0,1,1},
-            ['shape']   = "circle",
+            ['shape']   = tree_or_house,
+            ['color']   = tree_or_house == "house" and {0,0,1,1} or {0,1,0,1},
             ['scale']   = 3,
             ['visible'] = true
         }
@@ -60,7 +61,8 @@ SETUP = function()
     People = FamilyMobil()
     People:create_n(Config.people, function()
         return {
-            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)}
+            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
+            ['shape']   = "triangle"
         }
     end)
     ask(People,function(pers)
@@ -81,10 +83,6 @@ RUN = function()
         end
         pers:fd(0.5):update_cell()
     end)
-
-    if Config.ticks <=0 then
-        Config.go = false
-    end
 end
 
 -- Setup and start visualization

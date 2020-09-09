@@ -43,13 +43,21 @@ end
 
 SETUP = function()
 
+    Config.go = true
+
     Nodes = FamilyMobil()
     Nodes:create_n( Config.nodes, function()
         return {
             ['pos']     = {size,size},
+            ['scale']   = 1.5, 
             ['head']    = {0,0}
         }
     end)
+
+end
+
+
+RUN = function()
 
     layout_circle(Nodes, size - 1 )
 
@@ -69,11 +77,6 @@ SETUP = function()
             )
         end)
     end)
-
-end
-
-
-RUN = function()
 
     Config.go = false
 end

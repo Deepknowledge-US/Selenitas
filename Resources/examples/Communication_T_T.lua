@@ -17,7 +17,6 @@ Config = Params({
 })
 
 
-
 -- "COMUNICATION_T_T"
 -- Agents are created and randomly positioned in the grid of patches
 -- A message is given to one of them

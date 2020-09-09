@@ -168,7 +168,7 @@ end
 
 Mobil.face = function(self, ag)
     local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
-    self.head[1] = math.atan2(x,y)
+    self.head[1] = math.atan2(x,-y)
     return self
 end
 
@@ -184,7 +184,7 @@ Mobil.fd = function(self, num)
     local s,c = sin(self.head[1]), cos(self.head[1])
 
     self.pos[1] = (self:xcor() + s * num) % Config.xsize
-    self.pos[2] = (self:ycor() + c * num) % Config.ysize
+    self.pos[2] = (self:ycor() - c * num) % Config.ysize
 
     return self
 end

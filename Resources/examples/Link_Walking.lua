@@ -9,11 +9,9 @@ Config = Params({
     ['stride']= 1
 })
 
-Config:create_slider('nodes', 0, 100, 1, 22)
+Config:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
-
-    math.randomseed(os.clock())
 
     Nodes  = FamilyMobil()
     Edges  = FamilyRelational()
@@ -47,9 +45,10 @@ SETUP = function()
     Walkers:create_n( 1, function()
         local node = one_of(Nodes)
         return {
-            ['pos']     = {node:xcor(), node:ycor()},
-            ['head']    = {0,nil},
+            ['pos']       = {node:xcor(), node:ycor()},
+            ['head']      = {0,nil},
             ['curr_node'] = node,
+            ['color']     = {0,0,1,1},
             ['next_node'] = node
         }
     end)
@@ -63,23 +62,19 @@ end
 
 
 RUN = function()
-    if Wlkr:dist_euc(Wlkr.next_node.pos) < 1.2 then
+    if Wlkr:dist_euc(Wlkr.next_node.pos) < 1 then
         Wlkr.curr_node = Wlkr.next_node
         Wlkr:search_next_node()
     end
-    Wlkr:fd(1)
+    Wlkr:fd(0.9)
     Wlkr:update_cell()
 
-    Config.ticks = Config.ticks-1
-    if Config.ticks <= 0 then
-        Config.go = false
-    end
 end
 
 -- Setup and start visualization
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
-GraphicEngine.set_time_between_steps(0.3)
+GraphicEngine.set_time_between_steps(0.1)
 GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)

@@ -531,6 +531,12 @@ function love.draw()
                 love.graphics.draw(ResourceManager.images.triangle, x, y, rot, scl, scl, shift, shift)
             elseif a.shape == "square" then
                 love.graphics.draw(ResourceManager.images.rectangle, x, y, rot, scl, scl, shift, shift)
+            elseif a.shape == "house" then
+                love.graphics.draw(ResourceManager.images.house, x, y, rot, scl, scl, shift, shift)
+            elseif a.shape == "person" then
+                love.graphics.draw(ResourceManager.images.person, x, y, rot, scl, scl, shift, shift)
+            elseif a.shape == "tree" then
+                love.graphics.draw(ResourceManager.images.tree, x, y, rot, scl, scl, shift, shift)
             else
                 -- Default to circle
                 love.graphics.draw(ResourceManager.images.circle, x, y, rot, scl, scl, shift, shift)
