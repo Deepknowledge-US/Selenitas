@@ -527,20 +527,20 @@ function love.draw()
             local rot = a.head[1]
             local scl = 0.1 * a.scale
             local shift = 50 -- pixels to shift to center the figure
+            local shape_img = ResourceManager.images.circle -- Default to circle
             if a.shape == "triangle" then
-                love.graphics.draw(ResourceManager.images.triangle, x, y, rot, scl, scl, shift, shift)
+                shape_img = ResourceManager.images.triangle
             elseif a.shape == "square" then
-                love.graphics.draw(ResourceManager.images.rectangle, x, y, rot, scl, scl, shift, shift)
+                shape_img = ResourceManager.images.rectangle
             elseif a.shape == "house" then
-                love.graphics.draw(ResourceManager.images.house, x, y, rot, scl, scl, shift, shift)
+                shape_img = ResourceManager.images.house
             elseif a.shape == "person" then
-                love.graphics.draw(ResourceManager.images.person, x, y, rot, scl, scl, shift, shift)
+                shape_img = ResourceManager.images.person
             elseif a.shape == "tree" then
-                love.graphics.draw(ResourceManager.images.tree, x, y, rot, scl, scl, shift, shift)
-            else
-                -- Default to circle
-                love.graphics.draw(ResourceManager.images.circle, x, y, rot, scl, scl, shift, shift)
+                shape_img = ResourceManager.images.tree
             end
+
+            love.graphics.draw(shape_img, x, y, rot, scl, scl, shift, shift)
 
             -- Handle agent label
             love.graphics.setColor(a.label_color)
