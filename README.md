@@ -24,3 +24,7 @@ Now it is in a very first stage of development, but soon we hope to offer in thi
 - Antonio Torres Moriñigo
 
 Universidad de Sevilla
+
+## Internal Todo
+
+- List of changes TODO (in spanish).
