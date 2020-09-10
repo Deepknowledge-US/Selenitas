@@ -136,11 +136,8 @@ RUN = function(funct)
 end
 
 Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['min_x'] = -15,
-    ['min_y'] = -15,
-    ['max_x'] = 15,
-    ['max_y'] = 15
-
+    ['start']  = true,
+    ['go']     = true,
+    ['xsize']  = 50, -- This is scaled to pixels using the coord_scale property
+    ['ysize'] = 35,
 })

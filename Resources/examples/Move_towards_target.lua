@@ -77,8 +77,5 @@ RUN = function()
 end
 
 -- Setup and start visualization
-GraphicEngine.set_coordinate_scale(20)
-GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)
-GraphicEngine.init()

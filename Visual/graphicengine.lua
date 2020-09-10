@@ -30,7 +30,7 @@ local file_loaded_path = nil
 local show_file_picker = false
 
 -- Drawing & UI params
-local coord_scale = 1 -- coordinate scaling for better visualization
+local coord_scale = 20 -- coordinate scaling for better visualization
 local ui_width = 152 -- width in pixels of UI column
 local ui_height = 400 -- height of UI column
 local menu_bar_width = 20 -- approximate width of horizontal menu bar
@@ -59,6 +59,9 @@ local function init()
     -- Default font size for labels
     love.graphics.setNewFont(7)
 
+    -- World dimensions
+    love.window.setMode(Config.xsize * coord_scale, Config.ysize * coord_scale, {})
+
     -- Set up camera
     local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
@@ -86,6 +89,7 @@ local function load_simulation_file(file_path)
     _reset()
     file_loaded_path = file_path
     dofile(file_loaded_path)
+    init() -- Re-init graphic engine with settings specified in loaded file
 end
 
 -- List of files in "examples" resource folder
@@ -143,6 +147,7 @@ local function update_ui(dt)
                         -- (just calling it is enough for it to be run because of how 'cargo' library loads it)
                         _reset()
                         _ = ResourceManager.examples[e]
+                        init() -- Re-init graphic engine with settings specified in loaded file
                     end
                 end
                 Slab.EndMenu()
@@ -340,27 +345,13 @@ local function set_time_between_steps(t)
     time_between_steps = t
 end
 
--- Sets viewport size, using as minimum prefixed UI size
-local function set_viewport_size(w, h)
-    love.window.setMode(math.max(ui_width, w), math.max(ui_height, h), {})
-end
-
-------------------
--- Sets world space in 2D, using pixels as unit. 
--- For using different units, provide an scale using the set_coordinate_scale before calling this function.
--- @function set_world_dimensions
--- @param x the width of the space.
--- @param y the height of the space.
-local function set_world_dimensions(x, y)
-    set_viewport_size(ui_width + (x * coord_scale), menu_bar_width + (y * coord_scale))
-end
-
 ------------------
 -- Allows scaling the world space for using units different to pixels.
 -- Must be called before setting the world dimensions. This scale also affects agents' positions.
 -- @param f Scaling factor. Must be a positive number.
 local function set_coordinate_scale(f)
     coord_scale = f
+    love.window.setMode(Config.xsize * coord_scale, Config.ysize * coord_scale, {})
 end
 
 ------------------
@@ -545,7 +536,6 @@ end
 GraphicEngine = {
     init = init,
     load_simulation_file = load_simulation_file,
-    set_world_dimensions = set_world_dimensions,
     set_background_color = set_background_color,
     set_coordinate_scale = set_coordinate_scale,
     set_setup_function = set_setup_function,
