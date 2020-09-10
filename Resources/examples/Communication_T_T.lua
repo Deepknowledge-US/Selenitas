@@ -7,16 +7,6 @@ local lamb          = utl.bind1
 local lambda        = utl.string_lambda
 
 
-
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 200,
-    ['xsize'] = 30,
-    ['ysize'] = 30
-})
-
-
 -- "COMUNICATION_T_T"
 -- Agents are created and randomly positioned in the grid of patches
 -- A message is given to one of them
@@ -90,7 +80,6 @@ end
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_time_between_steps(0.25)
-GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)
 GraphicEngine.init()

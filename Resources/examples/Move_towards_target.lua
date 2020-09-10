@@ -6,15 +6,6 @@ require 'Engine.utilities.utl_main'
 ]]--
 
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 1,
-    ['speed'] = 0.1,
-    ['xsize'] = 50,
-    ['ysize'] = 50
-})
-
 Config:create_slider('houses', 0, 100, 1, 22)
 Config:create_slider('people', 10, 1000, 1, 25)
 
@@ -88,8 +79,6 @@ end
 -- Setup and start visualization
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
-GraphicEngine.set_time_between_steps(Config.speed)
-GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)
 GraphicEngine.init()

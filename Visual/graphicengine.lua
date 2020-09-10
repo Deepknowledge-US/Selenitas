@@ -9,13 +9,14 @@ local FileUtils = require("Visual.fileutils")
 local Camera = require("Thirdparty.brady.camera")
 local Input = require("Visual.input")
 
+require 'Engine.utilities.utl_main'
+
 -- Simulation info
 local agents_families = {}
 local links_families = {}
 local cells_families = {}
 local setup_func = nil
 local step_func = nil
-local simulation_params = nil
 local initialized = false
 local setup_func_executed = false
 local go = false
@@ -76,7 +77,6 @@ local function _reset()
     cells_families = {}
     setup_func = nil
     step_func = nil
-    simulation_params = nil
     initialized = false
     setup_func_executed = false
     go = false
@@ -238,13 +238,13 @@ local function update_ui(dt)
     })
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
-            simulation_params.__all_families = {}
+            Config.__all_families = {}
             agents_families = {}
             links_families = {}
             cells_families = {}
             setup_func()
             -- Get agents and links lists
-            for k, f in ipairs(simulation_params.__all_families) do
+            for k, f in ipairs(Config.__all_families) do
                 if f:is_a(FamilyMobil) then
                     table.insert(agents_families, f.agents) -- f.agents is a "Mobil" collection
                 elseif f:is_a(FamilyRelational) then
@@ -280,37 +280,36 @@ local function update_ui(dt)
     Slab.Separator()
 
     -- Parse simulation params
-    if simulation_params then
-        for k, v in pairs(simulation_params.ui_settings) do
-            -- Checkbox
-            if v.type == "boolean" then
-                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-                if Slab.CheckBox(simulation_params[k], "Enabled") then
-                    simulation_params[k] = not simulation_params[k]
-                end
-            -- Slider
-            elseif v.type == "slider" then
-                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-                if Slab.InputNumberSlider(k .. "Slider", simulation_params[k], v.min, v.max + 0.0000001, {Step = v.step}) then
-                    simulation_params[k] = Slab.GetInputNumber()
-                end
-            -- Number input
-            elseif v.type == "input" then
-                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-                if Slab.InputNumberDrag(k .. "InputNumber", simulation_params[k], nil, nil, {}) then
-                    simulation_params[k] = Slab.GetInputNumber()
-                end
-            -- Radio buttons
-            elseif v.type == "enum" then
-                Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-                for i, e in ipairs(v.options) do
-                    if Slab.RadioButton(e, {Index = i, SelectedIndex = simulation_params[k]}) then
-                        simulation_params[k] = i
-                    end
-                end
-            else
-                print("UI Control of type \"" .. v.type .. "\" is not recognized.")
+    -- Config object taken from 'utl_main'
+    for k, v in pairs(Config.ui_settings) do
+        -- Checkbox
+        if v.type == "boolean" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            if Slab.CheckBox(Config[k], "Enabled") then
+                Config[k] = not Config[k]
             end
+        -- Slider
+        elseif v.type == "slider" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            if Slab.InputNumberSlider(k .. "Slider", Config[k], v.min, v.max + 0.0000001, {Step = v.step}) then
+                Config[k] = Slab.GetInputNumber()
+            end
+        -- Number input
+        elseif v.type == "input" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            if Slab.InputNumberDrag(k .. "InputNumber", Config[k], nil, nil, {}) then
+                Config[k] = Slab.GetInputNumber()
+            end
+        -- Radio buttons
+        elseif v.type == "enum" then
+            Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
+            for i, e in ipairs(v.options) do
+                if Slab.RadioButton(e, {Index = i, SelectedIndex = Config[k]}) then
+                    Config[k] = i
+                end
+            end
+        else
+            print("UI Control of type \"" .. v.type .. "\" is not recognized.")
         end
     end
     Slab.EndLayout()
@@ -339,24 +338,6 @@ end
 -- @param t time in seconds.
 local function set_time_between_steps(t)
     time_between_steps = t
-end
-
--- Expected input:
--- An object of type Params. It includes an UI setting table like this:
--- {
---    "param_1_name" : {type = "boolean"},
---    "param_2_name" : {type = "slider", min = minval, max = maxval, step = step},
---    "param_3_name" : {type = "enum", options = {enum_val_1, enum_val_2, enum_val_3}},
---    "param_4_name" : {type = "input"}
---}
-
-------------------
--- Sets simulation parameters that can be exposed via the UI.
--- The parameters exposed can then be modified using UI controls automatically created by the graphic engine.
--- @function set_simulation_params
--- @param p simulation parameters object. Check the Params class of the simulations engine for more information.
-local function set_simulation_params(p)
-    simulation_params = p
 end
 
 -- Sets viewport size, using as minimum prefixed UI size
@@ -426,9 +407,11 @@ function love.draw()
     camera:push()
 
     -- Translate (0, 0) to center of the screen (local scope to avoid goto-jump issues)
+    -- Invert Y-axis to have its positive side point up
     do
         local sw, sh, _ = love.window.getMode()
         love.graphics.translate(sw / 2, sh / 2)
+        love.graphics.scale(1, -1)
     end
 
     -- Draw cells
@@ -442,7 +425,7 @@ function love.draw()
             love.graphics.setColor(c.color)
 
             local x = c:xcor() * coord_scale
-            local y = - c:ycor() * coord_scale -- negative because of Y-axis orientation change
+            local y = c:ycor() * coord_scale
             if c.shape == "square" then
                 -- Squares are assumed to be 1x1
                 -- Each square is 4 lines
@@ -492,9 +475,9 @@ function love.draw()
             -- Agent coordinate is scaled and shifted in its x coordinate
             -- to account for UI column
             local sx = l.source:xcor() * coord_scale
-            local sy = - l.source:ycor() * coord_scale -- negative because of Y-axis orientation change
+            local sy = l.source:ycor() * coord_scale
             local tx = l.target:xcor() * coord_scale
-            local ty = - l.target:ycor() * coord_scale -- negative because of Y-axis orientation change
+            local ty = l.target:ycor() * coord_scale
             -- Draw line
             love.graphics.line(sx, sy, tx, ty)
             -- Draw label
@@ -521,7 +504,7 @@ function love.draw()
             love.graphics.setColor(a.color)
 
             local x = a:xcor() * coord_scale
-            local y = - a:ycor() * coord_scale -- negative because of Y-axis orientation change
+            local y = a:ycor() * coord_scale
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
@@ -567,7 +550,6 @@ GraphicEngine = {
     set_coordinate_scale = set_coordinate_scale,
     set_setup_function = set_setup_function,
     set_step_function = set_step_function,
-    set_simulation_params = set_simulation_params,
     set_time_between_steps = set_time_between_steps
 }
 

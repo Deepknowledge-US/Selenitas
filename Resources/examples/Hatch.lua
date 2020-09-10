@@ -1,13 +1,5 @@
 require 'Engine.utilities.utl_main'
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 300,
-    ['xsize'] = 15,
-    ['ysize'] = 15
-})
-
 
 -- In the 'setup' block we define the initial configuration of the system.
 SETUP = function()
@@ -83,7 +75,6 @@ end
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_time_between_steps(0.2)
-GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)
 GraphicEngine.init()

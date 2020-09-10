@@ -1,14 +1,5 @@
 require 'Engine.utilities.utl_main'
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 200,
-    ['xsize'] = 50,
-    ['ysize'] = 50,
-    ['stride']= 1
-})
-
 Config:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
@@ -75,7 +66,6 @@ end
 GraphicEngine.set_coordinate_scale(20)
 GraphicEngine.set_world_dimensions(Config.xsize + 2, Config.ysize + 2)
 GraphicEngine.set_time_between_steps(0.1)
-GraphicEngine.set_simulation_params(Config)
 GraphicEngine.set_setup_function(SETUP)
 GraphicEngine.set_step_function(RUN)
 GraphicEngine.init()
