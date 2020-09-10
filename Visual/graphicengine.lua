@@ -425,8 +425,11 @@ function love.draw()
 
     camera:push()
 
-    -- Translate all coordinates to account for UI space
-    love.graphics.translate(ui_width, menu_bar_width)
+    -- Translate (0, 0) to center of the screen (local scope to avoid goto-jump issues)
+    do
+        local sw, sh, _ = love.window.getMode()
+        love.graphics.translate(sw / 2, sh / 2)
+    end
 
     -- Draw cells
     for _, cells in pairs(cells_families or {}) do
@@ -439,7 +442,7 @@ function love.draw()
             love.graphics.setColor(c.color)
 
             local x = c:xcor() * coord_scale
-            local y = c:ycor() * coord_scale
+            local y = - c:ycor() * coord_scale -- negative because of Y-axis orientation change
             if c.shape == "square" then
                 -- Squares are assumed to be 1x1
                 -- Each square is 4 lines
@@ -489,9 +492,9 @@ function love.draw()
             -- Agent coordinate is scaled and shifted in its x coordinate
             -- to account for UI column
             local sx = l.source:xcor() * coord_scale
-            local sy = l.source:ycor() * coord_scale
+            local sy = - l.source:ycor() * coord_scale -- negative because of Y-axis orientation change
             local tx = l.target:xcor() * coord_scale
-            local ty = l.target:ycor() * coord_scale
+            local ty = - l.target:ycor() * coord_scale -- negative because of Y-axis orientation change
             -- Draw line
             love.graphics.line(sx, sy, tx, ty)
             -- Draw label
@@ -517,10 +520,8 @@ function love.draw()
             -- Handle agent color
             love.graphics.setColor(a.color)
 
-            -- Agent coordinate is scaled and shifted in its x coordinate
-            -- to account for UI column
             local x = a:xcor() * coord_scale
-            local y = a:ycor() * coord_scale
+            local y = - a:ycor() * coord_scale -- negative because of Y-axis orientation change
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
