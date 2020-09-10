@@ -168,7 +168,7 @@ end
 
 Mobil.face = function(self, ag)
     local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
-    self.head[1] = math.atan2(x,-y)
+    self.head[1] = math.atan2(x,y)
     return self
 end
 
@@ -184,42 +184,10 @@ Mobil.fd = function(self, num)
     local s,c = sin(self.head[1]), cos(self.head[1])
 
     self.pos[1] = (self:xcor() + s * num) % Config.xsize
-    self.pos[2] = (self:ycor() - c * num) % Config.ysize
+    self.pos[2] = (self:ycor() + c * num) % Config.ysize
 
     return self
 end
-
--- ------------------
--- -- Ask the agent to go to a random neighbor in a 2D grid, neighbors are determined by moore neighborhood.
--- -- @function gtrn
--- -- @return The Agent that has called the function.
--- -- @usage
--- -- an_agent:gtrn()
--- --
--- -- -- an_agent will be moved to one of its patch neighbours (8 neighbours are considered).
--- -- --  0 0 0        0 0 x
--- -- --  0 x 0   ->   0 0 0
--- -- --  0 0 0        0 0 0
--- -- -- Extremes of the grid are conected.
--- --
--- -- -- As the agent is returned, we can do something like that:
--- -- an_agent:gtrn():search_food()
--- -- -- Assuming that we have defined a method 'search_food' in our agents
--- Mobil.gtrn = function(self)
-
---     local changes = { {0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1} }
---     local choose  = math.random(#changes)
-
---     -- Agents that cross a boundary will appear on the opposite side of the grid
---     self.pos[1] = (self:xcor() + changes[choose][1]) % Config.xsize
---     self.pos[1] = self:xcor() > 0 and self:xcor() or Config.xsize
-
---     self.pos[2] = (self:ycor() + changes[choose][2]) % Config.ysize
---     self.pos[2] = self:ycor() > 0 and self:ycor() or Config.ysize
-
---     return self
-
--- end
 
 ------------------
 -- Moves to an agent to the position of other agent
