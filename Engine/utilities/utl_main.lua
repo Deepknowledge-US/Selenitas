@@ -135,3 +135,12 @@ RUN = function(funct)
     end
 end
 
+Config = Params({
+    ['start'] = true,
+    ['go']    = true,
+    ['min_x'] = -15,
+    ['min_y'] = -15,
+    ['max_x'] = 15,
+    ['max_y'] = 15
+
+})
