@@ -83,6 +83,9 @@ local function _reset()
     initialized = false
     setup_func_executed = false
     go = false
+    -- Reset Config properties that depend on the loaded file
+    Config.__all_families = {}
+    Config.ui_settings = {}
 end
 
 local function load_simulation_file(file_path)
@@ -244,6 +247,7 @@ local function update_ui(dt)
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
             Config.__all_families = {}
+            Config.ui_settings = {}
             agents_families = {}
             links_families = {}
             cells_families = {}
