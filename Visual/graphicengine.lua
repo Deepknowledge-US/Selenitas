@@ -39,7 +39,7 @@ local camera = nil
 -- Callbacks for Input, registered in `init` function
 local drag_camera_callback_func = function(x, y, dx, dy)
     if Input.is_mouse_button_pressed(2) then
-        camera:translate(dx, dy)
+        camera:translate(-dx, -dy)
     end
 end
 local zoom_camera_callback_func = function(dx, dy)
