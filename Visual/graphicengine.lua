@@ -247,7 +247,6 @@ local function update_ui(dt)
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
             Config.__all_families = {}
-            Config.ui_settings = {}
             agents_families = {}
             links_families = {}
             cells_families = {}
@@ -402,11 +401,9 @@ function love.draw()
     camera:push()
 
     -- Translate (0, 0) to center of the screen (local scope to avoid goto-jump issues)
-    -- Invert Y-axis to have its positive side point up
     do
         local sw, sh, _ = love.window.getMode()
         love.graphics.translate(sw / 2, sh / 2)
-        love.graphics.scale(1, -1)
     end
 
     -- Draw cells
@@ -420,7 +417,7 @@ function love.draw()
             love.graphics.setColor(c.color)
 
             local x = c:xcor() * coord_scale
-            local y = c:ycor() * coord_scale
+            local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             if c.shape == "square" then
                 -- Squares are assumed to be 1x1
                 -- Each square is 4 lines
@@ -470,9 +467,9 @@ function love.draw()
             -- Agent coordinate is scaled and shifted in its x coordinate
             -- to account for UI column
             local sx = l.source:xcor() * coord_scale
-            local sy = l.source:ycor() * coord_scale
+            local sy = - l.source:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             local tx = l.target:xcor() * coord_scale
-            local ty = l.target:ycor() * coord_scale
+            local ty = - l.target:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             -- Draw line
             love.graphics.line(sx, sy, tx, ty)
             -- Draw label
@@ -499,7 +496,7 @@ function love.draw()
             love.graphics.setColor(a.color)
 
             local x = a:xcor() * coord_scale
-            local y = a:ycor() * coord_scale
+            local y = - a:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
