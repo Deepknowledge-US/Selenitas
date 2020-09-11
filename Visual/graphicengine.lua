@@ -35,6 +35,7 @@ local ui_width = 152 -- width in pixels of UI column
 local ui_height = 400 -- height of UI column
 local menu_bar_width = 20 -- approximate width of horizontal menu bar
 local show_about_dialog = false
+local show_params_window = false
 local camera = nil
 -- Callbacks for Input, registered in `init` function
 local drag_camera_callback_func = function(x, y, dx, dy)
@@ -93,12 +94,16 @@ local function load_simulation_file(file_path)
     file_loaded_path = file_path
     dofile(file_loaded_path)
     init() -- Re-init graphic engine with settings specified in loaded file
+    if next(Config.ui_settings) ~= nil then
+        -- Loaded simulation has params, show params window
+        show_params_window = true
+    end
 end
 
 -- List of files in "examples" resource folder
 local function list_examples()
     local ret = {}
-    for i, f in ipairs(love.filesystem.getDirectoryItems("Resources/examples")) do
+    for _, f in ipairs(love.filesystem.getDirectoryItems("Resources/examples")) do
         local name = string.gsub(f, ".lua", "")
         table.insert(ret, name)
     end
@@ -151,6 +156,10 @@ local function update_ui(dt)
                         _reset()
                         _ = ResourceManager.examples[e]
                         init() -- Re-init graphic engine with settings specified in loaded file
+                        if next(Config.ui_settings) ~= nil then
+                            -- Loaded simulation has params, show params window
+                            show_params_window = true
+                        end
                     end
                 end
                 Slab.EndMenu()
@@ -172,6 +181,11 @@ local function update_ui(dt)
                 camera:setTranslation(w / 2, h / 2)
                 camera:setScale(1)
             end
+
+            if Slab.MenuItem("Show parameters window") then
+                show_params_window = true
+            end
+
             Slab.EndMenu()
         end
 
@@ -229,21 +243,28 @@ local function update_ui(dt)
         Slab.EndDialog()
     end
 
-    -- Create panel for UI with fixed size
-    Slab.BeginWindow("Simulation", {
-        Title = "Simulation",
-        X = 2,
-        Y = menu_bar_width,
-        W = ui_width - 2,
-        H = ui_height,
-        AllowMove = false,
+    -- Get screen width
+    local screen_w, _, _ = love.window.getMode()
+
+    -- Create toolbar with main controls
+    Slab.BeginWindow("Toolbar", {
+        Title = "", -- No title means it shows no title border and is not movable
+        X = 0,
+        Y = menu_bar_width - 5,
+        W = screen_w,
+        H = 35,
         AutoSizeWindow = false,
         AllowResize = false
     })
-    -- Layout to horizontally expand all controls
-    Slab.BeginLayout("Layout", {
-        ExpandW = true
+
+    Slab.Separator()
+
+    Slab.BeginLayout("ToolbarLayout", {
+        AlignY = 'center',
+        AlignRowY = 'center'
     })
+
+    -- Setup button
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
         if setup_func then
             Config.__all_families = {}
@@ -266,26 +287,53 @@ local function update_ui(dt)
         go = false -- Reset 'go' in case Setup button is pressed more than once
     end
 
-     -- Show "step" button
-     if Slab.Button("Step", {Disabled = not setup_func_executed}) then
+    Slab.SameLine()
+
+    -- Step button
+    if Slab.Button("Step", {Disabled = not setup_func_executed}) then
         if step_func then
             step_func()
         end
     end
 
-    -- Change "go" button label if it's already running
-    local go_button_label = go and "Stop" or "Go"
+    Slab.SameLine()
+
+    -- Go button
+    local go_button_label = go and "Stop" or "Go" -- Change "go" button label if it's already running
     if Slab.Button(go_button_label, {Disabled = not setup_func_executed}) then
         go = not go
     end
 
-    -- Show "time between steps" slider
-    Slab.Text("Time between steps", {Color = {0.258, 0.529, 0.956}})
+    Slab.SameLine()
+
+    -- "Time between steps" slider
+    Slab.Text(" Time between steps: ", {})
+    Slab.SameLine()
     if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 2.0 + 0.00000001, {}) then
         time_between_steps = Slab.GetInputNumber()
-        end
+    end
 
-    Slab.Separator()
+    Slab.EndLayout()
+
+    Slab.EndWindow()
+
+    -- Create panel for simulation params
+    show_params_window = Slab.BeginWindow("Simulation", {
+        Title = "Simulation parameters",
+        X = 10,
+        Y = 100,
+        W = 200,
+        ContentW = 200,
+        AutoSizeWindow = false,
+        AllowResize = true,
+        IsOpen = show_params_window,
+        NoSavedSettings = true
+    })
+
+    -- Layout to horizontally expand all controls
+    Slab.BeginLayout("Layout", {
+        ExpandW = true
+    })
 
     -- Parse simulation params
     -- Config object taken from 'utl_main'
