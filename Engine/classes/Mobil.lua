@@ -183,11 +183,27 @@ Mobil.fd = function(self, num)
 
     local s,c = sin(self.head[1]), cos(self.head[1])
 
-    self.pos[1] = (self:xcor() + s * num) % Config.xsize
-    self.pos[2] = (self:ycor() + c * num) % Config.ysize
+    self.pos[1] = self:xcor() + s * num
+    self.pos[2] = self:ycor() + c * num
 
     return self
 end
+-- ------------------
+-- -- Advance in the faced direction. The distance is specified with num
+-- -- @function fd
+-- -- @param num The number of units we want the agent advance.
+-- -- @return An Agent. The one who has called the function.
+-- -- @usage
+-- -- an_agent:fd(3)
+-- Mobil.fd = function(self, num)
+
+--     local s,c = sin(self.head[1]), cos(self.head[1])
+
+--     self.pos[1] = (self:xcor() + s * num) % Config.xsize
+--     self.pos[2] = (self:ycor() + c * num) % Config.ysize
+
+--     return self
+-- end
 
 ------------------
 -- Moves to an agent to the position of other agent

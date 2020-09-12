@@ -23,6 +23,26 @@ Config = Params({
 })
 
 
+local function update_position(agent, min_x, max_x, minim_y, maxim_y)
+    local x,y = agent:xcor(),agent:ycor()
+
+    local min_y, max_y = minim_y or min_x, maxim_y or max_x
+
+    local size_x, size_y = max_x-min_x, max_y-min_y
+
+    if x > max_x then
+        agent.pos[1] = agent.pos[1] - size_x
+    elseif x < min_x then
+        agent.pos[1] = agent.pos[1] + size_x
+    end
+
+    if y > max_y then
+        agent.pos[2] = agent.pos[2] - size_y
+    elseif y < min_y then
+        agent.pos[2] = agent.pos[2] + size_y
+    end
+end
+
 
 -- Agents with the message will share it with other agents in the same patch
 local function comunicate(agent)
@@ -108,7 +128,11 @@ RUN(function()
 
     -- In each iteration, agents go to a random neighbour and try to share the message
     ask(People, function(person)
-        person:rt(math.random(360)):fd(1):update_cell()
+        person:rt(math.random(360)):fd(1)
+
+        update_position(person,0,15)
+        
+        person:update_cell()
         comunicate(person)
     end)
 

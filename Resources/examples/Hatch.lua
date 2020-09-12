@@ -1,6 +1,11 @@
 require 'Engine.utilities.utl_main'
 
 
+Config:create_slider('num_agents', 0, 10, 1, 3)
+Config:create_slider('max_age', 5, 50, 1, 30)
+Config:create_slider('clone_probability', 0, 100, 1, 20)
+
+
 -- In the 'setup' block we define the initial configuration of the system.
 SETUP = function()
 
@@ -9,9 +14,9 @@ SETUP = function()
 
     -- Populate the Family with 3 agents. Each agent will have the parameters
     -- specified in the table (and some parameters obteined just for be a Mobil instance)
-    Agents:create_n( 3, function()
+    Agents:create_n( Config.num_agents, function()
         return {
-            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
+            ['pos']     = {math.random(-5,5),math.random(-5,5)},
             ['head']    = {math.random(2*math.pi),0},
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1}
@@ -31,7 +36,7 @@ SETUP = function()
     -- Grey agents have a chance to clone itself in each iteration
     Agents:add_method('reproduce', function(agent)
         if agent.alive then
-            if same_rgb(agent, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
+            if same_rgb(agent, {0.5,0.5,0.5,1}) and math.random(100) <= Config.clone_probability then
                 Agents:clone_n(1, agent, function(x)
                     x.color = math.random(10) > 1 and {0,0,1,1} or {0.5,0.5,0.5,1}
                     x.age   = 0
@@ -41,7 +46,6 @@ SETUP = function()
     end)
 
 end
-
 
 -- The run function is executed until a stop condition in reached
 -- At the moment we have discrete iterations

@@ -22,7 +22,7 @@ local setup_func_executed = false
 local go = false
 
 -- Time handling
-local time_between_steps = 0.3
+local time_between_steps = 0.2
 local _time_acc = 0
 
 -- File handling
@@ -309,7 +309,7 @@ local function update_ui(dt)
     -- "Time between steps" slider
     Slab.Text(" Time between steps: ", {})
     Slab.SameLine()
-    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 2.0 + 0.00000001, {}) then
+    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 1.0 + 0.00000001, {}) then
         time_between_steps = Slab.GetInputNumber()
     end
 
@@ -554,6 +554,8 @@ function love.draw()
             local shape_img = ResourceManager.images.circle -- Default to circle
             if a.shape == "triangle" then
                 shape_img = ResourceManager.images.triangle
+            elseif a.shape == "triangle_2" then
+                shape_img = ResourceManager.images.triangletest
             elseif a.shape == "square" then
                 shape_img = ResourceManager.images.rectangle
             elseif a.shape == "house" then

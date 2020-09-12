@@ -1,15 +1,16 @@
 require 'Engine.utilities.utl_main'
 
-
+local radius = 15
 Config:create_slider('nodes', 0, 100, 1,10)
 Config:create_slider('links', 0, 30, 1, 15)
+Config:create_boolean('rt_lt', true)
 
 -- local x,y  =  Config.xsize, Config.ysize
 -- local off_x,off_y = Config.xsize/2, Config.ysize/2
 -- local size =  x > y and math.floor(x/4) or math.floor(y/4)
 -- print(x,y,size)
 
-local function layout_circle(collection, radius)
+local function layout_circle(collection, rad)
     local num = collection.count
     local step = 2*math.pi / num
     local degrees = 0
@@ -19,7 +20,7 @@ local function layout_circle(collection, radius)
 
         current_agent:move_to({0,0})
         current_agent:lt(degrees)
-        current_agent:fd(radius)
+        current_agent:fd(rad)
         degrees = degrees + step
     end
 
@@ -38,9 +39,9 @@ SETUP = function()
         }
     end)
 
-    local minor_half = Config.xsize < Config.ysize and Config.xsize / 2 or Config.ysize / 2
+    -- local minor_half = Config.xsize < Config.ysize and Config.xsize / 2 or Config.ysize / 2
 
-    layout_circle(Nodes, minor_half )
+    layout_circle(Nodes, radius - 1 )
     ask(Nodes, function(ag)
         ag:update_cell()
         ag.label = ag:xcor() .. ',' .. ag:ycor()
@@ -63,12 +64,30 @@ SETUP = function()
         end)
     end)
 
+    Agents = FamilyMobil()
+    Agents:add({
+        ['pos'] = {0,0},
+        ['head'] = {0,0},
+        ['color'] = {0,0,1,1},
+        ['shape'] = "triangle_2",
+        ['scale'] = 2,
+    })
+
 end
 
 
 RUN = function()
+    if Config.rt_lt then
+        ask_ordered(Agents, function(ag)
+            ag:lt(math.pi/2)
+        end)
+    else
+        ask_ordered(Agents, function(ag)
+            ag:rt(math.pi/2)
+        end)
+    end
 
-
+    Config.go = false
 end
 
 -- Setup and start visualization

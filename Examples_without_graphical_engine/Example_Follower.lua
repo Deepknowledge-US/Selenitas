@@ -13,6 +13,8 @@ Config = Params({
 })
 
 
+
+
 local function print_current_config()
 
     print('\n========= tick: '.. __ticks ..' =========')
@@ -51,6 +53,26 @@ SETUP(function()
             ['age']     = 0
         }
     end)
+    Agents:add_method('update_position', function(agent, min_x, max_x, minim_y, maxim_y)
+        local x,y = agent:xcor(),agent:ycor()
+    
+        local min_y, max_y = minim_y or min_x, maxim_y or max_x
+    
+        local size_x, size_y = max_x-min_x, max_y-min_y
+    
+        if x > max_x then
+            agent.pos[1] = agent.pos[1] - size_x
+        elseif x < min_x then
+            agent.pos[1] = agent.pos[1] + size_x
+        end
+    
+        if y > max_y then
+            agent.pos[2] = agent.pos[2] - size_y
+        elseif y < min_y then
+            agent.pos[2] = agent.pos[2] + size_y
+        end
+        return agent
+    end)
 
     Choosen = one_of(Agents)
     Other   = one_of(Agents:others(Choosen))
@@ -69,12 +91,14 @@ RUN(function()
         Other
             :set_param('head',{math.random(2*math.pi),nil})
             :fd(7)
+            :update_position(0,Config.xsize)
             :update_cell()
     end
 
     Choosen
         :face(Other)
         :fd(2)
+        :update_position(0,Config.xsize)
         :update_cell()
 
     print_current_config()

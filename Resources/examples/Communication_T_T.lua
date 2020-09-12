@@ -24,7 +24,7 @@ local function comunicate(x)
                 return x:dist_euc_to_agent(other) <= 1
             end),
 
-            function(other)        
+            function(other)
                 other.message = true
                 other.color = {0,0,1,1}
             end
@@ -33,15 +33,51 @@ local function comunicate(x)
 
 end
 
+local function update_position(agent, min_x, max_x, minim_y, maxim_y)
+    local x,y = agent:xcor(),agent:ycor()
+
+    local min_y, max_y = minim_y or min_x, maxim_y or max_x
+
+    local size_x, size_y = max_x-min_x, max_y-min_y
+
+    if x > max_x then
+        agent.pos[1] = agent.pos[1] - size_x
+    elseif x < min_x then
+        agent.pos[1] = agent.pos[1] + size_x
+    end
+
+    if y > max_y then
+        agent.pos[2] = agent.pos[2] - size_y
+    elseif y < min_y then
+        agent.pos[2] = agent.pos[2] + size_y
+    end
+end
+
 
 SETUP = function()
+    -- Test collection
+    Checkpoints = FamilyMobil()
+    Checkpoints:add({ ['pos'] = {-20, 20} })
+    Checkpoints:add({ ['pos'] = {-20,-20} })
+    Checkpoints:add({ ['pos'] = { 20,-20} })
+    Checkpoints:add({ ['pos'] = { 20, 20} })
+
+    ask(Checkpoints, function(ch) 
+        ch.shape = 'circle'
+        ch.scale = 1.5
+        ch.color = {1,0,0,1}
+        ch.label = ch:xcor() .. ',' .. ch:ycor()
+    end)
+
+
+
     -- Create a new collection
     People = FamilyMobil()
 
     -- Populate the collection with Agents.
     People:create_n( 13, function()
         return {
-            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
+            ['pos']     = {math.random(-20,20),math.random(-20,20)},
             ['message'] = false,
             ['head']    = {math.random(__2pi),0}
         }
@@ -71,6 +107,7 @@ RUN = function()
     ask(People, function(person)
         -- gtrn(person)
         person:lt(math.random(-0.5,0.5)):fd(1)
+        update_position(person,-20,20)
         comunicate(person)
     end)
 

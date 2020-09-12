@@ -10,7 +10,7 @@ SETUP = function()
 
     for i=1,Config.nodes do
         Nodes:add({
-            ['pos'] = {math.random(Config.xsize-1), math.random(Config.ysize-1)},
+            ['pos'] = {math.random(-20,20), math.random(-20,20)},
             ['visible'] = true,
             ['shape'] = 'circle',
             ['scale'] = 3,
@@ -40,6 +40,8 @@ SETUP = function()
             ['head']      = {0,nil},
             ['curr_node'] = node,
             ['color']     = {0,0,1,1},
+            ['scale']     = 1.5,
+            ['shape']     = 'triangle_2',
             ['next_node'] = node
         }
     end)

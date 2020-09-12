@@ -85,10 +85,33 @@ SETUP(function()
         end
     end)
 
+    Agents:add_method('update_position', function(agent, min_x, max_x, minim_y, maxim_y)
+        local x,y = agent:xcor(),agent:ycor()
+    
+        local min_y, max_y = minim_y or min_x, maxim_y or max_x
+    
+        local size_x, size_y = max_x-min_x, max_y-min_y
+    
+        if x > max_x then
+            agent.pos[1] = agent.pos[1] - size_x
+        elseif x < min_x then
+            agent.pos[1] = agent.pos[1] + size_x
+        end
+    
+        if y > max_y then
+            agent.pos[2] = agent.pos[2] - size_y
+        elseif y < min_y then
+            agent.pos[2] = agent.pos[2] + size_y
+        end
+        return agent
+    end)
+
     -- All agents will advance in the faced direction
     ask(Agents, function(agent)
-        agent:fd(Config.stride)
-        agent:update_cell()
+        agent
+        :fd(Config.stride)
+        :update_position(0,15)
+        :update_cell()
     end)
 
     -- for k,v in pairs(one_of(Agents).current_cells)do
@@ -116,6 +139,7 @@ RUN(function()
         agent
         :rt(math.random(2*math.pi))
         :fd(Config.stride)
+        :update_position(0,15)
         :update_cell()
         :grow_old()
         :reproduce()

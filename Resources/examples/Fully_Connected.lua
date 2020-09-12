@@ -37,7 +37,7 @@ SETUP = function()
     Nodes = FamilyMobil()
     Nodes:create_n( Config.nodes, function()
         return {
-            ['pos']     = {size,size},
+            ['pos']     = {0,0},
             ['head']    = {0,0}
         }
     end)
@@ -46,6 +46,12 @@ SETUP = function()
 
     -- A new collection to store the links
     Links = FamilyRelational()
+
+
+end
+
+
+RUN = function()
 
     -- Each agent will create a link with the other agents.
     ask(Nodes, function(agent)
@@ -60,11 +66,6 @@ SETUP = function()
             )
         end)
     end)
-
-end
-
-
-RUN = function()
 
     Config.go = false
 end

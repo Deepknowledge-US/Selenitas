@@ -6,11 +6,10 @@ require 'Engine.utilities.utl_main'
 ]]--
 
 
+local radius = 20
 Config:create_slider('houses', 0, 100, 1, 22)
 Config:create_slider('people', 10, 1000, 1, 25)
 
-local x,y  =  Config.xsize, Config.ysize
-local size =  x > y and math.floor(x/2) or math.floor(y/2)
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 360º by
 -- the number of agents to obtain the degrees of separation between agents (step).
@@ -39,7 +38,7 @@ SETUP = function()
     Houses:create_n( Config.houses, function()
         local tree_or_house = math.random(100)<=50 and "house" or "tree"
         return {
-            ['pos']     = {size,size},
+            ['pos']     = {0,0},
             ['shape']   = tree_or_house,
             ['color']   = tree_or_house == "house" and {0,0,1,1} or {0,1,0,1},
             ['scale']   = 3,
@@ -47,12 +46,12 @@ SETUP = function()
         }
     end)
 
-    layout_circle(Houses, size - 1 )
+    layout_circle(Houses, radius - 1 )
 
     People = FamilyMobil()
     People:create_n(Config.people, function()
         return {
-            ['pos']     = {math.random(Config.xsize),math.random(Config.ysize)},
+            ['pos']     = {math.random(-radius,radius),math.random(-radius,radius)},
             ['shape']   = "triangle"
         }
     end)

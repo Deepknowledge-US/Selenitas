@@ -31,11 +31,16 @@ Family._init = function(self)
 end
 
 ------------------
--- Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.
--- @function kill
+-- This function adds a method in the Family, the added method can be used for every agent of the family.
+-- @function add_method
 -- @return Nothing.
--- @usage Nodes:kill(a_node)
--- @see actions.die
+-- @usage 
+-- Nodes:add_method('method_name', function(node, an_agent) 
+--     return dist_euc_to_agent(an_agent) 
+-- end )
+--
+-- a_node:method_name(an_agent)
+-- -- The euclidean distance from a_node to an_agent is returned
 Family.add_method = function(self, name, funct)
     self[name] = funct
     self:ask_ordered(function(ag)
@@ -54,8 +59,10 @@ Family.kill = function(self, agent)
         self.agents[agent.id].alive = false
         table.insert(self.__to_purge, agent)
         self.count = self.count - 1
-        for i=1,#agent.current_cells do
-            agent.current_cells[i]:come_out(agent)
+        if agent.current_cells then
+            for i=1,#agent.current_cells do
+                agent.current_cells[i]:come_out(agent)
+            end
         end
     end
 end
