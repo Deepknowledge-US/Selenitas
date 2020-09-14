@@ -60,11 +60,15 @@ local function init()
     -- Default font size for labels
     love.graphics.setNewFont(7)
 
-    -- World dimensions
-    love.window.setMode(Config.xsize * coord_scale, Config.ysize * coord_scale, {})
+    -- World dimensions (change only if it's different to current size)
+    local w, h, _ = love.window.getMode()
+    local w_scaled = Config.xsize * coord_scale
+    local h_scaled = Config.ysize * coord_scale
+    if w ~= w_scaled or h ~= h_scaled then
+        love.window.setMode(w_scaled, h_scaled, {})
+    end
 
     -- Set up camera
-    local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
 
     -- Input callbacks
