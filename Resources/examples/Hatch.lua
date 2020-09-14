@@ -17,7 +17,7 @@ SETUP = function()
     Agents:create_n( Config.num_agents, function()
         return {
             ['pos']     = {math.random(-5,5),math.random(-5,5)},
-            ['head']    = {math.random(2*math.pi),0},
+            ['heading'] = {math.random(2*math.pi),0},
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1}
         }
@@ -28,7 +28,8 @@ SETUP = function()
     Agents:add_method('grow_old', function(agent)
         agent.age = agent.age + 1
         if agent.age > 50 then
-            die(agent)
+            -- die(agent)
+            kill_n_purge(agent)
         end
         return agent
     end)
@@ -70,8 +71,8 @@ RUN = function()
             :reproduce()
     end)
 
-    -- Killed agents are purged of the simulation
-    purge_agents(Agents)
+    -- -- Killed agents are purged of the simulation
+    -- purge_agents(Agents)
 
 end
 

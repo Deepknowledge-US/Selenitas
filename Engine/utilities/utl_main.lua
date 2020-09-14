@@ -63,7 +63,9 @@ same_rgba           = __chk.same_rgba
 same_pos            = __chk.same_pos
 
 __act               = require 'Engine.utilities.utl_actions'
+n_decimals          = __act.n_decimals
 array_shuffle       = __act.array_shuffle
+kill_n_purge        = __act.kill_n_purge
 die                 = __act.die
 fd                  = __act.fd
 fd_grid             = __act.fd_grid

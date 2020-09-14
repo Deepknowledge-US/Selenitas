@@ -65,8 +65,8 @@ end
 
 RUN = function()
     ask(People,function(pers)
-        -- print(pers.next_house.id,pers:dist_euc_to_agent(pers.next_house))
-        if pers:dist_euc_to_agent(pers.next_house) <= 0.25 then
+        -- print(pers.next_house.id,pers:dist_euc_to(pers.next_house))
+        if pers:dist_euc_to(pers.next_house) <= 0.25 then
             pers.current_house = pers.next_house
             pers.next_house = one_of(Houses:others(pers.current_house))
             pers:face(pers.next_house)

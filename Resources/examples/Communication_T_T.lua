@@ -21,7 +21,7 @@ local function comunicate(x)
     if x.message then
         ask(
             People:with(function(other)
-                return x:dist_euc_to_agent(other) <= 1
+                return x:dist_euc_to(other) <= 1
             end),
 
             function(other)
@@ -79,7 +79,7 @@ SETUP = function()
         return {
             ['pos']     = {math.random(-20,20),math.random(-20,20)},
             ['message'] = false,
-            ['head']    = {math.random(__2pi),0}
+            ['heading'] = {math.random(__2pi),0}
         }
     end)
 

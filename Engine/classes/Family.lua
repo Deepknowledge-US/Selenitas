@@ -36,7 +36,7 @@ end
 -- @return Nothing.
 -- @usage 
 -- Nodes:add_method('method_name', function(node, an_agent) 
---     return dist_euc_to_agent(an_agent) 
+--     return dist_euc_to(an_agent) 
 -- end )
 --
 -- a_node:method_name(an_agent)
@@ -80,6 +80,18 @@ Family.__purge_agents = function(self)
         v:__purge()
     end
     self.__to_purge = {}
+end
+
+------------------
+-- This function kills and agent and removes it from the simulation.
+-- @function kill_n_purge
+-- @return Nothing.
+-- @usage
+-- Nodes:kill_n_purge(an_agent)
+-- @see utl_actions.kill_n_purge
+Family.kill_n_purge = function(self,agent)
+    self:kill(agent)
+    agent:__purge()
 end
 
 ------------------

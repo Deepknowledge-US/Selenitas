@@ -17,10 +17,13 @@ local utl_filters = {}
 --     local chosen = math.random(#candidates)
 --     return family.agents[ candidates[chosen] ]
 -- end
-function utl_filters.one_of(family)
-    return family:one_of()
+function utl_filters.one_of(fam_or_list)
+    if pcall( function() return fam_or_list:is_a(Family) end ) then
+        return fam_or_list:one_of()
+    else
+        return fam_or_list[ math.random(#fam_or_list) ]
+    end
 end
-
 ------------------
 -- Select n random elements in a Family, a Collection or a Table.
 -- @function n_of

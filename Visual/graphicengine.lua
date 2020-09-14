@@ -548,7 +548,7 @@ function love.draw()
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
-            local rot = a.head[1]
+            local rot = a.heading[1]
             local scl = 0.1 * a.scale
             local shift = 50 -- pixels to shift to center the figure
             local shape_img = ResourceManager.images.circle -- Default to circle

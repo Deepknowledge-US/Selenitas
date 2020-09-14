@@ -9,6 +9,12 @@ local rad       = math.rad
 
 local utl_actions = {}
 
+function utl_actions.n_decimals(n,a_number)
+    local mod = 10^n
+    local to_int = math.floor( a_number * mod )
+    return to_int / mod
+end
+
 ------------------
 -- Fisher-Yates method to shuffle a list. It consist on permutations of the objects in a list.
 -- @function array_shuffle
@@ -121,5 +127,8 @@ function utl_actions.die(agent, family)
     end
 end
 
+function utl_actions.kill_n_purge(agent)
+    return agent.family:kill_n_purge(agent)
+end
 
 return utl_actions

@@ -37,7 +37,7 @@ Rel._init = function(self,obj)
     self.label_color= obj.label_color or {1,1,1,1}
     self.thickness  = obj.thickness   or 1
     self.shape      = obj.shape       or 'line'
-    self.visible    = obj.visible     or false
+    self.visible    = obj.visible     or true
     self.z_order    = obj.z_order     or 0
     return self
 end;

@@ -38,7 +38,7 @@ SETUP = function()
     Nodes:create_n( Config.nodes, function()
         return {
             ['pos']     = {0,0},
-            ['head']    = {0,0}
+            ['heading'] = {0,0}
         }
     end)
 

@@ -77,7 +77,7 @@ SETUP(function()
     Nodes:create_n( Config.nodes, function()
         return {
             ['pos']     = {size,size},
-            ['head']    = {0,nil}
+            ['heading'] = {0,nil}
         }
     end)
 
