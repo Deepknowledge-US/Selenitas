@@ -55,11 +55,10 @@ end
 
 
 RUN = function()
-    if Wlkr:dist_euc_to(Wlkr.next_node.pos) < 1 then
-        Wlkr.curr_node = Wlkr.next_node
-        Wlkr:search_next_node()
-    end
-    Wlkr:fd(0.9)
+
+    Wlkr:move_to(Wlkr.next_node.pos)
+    Wlkr.curr_node = Wlkr.next_node
+    Wlkr:search_next_node()
     Wlkr:update_cell()
 
 end

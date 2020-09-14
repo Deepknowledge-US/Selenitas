@@ -49,7 +49,7 @@ SETUP(function()
     Agents:create_n( 2, function()
         return {
             ['pos']     ={Config.xsize-1,Config.ysize-1},
-            ['head']    = {0,nil},
+            ['heading'] = 0,
             ['age']     = 0
         }
     end)
@@ -89,7 +89,7 @@ RUN(function()
 
     if __ticks % 5 == 0 then
         Other
-            :set_param('head',{math.random(2*math.pi),nil})
+            :set_param('heading',math.random(2*math.pi))
             :fd(7)
             :update_position(0,Config.xsize)
             :update_cell()

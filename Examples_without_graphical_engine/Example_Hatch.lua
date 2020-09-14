@@ -50,7 +50,7 @@ SETUP(function()
     Agents:create_n( 3, function()
         return {
             ['pos']     = {math.random(Config.xsize-1),math.random(Config.ysize-1)},
-            ['head']    = {math.random(360),nil},
+            ['heading'] = math.random(360),
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1}
         }

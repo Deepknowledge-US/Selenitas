@@ -35,7 +35,7 @@ SETUP = function()
         return {
             ['pos']     = {0,0},
             ['scale']   = 1.5,
-            ['head']    = {0,0}
+            ['heading'] = 0
         }
     end)
 
@@ -44,7 +44,7 @@ SETUP = function()
     layout_circle(Nodes, radius - 1 )
     ask(Nodes, function(ag)
         ag:update_cell()
-        ag.label = ag:xcor() .. ',' .. ag:ycor()
+        ag.label = n_decimals(2,ag:xcor()) .. ',' .. n_decimals(2,ag:ycor())
     end)
 
     -- A new collection to store the links
@@ -66,11 +66,11 @@ SETUP = function()
 
     Agents = FamilyMobil()
     Agents:add({
-        ['pos'] = {0,0},
-        ['head'] = {0,0},
-        ['color'] = {0,0,1,1},
-        ['shape'] = "triangle_2",
-        ['scale'] = 2,
+        ['pos']     = {0,0},
+        ['heading'] = 0,
+        ['color']   = {0,0,1,1},
+        ['shape']   = "triangle_2",
+        ['scale']   = 2,
     })
 
 end

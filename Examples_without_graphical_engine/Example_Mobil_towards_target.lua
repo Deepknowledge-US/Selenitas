@@ -80,7 +80,7 @@ SETUP(function()
     Houses:create_n( Config.houses, function()
         return {
             ['pos']     = {size,size},
-            ['head']    = {0,nil}
+            ['heading'] = 0
         }
     end)
     layout_circle(Houses, size-1 )
@@ -107,8 +107,9 @@ local function print_aux()
 end
 
 RUN(function()
+
     ask(People,function(pers)
-        if pers:dist_euc_to_agent(pers.next_house) < 1 then
+        if pers:dist_euc_to(pers.next_house) < 1 then
             pers.current_house = pers.next_house
             pers.next_house = one_of(Houses:others(pers.current_house))
             pers:face(pers.next_house)
@@ -117,6 +118,7 @@ RUN(function()
     end)
 
     print_current_config()
+    local list = {math.random(10,19),math.random(20,29),math.random(30,39)}
 
     if Config.ticks <=0 then
         Config.go = false

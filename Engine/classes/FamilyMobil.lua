@@ -68,10 +68,10 @@ end
 -- @usage
 -- Agents1:create_n( 10, function()
 --     return {
---         ['head'] = math.random(360),
+--         ['heading'] = math.random(360),
 --     }
 -- end)
--- -- This will result in 10 agents each one with a random value (between 1 and 360) for the parameter head.
+-- -- This will result in 10 agents each one with a random value (between 1 and 360) for the parameter heading.
 FM.create_n = function(self,num, funct)
     for i=1,num do
         self:add( Mobil( funct() ) )

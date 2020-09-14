@@ -28,12 +28,10 @@ local _time_acc = 0
 -- File handling
 local file_loaded_path = nil
 local show_file_picker = false
+local load_file_error_msg = nil
 
 -- Drawing & UI params
 local coord_scale = 20 -- coordinate scaling for better visualization
-local ui_width = 152 -- width in pixels of UI column
-local ui_height = 400 -- height of UI column
-local menu_bar_width = 20 -- approximate width of horizontal menu bar
 local show_about_dialog = false
 local show_params_window = false
 local camera = nil
@@ -60,11 +58,15 @@ local function init()
     -- Default font size for labels
     love.graphics.setNewFont(7)
 
-    -- World dimensions
-    love.window.setMode(Config.xsize * coord_scale, Config.ysize * coord_scale, {})
+    -- World dimensions (change only if it's different to current size)
+    local w, h, _ = love.window.getMode()
+    local w_scaled = Config.xsize * coord_scale
+    local h_scaled = Config.ysize * coord_scale
+    if w ~= w_scaled or h ~= h_scaled then
+        love.window.setMode(w_scaled, h_scaled, {})
+    end
 
     -- Set up camera
-    local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
 
     -- Input callbacks
@@ -92,11 +94,16 @@ end
 local function load_simulation_file(file_path)
     _reset()
     file_loaded_path = file_path
-    dofile(file_loaded_path)
-    init() -- Re-init graphic engine with settings specified in loaded file
-    if next(Config.ui_settings) ~= nil then
-        -- Loaded simulation has params, show params window
-        show_params_window = true
+    local r, e = loadfile(file_loaded_path)
+    if r then
+        r()
+        init() -- Re-init graphic engine with settings specified in loaded file
+        if next(Config.ui_settings) ~= nil then
+            -- Loaded simulation has params, show params window
+            show_params_window = true
+        end
+    else
+        load_file_error_msg = e
     end
 end
 
@@ -243,6 +250,14 @@ local function update_ui(dt)
         Slab.EndDialog()
     end
 
+    -- Show load file error if it happened
+    if load_file_error_msg ~= nil then
+        local res = Slab.MessageBox("Load file error", "An error occurred loading the selected file:\n " .. load_file_error_msg)
+        if res ~= "" then
+            load_file_error_msg = nil
+        end
+    end
+
     -- Get screen width
     local screen_w, _, _ = love.window.getMode()
 
@@ -250,7 +265,7 @@ local function update_ui(dt)
     Slab.BeginWindow("Toolbar", {
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
-        Y = menu_bar_width - 5,
+        Y = 15,
         W = screen_w,
         H = 35,
         AutoSizeWindow = false,
@@ -548,7 +563,7 @@ function love.draw()
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
-            local rot = a.head[1]
+            local rot = -( a.heading - (math.pi/2) )
             local scl = 0.1 * a.scale
             local shift = 50 -- pixels to shift to center the figure
             local shape_img = ResourceManager.images.circle -- Default to circle

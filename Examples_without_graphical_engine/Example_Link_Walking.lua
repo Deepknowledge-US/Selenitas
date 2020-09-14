@@ -85,8 +85,8 @@ SETUP(function()
     Walkers:create_n( 1, function()
         local node = one_of(Nodes)
         return {
-            ['pos']     = {node:xcor(), node:ycor()},
-            ['head']    = {0,nil},
+            ['pos']       = {node:xcor(), node:ycor()},
+            ['heading']   = 0,
             ['curr_node'] = node,
             ['next_node'] = node
         }
@@ -106,7 +106,7 @@ end)
 
 RUN(function()
 
-    if Wlkr:dist_euc(Wlkr.next_node.pos) < 1.2 then
+    if Wlkr:dist_euc_to(Wlkr.next_node.pos) < 1.2 then
         Wlkr.curr_node = Wlkr.next_node
         Cells:cell_of(Wlkr.curr_node).visited = 'Y'
         Wlkr:search_next_node()

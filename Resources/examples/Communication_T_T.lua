@@ -1,11 +1,9 @@
 local graphicengine = require 'Visual.graphicengine'
-
 require 'Engine.utilities.utl_main'
 
 local utl           = require 'pl.utils'
 local lamb          = utl.bind1
 local lambda        = utl.string_lambda
-
 
 -- "COMUNICATION_T_T"
 -- Agents are created and randomly positioned in the grid of patches
@@ -14,6 +12,7 @@ local lambda        = utl.string_lambda
 -- The simulation ends when all agents have the message.
 
 
+Config:create_slider('Agents', 0, 100, 1, 22)
 
 -- Agents with the message will share it with other agents in the same patch
 local function comunicate(x)
@@ -21,7 +20,7 @@ local function comunicate(x)
     if x.message then
         ask(
             People:with(function(other)
-                return x:dist_euc_to_agent(other) <= 1
+                return x:dist_euc_to(other) <= 1
             end),
 
             function(other)
@@ -35,9 +34,7 @@ end
 
 local function update_position(agent, min_x, max_x, minim_y, maxim_y)
     local x,y = agent:xcor(),agent:ycor()
-
     local min_y, max_y = minim_y or min_x, maxim_y or max_x
-
     local size_x, size_y = max_x-min_x, max_y-min_y
 
     if x > max_x then
@@ -62,24 +59,22 @@ SETUP = function()
     Checkpoints:add({ ['pos'] = { 20,-20} })
     Checkpoints:add({ ['pos'] = { 20, 20} })
 
-    ask(Checkpoints, function(ch) 
+    ask_ordered(Checkpoints, function(ch)
         ch.shape = 'circle'
         ch.scale = 1.5
         ch.color = {1,0,0,1}
         ch.label = ch:xcor() .. ',' .. ch:ycor()
     end)
 
-
-
     -- Create a new collection
     People = FamilyMobil()
 
     -- Populate the collection with Agents.
-    People:create_n( 13, function()
+    People:create_n( Config.Agents, function()
         return {
             ['pos']     = {math.random(-20,20),math.random(-20,20)},
             ['message'] = false,
-            ['head']    = {math.random(__2pi),0}
+            ['heading'] = math.random(__2pi)
         }
     end)
 

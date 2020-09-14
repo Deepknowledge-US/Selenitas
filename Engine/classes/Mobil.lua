@@ -26,7 +26,7 @@ Mobil._init = function(self,o)
 
     self.pos            = o.pos           or {0, 0, 0}
     self.color          = o.color         or {0.5,0.5,0.5,1}
-    self.head           = o.head          or {0.5 * math.pi, 0}
+    self.heading        = o.heading       or 0
     self.shape          = o.shape         or 'triangle'
     self.scale          = o.scale         or 1
     self.visible        = o.visible       or true
@@ -150,7 +150,7 @@ end
 -- @usage
 -- an_agent:rt(90)
 Mobil.rt = function(self, num)
-    self.head[1] = (self.head[1] + num)
+    self.heading = (self.heading - num)
     return self
 end
 
@@ -162,13 +162,13 @@ end
 -- @usage
 -- an_agent:lt(30)
 Mobil.lt = function(self, num)
-    self.head[1] = (self.head[1] - num)
+    self.heading = (self.heading + num)
     return self
 end
 
 Mobil.face = function(self, ag)
     local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
-    self.head[1] = math.atan2(x,y)
+    self.heading = math.atan2(y,x)
     return self
 end
 
@@ -181,10 +181,10 @@ end
 -- an_agent:fd(3)
 Mobil.fd = function(self, num)
 
-    local s,c = sin(self.head[1]), cos(self.head[1])
+    local s,c = sin(self.heading), cos(self.heading)
 
-    self.pos[1] = self:xcor() + s * num
-    self.pos[2] = self:ycor() + c * num
+    self.pos[1] = self:xcor() + c * num
+    self.pos[2] = self:ycor() + s * num
 
     return self
 end
@@ -197,7 +197,7 @@ end
 -- -- an_agent:fd(3)
 -- Mobil.fd = function(self, num)
 
---     local s,c = sin(self.head[1]), cos(self.head[1])
+--     local s,c = sin(self.heading), cos(self.heading)
 
 --     self.pos[1] = (self:xcor() + s * num) % Config.xsize
 --     self.pos[2] = (self:ycor() + c * num) % Config.ysize
@@ -218,7 +218,10 @@ end
 --
 -- -- This will position the agent near of another agent but not in the same position
 Mobil.move_to = function(self, agent_or_vector)
-    self.pos = agent_or_vector.pos or agent_or_vector
+    local new_pos = agent_or_vector.pos or agent_or_vector
+    for i = 1,#new_pos do
+        self.pos[i] = new_pos[i]
+    end
     return self
 end
 
@@ -232,33 +235,25 @@ end
 
 
 ------------------
--- This function give us the euclidean distance from the agent to another point.
--- @function dist_euc
--- @param point The point to calculate the distance to the agent.
+-- This function give us the euclidean distance from the agent to another agent or point.
+-- @function dist_euc_to
+-- @param ag_or_point The agent or point to calculate the distance to the agent.
 -- @return Number The euclidean distance to the point
 -- @usage
--- ag:dist_euc( {23, 50.1, 7} )
-Mobil.dist_euc = function(self, point)
+-- ag:dist_euc_to( {23, 50.1, 7} )
+-- -- or:
+-- dist_euc_to(ag, {23, 50.1, 7})
+Mobil.dist_euc_to = function(self, ag_or_point)
     local pos = self.pos
+    local point = ag_or_point.pos or ag_or_point
     local res = 0
     if #pos ~= #point then
-        return 'Error in dist_euc: Diferent number of dimensions'
+        error('Error in dist_euc: Diferent number of dimensions')
     end
     for i = 1,#pos do
         res = res + (pos[i] - point[i])^2
     end
     return math.sqrt(res)
-end
-
-------------------
--- This function give us the euclidean distance from the agent to another agent.
--- @function dist_euc_to_agent
--- @param agent The agent to calculate the distance to the agent that is calling the function.
--- @return Number The euclidean distance to the agent
--- @usage
--- ag:dist_euc_to_agent( ag2 )
-Mobil.dist_euc_to_agent = function(self, agent)
-    return self:dist_euc(agent.pos)
 end
 
 ------------------
@@ -268,11 +263,12 @@ end
 -- @return Number The manhattan distance to the point
 -- @usage
 -- ag:dist_manh( {23, 50, 7} )
-Mobil.dist_manh = function(self, point)
-    local pos = self.pos
-    local res = 0
+Mobil.dist_manh_to = function(self, ag_or_point)
+    local pos   = self.pos
+    local point = ag_or_point.pos or ag_or_point
+    local res   = 0
     if #pos ~= #point then
-        return 'Error in dist_manh: Diferent number of coordinates'
+        error('Error in dist_manh: Diferent number of coordinates')
     end
 
     for i=1,#pos do
@@ -281,17 +277,6 @@ Mobil.dist_manh = function(self, point)
         res = res + dist
     end
     return res
-end
-
-------------------
--- This function give us the manhattan distance from the agent to another agent.
--- @function dist_manh_to_agent
--- @param agent The agent to calculate the distance to the agent that is calling the function.
--- @return Number The manhattan distance to the agent
--- @usage
--- ag:dist_manh_to_agent( ag2 )
-Mobil.dist_manh_to_agent = function(self,agent)
-    return self:dist_manh(agent.pos)
 end
 
 return Mobil
