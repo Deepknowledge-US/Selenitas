@@ -28,7 +28,7 @@ SETUP = function()
         return {
             ['pos']     = {0,0},
             ['scale']   = 1.5,
-            ['heading'] = {0,0}
+            ['heading'] = 0
         }
     end)
 

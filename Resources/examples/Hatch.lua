@@ -17,7 +17,7 @@ SETUP = function()
     Agents:create_n( Config.num_agents, function()
         return {
             ['pos']     = {math.random(-5,5),math.random(-5,5)},
-            ['heading'] = {math.random(2*math.pi),0},
+            ['heading'] = math.random(2*math.pi),
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1}
         }

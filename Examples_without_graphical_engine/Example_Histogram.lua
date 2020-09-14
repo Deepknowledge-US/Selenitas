@@ -79,7 +79,7 @@ SETUP(
             function()
                 return {
                     ["pos"]     = {math.floor(Config.xsize / 2), math.floor(Config.ysize / 2)},
-                    ["heading"] = {math.random(__2pi), 0}
+                    ["heading"] = math.random(__2pi)
                 }
             end
         )

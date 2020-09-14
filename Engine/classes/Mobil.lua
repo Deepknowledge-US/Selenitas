@@ -26,7 +26,7 @@ Mobil._init = function(self,o)
 
     self.pos            = o.pos           or {0, 0, 0}
     self.color          = o.color         or {0.5,0.5,0.5,1}
-    self.heading        = o.heading       or {0.5 * math.pi, 0}
+    self.heading        = o.heading       or 0
     self.shape          = o.shape         or 'triangle'
     self.scale          = o.scale         or 1
     self.visible        = o.visible       or true
@@ -150,7 +150,7 @@ end
 -- @usage
 -- an_agent:rt(90)
 Mobil.rt = function(self, num)
-    self.heading[1] = (self.heading[1] + num)
+    self.heading = (self.heading - num)
     return self
 end
 
@@ -162,13 +162,13 @@ end
 -- @usage
 -- an_agent:lt(30)
 Mobil.lt = function(self, num)
-    self.heading[1] = (self.heading[1] - num)
+    self.heading = (self.heading + num)
     return self
 end
 
 Mobil.face = function(self, ag)
     local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
-    self.heading[1] = math.atan2(x,y)
+    self.heading = math.atan2(y,x)
     return self
 end
 
@@ -181,10 +181,10 @@ end
 -- an_agent:fd(3)
 Mobil.fd = function(self, num)
 
-    local s,c = sin(self.heading[1]), cos(self.heading[1])
+    local s,c = sin(self.heading), cos(self.heading)
 
-    self.pos[1] = self:xcor() + s * num
-    self.pos[2] = self:ycor() + c * num
+    self.pos[1] = self:xcor() + c * num
+    self.pos[2] = self:ycor() + s * num
 
     return self
 end
@@ -197,7 +197,7 @@ end
 -- -- an_agent:fd(3)
 -- Mobil.fd = function(self, num)
 
---     local s,c = sin(self.heading[1]), cos(self.heading[1])
+--     local s,c = sin(self.heading), cos(self.heading)
 
 --     self.pos[1] = (self:xcor() + s * num) % Config.xsize
 --     self.pos[2] = (self:ycor() + c * num) % Config.ysize

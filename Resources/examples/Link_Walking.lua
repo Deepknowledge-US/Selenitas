@@ -37,7 +37,7 @@ SETUP = function()
         local node = one_of(Nodes)
         return {
             ['pos']       = {node:xcor(), node:ycor()},
-            ['heading']   = {0,nil},
+            ['heading']   = 0,
             ['curr_node'] = node,
             ['color']     = {0,0,1,1},
             ['scale']     = 1.5,

@@ -80,7 +80,7 @@ SETUP(function()
     Houses:create_n( Config.houses, function()
         return {
             ['pos']     = {size,size},
-            ['heading'] = {0,nil}
+            ['heading'] = 0
         }
     end)
     layout_circle(Houses, size-1 )

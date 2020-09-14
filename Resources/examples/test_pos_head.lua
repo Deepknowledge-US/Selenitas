@@ -35,7 +35,7 @@ SETUP = function()
         return {
             ['pos']     = {0,0},
             ['scale']   = 1.5,
-            ['heading'] = {0,0}
+            ['heading'] = 0
         }
     end)
 
@@ -67,7 +67,7 @@ SETUP = function()
     Agents = FamilyMobil()
     Agents:add({
         ['pos']     = {0,0},
-        ['heading'] = {0,0},
+        ['heading'] = 0,
         ['color']   = {0,0,1,1},
         ['shape']   = "triangle_2",
         ['scale']   = 2,

@@ -86,7 +86,7 @@ SETUP(function()
         local node = one_of(Nodes)
         return {
             ['pos']       = {node:xcor(), node:ycor()},
-            ['heading']   = {0,nil},
+            ['heading']   = 0,
             ['curr_node'] = node,
             ['next_node'] = node
         }
