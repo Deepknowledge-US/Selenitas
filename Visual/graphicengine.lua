@@ -33,14 +33,16 @@ local coord_scale = 20 -- coordinate scaling for better visualization
 local show_about_dialog = false
 local show_params_window = false
 local camera = nil
+local camera_zoom_scale = 1
 -- Callbacks for Input, registered in `init` function
 local drag_camera_callback_func = function(x, y, dx, dy)
     if Input.is_mouse_button_pressed(2) then
-        camera:translate(-dx / 2, -dy / 2)
+        camera:translate(-dx / (camera.scale * 2), -dy / (camera.scale * 2))
     end
 end
 local zoom_camera_callback_func = function(dx, dy)
-    camera:scaleToPoint(1 + dy / 10)
+    local inc = 1 + dy / 10
+    camera:scaleToPoint(inc)
 end
 
 
