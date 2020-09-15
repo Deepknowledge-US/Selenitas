@@ -15,8 +15,6 @@ require 'Engine.utilities.utl_main'
 local agents_families = {}
 local links_families = {}
 local cells_families = {}
-local setup_func = nil
-local step_func = nil
 local initialized = false
 local setup_func_executed = false
 local go = false
@@ -81,8 +79,6 @@ local function _reset()
     agents_families = {}
     links_families = {}
     cells_families = {}
-    setup_func = nil
-    step_func = nil
     initialized = false
     setup_func_executed = false
     go = false
@@ -281,12 +277,12 @@ local function update_ui(dt)
 
     -- Setup button
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
-        if setup_func then
+        if SETUP then
             Config.__all_families = {}
             agents_families = {}
             links_families = {}
             cells_families = {}
-            setup_func()
+            SETUP()
             -- Get agents and links lists
             for k, f in ipairs(Config.__all_families) do
                 if f:is_a(FamilyMobil) then
@@ -306,8 +302,8 @@ local function update_ui(dt)
 
     -- Step button
     if Slab.Button("Step", {Disabled = not setup_func_executed}) then
-        if step_func then
-            step_func()
+        if RUN then
+            RUN()
         end
     end
 
@@ -388,22 +384,6 @@ local function update_ui(dt)
 end
 
 ------------------
--- Sets setup function.
--- @function set_setup_function
--- @param f Setup function.
-local function set_setup_function(f)
-    setup_func = f
-end
-
-------------------
--- Sets step function.
--- @function set_step_function
--- @param f Step function.
-local function set_step_function(f)
-    step_func = f
-end
-
-------------------
 -- Sets time between steps in seconds for better visualization
 -- @function set_time_between_steps
 -- @param t time in seconds.
@@ -448,8 +428,8 @@ function love.update(dt)
     end
     _time_acc = 0
 
-    if step_func and go then
-        step_func()
+    if RUN and go then
+        RUN()
     end
 
     camera:update()
@@ -604,8 +584,6 @@ GraphicEngine = {
     load_simulation_file = load_simulation_file,
     set_background_color = set_background_color,
     set_coordinate_scale = set_coordinate_scale,
-    set_setup_function = set_setup_function,
-    set_step_function = set_step_function,
     set_time_between_steps = set_time_between_steps
 }
 

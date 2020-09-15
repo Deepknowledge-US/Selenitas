@@ -77,6 +77,3 @@ RUN = function()
     end)
 
 end
-
-GraphicEngine.set_setup_function(SETUP)
-GraphicEngine.set_step_function(RUN)

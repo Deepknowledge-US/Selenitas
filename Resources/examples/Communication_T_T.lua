@@ -1,4 +1,3 @@
-local graphicengine = require 'Visual.graphicengine'
 require 'Engine.utilities.utl_main'
 
 local utl           = require 'pl.utils'
@@ -107,7 +106,3 @@ RUN = function()
     end)
 
 end
-
--- Setup and start visualization
-GraphicEngine.set_setup_function(SETUP)
-GraphicEngine.set_step_function(RUN)

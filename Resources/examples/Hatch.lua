@@ -75,7 +75,3 @@ RUN = function()
     -- purge_agents(Agents)
 
 end
-
--- Setup and start visualization
-GraphicEngine.set_setup_function(SETUP)
-GraphicEngine.set_step_function(RUN)

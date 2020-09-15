@@ -74,7 +74,3 @@ RUN = function()
         pers:fd(0.5):update_cell()
     end)
 end
-
--- Setup and start visualization
-GraphicEngine.set_setup_function(SETUP)
-GraphicEngine.set_step_function(RUN)
