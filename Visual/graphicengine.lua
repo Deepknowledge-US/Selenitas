@@ -318,6 +318,12 @@ local function update_ui(dt)
 
     Slab.SameLine()
 
+    if Slab.Button("Reload", {Disabled = file_loaded_path == nil}) then
+        load_simulation_file(file_loaded_path)
+    end
+
+    Slab.SameLine()
+
     -- "Time between steps" slider
     Slab.Text(" Delta T: ", {})
     Slab.SameLine()
