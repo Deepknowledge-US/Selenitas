@@ -318,7 +318,7 @@ local function update_ui(dt)
     Slab.SameLine()
 
     -- "Time between steps" slider
-    Slab.Text(" Time between steps: ", {})
+    Slab.Text(" Delta T: ", {})
     Slab.SameLine()
     if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 1.0 + 0.00000001, {}) then
         time_between_steps = Slab.GetInputNumber()
