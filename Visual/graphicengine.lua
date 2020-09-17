@@ -29,7 +29,7 @@ local show_file_picker = false
 local load_file_error_msg = nil
 
 -- Drawing & UI params
-local coord_scale = 20 -- coordinate scaling for better visualization
+local coord_scale = 16 -- coordinate scaling for better visualization
 local show_about_dialog = false
 local show_params_window = false
 local camera = nil
@@ -57,15 +57,8 @@ local function init()
     -- Default font size for labels
     love.graphics.setNewFont(7)
 
-    -- World dimensions (change only if it's different to current size)
-    local w, h, _ = love.window.getMode()
-    local w_scaled = Config.xsize * coord_scale
-    local h_scaled = Config.ysize * coord_scale
-    if w ~= w_scaled or h ~= h_scaled then
-        love.window.setMode(w_scaled, h_scaled, {})
-    end
-
     -- Set up camera
+    local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
 
     -- Input callbacks
@@ -396,15 +389,6 @@ end
 -- @param t time in seconds.
 local function set_time_between_steps(t)
     time_between_steps = t
-end
-
-------------------
--- Allows scaling the world space for using units different to pixels.
--- Must be called before setting the world dimensions. This scale also affects agents' positions.
--- @param f Scaling factor. Must be a positive number.
-local function set_coordinate_scale(f)
-    coord_scale = f
-    love.window.setMode(Config.xsize * coord_scale, Config.ysize * coord_scale, {})
 end
 
 ------------------
