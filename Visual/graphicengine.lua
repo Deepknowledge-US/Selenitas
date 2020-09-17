@@ -40,7 +40,7 @@ local drag_camera_callback_func = function(x, y, dx, dy)
     end
 end
 local zoom_camera_callback_func = function(dx, dy)
-    local inc = 1 + dy / 10
+    local inc = 1 + dy / 50
     camera:scaleToPoint(inc)
 end
 
