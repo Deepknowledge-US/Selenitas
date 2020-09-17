@@ -26,7 +26,7 @@ local _time_acc = 0
 -- File handling
 local file_loaded_path = nil
 local show_file_picker = false
-local load_file_error_msg = nil
+local error_msg = nil
 
 -- Drawing & UI params
 local coord_scale = 16 -- coordinate scaling for better visualization
@@ -95,7 +95,7 @@ local function load_simulation_file(file_path)
             show_params_window = true
         end
     else
-        load_file_error_msg = e
+        error_msg = e
     end
 end
 
@@ -204,11 +204,11 @@ local function update_ui(dt)
         Slab.EndDialog()
     end
 
-    -- Show load file error if it happened
-    if load_file_error_msg ~= nil then
-        local res = Slab.MessageBox("Load file error", "An error occurred loading the selected file:\n " .. load_file_error_msg)
+    -- Show error message if needed
+    if error_msg ~= nil then
+        local res = Slab.MessageBox("An error occurred", "An error occurred:\n " .. error_msg)
         if res ~= "" then
-            load_file_error_msg = nil
+            error_msg = nil
         end
     end
 
@@ -240,7 +240,11 @@ local function update_ui(dt)
             agents_families = {}
             links_families = {}
             cells_families = {}
-            SETUP()
+            local ok, err = pcall(SETUP)
+            if not ok then
+                error_msg = err
+                goto skipsetupbutton
+            end
             -- Get agents and links lists
             for k, f in ipairs(Config.__all_families) do
                 if f:is_a(FamilyMobil) then
@@ -252,8 +256,9 @@ local function update_ui(dt)
                 end
             end
             setup_func_executed = true
+            go = false -- Reset 'go' in case Setup button is pressed more than once
         end
-        go = false -- Reset 'go' in case Setup button is pressed more than once
+        ::skipsetupbutton::
     end
 
     Slab.SameLine()
@@ -261,7 +266,10 @@ local function update_ui(dt)
     -- Step button
     if Slab.Button("Step", {Disabled = not setup_func_executed}) then
         if RUN then
-            RUN()
+            local ok, err = pcall(RUN)
+            if not ok then
+                error_msg = err
+            end
         end
     end
 
@@ -384,7 +392,11 @@ function love.update(dt)
     _time_acc = 0
 
     if RUN and go then
-        RUN()
+        local ok, err = pcall(RUN)
+        if not ok then
+            error_msg = err
+            go = false
+        end
     end
 
     camera:update()
