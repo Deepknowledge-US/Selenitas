@@ -538,7 +538,6 @@ GraphicEngine = {
     init = init,
     load_simulation_file = load_simulation_file,
     set_background_color = set_background_color,
-    set_coordinate_scale = set_coordinate_scale,
     set_time_between_steps = set_time_between_steps
 }
 
