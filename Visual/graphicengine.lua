@@ -88,6 +88,8 @@ local function load_simulation_file(file_path)
     if r then
         r()
         init() -- Re-init graphic engine with settings specified in loaded file
+        local sim_name = string.gsub(FileUtils.get_filename_from_path(file_loaded_path), ".lua", "")
+        love.window.setTitle("Selenitas - " .. sim_name)
         if next(Config.ui_settings) ~= nil then
             -- Loaded simulation has params, show params window
             show_params_window = true

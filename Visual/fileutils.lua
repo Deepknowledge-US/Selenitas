@@ -43,4 +43,15 @@ function fileutils.open_in_editor(path)
     end
 end
 
+-- Gets the filename of an specified path
+-- path/to/my/file.lua -> file.lua
+function fileutils.get_filename_from_path(path)
+    local split = {}
+    local sep = "/"
+    for str in string.gmatch(path, "([^"..sep.."]+)") do
+        table.insert(split, str)
+    end
+    return split[#split] -- last item is filename
+end
+
 return fileutils
