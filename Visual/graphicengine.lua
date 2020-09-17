@@ -99,16 +99,6 @@ local function load_simulation_file(file_path)
     end
 end
 
--- List of files in "examples" resource folder
-local function list_examples()
-    local ret = {}
-    for _, f in ipairs(love.filesystem.getDirectoryItems("Resources/examples")) do
-        local name = string.gsub(f, ".lua", "")
-        table.insert(ret, name)
-    end
-    return ret
-end
-
 local function update_ui(dt)
     -- Re-draw UI in each step
     Slab.Update(dt)
@@ -134,34 +124,6 @@ local function update_ui(dt)
                 if Slab.MenuItem("Edit loaded file") then
                     FileUtils.open_in_editor(file_loaded_path)
                 end
-            end
-
-            -- "Load example" submenu
-            if Slab.BeginMenu("Load example") then
-                for _,e in ipairs(list_examples()) do
-                    if Slab.MenuItem(e) then
-                        -- Create save directory if it doesn't exist
-                        if not FileUtils.exists(love.filesystem.getSaveDirectory() .. "/files") then
-                            love.filesystem.createDirectory("files")
-                        end
-                        -- Copy file to save directory
-                        local src = "Resources/examples/" .. e .. ".lua"
-                        local dst = "files/" .. e .. ".lua" -- contained in Save directory
-                        FileUtils.copy_to_save_dir(src, dst)
-                        file_loaded_path =
-                            love.filesystem.getSaveDirectory() .. "/" .. dst
-                        -- Reset variables and run example
-                        -- (just calling it is enough for it to be run because of how 'cargo' library loads it)
-                        _reset()
-                        _ = ResourceManager.examples[e]
-                        init() -- Re-init graphic engine with settings specified in loaded file
-                        if next(Config.ui_settings) ~= nil then
-                            -- Loaded simulation has params, show params window
-                            show_params_window = true
-                        end
-                    end
-                end
-                Slab.EndMenu()
             end
 
             Slab.Separator()
