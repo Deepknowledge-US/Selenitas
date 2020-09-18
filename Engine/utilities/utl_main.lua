@@ -29,6 +29,15 @@ list_remove         = __list_tables.list_remove
 list_remove_index   = __list_tables.list_remove_index
 fam_to_list         = __list_tables.fam_to_list
 
+__iterators         = require 'Engine.utilities.utl_iterators'
+__producer          = __iterators.__producer
+__consumer          = __iterators.__consumer
+shuffled            = __iterators.shuffled
+ordered             = __iterators.ordered
+
+__numbers           = require 'Engine.utilities.utl_numbers'
+round               = __numbers.round
+random_float        = __numbers.random_float
 
 __str_fls           = require 'Engine.utilities.utl_strings_and_files'
 lines_from          = __str_fls.lines_from
@@ -41,8 +50,8 @@ clone_n             = __fam.clone_n
 ask_ordered         = __fam.ask_ordered
 ask_n               = __fam.ask_n
 ask                 = __fam.ask
-__producer          = __fam.__producer
-__consumer          = __fam.__consumer
+-- __producer          = __fam.__producer
+-- __consumer          = __fam.__consumer
 
 __fltr              = require 'Engine.utilities.utl_filters'
 first_n             = __fltr.first_n
@@ -65,7 +74,7 @@ same_pos            = __chk.same_pos
 __act               = require 'Engine.utilities.utl_actions'
 n_decimals          = __act.n_decimals
 array_shuffle       = __act.array_shuffle
-kill_n_purge        = __act.kill_n_purge
+kill_and_purge      = __act.kill_and_purge
 die                 = __act.die
 fd                  = __act.fd
 fd_grid             = __act.fd_grid

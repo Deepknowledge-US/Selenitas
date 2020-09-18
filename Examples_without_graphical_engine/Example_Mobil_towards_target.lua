@@ -22,15 +22,10 @@ Config:create_slider('houses', 5, 500, 1, 20)
 local function print_current_config()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
-    ask(Patches, function(p)
-        p.label = '_'
-    end)
-    ask(People, function(ag)
-        ag.current_cells[1].label = 'I'
-    end)
-    ask(Houses, function(ag)
-        ag.current_cells[1].label = 'O'
-    end)
+    for _,p  in ordered(Patches)do p.label = '_' end
+    for _,ag in ordered(People) do ag.current_cells[1].label = 'I' end
+    for _,ag in ordered(Houses) do ag.current_cells[1].label = 'O' end
+
 
     print('\n\n========== tick '.. __ticks .. ' ===========')
     for i=Config.ysize-1,0,-1 do
@@ -92,11 +87,11 @@ SETUP(function()
         }
     end)
 
-    ask(People,function(pers)
+    for _,pers in shuffled(People)do
         local house = one_of(Houses)
         pers:face(house)
         pers.next_house = house
-    end)
+    end
 
 end)
 
@@ -108,14 +103,14 @@ end
 
 RUN(function()
 
-    ask(People,function(pers)
+    for _,pers in shuffled(People)do
         if pers:dist_euc_to(pers.next_house) < 1 then
             pers.current_house = pers.next_house
             pers.next_house = one_of(Houses:others(pers.current_house))
             pers:face(pers.next_house)
         end
         pers:fd(1):update_cell()
-    end)
+    end
 
     print_current_config()
     local list = {math.random(10,19),math.random(20,29),math.random(30,39)}
@@ -123,7 +118,6 @@ RUN(function()
     if Config.ticks <=0 then
         Config.go = false
     end
-        -- print(Links)
 end)
 
 

@@ -27,10 +27,10 @@ function utl_fam.create_grid(x, y, offset_x, offset_y, cell_width, cell_height)
     local cells =
         FamilyCell(
         {
-            ["cell_width"]  = w,
+            ["cell_width"] = w,
             ["cell_height"] = h,
-            ["offset_x"]    = step_x,
-            ["offset_y"]    = step_y
+            ["offset_x"] = step_x,
+            ["offset_y"] = step_y
         }
     )
 
@@ -51,19 +51,34 @@ function utl_fam.create_grid(x, y, offset_x, offset_y, cell_width, cell_height)
         {-w, -h}
     }
 
-    cells:ask_ordered(
-        function(cell)
-            local c_x, c_y = cell:xcor(), cell:ycor()
-            local neighs = {}
+    for _, cell in ordered(cells) do
+        local c_x, c_y = cell:xcor(), cell:ycor()
+        local neighs = {}
 
-            for i = 1, 8 do
-                local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
-                if neigh_pos[1] > 0+step_x and neigh_pos[2] > 0+step_y and neigh_pos[1] <= x+step_x and neigh_pos[2] <= y+step_y then
-                    cell.neighbors:add(cells:cell_in_pos(neigh_pos))
-                end
+        for i = 1, 8 do
+            local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+            if
+                neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
+                    neigh_pos[2] <= y + step_y
+             then
+                cell.neighbors:add(cells:cell_in_pos(neigh_pos))
             end
         end
-    )
+    end
+
+    -- cells:ask_ordered(
+    --     function(cell)
+    --         local c_x, c_y = cell:xcor(), cell:ycor()
+    --         local neighs = {}
+
+    --         for i = 1, 8 do
+    --             local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+    --             if neigh_pos[1] > 0+step_x and neigh_pos[2] > 0+step_y and neigh_pos[1] <= x+step_x and neigh_pos[2] <= y+step_y then
+    --                 cell.neighbors:add(cells:cell_in_pos(neigh_pos))
+    --             end
+    --         end
+    --     end
+    -- )
 
     return cells
 end
@@ -89,56 +104,56 @@ function utl_fam.create_n(family, num, funct)
     family:create_n(num, funct)
 end
 
-------------------
--- Applies a function to all elements. Works with Families or with subsets of families (Collections).
--- @function ask_ordered
--- @param elements A Family or a filtered Family to ask to do something.
--- @return  Nothing
--- @usage
--- ask(Nodes, function(node)
---     if Node:xcor() > 4 then Node.color = {0,0,0,1} end
--- end)
--- @see Family.ask_ordered
-function utl_fam.ask_ordered(elements, funct)
-    if elements:is_a(Agent) then
-        if elements.alive then
-            funct(elements)
-        end
-    else
-        for _, v in pairs(elements.agents) do
-            if v.alive then
-                funct(v)
-            end
-        end
-    end
-end
+-- ------------------
+-- -- Applies a function to all elements. Works with Families or with subsets of families (Collections).
+-- -- @function ask_ordered
+-- -- @param elements A Family or a filtered Family to ask to do something.
+-- -- @return  Nothing
+-- -- @usage
+-- -- ask(Nodes, function(node)
+-- --     if Node:xcor() > 4 then Node.color = {0,0,0,1} end
+-- -- end)
+-- -- @see Family.ask_ordered
+-- function utl_fam.ask_ordered(elements, funct)
+--     if elements:is_a(Agent) then
+--         if elements.alive then
+--             funct(elements)
+--         end
+--     else
+--         for _, v in pairs(elements.agents) do
+--             if v.alive then
+--                 funct(v)
+--             end
+--         end
+--     end
+-- end
 
-------------------
--- Applies an anonymous function to a Family of agents.
--- @function ask
--- @param fam A Family or Agent instance. Note that Collections are also Families.
--- @param funct Anonymous function that will be applied to the agents of the family.
--- @return Nothing
--- @usage
--- ask(A_family, function(ag) ag:fd(1.3) end)
--- @see Family.ask
-function utl_fam.ask(fam, funct)
-    fam:ask(funct)
-end
+-- ------------------
+-- -- Applies an anonymous function to a Family of agents.
+-- -- @function ask
+-- -- @param fam A Family or Agent instance. Note that Collections are also Families.
+-- -- @param funct Anonymous function that will be applied to the agents of the family.
+-- -- @return Nothing
+-- -- @usage
+-- -- ask(A_family, function(ag) ag:fd(1.3) end)
+-- -- @see Family.ask
+-- function utl_fam.ask(fam, funct)
+--     fam:ask(funct)
+-- end
 
-------------------
--- It works same way as "ask", but this function applies the action only at n random selected elements of the family.
--- @function ask_n
--- @param n Number of agents to be asked.
--- @param fam Family where the agents will be asked.
--- @param funct Anonymous function that will be applied to the agents.
--- @return Nothing
--- @usage
--- ask_n(Agents, function(ag) ag:fd(2.1) end)
--- @see Family.ask_n
-function utl_fam.ask_n(n, fam, funct)
-    fam:ask_n(n, funct)
-end
+-- ------------------
+-- -- It works same way as "ask", but this function applies the action only at n random selected elements of the family.
+-- -- @function ask_n
+-- -- @param n Number of agents to be asked.
+-- -- @param fam Family where the agents will be asked.
+-- -- @param funct Anonymous function that will be applied to the agents.
+-- -- @return Nothing
+-- -- @usage
+-- -- ask_n(Agents, function(ag) ag:fd(2.1) end)
+-- -- @see Family.ask_n
+-- function utl_fam.ask_n(n, fam, funct)
+--     fam:ask_n(n, funct)
+-- end
 
 ------------------
 -- This function encapsulates a call to the function clone_n_act in the Family given as parameter.

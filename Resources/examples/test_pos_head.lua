@@ -1,91 +1,94 @@
-require 'Engine.utilities.utl_main'
+-- Interface
 
-local radius = 15
-Config:create_slider('nodes', 0, 100, 1,10)
-Config:create_slider('links', 0, 30, 1, 15)
+Config:create_slider('nodes', 0, 100, 1.0, 12)
 Config:create_boolean('rt_lt', true)
-
--- local x,y  =  Config.xsize, Config.ysize
--- local off_x,off_y = Config.xsize/2, Config.ysize/2
--- local size =  x > y and math.floor(x/4) or math.floor(y/4)
--- print(x,y,size)
+Config:create_boolean('pos_ang', true)
 
 local function layout_circle(collection, rad)
-    local num = collection.count
-    local step = 2*math.pi / num
-    local degrees = 0
+    local step = 2*math.pi / collection.count
+    local angle = 0
 
-    for k,v in pairs(collection.agents)do
-        local current_agent = collection.agents[k]
-
-        current_agent:move_to({0,0})
-        current_agent:lt(degrees)
-        current_agent:fd(rad)
-        degrees = degrees + step
+    for _,ag in pairs(collection.agents)do
+        ag:move_to({0,0})
+        ag:lt(angle)
+        ag:fd(rad)
+        angle = angle + step
     end
 
 end
 
-SETUP = function()
+local function round(x, n)
+    n = math.pow(10, n or 0)
+    x = x * n
+    if x >= 0 then x = math.floor(x + 0.5) else x = math.ceil(x - 0.5) end
+    return x / n
+end
 
-    Config.go = true
+SETUP = function()
 
     Nodes = FamilyMobil()
     Nodes:create_n( Config.nodes, function()
         return {
-            ['pos']     = {0,0},
-            ['scale']   = 1.5,
-            ['heading'] = 0
+            ['pos']     = {0,0}
+            ,['scale']   = 1.5
         }
     end)
 
-    -- local minor_half = Config.xsize < Config.ysize and Config.xsize / 2 or Config.ysize / 2
+    layout_circle(Nodes, 10)
 
-    layout_circle(Nodes, radius - 1 )
-    ask(Nodes, function(ag)
-        ag:update_cell()
-        ag.label = n_decimals(2,ag:xcor()) .. ',' .. n_decimals(2,ag:ycor())
-    end)
+    for _,ag in pairs(Nodes.agents) do
+        ag.label = '(' .. round(ag:xcor(),1) .. ' , ' .. round(ag:ycor(),1) .. ')'
+    end
 
     -- A new collection to store the links
     Links = FamilyRelational()
 
     -- Each agent will create a link with the other agents.
-    ask(Nodes, function(agent)
-        ask(Nodes:others(agent), function(another_agent)
+    for _, agent in pairs(Nodes.agents) do
+        for _, another_agent in pairs((Nodes:others(agent)).agents) do
             Links:add({
-                    ['source'] = agent,
-                    ['target'] = another_agent,
-                    ['label'] = "",--agent.id .. ',' .. another_agent.id,
-                    ['visible'] = true,
-                    ['color'] = {0.75, 0, 0, 1}
-                }
-            )
-        end)
-    end)
+                ['source'] = agent
+                ,['target'] = another_agent
+                ,['color'] = {0.75, 0, 0, 0.2}
+            })
+        end
+    end
 
     Agents = FamilyMobil()
     Agents:add({
-        ['pos']     = {0,0},
-        ['heading'] = 0,
-        ['color']   = {0,0,1,1},
-        ['shape']   = "triangle_2",
-        ['scale']   = 2,
+        ['pos'] = {0,0}
+        ,['color'] = {0,0,1,1}
+        ,['shape'] = "triangle_2"
+        ,['scale'] = 2
     })
+
+    central = one_of (Agents)
 
 end
 
 
 RUN = function()
+
     if Config.rt_lt then
-        ask_ordered(Agents, function(ag)
-            ag:lt(math.pi/2)
-        end)
+        central:rt(2*math.pi/Nodes.count)
     else
-        ask_ordered(Agents, function(ag)
-            ag:rt(math.pi/2)
-        end)
+        central:lt(2*math.pi/Nodes.count)
+    end
+    central.heading = math.fmod(central.heading,__2pi)
+    central.label   = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'
+
+    if Config.pos_ang then
+        for _,ag in pairs(Nodes.agents) do
+            ag.label = '(' .. round(ag:xcor(),1) .. ' , ' .. round(ag:ycor(),1) .. ')'
+        end
+    else
+        for _,ag in pairs(Nodes.agents) do
+            ag.label = '(' .. round(ag.heading,1) .. ' , ' .. round(math.deg(ag.heading),1) .. ')'
+        end
     end
 
-    Config.go = false
 end
+
+-- Setup and start visualization
+-- GraphicEngine.set_setup_function(SETUP)
+-- GraphicEngine.set_step_function(RUN)
