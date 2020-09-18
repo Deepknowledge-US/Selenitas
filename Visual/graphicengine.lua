@@ -15,7 +15,6 @@ require 'Engine.utilities.utl_main'
 local agents_families = {}
 local links_families = {}
 local cells_families = {}
-local initialized = false
 local setup_func_executed = false
 local go = false
 
@@ -33,39 +32,31 @@ local coord_scale = 16 -- coordinate scaling for better visualization
 local show_about_dialog = false
 local show_params_window = false
 local camera = nil
--- Callbacks for Input, registered in `init` function
-local drag_camera_callback_func = function(x, y, dx, dy)
-    if Input.is_mouse_button_pressed(2) then
-        camera:translate(-dx / (camera.scale * 2), -dy / (camera.scale * 2))
-    end
-end
-local zoom_camera_callback_func = function(dx, dy)
-    local inc = 1 + dy / 50
-    camera:scaleToPoint(inc)
-end
 
+-- Callbacks for Input
+Input.add_mouse_moved_callback_func(
+    function(x, y, dx, dy)
+        if Input.is_mouse_button_pressed(2) then
+            camera:translate(-dx / (camera.scale * 2), -dy / (camera.scale * 2))
+        end
+    end
+)
+Input.add_scroll_callback_func(
+    function(dx, dy)
+        local inc = 1 + dy / 50
+        camera:scaleToPoint(inc)
+    end
+)
 
 ------------------
--- inits the graphic engine using the configurations specified.
+-- inits the graphic engine
 -- @function init
 local function init()
     -- TODO: read user settings
-
-    -- Window title
     love.window.setTitle("Selenitas")
-
-    -- Default font size for labels
-    love.graphics.setNewFont(7)
-
-    -- Set up camera
+    -- Reset camera
     local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
-
-    -- Input callbacks
-    Input.add_mouse_moved_callback_func(drag_camera_callback_func)
-    Input.add_scroll_callback_func(zoom_camera_callback_func)
-
-    initialized = true
 end
 
 local function _reset()
@@ -73,21 +64,71 @@ local function _reset()
     agents_families = {}
     links_families = {}
     cells_families = {}
-    initialized = false
     setup_func_executed = false
     go = false
+    file_loaded_path = nil
+    show_params_window = false
     -- Reset Config properties that depend on the loaded file
     Config.__all_families = {}
     Config.ui_settings = {}
+    love.window.setTitle("Selenitas")
+    -- Reset camera
+    local w, h, _ = love.window.getMode()
+    camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
+end
+
+local function _setup()
+    if SETUP then
+        Config.__all_families = {}
+        agents_families = {}
+        links_families = {}
+        cells_families = {}
+        local ok, err = pcall(SETUP)
+        if not ok then
+            error_msg = err
+            goto skipsetup
+        end
+        -- Get agents and links lists
+        for k, f in ipairs(Config.__all_families) do
+            if f:is_a(FamilyMobil) then
+                table.insert(agents_families, f.agents) -- f.agents is a "Mobil" collection
+            elseif f:is_a(FamilyRelational) then
+                table.insert(links_families, f.agents) -- f.agents is a "Relational" collection
+            elseif f:is_a(FamilyCell) then
+                table.insert(cells_families, f.agents) -- f.agents is a "Cell" collection
+            end
+        end
+        setup_func_executed = true
+        go = false -- Reset 'go' in case Setup button is pressed more than once
+    end
+    ::skipsetup::
+end
+
+local function _step()
+    if RUN then
+        local ok, err = pcall(RUN)
+        if not ok then
+            error_msg = err
+        end
+    end
+end
+
+local function _run()
+    if RUN and go then
+        local ok, err = pcall(RUN)
+        if not ok then
+            error_msg = err
+            go = false
+        end
+    end
 end
 
 local function load_simulation_file(file_path)
     _reset()
-    file_loaded_path = file_path
-    local r, e = loadfile(file_loaded_path)
+    local r, e = loadfile(file_path)
     if r then
         r()
-        init() -- Re-init graphic engine with settings specified in loaded file
+        file_loaded_path = file_path
         local sim_name = string.gsub(FileUtils.get_filename_from_path(file_loaded_path), ".lua", "")
         love.window.setTitle("Selenitas - " .. sim_name)
         if next(Config.ui_settings) ~= nil then
@@ -124,6 +165,11 @@ local function update_ui(dt)
                 if Slab.MenuItem("Edit loaded file") then
                     FileUtils.open_in_editor(file_loaded_path)
                 end
+            end
+
+            -- Show "Close" sim file
+            if Slab.MenuItem("Close") then
+                _reset()
             end
 
             Slab.Separator()
@@ -235,42 +281,14 @@ local function update_ui(dt)
 
     -- Setup button
     if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
-        if SETUP then
-            Config.__all_families = {}
-            agents_families = {}
-            links_families = {}
-            cells_families = {}
-            local ok, err = pcall(SETUP)
-            if not ok then
-                error_msg = err
-                goto skipsetupbutton
-            end
-            -- Get agents and links lists
-            for k, f in ipairs(Config.__all_families) do
-                if f:is_a(FamilyMobil) then
-                    table.insert(agents_families, f.agents) -- f.agents is a "Mobil" collection
-                elseif f:is_a(FamilyRelational) then
-                    table.insert(links_families, f.agents) -- f.agents is a "Relational" collection
-                elseif f:is_a(FamilyCell) then
-                    table.insert(cells_families, f.agents) -- f.agents is a "Cell" collection
-                end
-            end
-            setup_func_executed = true
-            go = false -- Reset 'go' in case Setup button is pressed more than once
-        end
-        ::skipsetupbutton::
+        _setup()
     end
 
     Slab.SameLine()
 
     -- Step button
     if Slab.Button("Step", {Disabled = not setup_func_executed}) then
-        if RUN then
-            local ok, err = pcall(RUN)
-            if not ok then
-                error_msg = err
-            end
-        end
+        _step()
     end
 
     Slab.SameLine()
@@ -375,13 +393,15 @@ end
 -- LOVE2D load function
 function love.load()
     Slab.Initialize({})
+    -- Default font size for labels
+    love.graphics.setNewFont(7)
 end
 
 -- Main update function
 function love.update(dt)
     update_ui(dt)
 
-    if not initialized then
+    if not setup_func_executed then
         do return end
     end
     -- Skips until time between steps is covered
@@ -391,20 +411,14 @@ function love.update(dt)
     end
     _time_acc = 0
 
-    if RUN and go then
-        local ok, err = pcall(RUN)
-        if not ok then
-            error_msg = err
-            go = false
-        end
-    end
+    _run()
 
     camera:update()
 end
 
 -- Drawing function
 function love.draw()
-    if (not initialized) or (not setup_func_executed) then
+    if not setup_func_executed then
         goto skip
     end
 
