@@ -49,23 +49,36 @@ SETUP(function()
     Edges  = FamilyRelational()
     Walkers= FamilyMobil()
 
+    -- -- AKIIIIIIIIIIIII el n_of falla pq llama al ask
+
+
     local n_cells = fam_to_list(n_of(10,Cells))
-    print(#n_cells)
-    ask(Cells, function(c)
+    -- local n_cells = n_of(10,Cells)
+    -- print(n_cells.count)
+    
+    -- -- ask(Cells, function(c)
+    -- --     if is_in_list(c,n_cells) then
+    -- --         c['visited'] = 'N'
+    -- --     else
+    -- --         c['visited'] = '_'
+    -- --     end
+    -- -- end)
+
+    for _,c in ordered(Cells)do
         if is_in_list(c,n_cells) then
             c['visited'] = 'N'
         else
             c['visited'] = '_'
         end
-    end)
+    end
 
-    for i=1,10 do
+    for c=1,10 do
         Nodes:add({
-            ['pos'] = {n_cells[i]:xcor(), n_cells[i]:ycor()}
+            ['pos'] = {n_cells[c]:xcor(), n_cells[c]:ycor()}
         })
     end
 
-    math.randomseed(os.clock())
+    -- math.randomseed(os.clock())
     local list_of_nodes = fam_to_list(Nodes)
     array_shuffle(list_of_nodes)
 

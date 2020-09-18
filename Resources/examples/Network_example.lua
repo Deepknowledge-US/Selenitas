@@ -1,20 +1,16 @@
-require 'Engine.utilities.utl_main'
-
 local radius = 20
 Config:create_slider('nodes', 0, 100, 1, 22)
-Config:create_slider('links', 0, 30, 1, 15)
+Config:create_slider('links', 0, 10000, 1, 15)
 
 
 local function layout_circle(collection, rad)
-    local num = collection.count
-    local step = 2*math.pi / num
-    local degrees = 0
+    local step = 2*math.pi / collection.count
+    local angle = 0
 
-    for k,v in pairs(collection.agents)do
-        local current_agent = collection.agents[k]
-        current_agent:lt(degrees)
-        current_agent:fd(rad)
-        degrees = degrees + step
+    for _,ag in pairs(collection.agents) do
+        ag:lt(angle)
+        ag:fd(rad)
+        angle = angle + step
     end
 
 end
@@ -26,16 +22,17 @@ SETUP = function()
     Nodes = FamilyMobil()
     Nodes:create_n( Config.nodes, function()
         return {
-            ['pos']     = {0,0},
-            ['scale']   = 1.5,
-            ['heading'] = 0
+            ['pos']     = {0,0}
+            ,['scale']   = 1.5
+            ,['shape']   = 'circle'
+            ,['color']   = {0,1,0,0.5}
         }
     end)
 
-
-    layout_circle(Nodes, radius - 1 )
+    layout_circle(Nodes, radius)
 
     -- A new collection to store the links
+    Links = nil
     Links = FamilyRelational()
 
 end
@@ -43,37 +40,22 @@ end
 
 RUN = function()
 
-    -- -- Each agent will create a link with the other agents.
-    -- ask(Nodes, function(agent)
-    --     ask(Nodes:others(agent), function(another_agent)
-    --         Links:add({
-    --                 ['source'] = agent,
-    --                 ['target'] = another_agent,
-    --                 ['label'] = "",--agent.id .. ',' .. another_agent.id,
-    --                 ['visible'] = true,
-    --                 ['color'] = {0.75, 0, 0, 1}
-    --             }
-    --         )
-    --     end)
-    -- end)
+    local node_1 = one_of(Nodes)
+    local node_2 = one_of(Nodes:others(node_1))
 
-    ask(one_of(Nodes), function(node_1)
+    Links:add({
+        ['source'] = node_1,
+        ['target'] = node_2,
+        --['label'] = node_1.id .. '->' .. node_2.id,
+        ['color'] = {0.75, 0, 0, .2},
+        ['visible'] = true
+    })
 
-        local node_2 = one_of(Nodes:others(node_1))
-
-        Links:add({
-            ['source'] = node_1,
-            ['target'] = node_2,
-            ['label'] = "",--agent.id .. ',' .. another_agent.id,
-            ['visible'] = true,
-            ['color'] = {0.75, 0, 0, 1}
-        })
-
-        if Links.count > Config.links then
-            Links:kill(one_of(Links))
-            purge_agents(Links) -- If this line is commented, links killed are drawn (they are dead, but remains in the system until been purged)
-        end
-
-    end)
+    while Links.count > Config.links do
+        Links:kill_and_purge(one_of(Links))
+    end
 
 end
+
+-- GraphicEngine.set_setup_function(SETUP)
+-- GraphicEngine.set_step_function(RUN)

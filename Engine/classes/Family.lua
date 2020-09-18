@@ -43,9 +43,12 @@ end
 -- -- The euclidean distance from a_node to an_agent is returned
 Family.add_method = function(self, name, funct)
     self[name] = funct
-    self:ask_ordered(function(ag)
+    for _,ag in ordered(self)do
         ag[name] = self[name]
-    end)
+    end
+    -- self:ask_ordered(function(ag)
+    --     ag[name] = self[name]
+    -- end)
 end
 
 ------------------
@@ -84,12 +87,12 @@ end
 
 ------------------
 -- This function kills and agent and removes it from the simulation.
--- @function kill_n_purge
+-- @function kill_and_purge
 -- @return Nothing.
 -- @usage
--- Nodes:kill_n_purge(an_agent)
--- @see utl_actions.kill_n_purge
-Family.kill_n_purge = function(self,agent)
+-- Nodes:kill_and_purge(an_agent)
+-- @see utl_actions.kill_and_purge
+Family.kill_and_purge = function(self,agent)
     self:kill(agent)
     agent:__purge()
 end
@@ -123,61 +126,61 @@ Family.clone_n = function(self, num, agent, funct)
     end
 end
 
-------------------
--- This function applies an action to all alive agents in the family in random order.
--- @function Instance:ask
--- @param funct An anonymous function with the actions that will be applied to agents.
--- @return Nothing.
--- @usage Family:ask( function(ag) ag:rt(15):fd(1.5) end )
--- @see families.ask
-Family.ask = function(self, funct)
-    local list_copy = self:alives_list()
-    local num_agents = #list_copy
+-- ------------------
+-- -- This function applies an action to all alive agents in the family in random order.
+-- -- @function Instance:ask
+-- -- @param funct An anonymous function with the actions that will be applied to agents.
+-- -- @return Nothing.
+-- -- @usage Family:ask( function(ag) ag:rt(15):fd(1.5) end )
+-- -- @see families.ask
+-- Family.ask = function(self, funct)
+--     local list_copy = self:alives_list()
+--     local num_agents = #list_copy
 
-    for index = num_agents, 1, -1 do
-        local current = __consumer(list_copy, index)
-        funct(current)
-    end
-end
+--     for index = num_agents, 1, -1 do
+--         local current = __consumer(list_copy, index)
+--         funct(current)
+--     end
+-- end
 
-------------------
--- This function applies an action to all alive agents in the family. Allways in the same order, if you need random order use "ask".
--- @function Instance:ask_ordered
--- @param funct An anonymous function with the actions that will be applied to agents.
--- @return Nothing.
--- @usage Family:ask_ordered( function(ag) ag:rt(15):fd(1.5) end )
--- @see families.ask_ordered
-Family.ask_ordered = function(self, funct)
-    for _,v in pairs(self.agents) do
-        funct(v)
-    end
-end
+-- ------------------
+-- -- This function applies an action to all alive agents in the family. Allways in the same order, if you need random order use "ask".
+-- -- @function Instance:ask_ordered
+-- -- @param funct An anonymous function with the actions that will be applied to agents.
+-- -- @return Nothing.
+-- -- @usage Family:ask_ordered( function(ag) ag:rt(15):fd(1.5) end )
+-- -- @see families.ask_ordered
+-- Family.ask_ordered = function(self, funct)
+--     for _,v in pairs(self.agents) do
+--         funct(v)
+--     end
+-- end
 
-------------------
--- This function is the same as ask function, but it stops when we have applied the action to n random agents of the family.
--- @function Instance:ask_n
--- @param n Number of random agents to be asked.
--- @param funct An anonymous function with the actions that will be applied to agents.
--- @return Nothing
--- @usage
--- A_family:ask_n(3, function(agent) agent:gtrn() end)
--- @see families.ask_n
-Family.ask_n = function(self, n, funct)
-    local list_copy = self:alives_list()
-    local num_agents = self.count
+-- ------------------
+-- -- This function is the same as ask function, but it stops when we have applied the action to n random agents of the family.
+-- -- @function Instance:ask_n
+-- -- @param n Number of random agents to be asked.
+-- -- @param funct An anonymous function with the actions that will be applied to agents.
+-- -- @return Nothing
+-- -- @usage
+-- -- A_family:ask_n(3, function(agent) agent:gtrn() end)
+-- -- @see families.ask_n
+-- Family.ask_n = function(self, n, funct)
+--     local list_copy = self:alives_list()
+--     local num_agents = self.count
 
-    if n >= num_agents then
-        for index = num_agents, 1, -1 do
-            local current = __consumer(list_copy, index)
-            funct(current)
-        end
-    else
-        for index = num_agents, num_agents - n + 1, -1 do
-            local current = __consumer(list_copy, index)
-            funct(current)
-        end
-    end
-end
+--     if n >= num_agents then
+--         for index = num_agents, 1, -1 do
+--             local current = __consumer(list_copy, index)
+--             funct(current)
+--         end
+--     else
+--         for index = num_agents, num_agents - n + 1, -1 do
+--             local current = __consumer(list_copy, index)
+--             funct(current)
+--         end
+--     end
+-- end
 
 
 
@@ -305,7 +308,7 @@ end
 -- @see filters.one_of
 Family.one_of = function(self)
     local list_copy = self:alives_list()
-    local target = list_copy[math.random(self.count)]
+    local target = self.count>0 and list_copy[math.random(self.count)] or nil
     -- local target = list_copy[math.random(#list_copy)]
     return target
 end
@@ -324,11 +327,11 @@ Family.n_of = function(self, n)
     local list_copy  = self:alives_list()
     local num_agents = self.count
 
-    if n >= num_agents then
+    if n > num_agents then
         error("Error: n_of -> not enoughs agents. n: " .. n .. ". Agents alives: " .. self.count)
     else
-        for index = num_agents, num_agents - n + 1, -1 do
-            local current = __consumer(list_copy, index)
+        for index = num_agents+1, num_agents - n + 2, -1 do
+            local _,current = __consumer(list_copy, index)
             res:add(current)
         end
     end

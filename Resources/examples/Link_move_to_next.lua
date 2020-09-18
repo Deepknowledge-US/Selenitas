@@ -1,19 +1,18 @@
-require 'Engine.utilities.utl_main'
+-- Interface
 
 Config:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
 
-    Nodes  = FamilyMobil()
-    Edges  = FamilyRelational()
-    Walkers= FamilyMobil()
+    Nodes   = FamilyMobil()
+    Edges   = FamilyRelational()
+    Walkers = FamilyMobil()
 
     for i=1,Config.nodes do
         Nodes:add({
-            ['pos'] = {math.random(-20,20), math.random(-20,20)},
-            ['visible'] = true,
-            ['shape'] = 'circle',
-            ['scale'] = 3,
+            ['pos']   = {math.random(-20,20), math.random(-20,20)}
+            ,['shape'] = 'circle'
+            ,['scale'] = 3
         })
     end
 
@@ -22,27 +21,25 @@ SETUP = function()
 
     for i=1,#list_of_nodes-1 do
         Edges:add({
-            ['source'] = list_of_nodes[i],
-            ['target'] = list_of_nodes[i+1],
-            ['visible'] = true
+            ['source'] = list_of_nodes[i]
+            ,['target'] = list_of_nodes[i+1]
         })
     end
     Edges:add({
-        ['source'] = list_of_nodes[#list_of_nodes],
-        ['target'] = list_of_nodes[1],
-        ['visible']= true
+        ['source'] = list_of_nodes[#list_of_nodes]
+        ,['target'] = list_of_nodes[1]
     })
 
     Walkers:create_n( 1, function()
         local node = one_of(Nodes)
         return {
-            ['pos']       = {node:xcor(), node:ycor()},
-            ['heading']   = 0,
-            ['curr_node'] = node,
-            ['color']     = {0,0,1,1},
-            ['scale']     = 1.5,
-            ['shape']     = 'triangle_2',
-            ['next_node'] = node
+            ['pos']       = {node:xcor(), node:ycor()}
+            ,['heading']   = 0
+            ,['curr_node'] = node
+            ,['color']     = {0,0,1,1}
+            ,['scale']     = 1.5
+            ,['shape']     = 'triangle_2'
+            ,['next_node'] = node
         }
     end)
     Walkers:add_method('search_next_node',function(self)
@@ -59,6 +56,9 @@ RUN = function()
     Wlkr:move_to(Wlkr.next_node.pos)
     Wlkr.curr_node = Wlkr.next_node
     Wlkr:search_next_node()
-    Wlkr:update_cell()
 
 end
+
+-- Setup and start visualization
+-- GraphicEngine.set_setup_function(SETUP)
+-- GraphicEngine.set_step_function(RUN)

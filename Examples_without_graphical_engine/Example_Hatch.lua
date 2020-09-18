@@ -106,14 +106,20 @@ SETUP(function()
         return agent
     end)
 
-    -- All agents will advance in the faced direction
-    ask(Agents, function(agent)
+    -- -- All agents will advance in the faced direction
+    -- ask(Agents, function(agent)
+    --     agent
+    --     :fd(Config.stride)
+    --     :update_position(0,15)
+    --     :update_cell()
+    -- end)
+
+    for _,agent in ordered(Agents)do
         agent
         :fd(Config.stride)
         :update_position(0,15)
         :update_cell()
-    end)
-
+    end
     -- for k,v in pairs(one_of(Agents).current_cells)do
     --     print(k,v)
     -- end
@@ -134,8 +140,18 @@ RUN(function()
         return
     end
 
-    -- This is another way to do it:
-    ask(Agents, function(agent)
+    -- -- This is another way to do it:
+    -- ask(Agents, function(agent)
+    --     agent
+    --     :rt(math.random(2*math.pi))
+    --     :fd(Config.stride)
+    --     :update_position(0,15)
+    --     :update_cell()
+    --     :grow_old()
+    --     :reproduce()
+    -- end)
+
+    for _,agent in ordered(Agents)do
         agent
         :rt(math.random(2*math.pi))
         :fd(Config.stride)
@@ -143,8 +159,7 @@ RUN(function()
         :update_cell()
         :grow_old()
         :reproduce()
-    end)
-
+    end
 
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of

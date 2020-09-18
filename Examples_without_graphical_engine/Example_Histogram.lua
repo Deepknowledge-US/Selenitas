@@ -50,17 +50,14 @@ local function print_current_config()
     reset_histogram()
 
     -- Each agent will increment the counter of the histogram table depending on its position.
-    ask(
-        Agents,
-        function(agent)
-            for k, v in ipairs(bar_breaks) do
-                if agent:xcor() <= v then
-                    histogram[v] = histogram[v] + 1
-                    break
-                end
+    for _,agent in ordered(Agents)do
+        for k, v in ipairs(bar_breaks) do
+            if agent:xcor() <= v then
+                histogram[v] = histogram[v] + 1
+                break
             end
         end
-    )
+    end
 
     for k, v in ipairs(bar_breaks) do
         print(v, histogram[v])
@@ -112,13 +109,9 @@ SETUP(
 
 RUN(
     function()
-        -- We are asking all agents to go to a random neighbour in the grid
-        ask(
-            Agents,
-            function(x)
-                x:lt(math.random(__2pi)):fd(1):update_position(0,Config.xsize):update_cell()
-            end
-        )
+        for _,x in ordered(Agents)do
+            x:lt(math.random(__2pi)):fd(1):update_position(0,Config.xsize):update_cell()
+        end
 
         print_current_config()
     end

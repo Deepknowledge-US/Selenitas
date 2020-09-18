@@ -1,19 +1,20 @@
 require 'Engine.utilities.utl_main'
 
 Config:create_slider('nodes', 0, 50, 1, 12)
+Config:create_slider('speed', 0, 2, .01, 1)
 
 SETUP = function()
 
-    Nodes  = FamilyMobil()
-    Edges  = FamilyRelational()
-    Walkers= FamilyMobil()
+    Nodes   = FamilyMobil()
+    Edges   = FamilyRelational()
+    Walkers = FamilyMobil()
 
     for i=1,Config.nodes do
         Nodes:add({
-            ['pos'] = {math.random(-20,20), math.random(-20,20)},
-            ['visible'] = true,
-            ['shape'] = 'circle',
-            ['scale'] = 3,
+            ['pos']     = {math.random(-20,20), math.random(-20,20)},
+            ['shape']   = 'circle',
+            ['color']   = {1,0,0,1},
+            ['scale']   = 3,
         })
     end
 
@@ -22,22 +23,20 @@ SETUP = function()
 
     for i=1,#list_of_nodes-1 do
         Edges:add({
-            ['source'] = list_of_nodes[i],
-            ['target'] = list_of_nodes[i+1],
-            ['visible'] = true
+            ['source']  = list_of_nodes[i],
+            ['target']  = list_of_nodes[i+1],
         })
     end
     Edges:add({
-        ['source'] = list_of_nodes[#list_of_nodes],
-        ['target'] = list_of_nodes[1],
-        ['visible']= true
+        ['source']  = list_of_nodes[#list_of_nodes],
+        ['target']  = list_of_nodes[1],
     })
 
     Walkers:create_n( 1, function()
         local node = one_of(Nodes)
         return {
             ['pos']       = {node:xcor(), node:ycor()},
-            ['heading']   = 0,
+            ['head']      = {0,nil},
             ['curr_node'] = node,
             ['color']     = {0,0,1,1},
             ['scale']     = 1.5,
@@ -55,11 +54,14 @@ end
 
 
 RUN = function()
-    if Wlkr:dist_euc_to(Wlkr.next_node.pos) < 1 then
+    if Wlkr:dist_euc_to(Wlkr.next_node) < Config.speed then
+        Wlkr:move_to(Wlkr.next_node)
         Wlkr.curr_node = Wlkr.next_node
         Wlkr:search_next_node()
     end
-    Wlkr:fd(0.9)
-    Wlkr:update_cell()
-
+    Wlkr:fd(Config.speed)
 end
+
+-- Setup and start visualization
+-- GraphicEngine.set_setup_function(SETUP)
+-- GraphicEngine.set_step_function(RUN)

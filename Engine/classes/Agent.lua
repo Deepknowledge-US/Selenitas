@@ -42,7 +42,7 @@ Agent.set_param = function(self,name,value)
     return self
 end
 
-Agent.link_neighbors     = function(self,fam)
+Agent.link_neighbors = function(self,fam)
     local res = Collection()
     if fam then
         for i=1,#self.in_links do
@@ -51,7 +51,7 @@ Agent.link_neighbors     = function(self,fam)
             end
         end
         for i=1,#self.out_links do
-            if self.in_links[i].family == fam then
+            if self.out_links[i].family == fam then
                 res:add(self.out_links[i].target)
             end
         end

@@ -22,12 +22,19 @@ Nodes = Config:create_slider('nodes', 5, 500, 1, 20)
 local function print_current_config()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
-    ask(Patches, function(p)
+    -- ask(Patches, function(p)
+    --     p.label = '_'
+    -- end)
+    -- ask(Nodes, function(ag)
+    --     ag.current_cells[1].label = 'O'
+    -- end)
+
+    for _,p in ordered(Patches)do
         p.label = '_'
-    end)
-    ask(Nodes, function(ag)
+    end
+    for _,ag in ordered(Nodes)do
         ag.current_cells[1].label = 'O'
-    end)
+    end
 
     print('\n\n========== tick '.. __ticks .. ' ===========')
     for i=Config.ysize-1,0,-1 do
@@ -86,17 +93,15 @@ SETUP(function()
     -- A new collection to store the links
     Links = FamilyRelational()
 
-    -- Each agent will create a link with the other agents.
-    ask(Nodes, function(agent)
-        ask(Nodes:others(agent), function(another_agent)
+    for _,agent in ordered(Nodes)do
+        for _,another_agent in ordered(Nodes)do
             Links:add({
-                    ['source'] = agent,
-                    ['target'] = another_agent,
-                    ['legend'] = agent.id .. ',' .. another_agent.id
-                }
-            )
-        end)
-    end)
+                ['source'] = agent,
+                ['target'] = another_agent,
+                ['legend'] = agent.id .. ',' .. another_agent.id
+            })
+        end
+    end
 
 end)
 
