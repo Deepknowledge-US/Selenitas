@@ -200,11 +200,11 @@ local function update_ui(dt)
         if Slab.BeginMenu("Help") then
 
             if Slab.MenuItem("Selenitas User Manual") then
-                love.system.openURL("https://github.com/fsancho/Selenitas/wiki")
+                love.system.openURL("https://github.com/Deepknowledge-US/Selenitas/wiki")
             end
 
             if Slab.MenuItem("Report issue") then
-                love.system.openURL("https://github.com/fsancho/Selenitas/issues")
+                love.system.openURL("https://github.com/Deepknowledge-US/Selenitas/issues")
             end
 
             Slab.Separator()
@@ -240,7 +240,7 @@ local function update_ui(dt)
         Slab.NewLine()
         Slab.Text("Webpage: ")
         Slab.SameLine()
-        Slab.Text("https://github.com/fsancho/Selenitas", {URL = "https://github.com/fsancho/Selenitas"})
+        Slab.Text("https://github.com/Deepknowledge-US/Selenitas", {URL = "https://github.com/Deepknowledge-US/Selenitass"})
         Slab.NewLine()
         if Slab.Button("OK") then
             show_about_dialog = false
