@@ -116,7 +116,7 @@ RUN = function()
                     ['source']  = ag
                     ,['target'] = ag2
                     ,['color']  = {1,0,0,1}
-                    --,['visible'] = false
+                    ,['visible'] = false
                     })
                 merge(ag2,ag.leader)
             end

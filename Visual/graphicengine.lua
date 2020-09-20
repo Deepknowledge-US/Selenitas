@@ -19,7 +19,8 @@ local setup_func_executed = false
 local go = false
 
 -- Time handling
-local time_between_steps = 0.2
+local speed = 20
+local time_between_steps = 0
 local _time_acc = 0
 
 -- File handling
@@ -37,13 +38,13 @@ local camera = nil
 Input.add_mouse_moved_callback_func(
     function(x, y, dx, dy)
         if Input.is_mouse_button_pressed(2) then
-            camera:translate(-dx / (camera.scale * 2), -dy / (camera.scale * 2))
+            camera:translate(-dx / camera.scale, -dy / camera.scale)
         end
     end
 )
 Input.add_scroll_callback_func(
     function(dx, dy)
-        local inc = 1 + dy / 50
+        local inc = 1 + dy / 25
         camera:scaleToPoint(inc)
     end
 )
@@ -53,6 +54,7 @@ Input.add_scroll_callback_func(
 -- @function init
 local function init()
     -- TODO: read user settings
+    love.window.setMode(900,600, {resizable=true, minwidth=400, minheight=300})
     love.window.setTitle("Selenitas")
     -- Reset camera
     local w, h, _ = love.window.getMode()
@@ -123,7 +125,7 @@ local function _run()
     end
 end
 
-local function load_simulation_file(file_path)
+local function load_model_file(file_path)
     _reset()
     local r, e = loadfile(file_path)
     if r then
@@ -156,7 +158,7 @@ local function update_ui(dt)
             -- Show "Reload file" option if file was loaded
             if file_loaded_path then
                 if Slab.MenuItem("Reload file") then
-                    load_simulation_file(file_loaded_path)
+                    load_model_file(file_loaded_path)
                 end
             end
 
@@ -226,7 +228,7 @@ local function update_ui(dt)
             show_file_picker = false
             if result.Button == "OK" then
                 -- Load selected file
-                load_simulation_file(result.Files[1])
+                load_model_file(result.Files[1])
             end
         end
     end
@@ -302,16 +304,19 @@ local function update_ui(dt)
     Slab.SameLine()
 
     if Slab.Button("Reload", {Disabled = file_loaded_path == nil}) then
-        load_simulation_file(file_loaded_path)
+        load_model_file(file_loaded_path)
     end
 
     Slab.SameLine()
 
-    -- "Time between steps" slider
-    Slab.Text(" Delta T: ", {})
+    -- "Speed" slider: it changes time_between_steps value
+    Slab.Text(" Speed: ", {})
     Slab.SameLine()
-    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 1.0 + 0.00000001, {}) then
-        time_between_steps = Slab.GetInputNumber()
+--    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 1.0 + 0.00000001, {}) then
+    --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
+    if Slab.InputNumberSlider("tbs_slider", speed, 0.0, 5.0, {step=1}) then
+        speed = Slab.GetInputNumber()
+        time_between_steps =  (math.log(6) - math.log (speed + 1))/math.log(6) -- Slab.GetInputNumber()
     end
 
     Slab.EndLayout()
@@ -348,7 +353,7 @@ local function update_ui(dt)
         -- Slider
         elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberSlider(k .. "Slider", Config[k], v.min, v.max + 0.0000001, {Step = v.step}) then
+            if Slab.InputNumberSlider(k .. "Slider", Config[k], v.min, v.max, {Step = v.step}) then
                 Config[k] = Slab.GetInputNumber()
             end
         -- Number input

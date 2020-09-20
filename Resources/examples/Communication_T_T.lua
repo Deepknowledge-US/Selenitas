@@ -51,6 +51,7 @@ end
 
 
 SETUP = function()
+    love.graphics.setBackgroundColor(.8,.8,.8)
     -- Test collection
     Checkpoints = FamilyMobil()
     Checkpoints:add({ ['pos'] = {0, 100} })
