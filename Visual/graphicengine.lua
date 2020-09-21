@@ -325,7 +325,7 @@ local function update_ui(dt)
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
         Y = 15,
-        W = screen_w,
+        W = screen_w - 2,
         H = 35,
         AutoSizeWindow = false,
         AllowResize = false
@@ -376,7 +376,7 @@ local function update_ui(dt)
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
         Y = screen_h - 23,
-        W = screen_w,
+        W = screen_w - 2,
         H = 20,
         AutoSizeWindow = false,
         AllowResize = false
