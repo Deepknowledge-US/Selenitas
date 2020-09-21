@@ -7,6 +7,7 @@ local Slab = require "Thirdparty.Slab.Slab"
 local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
 local FileUtils = require("Visual.fileutils")
 local Camera = require("Thirdparty.brady.camera")
+local DebugGraph = require("Thirdparty.debuggraph.debugGraph")
 local Input = require("Visual.input")
 
 require 'Engine.utilities.utl_main'
@@ -33,6 +34,9 @@ local coord_scale = 16 -- coordinate scaling for better visualization
 local show_about_dialog = false
 local show_params_window = false
 local camera = nil
+local fps_graph = nil
+local mem_graph = nil
+local show_debug_graph = false
 
 -- Callbacks for Input
 Input.add_mouse_moved_callback_func(
@@ -245,6 +249,7 @@ local function update_ui(dt)
             end
 
             if Slab.MenuItem("Show performance stats") then
+                show_debug_graph = not show_debug_graph
             end
 
             Slab.EndMenu()
@@ -312,7 +317,7 @@ local function update_ui(dt)
         end
     end
 
-    -- Get screen width
+    -- Get screen size
     local screen_w, screen_h, _ = love.window.getMode()
 
     -- Create toolbar with main controls
@@ -451,6 +456,36 @@ local function update_ui(dt)
     Slab.EndWindow()
 end
 
+local function init_debug_graphs()
+    local graph_font = love.graphics.newFont(12)
+    fps_graph = DebugGraph:new('fps', 0, 0, 100, 60, 0.5, nil, graph_font)
+    mem_graph = DebugGraph:new('mem', 0, 60, 100, 60, 0.5, nil, graph_font)
+end
+
+local function update_debug_graphs(dt)
+    fps_graph:update(dt)
+    mem_graph:update(dt)
+end
+
+local function draw_debug_graphs(dt)
+    local screen_w, screen_h, _ = love.window.getMode()
+    local panel_width = 100 + 30
+    local panel_height = 60 * 2 + 5
+    local xpos = screen_w - panel_width - 20
+    local ypos = screen_h - panel_height - 30
+    -- Draw back panel
+    love.graphics.setColor(0, 0, 0, 0.5)
+    love.graphics.rectangle("fill", xpos, ypos, panel_width, panel_height)
+    love.graphics.setColor(1, 1, 1, 1)
+    -- Update graphs positions
+    fps_graph.x = xpos
+    fps_graph.y = ypos
+    mem_graph.x = xpos
+    mem_graph.y = ypos + 60
+    fps_graph:draw()
+    mem_graph:draw()
+end
+
 ------------------
 -- Sets time between steps in seconds for better visualization
 -- @function set_time_between_steps
@@ -473,11 +508,14 @@ function love.load()
     Slab.Initialize({})
     -- Default font size for labels
     love.graphics.setNewFont(7)
+    -- Init debug graphs
+    init_debug_graphs()
 end
 
 -- Main update function
 function love.update(dt)
     update_ui(dt)
+    update_debug_graphs(dt)
     camera:update()
     if not setup_func_executed then
         do return end
@@ -625,6 +663,9 @@ function love.draw()
     ::skip::
     -- Draw UI
     Slab.Draw()
+    if show_debug_graph then
+        draw_debug_graphs()
+    end
 end
 
 -- Public functions
