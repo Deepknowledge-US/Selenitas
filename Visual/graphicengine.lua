@@ -74,6 +74,7 @@ local function _reset()
     Config.__all_families = {}
     Config.ui_settings = {}
     love.window.setTitle("Selenitas")
+    GraphicEngine.set_background_color(0, 0, 0)
     -- Reset camera
     local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2, resizable = true, maintainAspectRatio = true})
