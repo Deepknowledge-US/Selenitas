@@ -1,16 +1,4 @@
---- Reading and writing strings using file-like objects. <br>
---
---    f = stringio.open(text)
---    l1 = f:read()  -- read first line
---    n,m = f:read ('*n','*n') -- read two numbers
---    for line in f:lines() do print(line) end -- iterate over all lines
---    f = stringio.create()
---    f:write('hello')
---    f:write('dolly')
---    assert(f:value(),'hellodolly')
---
--- See  @{03-strings.md.File_style_I_O_on_Strings|the Guide}.
--- @module pl.stringio
+-----
 
 local unpack = rawget(_G,'unpack') or rawget(table,'unpack')
 local tonumber = tonumber
@@ -134,7 +122,7 @@ end
 function SR:close() -- for compatibility only
 end
 
---- create a file-like object which can be used to construct a string.
+-- create a file-like object which can be used to construct a string.
 -- The resulting object has an extra `value()` method for
 -- retrieving the string value.  Implements `file:write`, `file:seek`, `file:lines`,
 -- plus an extra `writef` method which works like `utils.printf`.
@@ -143,7 +131,7 @@ function stringio.create()
     return setmetatable({tbl={}},SW)
 end
 
---- create a file-like object for reading from a given string.
+-- create a file-like object for reading from a given string.
 -- Implements `file:read`.
 -- @string s The input string.
 -- @usage fs = open '20 10'; x,y = f:read ('*n','*n'); assert(x == 20 and y == 10)

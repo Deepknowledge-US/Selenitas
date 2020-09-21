@@ -33,15 +33,23 @@ Agent.is_in = function(self,fam)
     return fam:is_in(self)
 end;
 
-Agent.pick = function(self,fam_or_agent)
-    return fam_or_agent
-end
-
+------------------
+-- It gives a new value to some parameter of the agent.
+-- @function set_param
+-- @param name String, the name of the paprameter
+-- @param value Anything. The new value of the paprameter could be a String, a number, a table ...
+-- @return Agent. The one who calls this method
 Agent.set_param = function(self,name,value)
     self[name] = value
     return self
 end
 
+
+------------------
+-- It returns the neighbors of the agent.
+-- @function link_neighbors
+-- @param fam Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
+-- @return Collection of neighbors of the agent.
 Agent.link_neighbors = function(self,fam)
     local res = Collection()
     if fam then
@@ -67,6 +75,11 @@ Agent.link_neighbors = function(self,fam)
 end
 
 
+------------------
+-- It returns the links that points to the agent.
+-- @function in_link_neighbors
+-- @param fam Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
+-- @return Collection of links of the agent.
 Agent.in_link_neighbors  = function(self,fam)
     local res = Collection()
     if fam then
@@ -84,6 +97,11 @@ Agent.in_link_neighbors  = function(self,fam)
 end
 
 
+------------------
+-- It returns the links the agent as origin.
+-- @function out_link_neighbors
+-- @param fam Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
+-- @return Collection of links of the agent.
 Agent.out_link_neighbors = function(self,fam)
     local res = Collection()
     if fam then
@@ -100,6 +118,7 @@ Agent.out_link_neighbors = function(self,fam)
     end
     return res
 end
+
 ------------------
 -- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
 -- @function __delete_in_neighs
@@ -150,35 +169,6 @@ Agent.__delete_links = function(self, list_of_links)
     end
 end
 
--- ------------------
--- -- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
--- -- @function __delete_links
--- -- @return Nothing.
--- Agent.__delete_links = function(self, list_of_ids)
---     local rel_families = {}
---     for _,v in pairs(Config.__all_families)do
---         if v:is_a(FamilyRelational) then
---             table.insert(rel_families,v)
---         end
---     end
---     for i=1,#list_of_ids do
---         local link_id = list_of_ids[i]
-
---         local iter = 1
---         local link = rel_families[iter].agents[link_id]
-
---         while link==nil do
---             iter = iter+1
---             link = rel_families[iter].agents[link_id]
---         end
---         if link ~= nil then
---             link:__purge() -- Recursive link removal. If it is related to any other link, this relationship will be removed.
---         else
---             print('ERROR while trying to delete_links. Target: ' .. link_id)
---         end
---     end
--- end
-
 ------------------
 -- Auxiliar function used by families to purge agents, it is not recommended to use it directly to purge agents, use 'purge_agents()' instead.
 -- @function __purge
@@ -194,13 +184,6 @@ Agent.__purge = function(self)
 
     -- Step 3: Delete myself
     self.family.agents[self.id] = nil
-end
-
-------------------
-Agent.ask = function(self,funct)
-    if self.alive then
-        funct(self)
-    end
 end
 
 ------------------

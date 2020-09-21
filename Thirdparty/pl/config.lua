@@ -1,32 +1,4 @@
---- Reads configuration files into a Lua table.
---  Understands INI files, classic Unix config files, and simple
--- delimited columns of values. See @{06-data.md.Reading_Configuration_Files|the Guide}
---
---    # test.config
---    # Read timeout in seconds
---    read.timeout=10
---    # Write timeout in seconds
---    write.timeout=5
---    #acceptable ports
---    ports = 1002,1003,1004
---
---    -- readconfig.lua
---    local config = require 'config'
---    local t = config.read 'test.config'
---    print(pretty.write(t))
---
---    ### output #####
---    {
---      ports = {
---        1002,
---        1003,
---        1004
---      },
---      write_timeout = 5,
---      read_timeout = 10
---    }
---
--- @module pl.config
+--------
 
 local type,tonumber,ipairs,io, table = _G.type,_G.tonumber,_G.ipairs,_G.io,_G.table
 
@@ -48,7 +20,7 @@ end
 
 local config = {}
 
---- like io.lines(), but allows for lines to be continued with '\'.
+-- like io.lines(), but allows for lines to be continued with '\'.
 -- @param file a file-like object (anything where read() returns the next line) or a filename.
 -- Defaults to stardard input.
 -- @return an iterator over the lines, or nil
@@ -88,7 +60,7 @@ function config.lines(file)
     end
 end
 
---- read a configuration file into a table
+-- read a configuration file into a table
 -- @param file either a file-like object or a string, which must be a filename
 -- @tab[opt] cnfg a configuration table that may contain these fields:
 --

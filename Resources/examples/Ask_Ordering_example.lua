@@ -1,3 +1,4 @@
+-----------------
 require 'Engine.utilities.utl_main'
 
 Config:create_slider('N_agents', 0, 20, 1.0, 10)
@@ -19,7 +20,6 @@ SETUP = function()
     print(Mobils.count)
     local x = 0
     for k,ag1 in shuffled(Mobils) do
-        print(k,x)
         ag1:move_to({x,0})
         ag1.label = ag1.id
         x = x + 2

@@ -1,16 +1,4 @@
---------------
--- PL loader, for loading all PL libraries, only on demand.
--- Whenever a module is implicitly accesssed, the table will have the module automatically injected.
--- (e.g. `_ENV.tablex`)
--- then that module is dynamically loaded. The submodules are all brought into
--- the table that is provided as the argument, or returned in a new table.
--- If a table is provided, that table's metatable is clobbered, but the values are not.
--- This module returns a single function, which is passed the environment.
--- If this is `true`, then return a 'shadow table' as the module
--- See @{01-introduction.md.To_Inject_or_not_to_Inject_|the Guide}
-
--- @module pl.import_into
-
+------------
 return function(env)
     local mod
     if env == true then

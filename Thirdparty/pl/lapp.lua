@@ -1,25 +1,4 @@
---- Simple command-line parsing using human-readable specification.
--- Supports GNU-style parameters.
---
---      lapp = require 'pl.lapp'
---      local args = lapp [[
---      Does some calculations
---        -o,--offset (default 0.0)  Offset to add to scaled number
---        -s,--scale  (number)  Scaling factor
---        <number> (number) Number to be scaled
---      ]]
---
---      print(args.offset + args.scale * args.number)
---
--- Lines beginning with `'-'` are flags; there may be a short and a long name;
--- lines beginning with `'<var>'` are arguments.  Anything in parens after
--- the flag/argument is either a default, a type name or a range constraint.
---
--- See @{08-additional.md.Command_line_Programs_with_Lapp|the Guide}
---
--- Dependencies: `pl.sip`
--- @module pl.lapp
-
+--------
 local status,sip = pcall(require,'pl.sip')
 if not status then
     sip = require 'sip'
@@ -45,11 +24,11 @@ local filetypes = {
     stderr = {io.stderr,'file-out'}
 }
 
---- controls whether to dump usage on error.
+-- controls whether to dump usage on error.
 -- Defaults to true
 lapp.show_usage_error = true
 
---- quit this script immediately.
+-- quit this script immediately.
 -- @string msg optional message
 -- @bool no_usage suppress 'usage' display
 function lapp.quit(msg,no_usage)
@@ -65,7 +44,7 @@ function lapp.quit(msg,no_usage)
     os.exit(1)
 end
 
---- print an error to stderr and quit.
+-- print an error to stderr and quit.
 -- @string msg a message
 -- @bool no_usage suppress 'usage' display
 function lapp.error(msg,no_usage)
@@ -77,7 +56,7 @@ function lapp.error(msg,no_usage)
     lapp.quit(script..': '..msg,no_usage)
 end
 
---- open a file.
+-- open a file.
 -- This will quit on error, and keep a list of file objects for later cleanup.
 -- @string file filename
 -- @string[opt] opt same as second parameter of `io.open`
@@ -88,7 +67,7 @@ function lapp.open (file,opt)
     return val
 end
 
---- quit if the condition is false.
+-- quit if the condition is false.
 -- @bool condn a condition
 -- @string msg message text
 function lapp.assert(condn,msg)
@@ -128,7 +107,7 @@ local function convert_parameter(ps,val)
     return val
 end
 
---- add a new type to Lapp. These appear in parens after the value like
+-- add a new type to Lapp. These appear in parens after the value like
 -- a range constraint, e.g. '<ival> (integer) Process PID'
 -- @string name name of type
 -- @param converter either a function to convert values, or a Lua type name.
@@ -174,7 +153,7 @@ local function process_default (sval,vtype)
     end
 end
 
---- process a Lapp options string.
+-- process a Lapp options string.
 -- Usually called as `lapp()`.
 -- @string str the options text
 -- @tparam {string} args a table of arguments (default is `_G.arg`)

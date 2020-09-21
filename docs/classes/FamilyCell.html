@@ -56,9 +56,13 @@
   <li><a href="../modules/checks.html">checks</a></li>
   <li><a href="../modules/families.html">families</a></li>
   <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
 </div>
@@ -85,8 +89,8 @@
 	<td class="summary">Create n new Cells in the family.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:with">FamilyCell:with (pred)</a></td>
-	<td class="summary">It returns a Collection of agents of the family that satisfy the predicate gived as parameter.</td>
+	<td class="name" nowrap><a href="#FamilyCell:diffuse">FamilyCell:diffuse (param, perc, num)</a></td>
+	<td class="summary">Produces the diffusion of a parameter of each Cell between its neighbors.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#FamilyCell:cell_of">FamilyCell:cell_of (table_)</a></td>
@@ -95,10 +99,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#FamilyCell:cell_in_pos">FamilyCell:cell_in_pos (table_)</a></td>
 	<td class="summary">It finds for a Cell in the family with the (exactly) same position as the one gived as parameter.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:diffuse">FamilyCell:diffuse (param, perc, num)</a></td>
-	<td class="summary">Produces the diffusion of a parameter of each Cell between its neighbors.</td>
 	</tr>
 </table>
 
@@ -211,34 +211,42 @@
 
 </dd>
     <dt>
-    <a name = "FamilyCell:with"></a>
-    <strong>FamilyCell:with (pred)</strong>
+    <a name = "FamilyCell:diffuse"></a>
+    <strong>FamilyCell:diffuse (param, perc, num)</strong>
     </dt>
     <dd>
-    It returns a Collection of agents of the family that satisfy the predicate gived as parameter.
+    Produces the diffusion of a parameter of each Cell between its neighbors.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">pred</span>
-         A predicate of pertenence to a set
+        <li><span class="parameter">param</span>
+         Name of an Agent parameter, the one we want to diffuse.
+        </li>
+        <li><span class="parameter">perc</span>
+         Percentage of param to be diffused in a [0,1] range
+        </li>
+        <li><span class="parameter">num</span>
+         Number. Optional parameter with 1 by default. The number of diffusions we want to do.
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A Collection of agents that satisfies a predicate
-    </ol>
 
 
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">Cells_1:with( <span class="keyword">function</span>(cell)
-    <span class="keyword">return</span> cell:xcor() == <span class="number">1</span> <span class="keyword">and</span> cell:ycor() == <span class="number">1</span>
+        <pre class="example">Cells = create_grid(<span class="number">3</span>, <span class="number">3</span>)
+ask_ordered(Cells, <span class="keyword">function</span>(x)
+    x.val = <span class="number">1</span>
 <span class="keyword">end</span>)
-<span class="comment">-- This will result in a collection of Agents of the family Cells_1 with a value of 1 in its xcor and 1 in its ycor</span></pre>
+Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>, <span class="number">50</span>)
+
+<span class="comment">--  1,1,1      0.67510935610916, 1.1250128361545, 0.67510935610916,
+</span><span class="comment">--  1,1,1  -&gt;  1.1250128361545,  1.7995112309455, 1.1250128361545,
+</span><span class="comment">--  1,1,1      0.67510935610916, 1.1250128361545, 0.67510935610916,
+</span>
+<span class="comment">--  The total sum of params is always the same (9 in this case).</span></pre>
     </ul>
 
 </dd>
@@ -290,46 +298,6 @@
 
 
 </dd>
-    <dt>
-    <a name = "FamilyCell:diffuse"></a>
-    <strong>FamilyCell:diffuse (param, perc, num)</strong>
-    </dt>
-    <dd>
-    Produces the diffusion of a parameter of each Cell between its neighbors.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">param</span>
-         Name of an Agent parameter, the one we want to diffuse.
-        </li>
-        <li><span class="parameter">perc</span>
-         Percentage of param to be diffused in a [0,1] range
-        </li>
-        <li><span class="parameter">num</span>
-         Number. Optional parameter with 1 by default. The number of diffusions we want to do.
-        </li>
-    </ul>
-
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">Cells = create_grid(<span class="number">3</span>, <span class="number">3</span>)
-ask_ordered(Cells, <span class="keyword">function</span>(x)
-    x.val = <span class="number">1</span>
-<span class="keyword">end</span>)
-Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>, <span class="number">50</span>)
-
-<span class="comment">--  1,1,1      0.67510935610916, 1.1250128361545, 0.67510935610916,
-</span><span class="comment">--  1,1,1  -&gt;  1.1250128361545,  1.7995112309455, 1.1250128361545,
-</span><span class="comment">--  1,1,1      0.67510935610916, 1.1250128361545, 0.67510935610916,
-</span>
-<span class="comment">--  The total sum of params is always the same (9 in this case).</span></pre>
-    </ul>
-
-</dd>
 </dl>
 
 
@@ -337,7 +305,7 @@ Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-27 13:23:35 </i>
+<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

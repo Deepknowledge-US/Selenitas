@@ -1,17 +1,4 @@
---- Checks uses of undeclared global variables.
--- All global variables must be 'declared' through a regular assignment
--- (even assigning `nil` will do) in a main chunk before being used
--- anywhere or assigned to inside a function. Existing metatables `__newindex` and `__index`
--- metamethods are respected.
---
--- You can set any table to have strict behaviour using `strict.module`. Creating a new
--- module with `strict.closed_module` makes the module immune to monkey-patching, if
--- you don't wish to encourage monkey business.
---
--- If the global `PENLIGHT_NO_GLOBAL_STRICT` is defined, then this module won't make the
--- global environment strict - if you just want to explicitly set table strictness.
---
--- @module pl.strict
+-----
 
 require 'debug' -- for Lua 5.2
 local getinfo, error, rawset, rawget = debug.getinfo, error, rawset, rawget
@@ -22,7 +9,7 @@ local function what ()
     return d and d.what or "C"
 end
 
---- make an existing table strict.
+-- make an existing table strict.
 -- @string[opt] name name of table
 -- @tab[opt] mod the table to protect - if `nil` then we'll return a new table
 -- @tab[opt] predeclared - table of variables that are to be considered predeclared.
@@ -100,7 +87,7 @@ function strict.module (name,mod,predeclared)
     return mod
 end
 
---- make all tables in a table strict.
+-- make all tables in a table strict.
 -- So `strict.make_all_strict(_G)` prevents monkey-patching
 -- of any global table
 -- @tab T the table containing the tables to protect. Table `T` itself will NOT be protected.
@@ -112,7 +99,7 @@ function strict.make_all_strict (T)
     end
 end
 
---- make a new module table which is closed to further changes.
+-- make a new module table which is closed to further changes.
 -- @tab mod module table
 -- @string name module name
 function strict.closed_module (mod,name)

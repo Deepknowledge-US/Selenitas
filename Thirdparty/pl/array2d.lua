@@ -1,8 +1,4 @@
---- Operations on two-dimensional arrays.
--- See @{02-arrays.md.Operations_on_two_dimensional_tables|The Guide}
---
--- Dependencies: `pl.utils`, `pl.tablex`, `pl.types`
--- @module pl.array2d
+--------
 
 local tonumber,assert,tostring,io,ipairs,string,table =
     _G.tonumber,_G.assert,_G.tostring,_G.io,_G.ipairs,_G.string,_G.table
@@ -38,7 +34,7 @@ local function index (t,k)
     return t[k]
 end
 
---- return the row and column size.
+-- return the row and column size.
 -- @array2d t a 2d array
 -- @treturn int number of rows
 -- @treturn int number of cols
@@ -47,7 +43,7 @@ function array2d.size (t)
     return #t,#t[1]
 end
 
---- extract a column from the 2D array.
+-- extract a column from the 2D array.
 -- @array2d a 2d array
 -- @param key an index or key
 -- @return 1d array
@@ -57,7 +53,7 @@ function array2d.column (a,key)
 end
 local column = array2d.column
 
---- map a function over a 2D array
+-- map a function over a 2D array
 -- @func f a function of at least one argument
 -- @array2d a 2d array
 -- @param arg an optional extra argument to be passed to the function.
@@ -68,7 +64,7 @@ function array2d.map (f,a,arg)
     return obj(a,imap(function(row) return imap(f,row,arg) end, a))
 end
 
---- reduce the rows using a function.
+-- reduce the rows using a function.
 -- @func f a binary function
 -- @array2d a 2d array
 -- @return 1d array
@@ -78,7 +74,7 @@ function array2d.reduce_rows (f,a)
     return tmap(function(row) return reduce(f,row) end, a)
 end
 
---- reduce the columns using a function.
+-- reduce the columns using a function.
 -- @func f a binary function
 -- @array2d a 2d array
 -- @return 1d array
@@ -88,7 +84,7 @@ function array2d.reduce_cols (f,a)
     return tmap(function(c) return reduce(f,column(a,c)) end, keys(a[1]))
 end
 
---- reduce a 2D array into a scalar, using two operations.
+-- reduce a 2D array into a scalar, using two operations.
 -- @func opc operation to reduce the final result
 -- @func opr operation to reduce the rows
 -- @param a 2D array
@@ -98,7 +94,7 @@ function array2d.reduce2 (opc,opr,a)
     return reduce(opc,tmp)
 end
 
---- map a function over two arrays.
+-- map a function over two arrays.
 -- They can be both or either 2D arrays
 -- @func f function of at least two arguments
 -- @int ad order of first array (1 or 2)
@@ -128,7 +124,7 @@ function array2d.map2 (f,ad,bd,a,b,arg)
     end
 end
 
---- cartesian product of two 1d arrays.
+-- cartesian product of two 1d arrays.
 -- @func f a function of 2 arguments
 -- @array t1 a 1d table
 -- @array t2 a 1d table
@@ -145,7 +141,7 @@ function array2d.product (f,t1,t2)
     return res
 end
 
---- flatten a 2D array.
+-- flatten a 2D array.
 -- (this goes over columns first.)
 -- @array2d t 2d table
 -- @return a 1d table
@@ -162,7 +158,7 @@ function array2d.flatten (t)
     return makelist(res)
 end
 
---- reshape a 2D array.
+-- reshape a 2D array.
 -- @array2d t 2d array
 -- @int nrows new number of rows
 -- @bool co column-order (Fortran-style) (default false)
@@ -195,7 +191,7 @@ function array2d.reshape (t,nrows,co)
     return obj(t,res)
 end
 
---- swap two rows of an array.
+-- swap two rows of an array.
 -- @array2d t a 2d array
 -- @int i1 a row index
 -- @int i2 a row index
@@ -204,7 +200,7 @@ function array2d.swap_rows (t,i1,i2)
     t[i1],t[i2] = t[i2],t[i1]
 end
 
---- swap two columns of an array.
+-- swap two columns of an array.
 -- @array2d t a 2d array
 -- @int j1 a column index
 -- @int j2 a column index
@@ -216,14 +212,14 @@ function array2d.swap_cols (t,j1,j2)
     end
 end
 
---- extract the specified rows.
+-- extract the specified rows.
 -- @array2d t 2d array
 -- @tparam {int} ridx a table of row indices
 function array2d.extract_rows (t,ridx)
     return obj(t,index_by(t,ridx))
 end
 
---- extract the specified columns.
+-- extract the specified columns.
 -- @array2d t 2d array
 -- @tparam {int} cidx a table of column indices
 function array2d.extract_cols (t,cidx)
@@ -235,13 +231,13 @@ function array2d.extract_cols (t,cidx)
     return obj(t,res)
 end
 
---- remove a row from an array.
+-- remove a row from an array.
 -- @function array2d.remove_row
 -- @array2d t a 2d array
 -- @int i a row index
 array2d.remove_row = remove
 
---- remove a column from an array.
+-- remove a column from an array.
 -- @array2d t a 2d array
 -- @int j a column index
 function array2d.remove_col (t,j)
@@ -265,7 +261,7 @@ local function _parse (s)
     return r,c
 end
 
---- parse a spreadsheet range.
+-- parse a spreadsheet range.
 -- The range can be specified either as 'A1:B2' or 'R1C1:R2C2';
 -- a special case is a single element (e.g 'A1' or 'R1C1')
 -- @string s a range.
@@ -285,7 +281,7 @@ function array2d.parse_range (s)
     end
 end
 
---- get a slice of a 2D array using spreadsheet range notation. @see parse_range
+-- get a slice of a 2D array using spreadsheet range notation. @see parse_range
 -- @array2d t a 2D array
 -- @string rstr range expression
 -- @return a slice
@@ -310,7 +306,7 @@ local function default_range (t,i1,j1,i2,j2)
     return i1,j1,i2,j2
 end
 
---- get a slice of a 2D array. Note that if the specified range has
+-- get a slice of a 2D array. Note that if the specified range has
 -- a 1D result, the rank of the result will be 1.
 -- @array2d t a 2D array
 -- @int i1 start row (default 1)
@@ -339,7 +335,7 @@ function array2d.slice (t,i1,j1,i2,j2)
     return obj(t,res)
 end
 
---- set a specified range of an array to a value.
+-- set a specified range of an array to a value.
 -- @array2d t a 2D array
 -- @param value the value (may be a function)
 -- @int i1 start row (default 1)
@@ -354,7 +350,7 @@ function array2d.set (t,value,i1,j1,i2,j2)
     end
 end
 
---- write a 2D array to a file.
+-- write a 2D array to a file.
 -- @array2d t a 2D array
 -- @param f a file object (default stdout)
 -- @string fmt a format string (default is just to use tostring)
@@ -377,7 +373,7 @@ function array2d.write (t,f,fmt,i1,j1,i2,j2)
     array2d.forall(t,rowop,newline,i1,j1,i2,j2)
 end
 
---- perform an operation for all values in a 2D array.
+-- perform an operation for all values in a 2D array.
 -- @array2d t 2D array
 -- @func row_op function to call on each value
 -- @func end_row_op function to call at end of each row
@@ -397,7 +393,7 @@ function array2d.forall (t,row_op,end_row_op,i1,j1,i2,j2)
     end
 end
 
----- move a block from the destination to the source.
+-- move a block from the destination to the source.
 -- @array2d dest a 2D array
 -- @int di start row in dest
 -- @int dj start col in dest
@@ -422,7 +418,7 @@ function array2d.move (dest,di,dj,src,i1,j1,i2,j2)
     end
 end
 
---- iterate over all elements in a 2D array, with optional indices.
+-- iterate over all elements in a 2D array, with optional indices.
 -- @array2d a 2D array
 -- @tparam {int} indices with indices (default false)
 -- @int i1 start row (default 1)
@@ -454,7 +450,7 @@ function array2d.iter (a,indices,i1,j1,i2,j2)
     end
 end
 
---- iterate over all columns.
+-- iterate over all columns.
 -- @array2d a a 2D array
 -- @return each column in turn
 function array2d.columns (a)
@@ -468,7 +464,7 @@ function array2d.columns (a)
     end
 end
 
---- new array of specified dimensions
+-- new array of specified dimensions
 -- @int rows number of rows
 -- @int cols number of cols
 -- @param val initial value; if it's a function then use `val(i,j)`

@@ -1,9 +1,4 @@
---- Listing files in directories and creating/removing directory paths.
---
--- Dependencies: `pl.utils`, `pl.path`
---
--- Soft Dependencies: `alien`, `ffi` (either are used on Windows for copying/moving files)
--- @module pl.dir
+--------
 
 local utils = require 'pl.utils'
 local path = require 'pl.path'
@@ -37,7 +32,7 @@ local function filemask(mask)
     return '^'..mask:gsub('%%%*','.*'):gsub('%%%?','.')..'$'
 end
 
---- Test whether a file name matches a shell pattern.
+-- Test whether a file name matches a shell pattern.
 -- Both parameters are case-normalized if operating system is
 -- case-insensitive.
 -- @string filename A file name.
@@ -52,7 +47,7 @@ function dir.fnmatch(filename,pattern)
     return path.normcase(filename):find(filemask(pattern)) ~= nil
 end
 
---- Return a list of all file names within an array which match a pattern.
+-- Return a list of all file names within an array which match a pattern.
 -- @tab filenames An array containing file names.
 -- @string pattern A shell pattern.
 -- @treturn List(string) List of matching file names.
@@ -83,7 +78,7 @@ local function _listfiles(dir,filemode,match)
     return makelist(res)
 end
 
---- return a list of all files in a directory which match a shell pattern.
+-- return a list of all files in a directory which match a shell pattern.
 -- @string dir A directory. If not given, all files in current directory are returned.
 -- @string mask  A shell pattern. If not given, all files are returned.
 -- @treturn {string} list of files
@@ -101,7 +96,7 @@ function dir.getfiles(dir,mask)
     return _listfiles(dir,true,match)
 end
 
---- return a list of all subdirectories of the directory.
+-- return a list of all subdirectories of the directory.
 -- @string dir A directory
 -- @treturn {string} a list of directories
 -- @raise dir must be a a valid directory
@@ -231,7 +226,7 @@ local function file_op (is_copy,src,dest,flag)
     end
 end
 
---- copy a file.
+-- copy a file.
 -- @string src source file
 -- @string dest destination file or directory
 -- @bool flag true if you want to force the copy (default)
@@ -244,7 +239,7 @@ function dir.copyfile (src,dest,flag)
     return file_op(true,src,dest,flag and 0 or 1)
 end
 
---- move a file.
+-- move a file.
 -- @string src source file
 -- @string dest destination file or directory
 -- @treturn bool operation succeeded
@@ -282,7 +277,7 @@ local function _walker(root,bottom_up,attrib)
     if bottom_up then yield(root,dirs,files) end
 end
 
---- return an iterator which walks through a directory tree starting at root.
+-- return an iterator which walks through a directory tree starting at root.
 -- The iterator returns (root,dirs,files)
 -- Note that dirs and files are lists of names (i.e. you must say path.join(root,d)
 -- to get the actual full path)
@@ -306,7 +301,7 @@ function dir.walk(root,bottom_up,follow_links)
     return wrap(function () _walker(root,bottom_up,attrib) end)
 end
 
---- remove a whole directory tree.
+-- remove a whole directory tree.
 -- @string fullpath A directory path
 -- @return true or nil
 -- @return error if failed
@@ -348,7 +343,7 @@ function _makepath(p)
    end
 end
 
---- create a directory path.
+-- create a directory path.
 -- This will create subdirectories as necessary!
 -- @string p A directory path
 -- @return true on success, nil + errormsg on failure
@@ -362,7 +357,7 @@ function dir.makepath (p)
 end
 
 
---- clone a directory tree. Will always try to create a new directory structure
+-- clone a directory tree. Will always try to create a new directory structure
 -- if necessary.
 -- @string path1 the base path of the source tree
 -- @string path2 the new base path for the destination
@@ -418,7 +413,7 @@ function dir.clonetree (path1,path2,file_fun,verbose)
     return true,faildirs,failfiles
 end
 
---- return an iterator over all entries in a directory tree
+-- return an iterator over all entries in a directory tree
 -- @string d a directory
 -- @return an iterator giving pathname and mode (true for dir, false otherwise)
 -- @raise d must be a non-empty string
@@ -451,7 +446,7 @@ function dir.dirtree( d )
 end
 
 
---- Recursively returns all the file starting at _path_. It can optionally take a shell pattern and
+-- Recursively returns all the file starting at _path_. It can optionally take a shell pattern and
 -- only returns files that match _shell_pattern_. If a pattern is given it will do a case insensitive search.
 -- @string start_path  A directory. If not given, all files in current directory are returned.
 -- @string shell_pattern A shell pattern. If not given, all files are returned.

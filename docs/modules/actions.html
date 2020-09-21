@@ -42,9 +42,13 @@
   <li><a href="../modules/checks.html">checks</a></li>
   <li><a href="../modules/families.html">families</a></li>
   <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 <h2>Classes</h2>
 <ul class="nowrap">
@@ -74,31 +78,27 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#array_shuffle">array_shuffle (list)</a></td>
-	<td class="summary">Fisher-Yates method to shuffle a list.</td>
+	<td class="summary">Fisher-Yates method to shuffle a list, it consist on permutations of the objects in a list.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#rt">rt (agent, num)</a></td>
-	<td class="summary">Produces a right turn in an agent of "num" degrees</td>
+	<td class="summary">Produces a right turn in an agent of "num" radians</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#lt">lt (agent, num)</a></td>
-	<td class="summary">Produces a left turn in an agent of "num" degrees</td>
+	<td class="summary">Produces a left turn in an agent of "num" radians</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#fd">fd (agent, num)</a></td>
 	<td class="summary">The agent will advance some units in the faced direction</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#fd_grid">fd_grid (agent, num)</a></td>
-	<td class="summary">The agent will advance some units in the faced direction, but coordinates are rounded to discrete numbers.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#gtrn">gtrn (agent)</a></td>
-	<td class="summary">The agent moves to a random neighbour in a 2D grid.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#die">die (agent, family)</a></td>
 	<td class="summary">It marks an agent as dead by giving a false value to its 'live' param.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#kill_and_purge">kill_and_purge (agent)</a></td>
+	<td class="summary">This function must be used to kill and agent and remove it for the simulation.</td>
 	</tr>
 </table>
 
@@ -114,7 +114,7 @@
     <strong>array_shuffle (list)</strong>
     </dt>
     <dd>
-    Fisher-Yates method to shuffle a list.  It consist on permutations of the objects in a list.
+    Fisher-Yates method to shuffle a list, it consist on permutations of the objects in a list.
 
 
     <h3>Parameters:</h3>
@@ -146,7 +146,7 @@ array_shuffle(a_list)
     <strong>rt (agent, num)</strong>
     </dt>
     <dd>
-    Produces a right turn in an agent of "num" degrees
+    Produces a right turn in an agent of "num" radians
 
 
     <h3>Parameters:</h3>
@@ -182,7 +182,7 @@ array_shuffle(a_list)
     <strong>lt (agent, num)</strong>
     </dt>
     <dd>
-    Produces a left turn in an agent of "num" degrees
+    Produces a left turn in an agent of "num" radians
 
 
     <h3>Parameters:</h3>
@@ -250,81 +250,6 @@ array_shuffle(a_list)
 
 </dd>
     <dt>
-    <a name = "fd_grid"></a>
-    <strong>fd_grid (agent, num)</strong>
-    </dt>
-    <dd>
-    The agent will advance some units in the faced direction, but coordinates are rounded to discrete numbers.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         The agent we want to advance.
-        </li>
-        <li><span class="parameter">num</span>
-         Number of units to advance.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../classes/Mobil.html#Mobil:fd_grid">Mobil.fd_grid</a>
-    </ul>
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">fd_grid(agent,<span class="number">2</span>)</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "gtrn"></a>
-    <strong>gtrn (agent)</strong>
-    </dt>
-    <dd>
-    The agent moves to a random neighbour in a 2D grid.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         The agent we want to move
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../classes/Mobil.html#Mobil:gtrn">Mobil.gtrn</a>
-    </ul>
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example"><span class="comment">-- Agent will be moved to one of its neighbors' patches (8 neighbors are considered).
-</span><span class="comment">-- 0 0 0        0 0 x
-</span><span class="comment">-- 0 x 0   -&gt;   0 0 0
-</span><span class="comment">-- 0 0 0        0 0 0
-</span><span class="comment">-- Extremes of the grid are conected.
-</span>
-gtrn(an_agent)</pre>
-    </ul>
-
-</dd>
-    <dt>
     <a name = "die"></a>
     <strong>die (agent, family)</strong>
     </dt>
@@ -366,6 +291,35 @@ gtrn(an_agent)</pre>
     </ul>
 
 </dd>
+    <dt>
+    <a name = "kill_and_purge"></a>
+    <strong>kill_and_purge (agent)</strong>
+    </dt>
+    <dd>
+    This function must be used to kill and agent and remove it for the simulation.  It will delete all the references to the agent and the links related to it.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">agent</span>
+         The agent to be purged.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">kill_and_purge(an_agent)</pre>
+    </ul>
+
+</dd>
 </dl>
 
 
@@ -373,7 +327,7 @@ gtrn(an_agent)</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-27 13:23:35 </i>
+<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

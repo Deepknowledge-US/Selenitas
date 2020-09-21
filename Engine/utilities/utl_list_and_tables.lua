@@ -7,7 +7,7 @@
 local utl_list = {}
 
 ------------------
--- TODO.
+-- It returns a list containing the agents of a family.
 -- @function fam_to_list
 -- @param fam A Family instance.
 -- @return List
@@ -52,9 +52,9 @@ function utl_list.list_remove(list,element)
 end
 
 ------------------
--- .
+-- It removes from the list the element of a determined position, and permute this element with the last of the list.
 -- @function list_remove_index
--- @param list.
+-- @param list The list from where remove the index
 -- @return List
 -- @usage
 function utl_list.list_remove_index(list,index)

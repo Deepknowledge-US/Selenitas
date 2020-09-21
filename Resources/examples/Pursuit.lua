@@ -1,5 +1,4 @@
--- Interface 
-
+-----------------
 Config:create_slider('Num_pursuers', 0, 100, 1, 10)
 
 -- pos_to_torus relocate the agents as they are living in a torus

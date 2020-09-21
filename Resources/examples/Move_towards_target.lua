@@ -1,3 +1,4 @@
+-----------------
 local radius = 20
 Config:create_slider('houses', 0, 100, 1, 22)
 Config:create_slider('people', 10, 1000, 1, 25)

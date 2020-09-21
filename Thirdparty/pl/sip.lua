@@ -1,23 +1,4 @@
---- Simple Input Patterns (SIP).
--- SIP patterns start with '$', then a
--- one-letter type, and then an optional variable in curly braces.
---
---    sip.match('$v=$q','name="dolly"',res)
---    ==> res=={'name','dolly'}
---    sip.match('($q{first},$q{second})','("john","smith")',res)
---    ==> res=={second='smith',first='john'}
---
--- Type names:
---
---    v     identifier
---    i     integer
---    f     floating-point
---    q     quoted string
---    ([{<  match up to closing bracket
---
--- See @{08-additional.md.Simple_Input_Patterns|the Guide}
---
--- @module pl.sip
+----------
 
 local loadstring = rawget(_G,'loadstring') or load
 local unpack = rawget(_G,'unpack') or rawget(table,'unpack')
@@ -88,7 +69,7 @@ function sip.custom_pattern(flag,patt)
     pattern_map[flag] = patt
 end
 
---- convert a SIP pattern into the equivalent Lua string pattern.
+-- convert a SIP pattern into the equivalent Lua string pattern.
 -- @param spec a SIP pattern
 -- @param options a table; only the <code>at_start</code> field is
 -- currently meaningful and ensures that the pattern is anchored
@@ -220,7 +201,7 @@ function sip.create_spec_fun(spec,options)
     return fun..'\treturn true\nend)\n', named_vars
 end
 
---- convert a SIP pattern into a matching function.
+-- convert a SIP pattern into a matching function.
 -- The returned function takes two arguments, the line and an empty table.
 -- If the line matched the pattern, then this function returns true
 -- and the table is filled with field-value pairs.
@@ -240,7 +221,7 @@ end
 
 local cache = {}
 
---- match a SIP pattern against a string.
+-- match a SIP pattern against a string.
 -- @param spec a SIP pattern
 -- @param line a string
 -- @param res a table to receive values
@@ -256,7 +237,7 @@ function sip.match (spec,line,res,options)
     return cache[spec](line,res)
 end
 
---- match a SIP pattern against the start of a string.
+-- match a SIP pattern against the start of a string.
 -- @param spec a SIP pattern
 -- @param line a string
 -- @param res a table to receive values
@@ -265,7 +246,7 @@ function sip.match_at_start (spec,line,res)
     return sip.match(spec,line,res,{at_start=true})
 end
 
---- given a pattern and a file object, return an iterator over the results
+-- given a pattern and a file object, return an iterator over the results
 -- @param spec a SIP pattern
 -- @param f a file-like object.
 function sip.fields (spec,f)
@@ -289,7 +270,7 @@ end
 
 local read_patterns = {}
 
---- register a match which will be used in the read function.
+-- register a match which will be used in the read function.
 -- @string spec a SIP pattern
 -- @func fun a function to be called with the results of the match
 -- @see read
@@ -299,7 +280,7 @@ function sip.pattern (spec,fun)
     append(read_patterns,{pat=pat,named=named,callback=fun})
 end
 
---- enter a loop which applies all registered matches to the input file.
+-- enter a loop which applies all registered matches to the input file.
 -- @param f a file-like object
 -- @array matches optional list of `{spec,fun}` pairs, as for `pattern` above.
 function sip.read (f,matches)

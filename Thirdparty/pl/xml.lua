@@ -1,33 +1,4 @@
---- XML LOM Utilities.
---
--- This implements some useful things on [LOM](http://matthewwild.co.uk/projects/luaexpat/lom.html) documents, such as returned by `lxp.lom.parse`.
--- In particular, it can convert LOM back into XML text, with optional pretty-printing control.
--- It is s based on stanza.lua from [Prosody](http://hg.prosody.im/trunk/file/4621c92d2368/util/stanza.lua)
---
---     > d = xml.parse "<nodes><node id='1'>alice</node></nodes>"
---     > = d
---     <nodes><node id='1'>alice</node></nodes>
---     > = xml.tostring(d,'','  ')
---     <nodes>
---        <node id='1'>alice</node>
---     </nodes>
---
--- Can be used as a lightweight one-stop-shop for simple XML processing; a simple XML parser is included
--- but the default is to use `lxp.lom` if it can be found.
--- <pre>
--- Prosody IM
--- Copyright (C) 2008-2010 Matthew Wild
--- Copyright (C) 2008-2010 Waqas Hussain--
--- classic Lua XML parser by Roberto Ierusalimschy.
--- modified to output LOM format.
--- http://lua-users.org/wiki/LuaXml
--- </pre>
--- See @{06-data.md.XML|the Guide}
---
--- Dependencies: `pl.utils`
---
--- Soft Dependencies: `lxp.lom` (fallback is to use basic Lua parser)
--- @module pl.xml
+----
 
 local utils = require 'pl.utils'
 local split         =   utils.split;
@@ -52,7 +23,7 @@ local _M = {}
 local Doc = { __type = "doc" };
 Doc.__index = Doc;
 
---- create a new document node.
+-- create a new document node.
 -- @param tag the tag name
 -- @param attr optional attributes (table of name-value pairs)
 function _M.new(tag, attr)
@@ -60,7 +31,7 @@ function _M.new(tag, attr)
     return setmetatable(doc, Doc);
 end
 
---- parse an XML document.  By default, this uses lxp.lom.parse, but
+-- parse an XML document.  By default, this uses lxp.lom.parse, but
 -- falls back to basic_parse, or if use_basic is true
 -- @param text_or_file  file or string representation
 -- @param is_file whether text_or_file is a file name or not
@@ -90,7 +61,7 @@ function _M.parse(text_or_file, is_file, use_basic)
     return doc
 end
 
----- convenient function to add a document node, This updates the last inserted position.
+-- convenient function to add a document node, This updates the last inserted position.
 -- @param tag a tag name
 -- @param attrs optional set of attributes (name-string pairs)
 function Doc:addtag(tag, attrs)
@@ -100,14 +71,14 @@ function Doc:addtag(tag, attrs)
     return self;
 end
 
---- convenient function to add a text node.  This updates the last inserted position.
+-- convenient function to add a text node.  This updates the last inserted position.
 -- @param text a string
 function Doc:text(text)
     (self.last_add[#self.last_add] or self):add_direct_child(text);
     return self;
 end
 
----- go up one level in a document
+-- go up one level in a document
 function Doc:up()
     t_remove(self.last_add);
     return self;
@@ -121,13 +92,13 @@ function Doc:reset()
     return self;
 end
 
---- append a child to a document directly.
+-- append a child to a document directly.
 -- @param child a child node (either text or a document)
 function Doc:add_direct_child(child)
     t_insert(self, child);
 end
 
---- append a child to a document at the last element added
+-- append a child to a document at the last element added
 -- @param child a child node (either text or a document)
 function Doc:add_child(child)
     (self.last_add[#self.last_add] or self):add_direct_child(child);
@@ -137,7 +108,7 @@ end
 --accessing attributes: useful not to have to expose implementation (attr)
 --but also can allow attr to be nil in any future optimizations
 
---- set attributes of a document node.
+-- set attributes of a document node.
 -- @param t a table containing attribute/value pairs
 function Doc:set_attribs (t)
     for k,v in pairs(t) do
@@ -145,21 +116,21 @@ function Doc:set_attribs (t)
     end
 end
 
---- set a single attribute of a document node.
+-- set a single attribute of a document node.
 -- @param a attribute
 -- @param v its value
 function Doc:set_attrib(a,v)
     self.attr[a] = v
 end
 
---- access the attributes of a document node.
+-- access the attributes of a document node.
 function Doc:get_attribs()
     return self.attr
 end
 
 local function is_text(s) return type(s) == 'string' end
 
---- function to create an element with a given tag name and a set of children.
+-- function to create an element with a given tag name and a set of children.
 -- @param tag a tag name
 -- @param items either text or a table where the hash part is the attributes and the list part is the children.
 function _M.elem(tag,items)
@@ -180,7 +151,7 @@ function _M.elem(tag,items)
     return s
 end
 
---- given a list of names, return a number of element constructors.
+-- given a list of names, return a number of element constructors.
 -- @param list  a list of names, or a comma-separated string.
 -- @usage local parent,children = doc.tags 'parent,children' <br>
 --  doc = parent {child 'one', child 'two'}
@@ -224,7 +195,7 @@ local function prepare_data(data)
     end
 end
 
---- create a substituted copy of a document,
+-- create a substituted copy of a document,
 -- @param templ  may be a document or a string representation which will be parsed and cached
 -- @param data  a table of name-value pairs or a list of such tables
 -- @return an XML document
@@ -254,7 +225,7 @@ function Doc.subst(templ, data)
 end
 
 
---- get the first child with a given tag name.
+-- get the first child with a given tag name.
 -- @param tag the tag name
 function Doc:child_with_name(tag)
     for _, child in ipairs(self) do
@@ -270,7 +241,7 @@ function _children_with_name(self,tag,list,recurse)
     end end
 end
 
---- get all elements in a document that have a given tag.
+-- get all elements in a document that have a given tag.
 -- @param tag a tag name
 -- @param dont_recurse optionally only return the immediate children with this tag name
 -- @return a list of elements
@@ -313,7 +284,7 @@ function Doc:matching_tags(tag, xmlns)
         end, tags, start_i;
 end
 
---- iterate over all child elements of a document node.
+-- iterate over all child elements of a document node.
 function Doc:childtags()
     local i = 0;
     return function (a)
@@ -326,7 +297,7 @@ function Doc:childtags()
         end, self[1], i;
 end
 
---- visit child element  of a node and call a function, possibility modifying the document.
+-- visit child element  of a node and call a function, possibility modifying the document.
 -- @param callback  a function passed the node (text or element). If it returns nil, that node will be removed.
 -- If it returns a value, that will replace the current node.
 function Doc:maptags(callback)
@@ -402,13 +373,13 @@ local function _dostring(t, buf, self, xml_escape, parentns, idn, indent, attr_i
     end
 end
 
----- pretty-print an XML document
---- @param t an XML document
---- @param idn an initial indent (indents are all strings)
---- @param indent an indent for each level
---- @param attr_indent if given, indent each attribute pair and put on a separate line
---- @param xml force prefacing with default or custom <?xml...>
---- @return a string representation
+-- pretty-print an XML document
+-- @param t an XML document
+-- @param idn an initial indent (indents are all strings)
+-- @param indent an indent for each level
+-- @param attr_indent if given, indent each attribute pair and put on a separate line
+-- @param xml force prefacing with default or custom <?xml...>
+-- @return a string representation
 function _M.tostring(t,idn,indent, attr_indent, xml)
     local buf = {};
     if xml then
@@ -424,7 +395,7 @@ end
 
 Doc.__tostring = _M.tostring
 
---- get the full text value of an element
+-- get the full text value of an element
 function Doc:get_text()
     local res = {}
     for i,el in ipairs(self) do
@@ -433,7 +404,7 @@ function Doc:get_text()
     return t_concat(res);
 end
 
---- make a copy of a document
+-- make a copy of a document
 -- @param doc the original document
 -- @param strsubst an optional function for handling string copying which could do substitution, etc.
 function _M.clone(doc, strsubst)
@@ -469,7 +440,7 @@ end
 
 Doc.filter = _M.clone -- also available as method
 
---- compare two documents.
+-- compare two documents.
 -- @param t1 any value
 -- @param t2 any value
 function _M.compare(t1,t2)
@@ -497,13 +468,13 @@ function _M.compare(t1,t2)
     return true
 end
 
---- is this value a document element?
+-- is this value a document element?
 -- @param d any value
 function _M.is_tag(d)
     return type(d) == 'table' and is_text(d.tag)
 end
 
---- call the desired function recursively over the document.
+-- call the desired function recursively over the document.
 -- @param doc the document
 -- @param depth_first  visit child notes first, then the current node
 -- @param operation a function which will receive the current tag name and current node.
@@ -537,14 +508,14 @@ local html_empty_elements = { --lists all HTML empty (void) elements
 local escapes = { quot = "\"", apos = "'", lt = "<", gt = ">", amp = "&" }
 local function unescape(str) return (str:gsub( "&(%a+);", escapes)); end
 
---- Parse a well-formed HTML file as a string.
+-- Parse a well-formed HTML file as a string.
 -- Tags are case-insenstive, DOCTYPE is ignored, and empty elements can be .. empty.
 -- @param s the HTML
 function _M.parsehtml (s)
     return _M.basic_parse(s,false,true)
 end
 
---- Parse a simple XML document using a pure Lua parser based on Robero Ierusalimschy's original version.
+-- Parse a simple XML document using a pure Lua parser based on Robero Ierusalimschy's original version.
 -- @param s the XML document to be parsed.
 -- @param all_text  if true, preserves all whitespace. Otherwise only text containing non-whitespace is included.
 -- @param html if true, uses relaxed HTML rules for parsing

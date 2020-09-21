@@ -166,6 +166,13 @@ Mobil.lt = function(self, num)
     return self
 end
 
+------------------
+-- It makes the agent points to another agent by modifiing the heading parameter of the first agent.
+-- @function face
+-- @param ag Agent, the one we want to face.
+-- @return An Agent. The one who has called the function.
+-- @usage
+-- an_agent:face(another_agent)
 Mobil.face = function(self, ag)
     local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
     self.heading = math.atan2(y,x)
@@ -188,22 +195,6 @@ Mobil.fd = function(self, num)
 
     return self
 end
--- ------------------
--- -- Advance in the faced direction. The distance is specified with num
--- -- @function fd
--- -- @param num The number of units we want the agent advance.
--- -- @return An Agent. The one who has called the function.
--- -- @usage
--- -- an_agent:fd(3)
--- Mobil.fd = function(self, num)
-
---     local s,c = sin(self.heading), cos(self.heading)
-
---     self.pos[1] = (self:xcor() + s * num) % Config.xsize
---     self.pos[2] = (self:ycor() + c * num) % Config.ysize
-
---     return self
--- end
 
 ------------------
 -- Moves to an agent to the position of other agent

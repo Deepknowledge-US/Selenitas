@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/actions.html">actions</a></li>
+  <li><a href="../modules/checks.html">checks</a></li>
+  <li><a href="../modules/families.html">families</a></li>
+  <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
+  <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
+  <li><a href="../modules/main.html">main</a></li>
+  <li><strong>numbers_and_dists</strong></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Agent.html">Agent</a></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
+  <li><a href="../classes/Collection.html">Collection</a></li>
+  <li><a href="../classes/Family.html">Family</a></li>
+  <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
+  <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
+  <li><a href="../classes/Metacollection.html">Metacollection</a></li>
+  <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Params.html">Params</a></li>
+  <li><a href="../classes/Relational.html">Relational</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>numbers_and_dists</code></h1>
+<p>Utilities to apply actions to agents or families mainly.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#round">round (list)</a></td>
+	<td class="summary">It removes from the list the element of a determined position, and permute this element with the last of the list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#random_float">random_float (a, b)</a></td>
+	<td class="summary">It returns a random float namber in range [a,b)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#dist_euc_to">dist_euc_to (a, b)</a></td>
+	<td class="summary">It returns the euclidean distance beetween two points or agents</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "round"></a>
+    <strong>round (list)</strong>
+    </dt>
+    <dd>
+    It removes from the list the element of a determined position, and permute this element with the last of the list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">list</span>
+         The list from where remove the index
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        List
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> my_two_decimals_num = round(<span class="number">1.456789</span>, <span class="number">2</span>)
+<span class="comment">-- =&gt; 1.46</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "random_float"></a>
+    <strong>random_float (a, b)</strong>
+    </dt>
+    <dd>
+    It returns a random float namber in range [a,b)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         Number
+        </li>
+        <li><span class="parameter">b</span>
+         Number
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Float number
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> some_float_value = utl_numers.random_float(<span class="number">3</span>,<span class="number">5</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "dist_euc_to"></a>
+    <strong>dist_euc_to (a, b)</strong>
+    </dt>
+    <dd>
+    It returns the euclidean distance beetween two points or agents
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         Agent or vector
+        </li>
+        <li><span class="parameter">b</span>
+         Agent or vector
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Number, the euclidean distance beetween the two points
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">if</span> dist_euc_to(ag1,ag2) &lt; <span class="number">1</span> <span class="keyword">then</span>
+    <span class="global">print</span>(<span class="string">"This two agent should get married"</span>)
+<span class="keyword">end</span>
+see Agent.dist_euc_to</pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

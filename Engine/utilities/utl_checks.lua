@@ -57,7 +57,6 @@ function utl_checks.is_instance(obj,cla)
     end
 end
 
-
 ------------------
 -- Given an item and a set of elements or a collection, decide if item is included in the set.
 -- @function is_in_list

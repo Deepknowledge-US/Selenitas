@@ -34,10 +34,12 @@ __producer          = __iterators.__producer
 __consumer          = __iterators.__consumer
 shuffled            = __iterators.shuffled
 ordered             = __iterators.ordered
+sorted              = __iterators.sorted
 
-__numbers           = require 'Engine.utilities.utl_numbers'
+__numbers           = require 'Engine.utilities.utl_numbers_and_dist'
 round               = __numbers.round
 random_float        = __numbers.random_float
+dist_euc_to         = __numbers.dist_euc_to
 
 __str_fls           = require 'Engine.utilities.utl_strings_and_files'
 lines_from          = __str_fls.lines_from
@@ -87,13 +89,31 @@ tablex  = require 'pl.tablex'
 pretty  = require 'pl.pretty'
 pd      = pretty.dump
 
+
+------------------
+-- This function removes from the system all agents and all families
+-- @function clear_simulation
+-- @return Nothing
+-- @usage
+-- clear_simulation()
+clear_simulation = function()
+    for k,v in ipairs(Config.__all_families)do
+        for _,ag in ordered(v)do
+            ag = nil
+        end
+        v = nil
+    end
+    Config.__all_families = {}
+    Config.__num_agents   = 0
+end
+
 ------------------
 -- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
 -- @function setup
 -- @param funct An anonymous function.
 -- @return Nothing, unless we specified it in the anonymous function.
 -- @usage
--- setup(function() 
+-- setup(function()
 --     Cells = create_patches(100,100)
 --     Agents= FamilyMobil()
 --     for i=1,50 do
