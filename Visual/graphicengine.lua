@@ -170,6 +170,11 @@ local function update_ui(dt)
                 end
             end
 
+            Slab.Separator()
+
+            if Slab.MenuItem("Settings...") then
+            end
+
             -- Show "Close" sim file
             if Slab.MenuItem("Close") then
                 _reset()
@@ -185,15 +190,61 @@ local function update_ui(dt)
             Slab.EndMenu()
         end
 
+        if Slab.BeginMenu("Edit") then
+            if Slab.BeginMenu("Mouse mode") then
+                if Slab.MenuItem("Move") then
+                end
+                if Slab.MenuItem("Select") then
+                end
+                Slab.EndMenu()
+            end
+            Slab.EndMenu()
+        end
+
+        if Slab.BeginMenu("Simulation") then
+            if Slab.MenuItem("Setup/Reset") then 
+            end
+
+            if Slab.MenuItem("Step") then
+            
+            end
+
+            if Slab.MenuItem("Run/Stop") then
+                
+            end
+
+            if Slab.MenuItem("Update view") then
+                
+            end
+
+            Slab.EndMenu()
+        end
+
         if Slab.BeginMenu("View") then
-            if Slab.MenuItem("Reset camera") then
+            if Slab.MenuItem("Reset view") then
                 local w, h, _ = love.window.getMode()
                 camera:setTranslation(w / 2, h / 2)
                 camera:setScale(1)
             end
 
-            if Slab.MenuItem("Show parameters window") then
-                show_params_window = true
+            if Slab.BeginMenu("Windows") then
+                if Slab.MenuItem("All") then
+                    show_params_window = true
+                end
+                Slab.EndMenu()
+            end
+
+            if Slab.BeginMenu("Families") then
+                if Slab.MenuItem("All") then
+                    
+                end
+                Slab.EndMenu()
+            end
+
+            if Slab.MenuItem("Show grid") then
+            end
+
+            if Slab.MenuItem("Show performance stats") then
             end
 
             Slab.EndMenu()
@@ -262,7 +313,7 @@ local function update_ui(dt)
     end
 
     -- Get screen width
-    local screen_w, _, _ = love.window.getMode()
+    local screen_w, screen_h, _ = love.window.getMode()
 
     -- Create toolbar with main controls
     Slab.BeginWindow("Toolbar", {
@@ -310,19 +361,40 @@ local function update_ui(dt)
 
     Slab.SameLine()
 
+    
+
+    Slab.EndLayout()
+    Slab.EndWindow()
+
+    -- Bottom status bar
+    Slab.BeginWindow("StatusBar", {
+        Title = "", -- No title means it shows no title border and is not movable
+        X = 0,
+        Y = screen_h - 23,
+        W = screen_w,
+        H = 20,
+        AutoSizeWindow = false,
+        AllowResize = false
+    })
+
+    Slab.BeginLayout("ToolbarLayout", {
+        AlignY = 'center',
+        AlignRowY = 'center',
+        AlignX = 'right'
+    })
+
     -- "Speed" slider: it changes time_between_steps value
     Slab.Text(" Speed: ", {})
     Slab.SameLine()
---    if Slab.InputNumberSlider("tbs_slider", time_between_steps, 0.0, 1.0 + 0.00000001, {}) then
     --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
     if Slab.InputNumberSlider("tbs_slider", speed, 0.0, 5.0, {step=1}) then
         speed = Slab.GetInputNumber()
-        time_between_steps =  (math.log(6) - math.log (speed + 1))/math.log(6) -- Slab.GetInputNumber()
+        time_between_steps =  (math.log(6) - math.log (speed + 1))/math.log(6)
     end
 
     Slab.EndLayout()
-
     Slab.EndWindow()
+
 
     -- Create panel for simulation params
     show_params_window = Slab.BeginWindow("Simulation", {
