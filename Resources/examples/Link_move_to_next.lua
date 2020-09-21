@@ -1,4 +1,4 @@
--- Interface
+-----------------
 
 Config:create_slider('nodes', 0, 50, 1, 12)
 

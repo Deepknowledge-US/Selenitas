@@ -54,10 +54,23 @@ Rel.ends = function(self)
     return res
 end
 
+------------------
+-- This function returns the destiny agent of the link.
+-- @function target
+-- @return Agent, the target param of the link.
+-- @usage
+-- local target_agent = one_of(Links):target()
 Rel.target = function(self)
     return self.target
 end
 
+
+------------------
+-- This function returns the origin agent of the link.
+-- @function source
+-- @return Agent, the source param of the link.
+-- @usage
+-- local source_agent = my_link:source()
 Rel.source = function(self)
     return self.source
 end

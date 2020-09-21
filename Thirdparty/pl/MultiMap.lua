@@ -1,8 +1,4 @@
---- MultiMap, a Map which has multiple values per key.
---
--- Dependencies: `pl.utils`, `pl.class`, `pl.List`, `pl.Map`
--- @classmod pl.MultiMap
-
+--------
 local utils = require 'pl.utils'
 local class = require 'pl.class'
 local List = require 'pl.List'
@@ -19,7 +15,7 @@ function MultiMap:_init (t)
     self:update(t)
 end
 
---- update a MultiMap using a table.
+-- update a MultiMap using a table.
 -- @param t either a Multimap or a map-like table.
 -- @return the map
 function MultiMap:update (t)
@@ -36,7 +32,7 @@ function MultiMap:update (t)
     end
 end
 
---- add a new value to a key.  Setting a nil value removes the key.
+-- add a new value to a key.  Setting a nil value removes the key.
 -- @param key the key
 -- @param val the value
 -- @return the map

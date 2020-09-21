@@ -1,10 +1,4 @@
---- Pretty-printing Lua tables.
--- Also provides a sandboxed Lua table reader and
--- a function to present large numbers in human-friendly format.
---
--- Dependencies: `pl.utils`, `pl.lexer`, `pl.stringx`, `debug`
--- @module pl.pretty
-
+----------
 local append = table.insert
 local concat = table.concat
 local mfloor, mhuge = math.floor, math.huge
@@ -67,7 +61,7 @@ local function restore_global_env(env)
     end
 end
 
---- Read a string representation of a Lua table.
+-- Read a string representation of a Lua table.
 -- This function loads and runs the string as Lua code, but bails out
 -- if it contains a function definition.
 -- Loaded string is executed in an empty environment.
@@ -103,7 +97,7 @@ function pretty.read(s)
     end
 end
 
---- Read a Lua chunk.
+-- Read a Lua chunk.
 -- @string s Lua code.
 -- @tab[opt] env environment used to run the code, empty by default.
 -- @bool[opt] paranoid abort loading if any looping constructs a found in the code
@@ -165,7 +159,7 @@ local function index (numkey,key)
 end
 
 
---- Create a string representation of a Lua table.
+-- Create a string representation of a Lua table.
 -- This function never fails, but may complain by returning an
 -- extra value. Normally puts out one item per line, using
 -- the provided indent; set the second parameter to an empty string
@@ -308,7 +302,7 @@ function pretty.write (tbl,space,not_clever)
     return concat(lines,#space > 0 and '\n' or '')
 end
 
---- Dump a Lua table out to a file or stdout.
+-- Dump a Lua table out to a file or stdout.
 -- @tab t The table to write to a file or stdout.
 -- @string[opt] filename File name to write too. Defaults to writing
 -- to stdout.
@@ -321,7 +315,7 @@ function pretty.dump (t, filename)
     end
 end
 
---- Dump a series of arguments to stdout for debug purposes.
+-- Dump a series of arguments to stdout for debug purposes.
 -- This function is attached to the module table `__call` method, to make it
 -- extra easy to access. So the full:
 --
@@ -372,7 +366,7 @@ local function comma (val)
     else return tostring(val) end
 end
 
---- Format large numbers nicely for human consumption.
+-- Format large numbers nicely for human consumption.
 -- @number num a number.
 -- @string[opt] kind one of `'M'` (memory in `KiB`, `MiB`, etc.),
 -- `'N'` (postfixes are `'K'`, `'M'` and `'B'`),

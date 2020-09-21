@@ -58,9 +58,13 @@
   <li><a href="../modules/checks.html">checks</a></li>
   <li><a href="../modules/families.html">families</a></li>
   <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
 </div>
@@ -80,18 +84,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#Instance:clone_n">Instance:clone_n (num, agent, funct)</a></td>
 	<td class="summary">This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:ask">Instance:ask (funct)</a></td>
-	<td class="summary">This function applies an action to all alive agents in the family in random order.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:ask_ordered">Instance:ask_ordered (funct)</a></td>
-	<td class="summary">This function applies an action to all alive agents in the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:ask_n">Instance:ask_n (n, funct)</a></td>
-	<td class="summary">This function is the same as ask function, but it stops when we have applied the action to n random agents of the family.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Instance:exists">Instance:exists (pred)</a></td>
@@ -158,6 +150,10 @@
 	<td class="summary">Returns the total number of agents in the family (alives and killed agents that have not been purged yet).</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Instance:count_all">Instance:count_all ()</a></td>
+	<td class="summary">Returns the total number of agents in the family (alives and killed agents that have not been purged yet).</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Instance:keys">Instance:keys ()</a></td>
 	<td class="summary">Returns the list of keys in the Family.</td>
 	</tr>
@@ -177,8 +173,16 @@
 	<td class="summary">Family constructor.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Family:add_method">Family:add_method ()</a></td>
+	<td class="summary">This function adds a method in the Family, the added method can be used for every agent of the family.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Family:kill">Family:kill ()</a></td>
 	<td class="summary">Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Family:kill_and_purge">Family:kill_and_purge ()</a></td>
+	<td class="summary">This function kills and agent and removes it from the simulation.</td>
 	</tr>
 </table>
 <h2><a href="#Metamethods">Metamethods</a></h2>
@@ -236,108 +240,6 @@
 <span class="keyword">end</span>)
 <span class="comment">-- If we just want to create same agents, we can call this function without the last parameter:
 </span>Agents1:clone_n(<span class="number">3</span>, agent)</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Instance:ask"></a>
-    <strong>Instance:ask (funct)</strong>
-    </dt>
-    <dd>
-    This function applies an action to all alive agents in the family in random order.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">funct</span>
-         An anonymous function with the actions that will be applied to agents.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/families.html#ask">families.ask</a>
-    </ul>
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">Family:ask( <span class="keyword">function</span>(ag) ag:rt(<span class="number">15</span>):fd(<span class="number">1.5</span>) <span class="keyword">end</span> )</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Instance:ask_ordered"></a>
-    <strong>Instance:ask_ordered (funct)</strong>
-    </dt>
-    <dd>
-    This function applies an action to all alive agents in the family.  Allways in the same order, if you need random order use "ask".
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">funct</span>
-         An anonymous function with the actions that will be applied to agents.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/families.html#ask_ordered">families.ask_ordered</a>
-    </ul>
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">Family:ask_ordered( <span class="keyword">function</span>(ag) ag:rt(<span class="number">15</span>):fd(<span class="number">1.5</span>) <span class="keyword">end</span> )</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Instance:ask_n"></a>
-    <strong>Instance:ask_n (n, funct)</strong>
-    </dt>
-    <dd>
-    This function is the same as ask function, but it stops when we have applied the action to n random agents of the family.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number of random agents to be asked.
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonymous function with the actions that will be applied to agents.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/families.html#ask_n">families.ask_n</a>
-    </ul>
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">A_family:ask_n(<span class="number">3</span>, <span class="keyword">function</span>(agent) agent:gtrn() <span class="keyword">end</span>)</pre>
     </ul>
 
 </dd>
@@ -863,6 +765,29 @@
 
 </dd>
     <dt>
+    <a name = "Instance:count_all"></a>
+    <strong>Instance:count_all ()</strong>
+    </dt>
+    <dd>
+    Returns the total number of agents in the family (alives and killed agents that have not been purged yet).  If you want the number of agets with live you can use the parameter "count" of families (Family.count)
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Number.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> number = My_family:count_all()</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "Instance:keys"></a>
     <strong>Instance:keys ()</strong>
     </dt>
@@ -965,6 +890,34 @@
 
 </dd>
     <dt>
+    <a name = "Family:add_method"></a>
+    <strong>Family:add_method ()</strong>
+    </dt>
+    <dd>
+    This function adds a method in the Family, the added method can be used for every agent of the family.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Nodes:add_method(<span class="string">'method_name'</span>, <span class="keyword">function</span>(node, an_agent)
+    <span class="keyword">return</span> dist_euc_to(an_agent)
+<span class="keyword">end</span> )
+
+a_node:method_name(an_agent)
+<span class="comment">-- The euclidean distance from a_node to an_agent is returned</span></pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "Family:kill"></a>
     <strong>Family:kill ()</strong>
     </dt>
@@ -988,6 +941,33 @@
     <h3>Usage:</h3>
     <ul>
         <pre class="example">Nodes:kill(a_node)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Family:kill_and_purge"></a>
+    <strong>Family:kill_and_purge ()</strong>
+    </dt>
+    <dd>
+    This function kills and agent and removes it from the simulation.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing.
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/actions.html#kill_and_purge">actions.kill_and_purge</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Nodes:kill_and_purge(an_agent)</pre>
     </ul>
 
 </dd>
@@ -1053,7 +1033,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-27 13:23:35 </i>
+<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

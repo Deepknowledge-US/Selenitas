@@ -1,4 +1,4 @@
--- Interface
+-----------------
 
 Config:create_slider('num_agents', 0, 10, 1, 3)
 Config:create_slider('max_age', 5, 100, 1, 30)

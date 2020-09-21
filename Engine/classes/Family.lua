@@ -91,7 +91,7 @@ end
 -- @return Nothing.
 -- @usage
 -- Nodes:kill_and_purge(an_agent)
--- @see utl_actions.kill_and_purge
+-- @see actions.kill_and_purge
 Family.kill_and_purge = function(self,agent)
     self:kill(agent)
     agent:__purge()
@@ -125,62 +125,6 @@ Family.clone_n = function(self, num, agent, funct)
         end
     end
 end
-
--- ------------------
--- -- This function applies an action to all alive agents in the family in random order.
--- -- @function Instance:ask
--- -- @param funct An anonymous function with the actions that will be applied to agents.
--- -- @return Nothing.
--- -- @usage Family:ask( function(ag) ag:rt(15):fd(1.5) end )
--- -- @see families.ask
--- Family.ask = function(self, funct)
---     local list_copy = self:alives_list()
---     local num_agents = #list_copy
-
---     for index = num_agents, 1, -1 do
---         local current = __consumer(list_copy, index)
---         funct(current)
---     end
--- end
-
--- ------------------
--- -- This function applies an action to all alive agents in the family. Allways in the same order, if you need random order use "ask".
--- -- @function Instance:ask_ordered
--- -- @param funct An anonymous function with the actions that will be applied to agents.
--- -- @return Nothing.
--- -- @usage Family:ask_ordered( function(ag) ag:rt(15):fd(1.5) end )
--- -- @see families.ask_ordered
--- Family.ask_ordered = function(self, funct)
---     for _,v in pairs(self.agents) do
---         funct(v)
---     end
--- end
-
--- ------------------
--- -- This function is the same as ask function, but it stops when we have applied the action to n random agents of the family.
--- -- @function Instance:ask_n
--- -- @param n Number of random agents to be asked.
--- -- @param funct An anonymous function with the actions that will be applied to agents.
--- -- @return Nothing
--- -- @usage
--- -- A_family:ask_n(3, function(agent) agent:gtrn() end)
--- -- @see families.ask_n
--- Family.ask_n = function(self, n, funct)
---     local list_copy = self:alives_list()
---     local num_agents = self.count
-
---     if n >= num_agents then
---         for index = num_agents, 1, -1 do
---             local current = __consumer(list_copy, index)
---             funct(current)
---         end
---     else
---         for index = num_agents, num_agents - n + 1, -1 do
---             local current = __consumer(list_copy, index)
---             funct(current)
---         end
---     end
--- end
 
 
 
@@ -559,35 +503,13 @@ Family.clone = function(self, agent) -- deep-copy a table
     for k, v in pairs(agent) do
         if type(v) ~= "table" or is_instance(v,Agent) or is_instance(v,Family) then
             target[k] = v
-        else 
+        else
             target[k] = self:clone(v)
         end
     end
     setmetatable(target, meta)
     return target
 end
-
--- ------------------
--- -- This function returns a clone of the agent gived as parameter. Is an auxiliar function used by 'clone_n_act' to obtain an object that is added to the Family later.
--- -- @function Instance:clone
--- -- @param agent is an Agent instance.
--- -- @return A new object, clone of the one gived as parameter. The only difference will be the id, unique for any agent or clone.
--- Family.clone = function(self, agent) -- deep-copy a table
---     if type(agent) ~= "table" then
---         return agent
---     end
---     local meta = getmetatable(agent)
---     local target = {}
---     for k, v in pairs(agent) do
---         if type(v) == "table" and k ~= "family" then
---             target[k] = self:clone(v)
---         else
---             target[k] = v
---         end
---     end
---     setmetatable(target, meta)
---     return target
--- end
 
 ------------------
 -- Returns the list of alive agents in the Family

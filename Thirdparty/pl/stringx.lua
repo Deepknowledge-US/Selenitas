@@ -1,13 +1,4 @@
---- Python-style extended string library.
---
--- see 3.6.1 of the Python reference.
--- If you want to make these available as string methods, then say
--- `stringx.import()` to bring them into the standard `string` table.
---
--- See @{03-strings.md|the Guide}
---
--- Dependencies: `pl.utils`
--- @module pl.stringx
+------
 local utils = require 'pl.utils'
 local string = string
 local find = string.find
@@ -42,46 +33,46 @@ end
 
 local stringx = {}
 
-------------------
+--
 -- String Predicates
 -- @section predicates
 
---- does s only contain alphabetic characters?
+-- does s only contain alphabetic characters?
 -- @string s a string
 function stringx.isalpha(s)
     assert_string(1,s)
     return find(s,'^%a+$') == 1
 end
 
---- does s only contain digits?
+-- does s only contain digits?
 -- @string s a string
 function stringx.isdigit(s)
     assert_string(1,s)
     return find(s,'^%d+$') == 1
 end
 
---- does s only contain alphanumeric characters?
+-- does s only contain alphanumeric characters?
 -- @string s a string
 function stringx.isalnum(s)
     assert_string(1,s)
     return find(s,'^%w+$') == 1
 end
 
---- does s only contain spaces?
+-- does s only contain spaces?
 -- @string s a string
 function stringx.isspace(s)
     assert_string(1,s)
     return find(s,'^%s+$') == 1
 end
 
---- does s only contain lower case characters?
+-- does s only contain lower case characters?
 -- @string s a string
 function stringx.islower(s)
     assert_string(1,s)
     return find(s,'^[%l%s]+$') == 1
 end
 
---- does s only contain upper case characters?
+-- does s only contain upper case characters?
 -- @string s a string
 function stringx.isupper(s)
     assert_string(1,s)
@@ -109,7 +100,7 @@ local function test_affixes(s, affixes, fn)
     end
 end
 
---- does s start with prefix or one of prefixes?
+-- does s start with prefix or one of prefixes?
 -- @string s a string
 -- @param prefix a string or an array of strings
 function stringx.startswith(s,prefix)
@@ -117,7 +108,7 @@ function stringx.startswith(s,prefix)
     return test_affixes(s,prefix,raw_startswith)
 end
 
---- does s end with suffix or one of suffixes?
+-- does s end with suffix or one of suffixes?
 -- @string s a string
 -- @param suffix a string or an array of strings
 function stringx.endswith(s,suffix)
@@ -125,10 +116,10 @@ function stringx.endswith(s,suffix)
     return test_affixes(s,suffix,raw_endswith)
 end
 
---- Strings and Lists
+-- Strings and Lists
 -- @section lists
 
---- concatenate the strings using this string as a delimiter.
+-- concatenate the strings using this string as a delimiter.
 -- Note that the arguments are reversed from `string.concat`.
 -- @string s the string
 -- @param seq a table of strings or numbers
@@ -138,7 +129,7 @@ function stringx.join(s,seq)
     return concat(seq,s)
 end
 
---- Split a string into a list of lines.
+-- Split a string into a list of lines.
 -- `"\r"`, `"\n"`, and `"\r\n"` are considered line ends.
 -- They are not included in the lines unless `keepends` is passed.
 -- Terminal line end does not produce an extra line.
@@ -176,7 +167,7 @@ function stringx.splitlines(s, keep_ends)
     return makelist(res)
 end
 
---- split a string into a list of strings using a delimiter.
+-- split a string into a list of strings using a delimiter.
 -- @function split
 -- @string s the string
 -- @string[opt] re a delimiter (defaults to whitespace)
@@ -201,7 +192,7 @@ function stringx.split(s,re,n)
     return makelist(res)
 end
 
---- replace all tabs in s with tabsize spaces. If not specified, tabsize defaults to 8.
+-- replace all tabs in s with tabsize spaces. If not specified, tabsize defaults to 8.
 -- Tab stops will be honored.
 -- @string s the string
 -- @int tabsize[opt=8] number of spaces to expand each tab
@@ -216,7 +207,7 @@ function stringx.expandtabs(s,tabsize)
     end))
 end
 
---- Finding and Replacing
+-- Finding and Replacing
 -- @section find
 
 local function _find_all(s,sub,first,last,allow_overlap)
@@ -239,7 +230,7 @@ local function _find_all(s,sub,first,last,allow_overlap)
     return res,k
 end
 
---- find index of first instance of sub in s from the left.
+-- find index of first instance of sub in s from the left.
 -- @string s the string
 -- @string sub substring
 -- @int[opt] first first index
@@ -257,7 +248,7 @@ function stringx.lfind(s,sub,first,last)
     end
 end
 
---- find index of first instance of sub in s from the right.
+-- find index of first instance of sub in s from the right.
 -- @string s the string
 -- @string sub substring
 -- @int[opt] first first index
@@ -269,7 +260,7 @@ function stringx.rfind(s,sub,first,last)
     return (_find_all(s,sub,first,last,true))
 end
 
---- replace up to n instances of old by new in the string s.
+-- replace up to n instances of old by new in the string s.
 -- If n is not present, replace all instances.
 -- @string s the string
 -- @string old the target substring
@@ -283,7 +274,7 @@ function stringx.replace(s,old,new,n)
     return (gsub(s,escape(old),new:gsub('%%','%%%%'),n))
 end
 
---- count all instances of substring in string.
+-- count all instances of substring in string.
 -- @string s the string
 -- @string sub substring
 -- @bool[opt] allow_overlap allow matches to overlap
@@ -296,7 +287,7 @@ function stringx.count(s,sub,allow_overlap)
     return k
 end
 
---- Stripping and Justifying
+-- Stripping and Justifying
 -- @section strip
 
 local function _just(s,w,ch,left,right)
@@ -322,7 +313,7 @@ local function _just(s,w,ch,left,right)
     end
 end
 
---- left-justify s with width w.
+-- left-justify s with width w.
 -- @string s the string
 -- @int w width of justification
 -- @string[opt=' '] ch padding character
@@ -333,7 +324,7 @@ function stringx.ljust(s,w,ch)
     return _just(s,w,ch,true,false)
 end
 
---- right-justify s with width w.
+-- right-justify s with width w.
 -- @string s the string
 -- @int w width of justification
 -- @string[opt=' '] ch padding character
@@ -344,7 +335,7 @@ function stringx.rjust(s,w,ch)
     return _just(s,w,ch,false,true)
 end
 
---- center-justify s with width w.
+-- center-justify s with width w.
 -- @string s the string
 -- @int w width of justification
 -- @string[opt=' '] ch padding character
@@ -386,7 +377,7 @@ local function _strip(s,left,right,chrs)
     return sub(s,f,t)
 end
 
---- trim any whitespace on the left of s.
+-- trim any whitespace on the left of s.
 -- @string s the string
 -- @string[opt='%s'] chrs default any whitespace character,
 --  but can be a string of characters to be trimmed
@@ -396,7 +387,7 @@ function stringx.lstrip(s,chrs)
 end
 lstrip = stringx.lstrip
 
---- trim any whitespace on the right of s.
+-- trim any whitespace on the right of s.
 -- @string s the string
 -- @string[opt='%s'] chrs default any whitespace character,
 --  but can be a string of characters to be trimmed
@@ -405,7 +396,7 @@ function stringx.rstrip(s,chrs)
     return _strip(s,false,true,chrs)
 end
 
---- trim any whitespace on both left and right of s.
+-- trim any whitespace on both left and right of s.
 -- @string s the string
 -- @string[opt='%s'] chrs default any whitespace character,
 --  but can be a string of characters to be trimmed
@@ -414,10 +405,10 @@ function stringx.strip(s,chrs)
     return _strip(s,true,true,chrs)
 end
 
---- Partioning Strings
+-- Partioning Strings
 -- @section partioning
 
---- split a string using a pattern. Note that at least one value will be returned!
+-- split a string using a pattern. Note that at least one value will be returned!
 -- @string s the string
 -- @string[opt='%s'] re a Lua string pattern (defaults to whitespace)
 -- @return the parts of the string
@@ -440,7 +431,7 @@ local function _partition(p,delim,fn)
     end
 end
 
---- partition the string using first occurance of a delimiter
+-- partition the string using first occurance of a delimiter
 -- @string s the string
 -- @string ch delimiter
 -- @return part before ch
@@ -454,7 +445,7 @@ function stringx.partition(s,ch)
     return _partition(s,ch,stringx.lfind)
 end
 
---- partition the string p using last occurance of a delimiter
+-- partition the string p using last occurance of a delimiter
 -- @string s the string
 -- @string ch delimiter
 -- @return part before ch
@@ -472,7 +463,7 @@ function stringx.rpartition(s,ch)
     return a,b,c
 end
 
---- return the 'character' at the index.
+-- return the 'character' at the index.
 -- @string s the string
 -- @int idx an index (can be negative)
 -- @return a substring of length 1 if successful, empty string otherwise.
@@ -482,10 +473,10 @@ function stringx.at(s,idx)
     return sub(s,idx,idx)
 end
 
---- Miscelaneous
+-- Miscelaneous
 -- @section misc
 
---- return an iterator over all lines in a string
+-- return an iterator over all lines in a string
 -- @string s the string
 -- @return an iterator
 -- @usage
@@ -500,7 +491,7 @@ function stringx.lines(s)
     return s:gmatch('([^\n]*)\n')
 end
 
---- inital word letters uppercase ('title case').
+-- inital word letters uppercase ('title case').
 -- Here 'words' mean chunks of non-space characters.
 -- @string s the string
 -- @return a string with each word's first letter uppercase
@@ -517,7 +508,7 @@ stringx.capitalize = stringx.title
 local ellipsis = '...'
 local n_ellipsis = #ellipsis
 
---- Return a shortened version of a string.
+-- Return a shortened version of a string.
 -- Fits string within w characters. Removed characters are marked with ellipsis.
 -- @string s the string
 -- @int w the maxinum size allowed
@@ -539,7 +530,7 @@ function stringx.shorten(s,w,tail)
     return s
 end
 
---- Utility function that finds any patterns that match a long string's an open or close.
+-- Utility function that finds any patterns that match a long string's an open or close.
 -- Note that having this function use the least number of equal signs that is possible is a harder algorithm to come up with.
 -- Right now, it simply returns the greatest number of them found.
 -- @param s The string
@@ -558,7 +549,7 @@ local function has_lquote(s)
     return equals
 end
 
---- Quote the given string and preserve any control or escape characters, such that reloading the string in Lua returns the same result.
+-- Quote the given string and preserve any control or escape characters, such that reloading the string in Lua returns the same result.
 -- @param s The string to be quoted.
 -- @return The quoted string.
 function stringx.quote_string(s)

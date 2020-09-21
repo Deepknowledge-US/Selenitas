@@ -1,3 +1,4 @@
+-----------------
 local radius = 20
 Config:create_slider('nodes', 0, 100, 1, 22)
 Config:create_slider('links', 0, 10000, 1, 15)

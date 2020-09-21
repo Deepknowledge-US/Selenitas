@@ -1,5 +1,4 @@
-------------------
--- Utilities to apply actions to agents or families mainly.
+--- Utilities to apply actions to agents or families mainly.
 -- @module
 -- actions
 
@@ -11,11 +10,11 @@ local utl_actions = {}
 
 
 ------------------
--- Fisher-Yates method to shuffle a list. It consist on permutations of the objects in a list.
+-- Fisher-Yates method to shuffle a list, it consist on permutations of the objects in a list.
 -- @function array_shuffle
 -- @param list A list to shuffle
 -- @return Nothing
--- @usage 
+-- @usage
 -- local a_list = {1,2,3,4,5}
 -- array_shuffle(a_list)
 -- print(a_list)
@@ -65,37 +64,6 @@ function utl_actions.fd(agent, num)
 end
 
 ------------------
--- The agent will advance some units in the faced direction, but coordinates are rounded to discrete numbers.
--- @function fd_grid
--- @param agent The agent we want to advance.
--- @param num Number of units to advance.
--- @return Nothing
--- @usage fd_grid(agent,2)
--- @see Mobil.fd_grid
-function utl_actions.fd_grid(agent, num)
-    return agent:fd_grid(num)
-end
-
-------------------
--- The agent moves to a random neighbour in a 2D grid.
--- @function gtrn
--- @param agent The agent we want to move
--- @return Nothing
--- @usage
--- 
--- -- Agent will be moved to one of its neighbors' patches (8 neighbors are considered).
--- -- 0 0 0        0 0 x
--- -- 0 x 0   ->   0 0 0
--- -- 0 0 0        0 0 0
--- -- Extremes of the grid are conected.
---
--- gtrn(an_agent)
--- @see Mobil.gtrn
-function utl_actions.gtrn(agent)
-    return agent:gtrn()
-end
-
-------------------
 -- It marks an agent as dead by giving a false value to its 'live' param.
 -- @function die
 -- @param agent The agent we want to mark as die.
@@ -122,6 +90,14 @@ function utl_actions.die(agent, family)
     end
 end
 
+
+------------------
+-- This function must be used to kill and agent and remove it for the simulation. It will delete all the references to the agent and the links related to it.
+-- @function kill_and_purge
+-- @param agent The agent to be purged.
+-- @return Nothing
+-- @usage
+-- kill_and_purge(an_agent)
 function utl_actions.kill_and_purge(agent)
     return agent.family:kill_and_purge(agent)
 end

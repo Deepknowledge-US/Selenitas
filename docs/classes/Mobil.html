@@ -56,9 +56,13 @@
   <li><a href="../modules/checks.html">checks</a></li>
   <li><a href="../modules/families.html">families</a></li>
   <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
 </div>
@@ -73,7 +77,7 @@
 <h2><a href="#Methods">Methods</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Mobil:_init">Mobil:_init ()</a></td>
+	<td class="name" nowrap><a href="#Mobil:_init">Mobil:_init (Table)</a></td>
 	<td class="summary">Mobil agents are are the most common agent to work with.</td>
 	</tr>
 	<tr>
@@ -93,6 +97,10 @@
 	<td class="summary">Getter function to get the z coordinate of the agent</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Mobil:same_pos">Mobil:same_pos (ag_or_pos)</a></td>
+	<td class="summary">Checks if the agent has the (exactly) same position as a vector or agent.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Mobil:update_cell">Mobil:update_cell ()</a></td>
 	<td class="summary">Checks for FamiliCells and if is anyone, updates the parameter current_cell of the agent (if this is needed).</td>
 	</tr>
@@ -105,36 +113,24 @@
 	<td class="summary">It produces a left turn in the agent</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#Mobil:face">Mobil:face (ag)</a></td>
+	<td class="summary">It makes the agent points to another agent by modifiing the heading parameter of the first agent.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#Mobil:fd">Mobil:fd (num)</a></td>
 	<td class="summary">Advance in the faced direction.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Mobil:fd_grid">Mobil:fd_grid (num)</a></td>
-	<td class="summary">Advance in a grid in the faced direction.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Mobil:gtrn">Mobil:gtrn ()</a></td>
-	<td class="summary">Ask the agent to go to a random neighbor in a 2D grid, neighbors are determined by moore neighborhood.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Mobil:move_to">Mobil:move_to (another_agent)</a></td>
 	<td class="summary">Moves to an agent to the position of other agent</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Mobil:dist_euc">Mobil:dist_euc (point)</a></td>
-	<td class="summary">This function give us the euclidean distance from the agent to another point.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Mobil:dist_euc_to_agent">Mobil:dist_euc_to_agent (agent)</a></td>
-	<td class="summary">This function give us the euclidean distance from the agent to another agent.</td>
+	<td class="name" nowrap><a href="#Mobil:dist_euc_to">Mobil:dist_euc_to (ag_or_point)</a></td>
+	<td class="summary">This function give us the euclidean distance from the agent to another agent or point.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Mobil:dist_manh">Mobil:dist_manh (point)</a></td>
 	<td class="summary">This function give us the manhattan distance from the agent to another point.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Mobil:dist_manh_to_agent">Mobil:dist_manh_to_agent (agent)</a></td>
-	<td class="summary">This function give us the manhattan distance from the agent to another agent.</td>
 	</tr>
 </table>
 
@@ -147,12 +143,18 @@
     <dl class="function">
     <dt>
     <a name = "Mobil:_init"></a>
-    <strong>Mobil:_init ()</strong>
+    <strong>Mobil:_init (Table)</strong>
     </dt>
     <dd>
     Mobil agents are are the most common agent to work with.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">Table</span>
+         with the properties we want in the agent.
+        </li>
+    </ul>
 
     <h3>Returns:</h3>
     <ol>
@@ -270,6 +272,30 @@ one_of(Agents):does(wander,talk)</pre>
 
 </dd>
     <dt>
+    <a name = "Mobil:same_pos"></a>
+    <strong>Mobil:same_pos (ag_or_pos)</strong>
+    </dt>
+    <dd>
+    Checks if the agent has the (exactly) same position as a vector or agent.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ag_or_pos</span>
+         Agent or vector.
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">agent:same_pos({<span class="number">1</span>,<span class="number">1</span>})</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "Mobil:update_cell"></a>
     <strong>Mobil:update_cell ()</strong>
     </dt>
@@ -278,18 +304,17 @@ one_of(Agents):does(wander,talk)</pre>
 
 
 
+    <h3>Returns:</h3>
+    <ol>
+
+        the Agent who has update its cells.
+    </ol>
 
 
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">agent:update_cell()
-Mobil.update_cell = <span class="keyword">function</span>(self,p)
-    <span class="global">print</span>(<span class="string">'PRIIIIIIINT'</span>,self.pos)
-    <span class="keyword">for</span> i=<span class="number">1</span>,#cell_fams <span class="keyword">do</span>
-        <span class="global">table</span>.insert(self.current_cell, {cell_fams[i], cell_fams[i]:cell_of(p) })
-    <span class="keyword">end</span>
-<span class="keyword">end</span></pre>
+        <pre class="example">agent:fd(<span class="number">4</span>):update_cell()</pre>
     </ul>
 
 </dd>
@@ -352,6 +377,35 @@ Mobil.update_cell = <span class="keyword">function</span>(self,p)
 
 </dd>
     <dt>
+    <a name = "Mobil:face"></a>
+    <strong>Mobil:face (ag)</strong>
+    </dt>
+    <dd>
+    It makes the agent points to another agent by modifiing the heading parameter of the first agent.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ag</span>
+         Agent, the one we want to face.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        An Agent. The one who has called the function.
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">an_agent:face(another_agent)</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "Mobil:fd"></a>
     <strong>Mobil:fd (num)</strong>
     </dt>
@@ -377,68 +431,6 @@ Mobil.update_cell = <span class="keyword">function</span>(self,p)
     <h3>Usage:</h3>
     <ul>
         <pre class="example">an_agent:fd(<span class="number">3</span>)</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Mobil:fd_grid"></a>
-    <strong>Mobil:fd_grid (num)</strong>
-    </dt>
-    <dd>
-    Advance in a grid in the faced direction.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">num</span>
-         The number of units we want the agent advance.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        An Agent. The one who has called the function.
-    </ol>
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">an_agent:fd_grid(<span class="number">3</span>)</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Mobil:gtrn"></a>
-    <strong>Mobil:gtrn ()</strong>
-    </dt>
-    <dd>
-    Ask the agent to go to a random neighbor in a 2D grid, neighbors are determined by moore neighborhood.
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-        The Agent that has called the function.
-    </ol>
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">an_agent:gtrn()
-
-<span class="comment">-- an_agent will be moved to one of its patch neighbours (8 neighbours are considered).
-</span><span class="comment">--  0 0 0        0 0 x
-</span><span class="comment">--  0 x 0   -&gt;   0 0 0
-</span><span class="comment">--  0 0 0        0 0 0
-</span><span class="comment">-- Extremes of the grid are conected.
-</span>
-<span class="comment">-- As the agent is returned, we can do something like that:
-</span>an_agent:gtrn():search_food()
-<span class="comment">-- Assuming that we have defined a method 'search_food' in our agents</span></pre>
     </ul>
 
 </dd>
@@ -477,17 +469,17 @@ Mobil.update_cell = <span class="keyword">function</span>(self,p)
 
 </dd>
     <dt>
-    <a name = "Mobil:dist_euc"></a>
-    <strong>Mobil:dist_euc (point)</strong>
+    <a name = "Mobil:dist_euc_to"></a>
+    <strong>Mobil:dist_euc_to (ag_or_point)</strong>
     </dt>
     <dd>
-    This function give us the euclidean distance from the agent to another point.
+    This function give us the euclidean distance from the agent to another agent or point.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">point</span>
-         The point to calculate the distance to the agent.
+        <li><span class="parameter">ag_or_point</span>
+         The agent or point to calculate the distance to the agent.
         </li>
     </ul>
 
@@ -501,36 +493,9 @@ Mobil.update_cell = <span class="keyword">function</span>(self,p)
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">ag:dist_euc( {<span class="number">23</span>, <span class="number">50.1</span>, <span class="number">7</span>} )</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Mobil:dist_euc_to_agent"></a>
-    <strong>Mobil:dist_euc_to_agent (agent)</strong>
-    </dt>
-    <dd>
-    This function give us the euclidean distance from the agent to another agent.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         The agent to calculate the distance to the agent that is calling the function.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Number The euclidean distance to the agent
-    </ol>
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">ag:dist_euc_to_agent( ag2 )</pre>
+        <pre class="example">ag:dist_euc_to( {<span class="number">23</span>, <span class="number">50.1</span>, <span class="number">7</span>} )
+<span class="comment">-- or:
+</span>dist_euc_to(ag, {<span class="number">23</span>, <span class="number">50.1</span>, <span class="number">7</span>})</pre>
     </ul>
 
 </dd>
@@ -563,35 +528,6 @@ Mobil.update_cell = <span class="keyword">function</span>(self,p)
     </ul>
 
 </dd>
-    <dt>
-    <a name = "Mobil:dist_manh_to_agent"></a>
-    <strong>Mobil:dist_manh_to_agent (agent)</strong>
-    </dt>
-    <dd>
-    This function give us the manhattan distance from the agent to another agent.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         The agent to calculate the distance to the agent that is calling the function.
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-        Number The manhattan distance to the agent
-    </ol>
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">ag:dist_manh_to_agent( ag2 )</pre>
-    </ul>
-
-</dd>
 </dl>
 
 
@@ -599,7 +535,7 @@ Mobil.update_cell = <span class="keyword">function</span>(self,p)
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-27 13:23:35 </i>
+<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

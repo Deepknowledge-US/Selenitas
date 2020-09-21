@@ -57,9 +57,13 @@
   <li><a href="../modules/checks.html">checks</a></li>
   <li><a href="../modules/families.html">families</a></li>
   <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
 </div>
@@ -77,9 +81,29 @@
 	<td class="name" nowrap><a href="#Agent:_init">Agent:_init ()</a></td>
 	<td class="summary">When a new agent is created, some properties are given to it.</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Agent:set_param">Agent:set_param (name, value)</a></td>
+	<td class="summary">It gives a new value to some parameter of the agent.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Agent:link_neighbors">Agent:link_neighbors (fam)</a></td>
+	<td class="summary">It returns the neighbors of the agent.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Agent:in_link_neighbors">Agent:in_link_neighbors (fam)</a></td>
+	<td class="summary">It returns the links that points to the agent.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Agent:out_link_neighbors">Agent:out_link_neighbors (fam)</a></td>
+	<td class="summary">It returns the links the agent as origin.</td>
+	</tr>
 </table>
 <h2><a href="#Metamethods">Metamethods</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Agent:__delete_in_neighs">Agent:__delete_in_neighs ()</a></td>
+	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Agent:__delete_in_neighs">Agent:__delete_in_neighs ()</a></td>
 	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.</td>
@@ -132,10 +156,132 @@
     </ul>
 
 </dd>
+    <dt>
+    <a name = "Agent:set_param"></a>
+    <strong>Agent:set_param (name, value)</strong>
+    </dt>
+    <dd>
+    It gives a new value to some parameter of the agent.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         String, the name of the paprameter
+        </li>
+        <li><span class="parameter">value</span>
+         Anything. The new value of the paprameter could be a String, a number, a table ...
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Agent. The one who calls this method
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Agent:link_neighbors"></a>
+    <strong>Agent:link_neighbors (fam)</strong>
+    </dt>
+    <dd>
+    It returns the neighbors of the agent.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fam</span>
+         Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Collection of neighbors of the agent.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Agent:in_link_neighbors"></a>
+    <strong>Agent:in_link_neighbors (fam)</strong>
+    </dt>
+    <dd>
+    It returns the links that points to the agent.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fam</span>
+         Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Collection of links of the agent.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Agent:out_link_neighbors"></a>
+    <strong>Agent:out_link_neighbors (fam)</strong>
+    </dt>
+    <dd>
+    It returns the links the agent as origin.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fam</span>
+         Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Collection of links of the agent.
+    </ol>
+
+
+
+
+</dd>
 </dl>
     <h2 class="section-header "><a name="Metamethods"></a>Metamethods</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "Agent:__delete_in_neighs"></a>
+    <strong>Agent:__delete_in_neighs ()</strong>
+    </dt>
+    <dd>
+    Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Nothing.
+    </ol>
+
+
+
+
+</dd>
     <dt>
     <a name = "Agent:__delete_in_neighs"></a>
     <strong>Agent:__delete_in_neighs ()</strong>
@@ -242,7 +388,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-27 13:23:35 </i>
+<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

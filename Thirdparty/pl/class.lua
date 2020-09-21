@@ -1,14 +1,4 @@
---- Provides a reuseable and convenient framework for creating classes in Lua.
--- Two possible notations:
---
---    B = class(A)
---    class.B(A)
---
--- The latter form creates a named class within the current environment. Note
--- that this implicitly brings in `pl.utils` as a dependency.
---
--- See the Guide for further @{01-introduction.md.Simplifying_Object_Oriented_Programming_in_Lua|discussion}
--- @module pl.class
+------------
 
 local error, getmetatable, io, pairs, rawget, rawset, setmetatable, tostring, type =
     _G.error, _G.getmetatable, _G.io, _G.pairs, _G.rawget, _G.rawset, _G.setmetatable, _G.tostring, _G.type
@@ -37,7 +27,7 @@ local function call_ctor (c,obj,...)
     return res
 end
 
---- initializes an __instance__ upon creation.
+-- initializes an __instance__ upon creation.
 -- @function class:_init
 -- @param ... parameters passed to the constructor
 -- @usage local Cat = class()
@@ -49,7 +39,7 @@ end
 -- local pussycat = Cat("pussycat")
 -- print(pussycat.name)  --> pussycat
 
---- checks whether an __instance__ is derived from some class.
+-- checks whether an __instance__ is derived from some class.
 -- Works the other way around as `class_of`. It has two ways of using;
 -- 1) call with a class to check against, 2) call without params.
 -- @function instance:is_a
@@ -78,7 +68,7 @@ local function is_a(self,klass)
     return false
 end
 
---- checks whether an __instance__ is derived from some class.
+-- checks whether an __instance__ is derived from some class.
 -- Works the other way around as `is_a`.
 -- @function some_class:class_of
 -- @param some_instance instance to check against
@@ -92,7 +82,7 @@ local function class_of(klass,obj)
     return klass.is_a(obj,klass)
 end
 
---- cast an object to another class.
+-- cast an object to another class.
 -- It is not clever (or safe!) so use carefully.
 -- @param some_instance the object to be changed
 -- @function some_class:cast
@@ -198,7 +188,7 @@ local function _class(base,c_arg,c)
     return c
 end
 
---- create a new class, derived from a given base class.
+-- create a new class, derived from a given base class.
 -- Supporting two class creation syntaxes:
 -- either `Name = class(base)` or `class.Name(base)`.
 -- The first form returns the class directly and does not set its `_name`.

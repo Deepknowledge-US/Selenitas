@@ -1,8 +1,4 @@
---- Application support functions.
--- See @{01-introduction.md.Application_Support|the Guide}
---
--- Dependencies: `pl.utils`, `pl.path`
--- @module pl.app
+--------
 
 local io,package,require = _G.io, _G.package, _G.require
 local utils = require 'pl.utils'
@@ -10,7 +6,7 @@ local path = require 'pl.path'
 
 local app = {}
 
---- return the name of the current script running.
+-- return the name of the current script running.
 -- The name will be the name as passed on the command line
 -- @return string filename
 function app.script_name()
@@ -20,7 +16,7 @@ function app.script_name()
     return utils.raise("No script name found")
 end
 
---- add the current script's path to the Lua module path.
+-- add the current script's path to the Lua module path.
 -- Applies to both the source and the binary module paths. It makes it easy for
 -- the main file of a multi-file program to access its modules in the same directory.
 -- `base` allows these modules to be put in a specified subdirectory, to allow for
@@ -54,7 +50,7 @@ function app.require_here (base)
     return p
 end
 
---- return a suitable path for files private to this application.
+-- return a suitable path for files private to this application.
 -- These will look like '~/.SNAME/file', with '~' as with expanduser and
 -- SNAME is the name of the script without .lua extension.
 -- If the directory does not exist, it will be created.
@@ -79,7 +75,7 @@ function app.appfile(file)
     return path.join(dir,file)
 end
 
---- return string indicating operating system.
+-- return string indicating operating system.
 -- @return 'Windows','OSX' or whatever uname returns (e.g. 'Linux')
 function app.platform()
     if path.is_windows then
@@ -93,7 +89,7 @@ function app.platform()
     end
 end
 
---- return the full command-line used to invoke this script.
+-- return the full command-line used to invoke this script.
 -- It will not include the scriptname itself, see `app.script_name`.
 -- @return command-line
 -- @return name of Lua program used
@@ -119,7 +115,7 @@ function app.lua()
     end
 end
 
---- parse command-line arguments into flags and parameters.
+-- parse command-line arguments into flags and parameters.
 -- Understands GNU-style command-line flags; short (`-f`) and long (`--flag`).
 --
 -- These may be given a value with either '=' or ':' (`-k:2`,`--alpha=3.2`,`-n2`),

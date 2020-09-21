@@ -1,20 +1,17 @@
----- Dealing with Detailed Type Information
-
--- Dependencies `pl.utils`
--- @module pl.types
+-----
 
 local utils = require 'pl.utils'
 local math_ceil = math.ceil
 local assert_arg = utils.assert_arg
 local types = {}
 
---- is the object either a function or a callable object?.
+-- is the object either a function or a callable object?.
 -- @param obj Object to check.
 function types.is_callable (obj)
     return type(obj) == 'function' or getmetatable(obj) and getmetatable(obj).__call and true
 end
 
---- is the object of the specified type?.
+-- is the object of the specified type?.
 -- If the type is a string, then use type, otherwise compare with metatable.
 --
 -- NOTE: this function is imported from `utils.is_type`.
@@ -26,7 +23,7 @@ types.is_type = utils.is_type
 
 local fileMT = getmetatable(io.stdout)
 
---- a string representation of a type.
+-- a string representation of a type.
 -- For tables and userdata with metatables, we assume that the metatable has a `_name`
 -- field. If the field is not present it will return 'unknown table' or
 -- 'unknown userdata'.
@@ -50,7 +47,7 @@ function types.type (obj)
     end
 end
 
---- is this number an integer?
+-- is this number an integer?
 -- @param x a number
 -- @raise error if x is not a number
 -- @return boolean
@@ -58,7 +55,7 @@ function types.is_integer (x)
     return math_ceil(x)==x
 end
 
---- Check if the object is "empty".
+-- Check if the object is "empty".
 -- An object is considered empty if it is:
 --
 -- - `nil`
@@ -86,7 +83,7 @@ local function check_meta (val)
     return getmetatable(val)
 end
 
---- is an object 'array-like'?
+-- is an object 'array-like'?
 -- An object is array like if:
 --
 -- - it is a table, or
@@ -101,7 +98,7 @@ function types.is_indexable (val)
     return mt and mt.__len and mt.__index and true
 end
 
---- can an object be iterated over with `pairs`?
+-- can an object be iterated over with `pairs`?
 -- An object is iterable if:
 --
 -- - it is a table, or
@@ -116,7 +113,7 @@ function types.is_iterable (val)
     return mt and mt.__pairs and true
 end
 
---- can an object accept new key/pair values?
+-- can an object accept new key/pair values?
 -- An object is iterable if:
 --
 -- - it is a table, or
@@ -151,7 +148,7 @@ local true_types = {
     number=function(o, true_strs, check_objs) return o ~= 0 end,
     table=function(o, true_strs, check_objs) if check_objs and next(o) ~= nil then return true end return false end
 }
---- Convert to a boolean value.
+-- Convert to a boolean value.
 -- True values are:
 --
 -- * boolean: true.

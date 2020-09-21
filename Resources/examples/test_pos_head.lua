@@ -1,5 +1,4 @@
--- Interface
-
+-----------------
 Config:create_slider('nodes', 0, 100, 1.0, 12)
 Config:create_boolean('rt_lt', true)
 Config:create_boolean('pos_ang', true)

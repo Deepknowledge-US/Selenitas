@@ -1,15 +1,4 @@
---- Path manipulation and file queries.
---
--- This is modelled after Python's os.path library (10.1); see @{04-paths.md|the Guide}.
---
--- NOTE: the functions assume the paths being dealt with to originate
--- from the OS the application is running on. Windows drive letters are not
--- to be used when running on a Unix system for example. The one exception
--- is Windows paths to allow both forward and backward slashes (since Lua
--- also accepts those)
---
--- Dependencies: `pl.utils`, `lfs`
--- @module pl.path
+------
 
 -- imports and locals
 local _G = _G
@@ -32,44 +21,44 @@ local link_attrib = lfs.symlinkattributes
 
 local path = {}
 
---- Lua iterator over the entries of a given directory.
+-- Lua iterator over the entries of a given directory.
 -- Implicit link to [`luafilesystem.dir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function dir
 path.dir = lfs.dir
 
---- Creates a directory.
+-- Creates a directory.
 -- Implicit link to [`luafilesystem.mkdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function mkdir
 path.mkdir = lfs.mkdir
 
---- Removes a directory.
+-- Removes a directory.
 -- Implicit link to [`luafilesystem.rmdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function rmdir
 path.rmdir = lfs.rmdir
 
---- Gets attributes.
+-- Gets attributes.
 -- Implicit link to [`luafilesystem.attributes`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function attrib
 path.attrib = attrib
 
---- Get the working directory.
+-- Get the working directory.
 -- Implicit link to [`luafilesystem.currentdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function currentdir
 path.currentdir = currentdir
 
---- Gets symlink attributes.
+-- Gets symlink attributes.
 -- Implicit link to [`luafilesystem.symlinkattributes`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function link_attrib
 path.link_attrib = link_attrib
 
---- Changes the working directory.
+-- Changes the working directory.
 -- On Windows, if a drive is specified, it also changes the current drive. If
 -- only specifying the drive, it will only switch drive, but not modify the path.
 -- Implicit link to [`luafilesystem.chdir`](https://keplerproject.github.io/luafilesystem/manual.html#reference)
 -- @function chdir
 path.chdir = lfs.chdir
 
---- is this a directory?
+-- is this a directory?
 -- @string P A file path
 function path.isdir(P)
     assert_string(1,P)
@@ -79,7 +68,7 @@ function path.isdir(P)
     return attrib(P,'mode') == 'directory'
 end
 
---- is this a file?
+-- is this a file?
 -- @string P A file path
 function path.isfile(P)
     assert_string(1,P)
@@ -97,14 +86,14 @@ function path.islink(P)
     end
 end
 
---- return size of a file.
+-- return size of a file.
 -- @string P A file path
 function path.getsize(P)
     assert_string(1,P)
     return attrib(P,'size')
 end
 
---- does a path exist?
+-- does a path exist?
 -- @string P A file path
 -- @return the file path if it exists (either as file, directory, socket, etc), nil otherwise
 function path.exists(P)
@@ -112,21 +101,21 @@ function path.exists(P)
     return attrib(P,'mode') ~= nil and P
 end
 
---- Return the time of last access as the number of seconds since the epoch.
+-- Return the time of last access as the number of seconds since the epoch.
 -- @string P A file path
 function path.getatime(P)
     assert_string(1,P)
     return attrib(P,'access')
 end
 
---- Return the time of last modification as the number of seconds since the epoch.
+-- Return the time of last modification as the number of seconds since the epoch.
 -- @string P A file path
 function path.getmtime(P)
     assert_string(1,P)
     return attrib(P,'modification')
 end
 
----Return the system's ctime as the number of seconds since the epoch.
+--Return the system's ctime as the number of seconds since the epoch.
 -- @string P A file path
 function path.getctime(P)
     assert_string(1,P)
@@ -154,19 +143,19 @@ else
 end
 sep = path.sep
 
---- are we running Windows?
+-- are we running Windows?
 -- @class field
 -- @name path.is_windows
 
---- path separator for this platform.
+-- path separator for this platform.
 -- @class field
 -- @name path.sep
 
---- separator for PATH for this platform
+-- separator for PATH for this platform
 -- @class field
 -- @name path.dirsep
 
---- given a path, return the directory part and a file part.
+-- given a path, return the directory part and a file part.
 -- if there's no directory part, the first value will be empty
 -- @string P A file path
 -- @return directory part
@@ -198,7 +187,7 @@ function path.splitpath(P)
     end
 end
 
---- return an absolute path.
+-- return an absolute path.
 -- @string P A file path
 -- @string[opt] pwd optional start path to use (default is current dir)
 function path.abspath(P,pwd)
@@ -216,7 +205,7 @@ function path.abspath(P,pwd)
     return path.normpath(P)
 end
 
---- given a path, return the root part and the extension part.
+-- given a path, return the root part and the extension part.
 -- if there's no extension part, the second value will be empty
 -- @string P A file path
 -- @treturn string root part (everything upto the "."", maybe empty)
@@ -247,7 +236,7 @@ function path.splitext(P)
     end
 end
 
---- return the directory part of a path
+-- return the directory part of a path
 -- @string P A file path
 -- @treturn string everything before the last dir-separator
 -- @see splitpath
@@ -260,7 +249,7 @@ function path.dirname(P)
     return p1
 end
 
---- return the file part of a path
+-- return the file part of a path
 -- @string P A file path
 -- @treturn string
 -- @see splitpath
@@ -273,7 +262,7 @@ function path.basename(P)
     return p2
 end
 
---- get the extension part of a path.
+-- get the extension part of a path.
 -- @string P A file path
 -- @treturn string
 -- @see splitext
@@ -286,7 +275,7 @@ function path.extension(P)
     return p2
 end
 
---- is this an absolute path?
+-- is this an absolute path?
 -- @string P A file path
 -- @usage
 -- path.isabs("hello/path")    -- false
@@ -304,7 +293,7 @@ function path.isabs(P)
     return seps[at(P,1)] ~= nil
 end
 
---- return the path resulting from combining the individual paths.
+-- return the path resulting from combining the individual paths.
 -- if the second (or later) path is absolute, we return the last absolute path (joined with any non-absolute paths following).
 -- empty elements (except the last) will be ignored.
 -- @string p1 A file path
@@ -335,7 +324,7 @@ function path.join(p1,p2,...)
     return p1..p2
 end
 
---- normalize the case of a pathname. On Unix, this returns the path unchanged,
+-- normalize the case of a pathname. On Unix, this returns the path unchanged,
 -- for Windows it converts;
 --
 -- * the path to lowercase
@@ -353,7 +342,7 @@ function path.normcase(P)
     end
 end
 
---- normalize a path name.
+-- normalize a path name.
 -- `A//B`, `A/./B`, and `A/foo/../B` all become `A/B`.
 --
 -- An empty path results in '.'.
@@ -406,7 +395,7 @@ function path.normpath(P)
     return P
 end
 
---- relative path from current directory or optional start point
+-- relative path from current directory or optional start point
 -- @string P a path
 -- @string[opt] start optional start point (default current directory)
 function path.relpath (P,start)
@@ -444,7 +433,7 @@ function path.relpath (P,start)
 end
 
 
---- Replace a starting '~' with the user's home directory.
+-- Replace a starting '~' with the user's home directory.
 -- In windows, if HOME isn't set, then USERPROFILE is used in preference to
 -- HOMEDRIVE HOMEPATH. This is guaranteed to be writeable on all versions of Windows.
 -- @string P A file path
@@ -462,7 +451,7 @@ function path.expanduser(P)
 end
 
 
----Return a suitable full path to a new temporary file name.
+--Return a suitable full path to a new temporary file name.
 -- unlike os.tmpname(), it always gives you a writeable path (uses TEMP environment variable on Windows)
 function path.tmpname ()
     local res = tmpnam()
@@ -475,7 +464,7 @@ function path.tmpname ()
     return res
 end
 
---- return the largest common prefix path of two paths.
+-- return the largest common prefix path of two paths.
 -- @string path1 a file path
 -- @string path2 a file path
 -- @return the common prefix (Windows: separators will be normalized, casing will be original)
@@ -506,7 +495,7 @@ function path.common_prefix (path1,path2)
     --return ''
 end
 
---- return the full path where a particular Lua module would be found.
+-- return the full path where a particular Lua module would be found.
 -- Both package.path and package.cpath is searched, so the result may
 -- either be a Lua file or a shared library.
 -- @string mod name of the module
@@ -523,5 +512,5 @@ function path.package_path(mod)
 end
 
 
----- finis -----
+-- finis --
 return path
