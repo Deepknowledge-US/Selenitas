@@ -54,10 +54,10 @@ SETUP = function()
     love.graphics.setBackgroundColor(.8,.8,.8)
     -- Test collection
     Checkpoints = FamilyMobil()
-    Checkpoints:add({ ['pos'] = {0, 100} })
-    Checkpoints:add({ ['pos'] = {0,0} })
-    Checkpoints:add({ ['pos'] = { 100,0} })
-    Checkpoints:add({ ['pos'] = { 100, 100} })
+    Checkpoints:new({ ['pos'] = {0, 100} })
+    Checkpoints:new({ ['pos'] = {0,0} })
+    Checkpoints:new({ ['pos'] = { 100,0} })
+    Checkpoints:new({ ['pos'] = { 100, 100} })
 
     for _, ch in ordered(Checkpoints) do
         ch.shape = 'circle'

@@ -20,18 +20,18 @@ FR._init = function(self,c)
 end
 
 ------------------
--- Add a new Relational agent to the family.
--- @function add
+-- Insert a new Relational agent to the family.
+-- @function new
 -- @param object A table with the params of the new Relational
 -- @return Nothing
 -- @usage
--- Links:add({
+-- Links:new({
 --     ['source'] = one_of(Nodes),
 --     ['target'] = one_of(Nodes)
 -- })
 -- end
 -- -- This will result in a new instance of Relational in the family Links
-FR.add = function(self,object)
+FR.new = function(self,object)
 
     -- A new Link is created using the input table. If this table does not have a source and a target an error is returned.
     if pcall( function() return object.source and object.target end ) then
@@ -91,7 +91,7 @@ end;
 -- -- This will result in 10 new links between 2 distinct agents of the family Nodes.
 FR.create_n = function(self,num, funct)
     for i=1,num do
-        self:add( Relational( funct() ) )
+        self:new( Relational( funct() ) )
     end
     if funct ~= nil then
         --TODO

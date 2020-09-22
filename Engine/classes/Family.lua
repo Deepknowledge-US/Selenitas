@@ -115,7 +115,7 @@ Family.clone_n = function(self, num, agent, funct)
 
     for i = 1, num do
         local ag = self:clone(agent)
-        self:add(ag)
+        self:new(ag)
         table.insert(res, ag)
     end
 

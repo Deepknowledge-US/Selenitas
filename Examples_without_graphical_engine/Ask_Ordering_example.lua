@@ -65,7 +65,7 @@ SETUP(function()
     -- Populate the collection with Agents. Each agent will be randomly positioned.
 
     for i=1,5 do
-        Mobils:add({
+        Mobils:new({
             ['pos']      = {i,0}
             ,['heading'] = math.pi / 2
         })

@@ -21,24 +21,31 @@ local Rel = class.Relational(Agent)
 --         [weight]=3.2
 --     })
 -- )
-Rel._init = function(self,obj)
+Rel._init = function(self,p_table)
 
     self:super()
 
-    for k,v in pairs(obj) do
+    for k,v in pairs(p_table) do
         self[k] = v
     end
 
-    self.type       = obj.type        or 'standard'
-    self.source     = obj.source      or {}
-    self.target     = obj.target      or {}
-    self.color      = obj.color       or {0.5, 0.5, 0.5, 1}
-    self.label      = obj.label       or ''
-    self.label_color= obj.label_color or {1,1,1,1}
-    self.thickness  = obj.thickness   or 1
-    self.shape      = obj.shape       or 'line'
-    self.visible    = obj.visible     or true
-    self.z_order    = obj.z_order     or 0
+    self.type       = p_table.type        or 'standard'
+    self.source     = p_table.source      or {}
+    self.target     = p_table.target      or {}
+    self.color      = p_table.color       or {0.5, 0.5, 0.5, 1}
+    self.label      = p_table.label       or ''
+    self.label_color= p_table.label_color or {1,1,1,1}
+    self.thickness  = p_table.thickness   or 1
+    self.shape      = p_table.shape       or 'line'
+    self.z_order    = p_table.z_order     or 0
+
+
+    if p_table.visible == nil then
+        self.visible = true
+    else
+        self.visible = p_table.visible
+    end
+
     return self
 end;
 

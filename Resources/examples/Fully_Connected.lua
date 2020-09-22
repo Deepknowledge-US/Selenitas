@@ -43,7 +43,7 @@ SETUP = function()
     -- Each agent will create a link with the other agents.
     for _, ag in ordered(Nodes) do
         for _, other in pairs(Nodes:others(ag).agents) do
-            Links:add({
+            Links:new({
                 ['source'] = ag,
                 ['target'] = other,
                 ['color'] = {0.75, 0, 0, 1}

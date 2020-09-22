@@ -34,8 +34,13 @@ Cell._init = function(self,p_table)
     self.region     = p_table.region      or {}
     self.neighbors  = p_table.neighbors   or Collection()
     self.my_agents  = p_table.my_agents   or Collection()
-    self.visible    = p_table.visible     or true
     self.z_order    = p_table.z_order     or 0
+
+    if p_table.visible == nil then
+        self.visible = true
+    else
+        self.visible = p_table.visible
+    end
 
     return self
 end;

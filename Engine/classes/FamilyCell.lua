@@ -22,17 +22,17 @@ FC._init = function(self,c)
 end
 
 ------------------
--- Add a new Cell to the family.
--- @function add
+-- Insert a new Cell to the family.
+-- @function new
 -- @param object A table with the params of the new Cell
 -- @return Nothing
 -- @usage
 -- for i=1,100 do
 --     for j=1,100 do
---          Cells_family:add( {['pos']={i,j}} )
+--          Cells_family:new( {['pos']={i,j}} )
 --     end
 -- end
-FC.add = function(self,object)
+FC.new = function(self,object)
     local new_agent
     local k  = Config:__new_id()
 
@@ -49,12 +49,14 @@ FC.add = function(self,object)
 
     self.agents[k]   = new_agent
     self.count       = self.count + 1
+
+    return self.agents[k]
 end
 
 ------------------
 -- Create n new Cells in the family.
 -- @function create_n
--- @param num The number of agents that will be added to the family
+-- @param num The number of agents that will be created in the family
 -- @param funct An anonymous function that will be executed to create the Cell.
 -- @return Nothing
 -- @usage
@@ -66,12 +68,12 @@ end
 --
 -- -- If you are not confortable with anonymous functions you can use a 'for' to add new agents to the family. This is equivalent to:
 -- for i=1,10 do
---     Cells:add({ ['pos'] = {math.random[100],math.random[100]} })
+--     Cells:new({ ['pos'] = {math.random[100],math.random[100]} })
 -- end
 -- @see families.create_n
 FC.create_n = function(self,num, funct)
     for i=1,num do
-        self:add(Cell( funct() ))
+        self:new(Cell( funct() ))
     end
 end
 

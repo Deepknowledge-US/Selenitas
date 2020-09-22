@@ -27,7 +27,7 @@ SETUP(
         People = FamilyMobil()
 
         for i=1,5 do
-            People:add({['pos'] = {i,i}})
+            People:new({['pos'] = {i,i}})
         end
     end
 )

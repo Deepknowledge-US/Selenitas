@@ -96,7 +96,7 @@ SETUP(function()
 
     for _,agent in ordered(Nodes)do
         for _,another_agent in ordered(Nodes)do
-            Links:add({
+            Links:new({
                 ['source'] = agent,
                 ['target'] = another_agent,
                 ['legend'] = agent.id .. ',' .. another_agent.id

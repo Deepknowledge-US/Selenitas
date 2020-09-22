@@ -161,6 +161,7 @@ RUN(function()
         :reproduce()
     end
 
+    purge_agents(Agents)
 
     -- When the simulation ends, in "histogram" we have an evolution of the population of
     -- agents along the iterations.

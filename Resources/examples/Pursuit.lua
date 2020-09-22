@@ -26,10 +26,10 @@ end
 SETUP = function()
     -- Test collection
     Checkpoints = FamilyMobil()
-    Checkpoints:add({ ['pos'] = {0, 100} })
-    Checkpoints:add({ ['pos'] = {0,0} })
-    Checkpoints:add({ ['pos'] = { 100,0} })
-    Checkpoints:add({ ['pos'] = { 100, 100} })
+    Checkpoints:new({ ['pos'] = {0, 100} })
+    Checkpoints:new({ ['pos'] = {0,0} })
+    Checkpoints:new({ ['pos'] = { 100,0} })
+    Checkpoints:new({ ['pos'] = { 100, 100} })
 
     for _, ch in pairs(Checkpoints.agents) do
         ch.shape = 'circle'

@@ -45,7 +45,7 @@ SETUP = function()
     -- Each agent will create a link with the other agents.
     for _, agent in pairs(Nodes.agents) do
         for _, another_agent in pairs((Nodes:others(agent)).agents) do
-            Links:add({
+            Links:new({
                 ['source'] = agent
                 ,['target'] = another_agent
                 ,['color'] = {0.75, 0, 0, 0.2}
@@ -54,7 +54,7 @@ SETUP = function()
     end
 
     Agents = FamilyMobil()
-    Agents:add({
+    Agents:new({
         ['pos'] = {0,0}
         ,['color'] = {0,0,1,1}
         ,['shape'] = "triangle_2"

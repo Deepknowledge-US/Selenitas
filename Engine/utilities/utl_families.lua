@@ -36,7 +36,7 @@ function utl_fam.create_grid(x, y, offset_x, offset_y, cell_width, cell_height)
 
     for i = 0 + step_x, x + step_x - 1 do
         for j = 0 + step_y, x + step_y - 1 do
-            cells:add(Cell({["pos"] = {i + half_w, j + half_h}}))
+            cells:new(Cell({["pos"] = {i + half_w, j + half_h}}))
         end
     end
 

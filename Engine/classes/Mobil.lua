@@ -16,24 +16,29 @@ local Mobil = class.Mobil(Agent)
 -- @param Table with the properties we want in the agent.
 -- @return A new instance of Agent class.
 -- @usage new_instance = Mobil()
-Mobil._init = function(self,o)
+Mobil._init = function(self,p_table)
 
     self:super()
 
-    for k,v in pairs(o) do
+    for k,v in pairs(p_table) do
         self[k] = v
     end
 
-    self.pos            = o.pos           or {0, 0, 0}
-    self.color          = o.color         or {0.5,0.5,0.5,1}
-    self.heading        = o.heading       or 0
-    self.shape          = o.shape         or 'triangle'
-    self.scale          = o.scale         or 1
-    self.visible        = o.visible       or true
-    self.z_order        = o.z_order       or 1
-    self.label          = o.label         or ''
-    self.label_color    = o.label_color   or {1,1,1,1}
-    self.current_cells  = o.current_cells or {}
+    self.pos            = p_table.pos           or {0, 0, 0}
+    self.color          = p_table.color         or {0.5,0.5,0.5,1}
+    self.heading        = p_table.heading       or 0
+    self.shape          = p_table.shape         or 'triangle'
+    self.scale          = p_table.scale         or 1
+    self.z_order        = p_table.z_order       or 1
+    self.label          = p_table.label         or ''
+    self.label_color    = p_table.label_color   or {1,1,1,1}
+    self.current_cells  = p_table.current_cells or {}
+
+    if p_table.visible == nil then
+        self.visible = true
+    else
+        self.visible = p_table.visible
+    end
 
     return self
 end

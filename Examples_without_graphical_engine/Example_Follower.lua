@@ -13,8 +13,6 @@ Config = Params({
 })
 
 
-
-
 local function print_current_config()
 
     print('\n========= tick: '.. __ticks ..' =========')

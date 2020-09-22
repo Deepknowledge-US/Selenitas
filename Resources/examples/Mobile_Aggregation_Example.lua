@@ -46,10 +46,10 @@ end
 SETUP = function()
     -- Test collection
     Checkpoints = FamilyMobil()
-    Checkpoints:add({ ['pos'] = {0, 100} })
-    Checkpoints:add({ ['pos'] = {0,0} })
-    Checkpoints:add({ ['pos'] = { 100,0} })
-    Checkpoints:add({ ['pos'] = { 100, 100} })
+    Checkpoints:new({ ['pos'] = {0, 100} })
+    Checkpoints:new({ ['pos'] = {0,0} })
+    Checkpoints:new({ ['pos'] = { 100,0} })
+    Checkpoints:new({ ['pos'] = { 100, 100} })
 
     for _, ch in pairs(Checkpoints.agents) do
         ch.shape = 'circle'
@@ -77,7 +77,7 @@ SETUP = function()
 
     for _ , ag in pairs(Mobiles.agents) do
         ag.leader = ag
-        -- Links:add({
+        -- Links:new({
         --     ['source']  = ag
         --     ,['target'] = ag
         --     ,['color']  = {1,0,0,1}
@@ -112,7 +112,7 @@ RUN = function()
         end)
         if candidates.count > 0 then
             for _,ag2 in ordered(candidates) do
-                Links:add({
+                Links:new({
                     ['source']  = ag
                     ,['target'] = ag2
                     ,['color']  = {1,0,0,1}

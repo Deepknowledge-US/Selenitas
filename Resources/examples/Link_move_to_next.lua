@@ -9,7 +9,7 @@ SETUP = function()
     Walkers = FamilyMobil()
 
     for i=1,Config.nodes do
-        Nodes:add({
+        Nodes:new({
             ['pos']   = {math.random(-20,20), math.random(-20,20)}
             ,['shape'] = 'circle'
             ,['scale'] = 3
@@ -20,12 +20,12 @@ SETUP = function()
     array_shuffle(list_of_nodes)
 
     for i=1,#list_of_nodes-1 do
-        Edges:add({
+        Edges:new({
             ['source'] = list_of_nodes[i]
             ,['target'] = list_of_nodes[i+1]
         })
     end
-    Edges:add({
+    Edges:new({
         ['source'] = list_of_nodes[#list_of_nodes]
         ,['target'] = list_of_nodes[1]
     })

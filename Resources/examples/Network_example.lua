@@ -44,7 +44,7 @@ RUN = function()
     local node_1 = one_of(Nodes)
     local node_2 = one_of(Nodes:others(node_1))
 
-    Links:add({
+    Links:new({
         ['source'] = node_1,
         ['target'] = node_2,
         --['label'] = node_1.id .. '->' .. node_2.id,

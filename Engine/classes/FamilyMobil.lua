@@ -20,16 +20,16 @@ FM._init = function(self)
 end
 
 ------------------
--- Add a new Mobil to the family.
--- @function add
+-- Insert a new Mobil in the family.
+-- @function new
 -- @param object A table with the params of the new Mobil
 -- @return Nothing
 -- @usage
 -- for i=1,100 do
---     Basic_agents:add({})
+--     Basic_agents:new({})
 -- end
 -- -- This will result in 100 new instances of Mobil class in the Family Basic_agents
-FM.add = function(self,object)
+FM.new = function(self,object)
 
     local new_agent
     local key  = Config:__new_id()
@@ -74,7 +74,7 @@ end
 -- -- This will result in 10 agents each one with a random value (between 1 and 360) for the parameter heading.
 FM.create_n = function(self,num, funct)
     for i=1,num do
-        self:add( Mobil( funct() ) )
+        self:new( Mobil( funct() ) )
     end
     if funct ~= nil then
         --TODO

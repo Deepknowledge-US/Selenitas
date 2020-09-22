@@ -24,8 +24,8 @@ local function print_current_config()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
     for _,p  in ordered(Patches)do p.label = '_' end
-    for _,ag in ordered(People) do ag.current_cells[1].label = 'I' end
     for _,ag in ordered(Houses) do ag.current_cells[1].label = 'O' end
+    for _,ag in ordered(People) do ag.current_cells[1].label = 'I' end
 
 
     print('\n\n========== tick '.. __ticks .. ' ===========')
@@ -53,7 +53,7 @@ local function layout_circle(family, radius)
     local step = (math.pi * 2) / num
     local radians = 0
 
-    for k,v in pairs(family.agents)do
+    for k,v in ordered(family)do
         rt(v, radians)
         fd(v, radius)
         v:update_cell()
@@ -92,6 +92,7 @@ SETUP(function()
         local house = one_of(Houses)
         pers:face(house)
         pers.next_house = house
+        pers:update_cell()
     end
 
 end)

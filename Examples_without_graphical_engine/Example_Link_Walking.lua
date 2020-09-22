@@ -73,7 +73,7 @@ SETUP(function()
     end
 
     for c=1,10 do
-        Nodes:add({
+        Nodes:new({
             ['pos'] = {n_cells[c]:xcor(), n_cells[c]:ycor()}
         })
     end
@@ -83,13 +83,13 @@ SETUP(function()
     array_shuffle(list_of_nodes)
 
     for i=1,#list_of_nodes-1 do
-        Edges:add({
+        Edges:new({
             ['source']  = list_of_nodes[i],
             ['target']  = list_of_nodes[i+1],
             ['visible'] = true
         })
     end
-    Edges:add({
+    Edges:new({
         ['source'] = list_of_nodes[#list_of_nodes],
         ['target'] = list_of_nodes[1],
         ['visible']= true
