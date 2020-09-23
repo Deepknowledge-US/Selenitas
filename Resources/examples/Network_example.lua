@@ -41,7 +41,7 @@ SETUP = function()
 end
 
 
-RUN = function()
+STEP = function()
 
     local node_1 = one_of(Nodes)
     local node_2 = one_of(Nodes:others(node_1))

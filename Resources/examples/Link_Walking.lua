@@ -53,7 +53,7 @@ SETUP = function()
 end
 
 
-RUN = function()
+STEP = function()
     if Wlkr:dist_euc_to(Wlkr.next_node) < Config.speed then
         Wlkr:move_to(Wlkr.next_node)
         Wlkr.curr_node = Wlkr.next_node

@@ -108,7 +108,7 @@ SETUP(
     end
 )
 
-RUN(
+STEP(
     function()
         for _,x in ordered(Agents)do
             x:lt(math.random(__2pi)):fd(1):update_position(0,Config.xsize):update_cell()

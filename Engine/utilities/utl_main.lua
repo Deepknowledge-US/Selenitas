@@ -159,7 +159,7 @@ end
 --
 --     purge_agents()
 -- end)
-RUN = function(funct)
+STEP = function(funct)
     while Config.go do -- While the 'go' button is pushed
         if __ticks <= Config.ticks then
             funct()

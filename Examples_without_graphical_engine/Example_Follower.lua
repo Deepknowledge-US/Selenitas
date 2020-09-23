@@ -83,7 +83,7 @@ SETUP(function()
 end)
 
 
-RUN(function()
+STEP(function()
 
     if __ticks % 5 == 0 then
         Other

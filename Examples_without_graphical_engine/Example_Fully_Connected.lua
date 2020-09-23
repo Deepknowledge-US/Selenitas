@@ -112,7 +112,7 @@ local function print_aux()
     end
 end
 
-RUN(function()
+STEP(function()
 
     print_current_config()
 

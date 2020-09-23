@@ -32,7 +32,7 @@ SETUP(
     end
 )
 
-RUN(
+STEP(
     function()
         print("=======================\n")
 

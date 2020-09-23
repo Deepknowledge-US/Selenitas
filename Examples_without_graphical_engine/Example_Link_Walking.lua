@@ -117,7 +117,7 @@ SETUP(function()
 end)
 
 
-RUN(function()
+STEP(function()
 
     if Wlkr:dist_euc_to(Wlkr.next_node.pos) < 1.2 then
         Wlkr.curr_node = Wlkr.next_node

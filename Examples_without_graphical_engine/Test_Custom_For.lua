@@ -23,7 +23,7 @@ SETUP(
     end
 )
 
-RUN(
+STEP(
     function()
         print("=======================\n")
         for k1, p1 in shuffled(People) do

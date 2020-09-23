@@ -56,19 +56,20 @@ SETUP = function()
     end
 
     Agents = FamilyMobil()
-    Agents:new({
+
+    -- Agents:new returns an agent, so, in global variable central we have the reference to the agent, becouse it has been asigned to a global variable, we can call this agent directly in step function.
+    central = Agents:new({
         ['pos'] = {0,0}
         ,['color'] = {0,0,1,1}
         ,['shape'] = "triangle_2"
         ,['scale'] = 2
     })
 
-    central = one_of (Agents)
 
 end
 
 
-RUN = function()
+STEP = function()
 
     if Config.rt_lt then
         central:rt(2*math.pi/Nodes.count)
@@ -79,13 +80,18 @@ RUN = function()
     central.label   = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'
 
     if Config.pos_ang then
-        for _,ag in pairs(Nodes.agents) do
-            ag.label = '(' .. round(ag:xcor(),1) .. ' , ' .. round(ag:ycor(),1) .. ')'
-        end
+        central.label = '(' .. round(central:xcor(),1) .. ' , ' .. round(central:ycor(),1) .. ')'
     else
-        for _,ag in pairs(Nodes.agents) do
-            ag.label = '(' .. round(ag.heading,1) .. ' , ' .. round(math.deg(ag.heading),1) .. ')'
-        end
+        central.label = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'
     end
+    -- if Config.pos_ang then
+    --     for _,ag in pairs(Nodes.agents) do
+    --         ag.label = '(' .. round(ag:xcor(),1) .. ' , ' .. round(ag:ycor(),1) .. ')'
+    --     end
+    -- else
+    --     for _,ag in pairs(Nodes.agents) do
+    --         ag.label = '(' .. round(ag.heading,1) .. ' , ' .. round(math.deg(ag.heading),1) .. ')'
+    --     end
+    -- end
 
 end

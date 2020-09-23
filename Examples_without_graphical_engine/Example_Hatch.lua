@@ -129,7 +129,7 @@ end)
 
 -- The run function is executed until a stop condition in reached
 -- At the moment we have discrete iterations
-RUN(function()
+STEP(function()
 
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
     if Agents.count == 0 or __ticks == Config.ticks then

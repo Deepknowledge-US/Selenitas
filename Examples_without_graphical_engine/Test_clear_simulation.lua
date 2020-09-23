@@ -26,7 +26,7 @@ SETUP(
     end
 )
 
-RUN(
+STEP(
     function()
 
         print("==========",TT,"===========\n")
@@ -40,13 +40,13 @@ RUN(
         end
 
         -- print( '1', collectgarbage('count')/1024 )
-        print( '1', gcinfo()/1024 )
+        print( '1', collectgarbage('count')/1024 )
 
-        clear_simulation()
+        clear('All')
 
         collectgarbage()
         -- print( '2', collectgarbage('count')/1024 )
-        print( '2', gcinfo()/1024 )
+        print( '2', collectgarbage('count')/1024 )
 
         -- if TT < 20 then
 

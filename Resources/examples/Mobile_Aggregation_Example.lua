@@ -92,7 +92,7 @@ end
 
 -- This function is executed until the stop condition is reached, 
 -- or the button go/stop is stop
-RUN = function()
+STEP = function()
 
     local alone = Mobiles:with(function(ag)
         return ag.leader == ag

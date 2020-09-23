@@ -84,7 +84,7 @@ SETUP(function()
     People = FamilyMobil()
     People:create_n(1, function()
         return {
-            ['pos'] = {math.random(Config.xsize),math.random(Config.ysize)},
+            ['pos'] = {0,0},
         }
     end)
 
@@ -103,7 +103,7 @@ local function print_aux()
     end
 end
 
-RUN(function()
+STEP(function()
 
     for _,pers in shuffled(People)do
         if pers:dist_euc_to(pers.next_house) < 1 then

@@ -53,7 +53,7 @@ SETUP = function()
     end
 end
 
-RUN = function()
+STEP = function()
     for _, pers in pairs(People.agents) do
         if pers:dist_euc_to(pers.next_house) <= pers.speed then
             pers.current_house = pers.next_house

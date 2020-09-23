@@ -99,7 +99,7 @@ end)
 
 -- This function is executed until the stop condition is reached, or until
 -- the number of iterations equals the number of ticks specified inf config_file
-RUN(function()
+STEP(function()
 
     if Config.random_ordered then
         for _,ag in shuffled(Mobils) do

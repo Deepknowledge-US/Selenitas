@@ -1,6 +1,5 @@
 -----------------
 
-
 Config:create_slider('N_agents', 0, 20, 1.0, 10)
 Config:create_boolean('random_ordered', true)
 
@@ -32,7 +31,7 @@ SETUP = function()
 end
 
 
-RUN = function()
+STEP = function()
     -- Limitación de ask: no puede combinarse con otras variables que cambien en cada ciclo... algo que tiene sentido
     -- si se considera el ask como una ejecución paralela.
     if Config.random_ordered then

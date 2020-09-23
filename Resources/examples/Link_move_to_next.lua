@@ -53,7 +53,7 @@ SETUP = function()
 end
 
 
-RUN = function()
+STEP = function()
 
     Wlkr:move_to(Wlkr.next_node.pos)
     Wlkr.curr_node = Wlkr.next_node

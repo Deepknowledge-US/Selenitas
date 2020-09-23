@@ -75,7 +75,7 @@ end
 
 -- This function is executed until the stop condition is reached, 
 -- or the button go/stop is stop
-RUN = function()
+STEP = function()
     
     pursued:lt(random_float(-0.6,0.6))
     pursued:fd(1)

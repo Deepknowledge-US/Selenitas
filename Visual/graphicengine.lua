@@ -112,8 +112,8 @@ local function _setup()
 end
 
 local function _step()
-    if RUN then
-        local ok, err = pcall(RUN)
+    if STEP then
+        local ok, err = pcall(STEP)
         if not ok then
             error_msg = err
         end
@@ -121,8 +121,8 @@ local function _step()
 end
 
 local function _run()
-    if RUN and go then
-        local ok, err = pcall(RUN)
+    if STEP and go then
+        local ok, err = pcall(STEP)
         if not ok then
             error_msg = err
             go = false
