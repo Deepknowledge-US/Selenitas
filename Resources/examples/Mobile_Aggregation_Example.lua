@@ -30,7 +30,6 @@ local function merge(ag,lead)
     ag.color = {0,0,1,1}
 
     local e0 = ag:link_neighbors(Links)
-    print("e0 COUNT", e0.count)
     local extend = e0:with(
         function(other)
             return other.leader ~= lead
@@ -44,6 +43,8 @@ local function merge(ag,lead)
 end
 
 SETUP = function()
+
+    clear('all')
     -- Test collection
     Checkpoints = FamilyMobil()
     Checkpoints:new({ ['pos'] = {0, 100} })
@@ -123,7 +124,3 @@ RUN = function()
         end
     end
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

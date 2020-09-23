@@ -1,5 +1,5 @@
 -----------------
-require 'Engine.utilities.utl_main'
+
 
 Config:create_slider('N_agents', 0, 20, 1.0, 10)
 Config:create_boolean('random_ordered', true)
@@ -7,8 +7,10 @@ Config:create_boolean('random_ordered', true)
 
 SETUP = function()
 
+    clear('all')
+
     Mobils = FamilyMobil()
-    Mobils:create_n( 5, function()
+    Mobils:create_n( Config.N_agents, function()
         return {
             ['pos']      = {0,0}
             ,['scale']   = 1.5
@@ -17,9 +19,11 @@ SETUP = function()
         }
     end)
 
-    print(Mobils.count)
     local x = 0
-    for k,ag1 in shuffled(Mobils) do
+
+    local iter = Config.random_ordered and shuffled or ordered
+
+    for k,ag1 in iter(Mobils) do
         ag1:move_to({x,0})
         ag1.label = ag1.id
         x = x + 2
@@ -41,7 +45,3 @@ RUN = function()
         end
     end
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

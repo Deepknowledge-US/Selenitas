@@ -22,7 +22,8 @@ local function layout_circle(collection, radius)
 end
 
 SETUP = function()
-    math.randomseed(os.clock())
+
+    clear('all')
     Houses = FamilyMobil()
     Houses:create_n( Config.houses, function()
         --local tree_or_house = math.random(100)<=50 and "house" or "tree"
@@ -62,7 +63,3 @@ RUN = function()
         pers:fd(pers.speed)
     end
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

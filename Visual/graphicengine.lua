@@ -392,9 +392,9 @@ local function update_ui(dt)
     Slab.Text(" Speed: ", {})
     Slab.SameLine()
     --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
-    if Slab.InputNumberSlider("tbs_slider", speed, 0.0, 5.0, {step=1}) then
+    if Slab.InputNumberSlider("tbs_slider", speed, 0.0, 10.0, {step=1}) then
         speed = Slab.GetInputNumber()
-        time_between_steps =  (math.log(6) - math.log (speed + 1))/math.log(6)
+        time_between_steps =  (math.log(11) - math.log (speed + 1))/math.log(11)
     end
 
     Slab.EndLayout()

@@ -96,15 +96,19 @@ pd      = pretty.dump
 -- @return Nothing
 -- @usage
 -- clear_simulation()
-clear_simulation = function()
-    for k,v in ipairs(Config.__all_families)do
-        for _,ag in ordered(v)do
-            ag = nil
+clear = function(str)
+
+    if string.lower(str) == 'all' then
+        for k,v in ipairs(Config.__all_families)do
+            for _,ag in ordered(v)do
+                ag = nil
+            end
+            v = nil
         end
-        v = nil
+        Config.__all_families = {}
+        Config.__num_agents   = 0
+
     end
-    Config.__all_families = {}
-    Config.__num_agents   = 0
 end
 
 ------------------

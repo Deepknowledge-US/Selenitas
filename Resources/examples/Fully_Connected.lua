@@ -1,5 +1,5 @@
 -----------------
-require 'Engine.utilities.utl_main'
+
 
 --[[
     In this example we create n nodes and distribute them in the grid. Once this is done,
@@ -26,6 +26,8 @@ local function layout_circle(collection, radius)
 end
 
 SETUP = function()
+    clear('all')
+
     Config.go = true
 
     Nodes = FamilyMobil()
@@ -58,7 +60,3 @@ end
 RUN = function()
 
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

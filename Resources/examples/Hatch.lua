@@ -7,6 +7,7 @@ Config:create_slider('clone_probability', 0, 100, 1, 20)
 -- In the 'setup' block we define the initial configuration of the system.
 SETUP = function()
 
+    clear('all')
     -- Create a Family of Mobil agents
     Agents = FamilyMobil()
 
@@ -91,7 +92,3 @@ RUN = function()
     purge_agents(Agents)
 
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

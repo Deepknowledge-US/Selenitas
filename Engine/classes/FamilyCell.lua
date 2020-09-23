@@ -72,9 +72,12 @@ end
 -- end
 -- @see families.create_n
 FC.create_n = function(self,num, funct)
+    local res = Collection()
     for i=1,num do
-        self:new(Cell( funct() ))
+        local cell = self:new(Cell( funct() ))
+        res:add(cell)
     end
+    return res
 end
 
 ------------------

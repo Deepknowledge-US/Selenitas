@@ -57,6 +57,7 @@ FM.new = function(self,object)
         end
 
     end
+    return self.agents[key]
 end
 
 ------------------
@@ -73,12 +74,12 @@ end
 -- end)
 -- -- This will result in 10 agents each one with a random value (between 1 and 360) for the parameter heading.
 FM.create_n = function(self,num, funct)
+    local res = Collection()
     for i=1,num do
-        self:new( Mobil( funct() ) )
+        local mobil = self:new( Mobil( funct() ) )
+        res:add(mobil)
     end
-    if funct ~= nil then
-        --TODO
-    end
+    return res
 end
 
 

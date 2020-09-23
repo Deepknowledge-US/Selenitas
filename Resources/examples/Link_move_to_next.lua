@@ -4,6 +4,8 @@ Config:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
 
+    clear('all')
+
     Nodes   = FamilyMobil()
     Edges   = FamilyRelational()
     Walkers = FamilyMobil()
@@ -58,7 +60,3 @@ RUN = function()
     Wlkr:search_next_node()
 
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

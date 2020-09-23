@@ -18,6 +18,8 @@ end
 
 SETUP = function()
 
+    clear('all')
+
     Config.go = true
 
     Nodes = FamilyMobil()
@@ -57,6 +59,3 @@ RUN = function()
     end
 
 end
-
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

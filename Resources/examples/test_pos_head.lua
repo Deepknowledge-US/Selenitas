@@ -25,6 +25,8 @@ end
 
 SETUP = function()
 
+    clear('all')
+
     Nodes = FamilyMobil()
     Nodes:create_n( Config.nodes, function()
         return {
@@ -87,7 +89,3 @@ RUN = function()
     end
 
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

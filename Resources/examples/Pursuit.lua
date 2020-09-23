@@ -24,6 +24,9 @@ end
 
 
 SETUP = function()
+    
+    clear('all')
+
     -- Test collection
     Checkpoints = FamilyMobil()
     Checkpoints:new({ ['pos'] = {0, 100} })
@@ -85,7 +88,3 @@ RUN = function()
     end
 
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)

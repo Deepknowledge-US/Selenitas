@@ -71,6 +71,7 @@ FR.new = function(self,object)
     else
         print("Error while adding new link:", object)
     end
+    return self.agents[new_id]
 end;
 
 ------------------
@@ -90,12 +91,12 @@ end;
 -- end)
 -- -- This will result in 10 new links between 2 distinct agents of the family Nodes.
 FR.create_n = function(self,num, funct)
+    local res = Collection()
     for i=1,num do
-        self:new( Relational( funct() ) )
+        local link = self:new( Relational( funct() ) )
+        res:add(link)
     end
-    if funct ~= nil then
-        --TODO
-    end
+    return res
 end;
 
 return FR

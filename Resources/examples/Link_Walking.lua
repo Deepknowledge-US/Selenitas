@@ -1,11 +1,10 @@
 -----------------
-require 'Engine.utilities.utl_main'
 
 Config:create_slider('nodes', 0, 50, 1, 12)
 Config:create_slider('speed', 0, 2, .01, 1)
 
 SETUP = function()
-
+    clear('all')
     Nodes   = FamilyMobil()
     Edges   = FamilyRelational()
     Walkers = FamilyMobil()
@@ -62,7 +61,3 @@ RUN = function()
     end
     Wlkr:fd(Config.speed)
 end
-
--- Setup and start visualization
--- GraphicEngine.set_setup_function(SETUP)
--- GraphicEngine.set_step_function(RUN)
