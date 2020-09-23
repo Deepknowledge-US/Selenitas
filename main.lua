@@ -3,4 +3,5 @@ love.filesystem.setRequirePath(love.filesystem.getRequirePath() .. ';Thirdparty/
 love.filesystem.setCRequirePath(love.filesystem.getCRequirePath() .. ';Native/?.so' .. ';Native/?.dll');
 
 -- Load default window
-require("Visual.graphicengine").init()
+GraphicEngine = require("Visual.graphicengine")
+GraphicEngine.init()

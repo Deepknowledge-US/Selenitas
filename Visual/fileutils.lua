@@ -54,4 +54,12 @@ function fileutils.get_filename_from_path(path)
     return split[#split] -- last item is filename
 end
 
+function fileutils.load_model_file(file_path)
+    local file, err = loadfile(file_path)
+    if file then
+        file()
+    end
+    return err
+end
+
 return fileutils
