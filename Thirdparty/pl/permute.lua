@@ -1,4 +1,7 @@
--------
+--- Permutation operations.
+--
+-- Dependencies: `pl.utils`, `pl.tablex`
+-- @module pl.permute
 local tablex = require 'pl.tablex'
 local utils = require 'pl.utils'
 local copy = tablex.deepcopy
@@ -34,7 +37,7 @@ permgen = function (a, n, fn)
   end
 end
 
--- an iterator over all permutations of the elements of a list.
+--- an iterator over all permutations of the elements of a list.
 -- Please note that the same list is returned each time, so do not keep references!
 -- @param a list-like table
 -- @return an iterator which provides the next permutation as a list
@@ -48,7 +51,7 @@ function permute.iter (a)
     end
 end
 
--- construct a table containing all the permutations of a list.
+--- construct a table containing all the permutations of a list.
 -- @param a list-like table
 -- @return a table of tables
 -- @usage permute.table {1,2,3} --> {{2,3,1},{3,2,1},{3,1,2},{1,3,2},{2,1,3},{1,2,3}}

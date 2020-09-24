@@ -1,0 +1,801 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/actions.html">actions</a></li>
+  <li><a href="../modules/checks.html">checks</a></li>
+  <li><a href="../modules/families.html">families</a></li>
+  <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
+  <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
+  <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/Thirdparty.luaiter.luaunit.html">Thirdparty.luaiter.luaunit</a></li>
+  <li><a href="../modules/pl.app.html">pl.app</a></li>
+  <li><a href="../modules/pl.array2d.html">pl.array2d</a></li>
+  <li><a href="../modules/pl.class.html">pl.class</a></li>
+  <li><a href="../modules/pl.compat.html">pl.compat</a></li>
+  <li><a href="../modules/pl.comprehension.html">pl.comprehension</a></li>
+  <li><a href="../modules/pl.config.html">pl.config</a></li>
+  <li><a href="../modules/pl.data.html">pl.data</a></li>
+  <li><a href="../modules/pl.dir.html">pl.dir</a></li>
+  <li><a href="../modules/pl.file.html">pl.file</a></li>
+  <li><a href="../modules/pl.func.html">pl.func</a></li>
+  <li><a href="../modules/Thirdparty.pl.import_into.html">Thirdparty.pl.import_into</a></li>
+  <li><a href="../modules/pl.html">pl</a></li>
+  <li><a href="../modules/pl.input.html">pl.input</a></li>
+  <li><a href="../modules/pl.lapp.html">pl.lapp</a></li>
+  <li><a href="../modules/pl.lexer.html">pl.lexer</a></li>
+  <li><a href="../modules/pl.luabalanced.html">pl.luabalanced</a></li>
+  <li><strong>pl.operator</strong></li>
+  <li><a href="../modules/pl.path.html">pl.path</a></li>
+  <li><a href="../modules/pl.permute.html">pl.permute</a></li>
+  <li><a href="../modules/pl.pretty.html">pl.pretty</a></li>
+  <li><a href="../modules/pl.seq.html">pl.seq</a></li>
+  <li><a href="../modules/pl.sip.html">pl.sip</a></li>
+  <li><a href="../modules/pl.strict.html">pl.strict</a></li>
+  <li><a href="../modules/pl.stringio.html">pl.stringio</a></li>
+  <li><a href="../modules/pl.stringx.html">pl.stringx</a></li>
+  <li><a href="../modules/pl.tablex.html">pl.tablex</a></li>
+  <li><a href="../modules/pl.template.html">pl.template</a></li>
+  <li><a href="../modules/pl.test.html">pl.test</a></li>
+  <li><a href="../modules/pl.text.html">pl.text</a></li>
+  <li><a href="../modules/Thirdparty.pl.types.html">Thirdparty.pl.types</a></li>
+  <li><a href="../modules/pl.url.html">pl.url</a></li>
+  <li><a href="../modules/pl.utils.html">pl.utils</a></li>
+  <li><a href="../modules/pl.xml.html">pl.xml</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Agent.html">Agent</a></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
+  <li><a href="../classes/Collection.html">Collection</a></li>
+  <li><a href="../classes/Family.html">Family</a></li>
+  <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
+  <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
+  <li><a href="../classes/Metacollection.html">Metacollection</a></li>
+  <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Params.html">Params</a></li>
+  <li><a href="../classes/Relational.html">Relational</a></li>
+  <li><a href="../classes/pl.Date.html">pl.Date</a></li>
+  <li><a href="../classes/pl.List.html">pl.List</a></li>
+  <li><a href="../classes/pl.Map.html">pl.Map</a></li>
+  <li><a href="../classes/pl.MultiMap.html">pl.MultiMap</a></li>
+  <li><a href="../classes/pl.OrderedMap.html">pl.OrderedMap</a></li>
+  <li><a href="../classes/pl.Set.html">pl.Set</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>pl.operator</code></h1>
+<p>Lua operators available as functions.</p>
+<p>
+<p> (similar to the Python module of the same name)
+<p> There is a module field `optable` which maps the operator strings
+ onto these functions, e.g. `operator.optable['()']==operator.call`
+<p> Operator strings like '>' and '{}' can be passed to most Penlight functions
+ expecting a function argument.
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#call">call (fn, ...)</a></td>
+	<td class="summary">apply function to some arguments **()**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#index">index (t, k)</a></td>
+	<td class="summary">get the indexed value from a table **[]**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#eq">eq (a, b)</a></td>
+	<td class="summary">returns true if arguments are equal **==**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#neq">neq (a, b)</a></td>
+	<td class="summary">returns true if arguments are not equal **~=**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lt">lt (a, b)</a></td>
+	<td class="summary">returns true if a is less than b **<**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#le">le (a, b)</a></td>
+	<td class="summary">returns true if a is less or equal to b **<=**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#gt">gt (a, b)</a></td>
+	<td class="summary">returns true if a is greater than b **>**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ge">ge (a, b)</a></td>
+	<td class="summary">returns true if a is greater or equal to b **>=**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#len">len (a)</a></td>
+	<td class="summary">returns length of string or table **#**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#add">add (a, b)</a></td>
+	<td class="summary">add two values **+**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#sub">sub (a, b)</a></td>
+	<td class="summary">subtract b from a **-**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mul">mul (a, b)</a></td>
+	<td class="summary">multiply two values __*__</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#div">div (a, b)</a></td>
+	<td class="summary">divide first value by second **/**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pow">pow (a, b)</a></td>
+	<td class="summary">raise first to the power of second **^**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#mod">mod (a, b)</a></td>
+	<td class="summary">modulo; remainder of a divided by b **%**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#concat">concat (a, b)</a></td>
+	<td class="summary">concatenate two values (either strings or `__concat` defined) **..**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#unm">unm (a)</a></td>
+	<td class="summary">return the negative of a value **-**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lnot">lnot (a)</a></td>
+	<td class="summary">false if value evaluates as true **not**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#land">land (a, b)</a></td>
+	<td class="summary">true if both values evaluate as true **and**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#lor">lor (a, b)</a></td>
+	<td class="summary">true if either value evaluate as true **or**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#table">table (...)</a></td>
+	<td class="summary">make a table from the arguments **{}**</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#match">match (a, b)</a></td>
+	<td class="summary">match two strings **~**.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#nop">nop (...)</a></td>
+	<td class="summary">the null operation.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#optable">optable</a></td>
+	<td class="summary">Map from operator symbol to function.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "call"></a>
+    <strong>call (fn, ...)</strong>
+    </dt>
+    <dd>
+    apply function to some arguments **()**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">fn</span>
+         a function or callable object
+        </li>
+        <li><span class="parameter">...</span>
+         arguments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "index"></a>
+    <strong>index (t, k)</strong>
+    </dt>
+    <dd>
+    get the indexed value from a table **[]**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">t</span>
+         a table or any indexable object
+        </li>
+        <li><span class="parameter">k</span>
+         the key
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "eq"></a>
+    <strong>eq (a, b)</strong>
+    </dt>
+    <dd>
+    returns true if arguments are equal **==**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "neq"></a>
+    <strong>neq (a, b)</strong>
+    </dt>
+    <dd>
+    returns true if arguments are not equal **~=**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lt"></a>
+    <strong>lt (a, b)</strong>
+    </dt>
+    <dd>
+    returns true if a is less than b **<**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "le"></a>
+    <strong>le (a, b)</strong>
+    </dt>
+    <dd>
+    returns true if a is less or equal to b **<=**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "gt"></a>
+    <strong>gt (a, b)</strong>
+    </dt>
+    <dd>
+    returns true if a is greater than b **>**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ge"></a>
+    <strong>ge (a, b)</strong>
+    </dt>
+    <dd>
+    returns true if a is greater or equal to b **>=**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "len"></a>
+    <strong>len (a)</strong>
+    </dt>
+    <dd>
+    returns length of string or table **#**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         a string or a table
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add"></a>
+    <strong>add (a, b)</strong>
+    </dt>
+    <dd>
+    add two values **+**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "sub"></a>
+    <strong>sub (a, b)</strong>
+    </dt>
+    <dd>
+    subtract b from a **-**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mul"></a>
+    <strong>mul (a, b)</strong>
+    </dt>
+    <dd>
+    multiply two values __*__
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "div"></a>
+    <strong>div (a, b)</strong>
+    </dt>
+    <dd>
+    divide first value by second **/**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pow"></a>
+    <strong>pow (a, b)</strong>
+    </dt>
+    <dd>
+    raise first to the power of second **^**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "mod"></a>
+    <strong>mod (a, b)</strong>
+    </dt>
+    <dd>
+    modulo; remainder of a divided by b **%**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "concat"></a>
+    <strong>concat (a, b)</strong>
+    </dt>
+    <dd>
+    concatenate two values (either strings or `__concat` defined) **..**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "unm"></a>
+    <strong>unm (a)</strong>
+    </dt>
+    <dd>
+    return the negative of a value **-**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lnot"></a>
+    <strong>lnot (a)</strong>
+    </dt>
+    <dd>
+    false if value evaluates as true **not**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "land"></a>
+    <strong>land (a, b)</strong>
+    </dt>
+    <dd>
+    true if both values evaluate as true **and**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "lor"></a>
+    <strong>lor (a, b)</strong>
+    </dt>
+    <dd>
+    true if either value evaluate as true **or**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+         value
+        </li>
+        <li><span class="parameter">b</span>
+         value
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "table"></a>
+    <strong>table (...)</strong>
+    </dt>
+    <dd>
+    make a table from the arguments **{}**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         non-nil arguments
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        a table
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "match"></a>
+    <strong>match (a, b)</strong>
+    </dt>
+    <dd>
+    match two strings **~**.
+ uses <a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.find">string.find</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">a</span>
+
+        </li>
+        <li><span class="parameter">b</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "nop"></a>
+    <strong>nop (...)</strong>
+    </dt>
+    <dd>
+    the null operation.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         arguments
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        the arguments
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "optable"></a>
+    <strong>optable</strong>
+    </dt>
+    <dd>
+    Map from operator symbol to function.
+ Most of these map directly from operators;
+ But note these extras
+<p>  * __'()'__  `call`
+  * __'[]'__  `index`
+  * __'{}'__ `table`
+  * __'~'__   `match`
+
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">operator</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-09-24 09:02:10 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

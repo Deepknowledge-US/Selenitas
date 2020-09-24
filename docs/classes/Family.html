@@ -24,20 +24,50 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Functions">Functions</a></li>
-<li><a href="#Methods">Methods</a></li>
-<li><a href="#Metamethods">Metamethods</a></li>
+
+
+<h2>Functions</h2>
+<ul class="nowrap">
+    <li><a href="#Instance:clone_n">Instance:clone_n (num, agent, funct)</a></li>
+    <li><a href="#Instance:exists">Instance:exists (pred)</a></li>
+    <li><a href="#Instance:all">Instance:all (pred)</a></li>
+    <li><a href="#Instance:is_in">Instance:is_in (agent)</a></li>
+    <li><a href="#Instance:others">Instance:others (agent)</a></li>
+    <li><a href="#Instance:one_of_others">Instance:one_of_others (agent)</a></li>
+    <li><a href="#Instance:with">Instance:with (pred)</a></li>
+    <li><a href="#Instance:one_of">Instance:one_of ()</a></li>
+    <li><a href="#Instance:n_of">Instance:n_of (n)</a></li>
+    <li><a href="#Instance:up_to_n_of">Instance:up_to_n_of (n)</a></li>
+    <li><a href="#Instance:max_one_of">Instance:max_one_of (funct)</a></li>
+    <li><a href="#Instance:max_n_of">Instance:max_n_of (num, funct)</a></li>
+    <li><a href="#Instance:min_n_of">Instance:min_n_of (num, funct)</a></li>
+    <li><a href="#Instance:min_one_of">Instance:min_one_of (funct)</a></li>
+    <li><a href="#Instance:with_max">Instance:with_max (funct)</a></li>
+    <li><a href="#Instance:with_min">Instance:with_min (funct)</a></li>
+    <li><a href="#Instance:count_all">Instance:count_all ()</a></li>
+    <li><a href="#Instance:count_all">Instance:count_all ()</a></li>
+    <li><a href="#Instance:keys">Instance:keys ()</a></li>
+    <li><a href="#Instance:clone">Instance:clone (agent)</a></li>
+    <li><a href="#A_family:alives_list">A_family:alives_list ()</a></li>
 </ul>
-
-
+<h2>Methods</h2>
+<ul class="nowrap">
+    <li><a href="#Family:_init">Family:_init ()</a></li>
+    <li><a href="#Family:add_method">Family:add_method ()</a></li>
+    <li><a href="#Family:kill">Family:kill ()</a></li>
+    <li><a href="#Family:kill_and_purge">Family:kill_and_purge ()</a></li>
+</ul>
+<h2>Metamethods</h2>
+<ul class="nowrap">
+    <li><a href="#Family:__purge_agents">Family:__purge_agents ()</a></li>
+    <li><a href="#Family:__tostring">Family:__tostring ()</a></li>
+</ul>
 <h2>Classes</h2>
 <ul class="nowrap">
   <li><a href="../classes/Agent.html">Agent</a></li>
@@ -73,132 +103,9 @@
 
 <h1>Class <code>Family</code></h1>
 <p>Family Class is the basis class from which we build the families of agents.</p>
-<p>
- Families are the main structures of the system. It consists in a table of Agents, a list of ids and some methods to manipulate the agents.
- self.agents is a table 'object_id: object' and we use it to find an element quickily.
-</p>
+<p> Families are the main structures of the system. It consists in a table of Agents, a list of ids and some methods to manipulate the agents.
+ self.agents is a table 'object_id: object' and we use it to find an element quickily.</p>
 
-
-<h2><a href="#Functions">Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#Instance:clone_n">Instance:clone_n (num, agent, funct)</a></td>
-	<td class="summary">This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:exists">Instance:exists (pred)</a></td>
-	<td class="summary">Returns true if any agent in the family validates a predicate.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:all">Instance:all (pred)</a></td>
-	<td class="summary">Checks if all agents in a family validates a condition.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:is_in">Instance:is_in (agent)</a></td>
-	<td class="summary">Checks if an agent is member of the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:others">Instance:others (agent)</a></td>
-	<td class="summary">Given an agent, it returns all the other agents in the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:one_of_others">Instance:one_of_others (agent)</a></td>
-	<td class="summary">Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:with">Instance:with (pred)</a></td>
-	<td class="summary">Filter function.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:one_of">Instance:one_of ()</a></td>
-	<td class="summary">Selects and returns a random alive agent of the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:n_of">Instance:n_of (n)</a></td>
-	<td class="summary">Selects and returns n random alive agents of the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:up_to_n_of">Instance:up_to_n_of (n)</a></td>
-	<td class="summary">This function selects n random agents of a family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:max_one_of">Instance:max_one_of (funct)</a></td>
-	<td class="summary">Returns the agent with the minimum value for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:max_n_of">Instance:max_n_of (num, funct)</a></td>
-	<td class="summary">Returns the n elements producing the maximum values for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:min_n_of">Instance:min_n_of (num, funct)</a></td>
-	<td class="summary">Returns the n elements producing the minimum values for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:min_one_of">Instance:min_one_of (funct)</a></td>
-	<td class="summary">Returns the agent with the minimum value for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:with_max">Instance:with_max (funct)</a></td>
-	<td class="summary">Returns a Collection of agents with the min value for a gived function.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:with_min">Instance:with_min (funct)</a></td>
-	<td class="summary">Returns a Collection of agents with the min value for a gived function.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:count_all">Instance:count_all ()</a></td>
-	<td class="summary">Returns the total number of agents in the family (alives and killed agents that have not been purged yet).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:count_all">Instance:count_all ()</a></td>
-	<td class="summary">Returns the total number of agents in the family (alives and killed agents that have not been purged yet).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:keys">Instance:keys ()</a></td>
-	<td class="summary">Returns the list of keys in the Family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Instance:clone">Instance:clone (agent)</a></td>
-	<td class="summary">This function returns a clone of the agent gived as parameter.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#A_family:alives_list">A_family:alives_list ()</a></td>
-	<td class="summary">Returns the list of alive agents in the Family</td>
-	</tr>
-</table>
-<h2><a href="#Methods">Methods</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#Family:_init">Family:_init ()</a></td>
-	<td class="summary">Family constructor.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Family:add_method">Family:add_method ()</a></td>
-	<td class="summary">This function adds a method in the Family, the added method can be used for every agent of the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Family:kill">Family:kill ()</a></td>
-	<td class="summary">Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Family:kill_and_purge">Family:kill_and_purge ()</a></td>
-	<td class="summary">This function kills and agent and removes it from the simulation.</td>
-	</tr>
-</table>
-<h2><a href="#Metamethods">Metamethods</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#Family:__purge_agents">Family:__purge_agents ()</a></td>
-	<td class="summary">To purge an agent consist in delete the agent of the family (A value of nil in the agents table) and delete all its links with other agents.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Family:__tostring">Family:__tostring ()</a></td>
-	<td class="summary">A function to print the Family.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
@@ -209,27 +116,10 @@
     <strong>Instance:clone_n (num, agent, funct)</strong>
     </dt>
     <dd>
-    This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them.  It uses the auxiliar function "clone" to obtain the clones and the auxiliar function "search_free_id" to give a new id to the clones.
+    This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them.  It uses the auxiliar function "clone" to obtain the clones and the auxiliar function "search<em>free</em>id" to give a new id to the clones.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">num</span>
-         is the number of clones we want.
-        </li>
-        <li><span class="parameter">agent</span>
-         is the Agent instance the clones are created from
-        </li>
-        <li><span class="parameter">funct</span>
-         is an optional param, and it is an anonymous function. If present, the function is applied to the clones.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
 
 
 
@@ -251,18 +141,7 @@
     Returns true if any agent in the family validates a predicate.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">pred</span>
-         An anonymous function (boolean predicate).
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean and an Agent. True if there is at least one agent that validates the predicate.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -284,18 +163,7 @@
     Checks if all agents in a family validates a condition.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">pred</span>
-         Anonymous function (boolean predicate).
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean. True if all agents validate the condition.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -317,18 +185,7 @@
     Checks if an agent is member of the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         The Agent instance we want to check.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean. True if the agent is in the family
-    </ol>
 
 
     <h3>See also:</h3>
@@ -350,18 +207,7 @@
     Given an agent, it returns all the other agents in the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         An Agent instance.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A Collection containing all Agents of the Family except the agent gived as parameter.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -383,18 +229,7 @@
     Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         is an Agent instance.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An Agent instance of the Family distinct of the agent gived as parameter.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -416,18 +251,7 @@
     Filter function.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">pred</span>
-         Anonymous function (boolean predicate)
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of agents in the family satisfying the predicate.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -450,11 +274,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Agent. The type of agent depends on the type of family the agent belongs to.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -476,18 +295,7 @@
     Selects and returns n random alive agents of the family.  If the number of agents of the family is minor that n this function returns an error message.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number of agents we want.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection with n random selected agents of the family, or error if not enough agents.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -510,18 +318,7 @@
     This function selects n random agents of a family.  When there are fewer than n agents in the family, this function returns all agents in the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number. Number of agents we want.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection
-    </ol>
 
 
     <h3>See also:</h3>
@@ -543,18 +340,7 @@
     Returns the agent with the minimum value for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to the agents to searching for the maximum.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Agent.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -577,21 +363,7 @@
     Returns the n elements producing the maximum values for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">num</span>
-         Number of agents we want
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to agents to compute the value
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -613,21 +385,7 @@
     Returns the n elements producing the minimum values for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">num</span>
-         Number of agents we want
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to agents to compute the value
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of agents
-    </ol>
 
 
     <h3>See also:</h3>
@@ -649,18 +407,7 @@
     Returns the agent with the minimum value for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to the agents to searching for the minimum.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An Agent. The type of agent depends on the type of family that has called the method.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -683,18 +430,7 @@
     Returns a Collection of agents with the min value for a gived function.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">funct</span>
-         An anonymous function to calculate the value for each agent
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection
-    </ol>
 
 
     <h3>See also:</h3>
@@ -716,18 +452,7 @@
     Returns a Collection of agents with the min value for a gived function.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">funct</span>
-         An anonymous function to calculate the value for each agent
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection
-    </ol>
 
 
     <h3>See also:</h3>
@@ -750,11 +475,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Number.
-    </ol>
 
 
 
@@ -773,11 +493,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Number.
-    </ol>
 
 
 
@@ -796,11 +511,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        List of numbers (the keys)
-    </ol>
 
 
     <h3>See also:</h3>
@@ -819,21 +529,10 @@
     <strong>Instance:clone (agent)</strong>
     </dt>
     <dd>
-    This function returns a clone of the agent gived as parameter.  Is an auxiliar function used by 'clone_n_act' to obtain an object that is added to the Family later.
+    This function returns a clone of the agent gived as parameter.  Is an auxiliar function used by 'clone<em>n</em>act' to obtain an object that is added to the Family later.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">agent</span>
-         is an Agent instance.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A new object, clone of the one gived as parameter. The only difference will be the id, unique for any agent or clone.
-    </ol>
 
 
 
@@ -848,11 +547,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        List of agents
-    </ol>
 
 
 
@@ -875,11 +569,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Family. A new instance of Family class.
-    </ol>
 
 
 
@@ -898,11 +587,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
 
@@ -926,11 +610,6 @@ a_node:method_name(an_agent)
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -953,11 +632,6 @@ a_node:method_name(an_agent)
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -984,11 +658,6 @@ a_node:method_name(an_agent)
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -1012,11 +681,6 @@ a_node:method_name(an_agent)
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A string representation of the Family
-    </ol>
 
 
 
@@ -1033,7 +697,7 @@ a_node:method_name(an_agent)
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

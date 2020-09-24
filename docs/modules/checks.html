@@ -24,18 +24,27 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Functions">Functions</a></li>
+
+
+<h2>Functions</h2>
+<ul class="nowrap">
+    <li><a href="#is_family">is_family (obj)</a></li>
+    <li><a href="#is_agent">is_agent (obj)</a></li>
+    <li><a href="#is_agent">is_agent (obj)</a></li>
+    <li><a href="#is_in_list">is_in_list (item, elements)</a></li>
+    <li><a href="#exists">exists (pred)</a></li>
+    <li><a href="#all">all (family, pred)</a></li>
+    <li><a href="#is_in">is_in (family, agent)</a></li>
+    <li><a href="#same_rgb">same_rgb (object_1, object_2)</a></li>
+    <li><a href="#same_rgba">same_rgba (object_1, object_2)</a></li>
+    <li><a href="#same_pos">same_pos (object_1, object_2)</a></li>
 </ul>
-
-
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/actions.html">actions</a></li>
@@ -71,55 +80,10 @@
 
 <h1>Module <code>checks</code></h1>
 <p>A set of check methods.</p>
-<p></p>
+<p>
 
+</p>
 
-<h2><a href="#Functions">Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#is_family">is_family (obj)</a></td>
-	<td class="summary">Given an object this function does a safe check and returns true if the object is an Instance of Family (Collections are also families).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#is_agent">is_agent (obj)</a></td>
-	<td class="summary">Given an item and a set of elements or a collection, decide if item is included in the set.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#is_agent">is_agent (obj)</a></td>
-	<td class="summary">Given an item and a set of elements or a collection, decide if item is included in the set.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#is_in_list">is_in_list (item, elements)</a></td>
-	<td class="summary">Given an item and a set of elements or a collection, decide if item is included in the set.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#exists">exists (pred)</a></td>
-	<td class="summary">Returns true if any agent in the family validates a predicate.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#all">all (family, pred)</a></td>
-	<td class="summary">Checks if all agents in a family validates a condition.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#is_in">is_in (family, agent)</a></td>
-	<td class="summary">Checks if an agent is member of the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#same_rgb">same_rgb (object_1, object_2)</a></td>
-	<td class="summary">A check function to compare colors.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#same_rgba">same_rgba (object_1, object_2)</a></td>
-	<td class="summary">A check function to compare colors.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#same_pos">same_pos (object_1, object_2)</a></td>
-	<td class="summary">A check function to compare positions.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
@@ -133,12 +97,6 @@
     Given an object this function does a safe check and returns true if the object is an Instance of Family (Collections are also families).
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">obj</span>
-         An object to check
-        </li>
-    </ul>
 
 
 
@@ -160,12 +118,6 @@ is_family(<span class="string">'hello'</span>) <span class="comment">-- =&gt; fa
     Given an item and a set of elements or a collection, decide if item is included in the set.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">obj</span>
-         An object to check
-        </li>
-    </ul>
 
 
 
@@ -185,12 +137,6 @@ is_family(<span class="string">'hello'</span>) <span class="comment">-- =&gt; fa
     Given an item and a set of elements or a collection, decide if item is included in the set.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">obj</span>
-         An object to check
-        </li>
-    </ul>
 
 
 
@@ -213,21 +159,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     Given an item and a set of elements or a collection, decide if item is included in the set.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">item</span>
-         An Object (usually an agent).
-        </li>
-        <li><span class="parameter">elements</span>
-         List of elements.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean, true if 'item' is present in 'elements'
-    </ol>
 
 
 
@@ -246,18 +178,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     Returns true if any agent in the family validates a predicate.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">pred</span>
-         An anonymous function (boolean predicate).
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean: True if there is at least one agent that validates the predicate. It also returns in second place an Agent validating the predicate.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -282,21 +203,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     Checks if all agents in a family validates a condition.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         A family to check.
-        </li>
-        <li><span class="parameter">pred</span>
-         Anonymous function (boolean predicate).
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean. True if all agents in the family validate the condition.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -318,21 +225,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     Checks if an agent is member of the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         A family to check.
-        </li>
-        <li><span class="parameter">agent</span>
-         The Agent instance we want to check.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean. True if the agent is in the family
-    </ol>
 
 
     <h3>See also:</h3>
@@ -354,21 +247,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     A check function to compare colors.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">object_1</span>
-         It may be an Agent or a 4 parameters vector (rgba).
-        </li>
-        <li><span class="parameter">object_2</span>
-         It may be an Agent or a 4 parameters vector (rgba).
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean, true if both colors have the same rgb components.
-    </ol>
 
 
 
@@ -388,21 +267,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     A check function to compare colors.  This function compares also the alpha channel.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">object_1</span>
-         It may be an Agent or a 4 parameters vector (rgba).
-        </li>
-        <li><span class="parameter">object_2</span>
-         It may be an Agent or a 4 parameters vector (rgba).
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean, true if both colors have the same rgba components.
-    </ol>
 
 
 
@@ -422,21 +287,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
     A check function to compare positions.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">object_1</span>
-         It may be an Agent or a vector.
-        </li>
-        <li><span class="parameter">object_2</span>
-         It may be an Agent or a vector.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean, true if both positions are the same.
-    </ol>
 
 
 
@@ -453,7 +304,7 @@ is_a(<span class="number">4</span>,Agent) <span class="comment">-- =&gt; false
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

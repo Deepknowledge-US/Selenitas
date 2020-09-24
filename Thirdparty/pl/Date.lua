@@ -1,4 +1,9 @@
------
+--- Date and Date Format classes.
+-- See  @{05-dates.md|the Guide}.
+--
+-- Dependencies: `pl.class`, `pl.stringx`, `pl.utils`
+-- @classmod pl.Date
+-- @pragma nostrip
 
 local class = require 'pl.class'
 local os_time, os_date = os.time, os.date
@@ -9,7 +14,7 @@ local assert_arg,assert_string = utils.assert_arg,utils.assert_string
 local Date = class()
 Date.Format = class()
 
--- Date constructor.
+--- Date constructor.
 -- @param t this can be either
 --
 --   * `nil` or empty - use current date and time
@@ -71,7 +76,7 @@ function Date:_init(t,...)
     self:set(time)
 end
 
--- set the current time of this Date object.
+--- set the current time of this Date object.
 -- @int t seconds since epoch
 function Date:set(t)
     self.time = t
@@ -82,7 +87,7 @@ function Date:set(t)
     end
 end
 
--- get the time zone offset from UTC.
+--- get the time zone offset from UTC.
 -- @int ts seconds ahead of UTC
 function Date.tzone (ts)
     if ts == nil then
@@ -100,7 +105,7 @@ function Date.tzone (ts)
     return os.difftime(os_time(lcl), os_time(utc))
 end
 
--- convert this date to UTC.
+--- convert this date to UTC.
 function Date:toUTC ()
     local ndate = Date(self)
     if not self.utc then
@@ -110,7 +115,7 @@ function Date:toUTC ()
     return ndate
 end
 
--- convert this UTC date to local.
+--- convert this UTC date to local.
 function Date:toLocal ()
     local ndate = Date(self)
     if self.utc then
@@ -121,67 +126,67 @@ function Date:toLocal ()
     return ndate
 end
 
--- set the year.
+--- set the year.
 -- @int y Four-digit year
 -- @class function
 -- @name Date:year
 
--- set the month.
+--- set the month.
 -- @int m month
 -- @class function
 -- @name Date:month
 
--- set the day.
+--- set the day.
 -- @int d day
 -- @class function
 -- @name Date:day
 
--- set the hour.
+--- set the hour.
 -- @int h hour
 -- @class function
 -- @name Date:hour
 
--- set the minutes.
+--- set the minutes.
 -- @int min minutes
 -- @class function
 -- @name Date:min
 
--- set the seconds.
+--- set the seconds.
 -- @int sec seconds
 -- @class function
 -- @name Date:sec
 
--- set the day of year.
+--- set the day of year.
 -- @class function
 -- @int yday day of year
 -- @name Date:yday
 
--- get the year.
+--- get the year.
 -- @int y Four-digit year
 -- @class function
 -- @name Date:year
 
--- get the month.
+--- get the month.
 -- @class function
 -- @name Date:month
 
--- get the day.
+--- get the day.
 -- @class function
 -- @name Date:day
 
--- get the hour.
+--- get the hour.
 -- @class function
 -- @name Date:hour
 
--- get the minutes.
+--- get the minutes.
 -- @class function
 -- @name Date:min
 
--- get the seconds.
+--- get the seconds.
 -- @class function
 -- @name Date:sec
 
--- get the day of year.
+--- get the day of year.
 -- @class function
 -- @name Date:yday
 
@@ -199,24 +204,26 @@ for _,c in ipairs{'year','month','day','hour','min','sec','yday'} do
     end
 end
 
--- name of day of week.
+--- name of day of week.
 -- @bool full abbreviated if true, full otherwise.
+-- @ret string name
 function Date:weekday_name(full)
     return os_date(full and '%A' or '%a',self.time)
 end
 
--- name of month.
+--- name of month.
 -- @int full abbreviated if true, full otherwise.
+-- @ret string name
 function Date:month_name(full)
     return os_date(full and '%B' or '%b',self.time)
 end
 
--- is this day on a weekend?.
+--- is this day on a weekend?.
 function Date:is_weekend()
     return self.tab.wday == 1 or self.tab.wday == 7
 end
 
--- add to a date object.
+--- add to a date object.
 -- @param t a table containing one of the following keys and a value:
 -- one of `year`,`month`,`day`,`hour`,`min`,`sec`
 -- @return this date
@@ -232,7 +239,7 @@ function Date:add(t)
     return self
 end
 
--- last day of the month.
+--- last day of the month.
 -- @return int day
 function Date:last_day()
     local d = 28
@@ -245,7 +252,7 @@ function Date:last_day()
     return self
 end
 
--- difference between two Date objects.
+--- difference between two Date objects.
 -- @tparam Date other Date object
 -- @treturn Date.Interval object
 function Date:diff(other)
@@ -254,7 +261,7 @@ function Date:diff(other)
     return Date.Interval(dt)
 end
 
--- long numerical ISO data format version of this date.
+--- long numerical ISO data format version of this date.
 function Date:__tostring()
     local fmt = '%Y-%m-%dT%H:%M:%S'
     if self.utc then
@@ -279,21 +286,21 @@ function Date:__tostring()
     end
 end
 
--- equality between Date objects.
+--- equality between Date objects.
 function Date:__eq(other)
     return self.time == other.time
 end
 
--- ordering between Date objects.
+--- ordering between Date objects.
 function Date:__lt(other)
     return self.time < other.time
 end
 
--- difference between Date objects.
+--- difference between Date objects.
 -- @function Date:__sub
 Date.__sub = Date.diff
 
--- add a date and an interval.
+--- add a date and an interval.
 -- @param other either a `Date.Interval` object or a table such as
 -- passed to `Date:add`
 function Date:__add(other)
@@ -307,7 +314,7 @@ end
 
 Date.Interval = class(Date)
 
--- Date.Interval constructor
+---- Date.Interval constructor
 -- @int t an interval in seconds
 -- @function Date.Interval
 function Date.Interval:_init(t)
@@ -325,7 +332,7 @@ local function ess(n)
     end
 end
 
--- If it's an interval then the format is '2 hours 29 sec' etc.
+--- If it's an interval then the format is '2 hours 29 sec' etc.
 function Date.Interval:__tostring()
     local t, res = self.tab, ''
     local y,m,d = t.year - 1970, t.month - 1, t.day - 1
@@ -342,7 +349,7 @@ function Date.Interval:__tostring()
     return res
 end
 
--- Date.Format class: parsing and renderinig dates --
+------------ Date.Format class: parsing and renderinig dates ------------
 
 -- short field names, explicit os.date names, and a mask for allowed field repeats
 local formats = {
@@ -354,7 +361,7 @@ local formats = {
     S = {'sec',{true,true}},
 }
 
--- Date.Format constructor.
+--- Date.Format constructor.
 -- @string fmt. A string where the following fields are significant:
 --
 --   * d day (either d or dd)
@@ -428,7 +435,7 @@ end
 
 local parse_date
 
--- parse a string into a Date object.
+--- parse a string into a Date object.
 -- @string str a date string
 -- @return date object
 function Date.Format:parse(str)
@@ -460,7 +467,7 @@ function Date.Format:parse(str)
     return Date(tab)
 end
 
--- convert a Date object into a string.
+--- convert a Date object into a string.
 -- @param d a date object, or a time value as returned by @{os.time}
 -- @return string
 function Date.Format:tostring(d)
@@ -477,7 +484,7 @@ function Date.Format:tostring(d)
     return os_date(fmt,tm)
 end
 
--- force US order in dates like 9/11/2001
+--- force US order in dates like 9/11/2001
 function Date.Format:US_order(yesno)
     self.us = yesno
 end

@@ -1,4 +1,12 @@
-----
+--- Useful test utilities.
+--
+--    test.asserteq({1,2},{1,2}) -- can compare tables
+--    test.asserteq(1.2,1.19,0.02) -- compare FP numbers within precision
+--    T = test.tuple -- used for comparing multiple results
+--    test.asserteq(T(string.find(" me","me")),T(2,3))
+--
+-- Dependencies: `pl.utils`, `pl.tablex`, `pl.pretty`, `pl.path`, `debug`
+-- @module pl.test
 
 local tablex = require 'pl.tablex'
 local utils = require 'pl.utils'
@@ -21,7 +29,7 @@ end
 
 local test = {}
 
--- error handling for test results.
+---- error handling for test results.
 -- By default, this writes to stderr and exits the program.
 -- Re-define this function to raise an error and/or redirect output
 function test.error_handler(file,line,got_text, needed_text,msg)
@@ -37,7 +45,7 @@ local function complain (x,y,msg,where)
     test.error_handler(i.short_src,i.currentline,dump(x),dump(y),msg)
 end
 
--- general test complain message.
+--- general test complain message.
 -- Useful for composing new test functions (see tests/tablex.lua for an example)
 -- @param x a value
 -- @param y value to compare first value against
@@ -46,7 +54,7 @@ end
 -- @function complain
 test.complain = complain
 
--- like assert, except takes two arguments that must be equal and can be tables.
+--- like assert, except takes two arguments that must be equal and can be tables.
 -- If they are plain tables, it will use tablex.deepcompare.
 -- @param x any value
 -- @param y a value equal to x
@@ -62,7 +70,7 @@ function test.asserteq (x,y,eps,where)
     end
 end
 
--- assert that the first string matches the second.
+--- assert that the first string matches the second.
 -- @param s1 a string
 -- @param s2 a string
 -- @param where extra level offset
@@ -72,7 +80,7 @@ function test.assertmatch (s1,s2,where)
     end
 end
 
--- assert that the function raises a particular error.
+--- assert that the function raises a particular error.
 -- @param fn a function or a table of the form {function,arg1,...}
 -- @param e a string to match the error against
 -- @param where extra level offset
@@ -88,7 +96,7 @@ function test.assertraise(fn,e,where)
     end
 end
 
--- a version of asserteq that takes two pairs of values.
+--- a version of asserteq that takes two pairs of values.
 -- <code>x1==y1 and x2==y2</code> must be true. Useful for functions that naturally
 -- return two values.
 -- @param x1 any value
@@ -129,7 +137,7 @@ function tuple_mt.__len(self)
     return self.n
 end
 
--- encode an arbitrary argument list as a tuple.
+--- encode an arbitrary argument list as a tuple.
 -- This can be used to compare to other argument lists, which is
 -- very useful for testing functions which return a number of values.
 -- Unlike regular array-like tables ('sequences') they may contain nils.
@@ -141,7 +149,7 @@ function test.tuple(...)
     return setmetatable(pack(...), tuple_mt)
 end
 
--- Time a function. Call the function a given number of times, and report the number of seconds taken,
+--- Time a function. Call the function a given number of times, and report the number of seconds taken,
 -- together with a message.  Any extra arguments will be passed to the function.
 -- @string msg a descriptive message
 -- @int n number of times to call the function

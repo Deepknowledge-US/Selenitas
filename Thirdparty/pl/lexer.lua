@@ -1,4 +1,24 @@
---------
+--- Lexical scanner for creating a sequence of tokens from text.
+-- `lexer.scan(s)` returns an iterator over all tokens found in the
+-- string `s`. This iterator returns two values, a token type string
+-- (such as 'string' for quoted string, 'iden' for identifier) and the value of the
+-- token.
+--
+-- Versions specialized for Lua and C are available; these also handle block comments
+-- and classify keywords as 'keyword' tokens. For example:
+--
+--    > s = 'for i=1,n do'
+--    > for t,v in lexer.lua(s)  do print(t,v) end
+--    keyword for
+--    iden    i
+--    =       =
+--    number  1
+--    ,       ,
+--    iden    n
+--    keyword do
+--
+-- See the Guide for further @{06-data.md.Lexical_Scanning|discussion}
+-- @module pl.lexer
 
 local strfind = string.find
 local strsub = string.sub
@@ -112,7 +132,7 @@ local function cpp_vdump(tok)
     end
 end
 
--- create a plain token iterator from a string or file-like object.
+--- create a plain token iterator from a string or file-like object.
 -- @tparam string|file s a string or a file-like object with `:read()` method returning lines.
 -- @tab matches an optional match table - array of token descriptions.
 -- A token is described by a `{pattern, action}` pair, where `pattern` should match
@@ -232,7 +252,7 @@ local function isstring (s)
     return type(s) == 'string'
 end
 
--- insert tokens into a stream.
+--- insert tokens into a stream.
 -- @param tok a token stream
 -- @param a1 a string is the type, a table is a token list and
 -- a function is assumed to be a token-like iterator (returns type & value)
@@ -253,7 +273,7 @@ function lexer.insert (tok,a1,a2)
     tok(ts)
 end
 
--- get everything in a stream upto a newline.
+--- get everything in a stream upto a newline.
 -- @param tok a token stream
 -- @return a string
 function lexer.getline (tok)
@@ -261,7 +281,7 @@ function lexer.getline (tok)
     return v
 end
 
--- get current line number.
+--- get current line number.
 -- @param tok a token stream
 -- @return the line number.
 -- if the input source is a file-like object,
@@ -270,7 +290,7 @@ function lexer.lineno (tok)
     return tok(0)
 end
 
--- get the rest of the stream.
+--- get the rest of the stream.
 -- @param tok a token stream
 -- @return a string
 function lexer.getrest (tok)
@@ -278,7 +298,7 @@ function lexer.getrest (tok)
     return v
 end
 
--- get the Lua keywords as a set-like table.
+--- get the Lua keywords as a set-like table.
 -- So `res["and"]` etc would be `true`.
 -- @return a table
 function lexer.get_keywords ()
@@ -296,7 +316,7 @@ function lexer.get_keywords ()
     return lua_keyword
 end
 
--- create a Lua token iterator from a string or file-like object.
+--- create a Lua token iterator from a string or file-like object.
 -- Will return the token type and value.
 -- @string s the string
 -- @tab[opt] filter a table of token types to exclude, by default `{space=true,comments=true}`
@@ -332,7 +352,7 @@ function lexer.lua(s,filter,options)
     return lexer.scan(s,lua_matches,filter,options)
 end
 
--- create a C/C++ token iterator from a string or file-like object.
+--- create a C/C++ token iterator from a string or file-like object.
 -- Will return the token type type and value.
 -- @string s the string
 -- @tab[opt] filter a table of token types to exclude, by default `{space=true,comments=true}`
@@ -396,7 +416,7 @@ function lexer.cpp(s,filter,options)
     return lexer.scan(s,cpp_matches,filter,options)
 end
 
--- get a list of parameters separated by a delimiter from a stream.
+--- get a list of parameters separated by a delimiter from a stream.
 -- @param tok the token stream
 -- @string[opt=')'] endtoken end of list. Can be '\n'
 -- @string[opt=','] delim separator
@@ -449,7 +469,7 @@ function lexer.get_separated_list(tok,endtoken,delim)
     return parm_values,{token,value}
 end
 
--- get the next non-space token from the stream.
+--- get the next non-space token from the stream.
 -- @param tok the token stream.
 function lexer.skipws (tok)
     local t,v = tok()
@@ -461,7 +481,7 @@ end
 
 local skipws = lexer.skipws
 
--- get the next token, which must be of the expected type.
+--- get the next token, which must be of the expected type.
 -- Throws an error if this type does not match!
 -- @param tok the token stream
 -- @string expected_type the token type

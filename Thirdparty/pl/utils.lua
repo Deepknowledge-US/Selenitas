@@ -1,4 +1,10 @@
------
+--- Generally useful routines.
+-- See  @{01-introduction.md.Generally_useful_functions|the Guide}.
+--
+-- Dependencies: `pl.compat`, all exported fields and functions from
+-- `pl.compat` are also available in this module.
+--
+-- @module pl.utils
 local format = string.format
 local compat = require 'pl.compat'
 local stdout = io.stdout
@@ -15,7 +21,7 @@ local _function_factories = {}
 local utils = { _VERSION = "1.8.0" }
 for k, v in pairs(compat) do utils[k] = v  end
 
--- Some standard patterns
+--- Some standard patterns
 -- @table patterns
 utils.patterns = {
     FLOAT = '[%+%-%d]%d*%.?%d*[eE]?[%+%-]?%d*', -- floating point number
@@ -25,7 +31,7 @@ utils.patterns = {
 }
 
 
--- Standard meta-tables as used by other Penlight modules
+--- Standard meta-tables as used by other Penlight modules
 -- @table stdmt
 -- @field List the List metatable
 -- @field Map the Map metatable
@@ -39,14 +45,14 @@ utils.stdmt = {
 }
 
 
--- pack an argument list into a table.
+--- pack an argument list into a table.
 -- @param ... any arguments
 -- @return a table with field `n` set to the length
 -- @function utils.pack
 -- @see compat.pack
 utils.pack = table.pack  -- added here to be symmetrical with unpack
 
--- unpack a table and return its contents.
+--- unpack a table and return its contents.
 --
 -- NOTE: this implementation differs from the Lua implementation in the way
 -- that this one DOES honor the `n` field in the table `t`, such that it is 'nil-safe'.
@@ -65,7 +71,7 @@ function utils.unpack(t, i, j)
     return _unpack(t, i or 1, j or t.n or #t)
 end
 
--- print an arbitrary number of arguments using a format.
+--- print an arbitrary number of arguments using a format.
 -- Output will be sent to `stdout`.
 -- @param fmt The format (see `string.format`)
 -- @param ... Extra arguments for format
@@ -74,7 +80,7 @@ function utils.printf(fmt, ...)
     utils.fprintf(stdout, fmt, ...)
 end
 
--- write an arbitrary number of arguments to a file using a format.
+--- write an arbitrary number of arguments to a file using a format.
 -- @param f File handle to write to.
 -- @param fmt The format (see `string.format`).
 -- @param ... Extra arguments for format
@@ -103,7 +109,7 @@ do
 
     local already_imported = {}
 
-    -- take a table and 'inject' it into the local namespace.
+    --- take a table and 'inject' it into the local namespace.
     -- @param t The table (table), or module name (string), defaults to this `utils` module table
     -- @param T An optional destination table (defaults to callers environment)
     function utils.import(t,T)
@@ -121,7 +127,7 @@ do
     end
 end
 
--- return either of two values, depending on a condition.
+--- return either of two values, depending on a condition.
 -- @param cond A condition
 -- @param value1 Value returned if cond is truthy
 -- @param value2 Value returned if cond is falsy
@@ -129,7 +135,7 @@ function utils.choose(cond, value1, value2)
     return cond and value1 or value2
 end
 
--- convert an array of values to strings.
+--- convert an array of values to strings.
 -- @param t a list-like table
 -- @param[opt] temp (table) buffer to use, otherwise allocate
 -- @param[opt] tostr custom tostring function, called with (value,index). Defaults to `tostring`.
@@ -144,7 +150,7 @@ end
 
 
 
--- is the object of the specified type?
+--- is the object of the specified type?
 -- If the type is a string, then use type, otherwise compare with metatable
 -- @param obj An object to check
 -- @param tp String of what type it should be
@@ -160,10 +166,10 @@ function utils.is_type (obj,tp)
     return tp == mt
 end
 
--- Error handling
+--- Error handling
 -- @section Error-handling
 
--- assert that the given argument is in fact of the correct type.
+--- assert that the given argument is in fact of the correct type.
 -- @param n argument index
 -- @param val the value
 -- @param tp the type
@@ -186,7 +192,7 @@ function utils.assert_arg (n,val,tp,verify,msg,lev)
     return val
 end
 
--- process a function argument.
+--- process a function argument.
 -- This is used throughout Penlight and defines what is meant by a function:
 -- Something that is callable, or an operator string as defined by <code>pl.operator</code>,
 -- such as '>' or '#'. If a function factory has been registered for the type, it will
@@ -228,7 +234,7 @@ function utils.function_arg (idx,f,msg)
 end
 
 
--- assert the common case that the argument is a string.
+--- assert the common case that the argument is a string.
 -- @param n argument index
 -- @param val a value that must be a string
 -- @return the validated value
@@ -240,7 +246,7 @@ function utils.assert_string (n, val)
     return utils.assert_arg(n,val,'string',nil,nil,3)
 end
 
--- control the error strategy used by Penlight.
+--- control the error strategy used by Penlight.
 -- This is a global setting that controls how `utils.raise` behaves:
 --
 -- - 'default': return `nil + error` (this is the default)
@@ -263,7 +269,7 @@ function utils.on_error (mode)
     end
 end
 
--- used by Penlight functions to return errors. Its global behaviour is controlled
+--- used by Penlight functions to return errors. Its global behaviour is controlled
 -- by `utils.on_error`.
 -- To use this function you MUST use it in conjunction with `return`, since it might
 -- return `nil + error`.
@@ -286,10 +292,10 @@ raise = utils.raise
 
 
 
--- File handling
+--- File handling
 -- @section files
 
--- return the contents of a file as a string
+--- return the contents of a file as a string
 -- @param filename The file path
 -- @param is_bin open in binary mode
 -- @return file contents
@@ -308,7 +314,7 @@ function utils.readfile(filename,is_bin)
     return res
 end
 
--- write a string to a file
+--- write a string to a file
 -- @param filename The file path
 -- @param str The string
 -- @param is_bin open in binary mode
@@ -331,7 +337,7 @@ function utils.writefile(filename,str,is_bin)
     return true
 end
 
--- return the contents of a file as a list of lines
+--- return the contents of a file as a list of lines
 -- @param filename The file path
 -- @return file contents as a table
 -- @raise error if filename is not a string
@@ -347,10 +353,10 @@ function utils.readlines(filename)
     return res
 end
 
--- OS functions
+--- OS functions
 -- @section OS-functions
 
--- execute a shell command and return the output.
+--- execute a shell command and return the output.
 -- This function redirects the output to tempfiles and returns the content of those files.
 -- @param cmd a shell command
 -- @param bin boolean, if true, read output as binary file
@@ -376,7 +382,7 @@ function utils.executeex(cmd, bin)
     return success, retcode, (outcontent or ""), (errcontent or "")
 end
 
--- Quote and escape an argument of a command.
+--- Quote and escape an argument of a command.
 -- Quotes a single (or list of) argument(s) of a command to be passed
 -- to `os.execute`, `pl.utils.execute` or `pl.utils.executeex`.
 -- @param argument (string or table/list) the argument to quote. If a list then
@@ -425,7 +431,7 @@ function utils.quote_arg(argument)
     end
 end
 
--- error out of this program gracefully.
+--- error out of this program gracefully.
 -- @param[opt] code The exit code, defaults to -`1` if omitted
 -- @param msg The exit message will be sent to `stderr` (will be formatted with the extra parameters)
 -- @param ... extra arguments for message's format'
@@ -446,17 +452,17 @@ function utils.quit(code, msg, ...)
 end
 
 
--- String functions
+--- String functions
 -- @section string-functions
 
--- escape any Lua 'magic' characters in a string
+--- escape any Lua 'magic' characters in a string
 -- @param s The input string
 function utils.escape(s)
     utils.assert_string(1,s)
     return (s:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]','%%%1'))
 end
 
--- split a string into a list of strings separated by a delimiter.
+--- split a string into a list of strings separated by a delimiter.
 -- @param s The input string
 -- @param re A Lua string pattern; defaults to '%s+'
 -- @param plain don't use Lua patterns
@@ -489,7 +495,7 @@ function utils.split(s,re,plain,n)
     end
 end
 
--- split a string into a number of return values.
+--- split a string into a number of return values.
 -- @param s the string
 -- @param re the delimiter, default space
 -- @return n values
@@ -500,11 +506,11 @@ function utils.splitv (s,re)
 end
 
 
--- Functional
+--- Functional
 -- @section functional
 
 
--- 'memoize' a function (cache returned value for next call).
+--- 'memoize' a function (cache returned value for next call).
 -- This is useful if you have a function which is relatively expensive,
 -- but you don't know in advance what values will be required, so
 -- building a table upfront is wasteful/impossible.
@@ -523,7 +529,7 @@ function utils.memoize(func)
 end
 
 
--- associate a function factory with a type.
+--- associate a function factory with a type.
 -- A function factory takes an object of the given type and
 -- returns a function for evaluating it
 -- @tab mt metatable
@@ -551,7 +557,7 @@ local function _string_lambda(f)
     end
 end
 
--- an anonymous function as a string. This string is either of the form
+--- an anonymous function as a string. This string is either of the form
 -- '|args| expression' or is a function of one argument, '_'
 -- @param lf function as a string
 -- @return a function
@@ -562,7 +568,7 @@ end
 utils.string_lambda = utils.memoize(_string_lambda)
 
 
--- bind the first argument of the function to a value.
+--- bind the first argument of the function to a value.
 -- @param fn a function of at least two values (may be an operator string)
 -- @param p a value
 -- @return a function such that f(x) is fn(p,x)
@@ -581,7 +587,7 @@ function utils.bind1 (fn,p)
     return function(...) return fn(p,...) end
 end
 
--- bind the second argument of the function to a value.
+--- bind the second argument of the function to a value.
 -- @param fn a function of at least two values (may be an operator string)
 -- @param p a value
 -- @return a function such that f(x) is fn(x,p)

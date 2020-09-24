@@ -1,4 +1,3 @@
------------------
 local pairs, type, setmetatable, string_match =
       pairs, type, setmetatable, string.match
 local unpack = _G.unpack or table.unpack

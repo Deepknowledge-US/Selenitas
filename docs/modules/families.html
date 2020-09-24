@@ -24,18 +24,23 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Functions">Functions</a></li>
+
+
+<h2>Functions</h2>
+<ul class="nowrap">
+    <li><a href="#create_patches">create_patches (x, y)</a></li>
+    <li><a href="#create_n">create_n (family, num, funct)</a></li>
+    <li><a href="#clone_n">clone_n (family, n, agent, funct)</a></li>
+    <li><a href="#purge_agents">purge_agents (...)</a></li>
+    <li><a href="#__producer">__producer (list, list)</a></li>
+    <li><a href="#__consumer">__consumer (list, index)</a></li>
 </ul>
-
-
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/actions.html">actions</a></li>
@@ -71,39 +76,10 @@
 
 <h1>Module <code>families</code></h1>
 <p>Some methods to operate over families.</p>
-<p></p>
+<p>
 
+</p>
 
-<h2><a href="#Functions">Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#create_patches">create_patches (x, y)</a></td>
-	<td class="summary">A function to create a bidimensional grid of patches quickily</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#create_n">create_n (family, num, funct)</a></td>
-	<td class="summary">Create n new Agents in the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#clone_n">clone_n (family, n, agent, funct)</a></td>
-	<td class="summary">This function encapsulates a call to the function clone_n_act in the Family given as parameter.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#purge_agents">purge_agents (...)</a></td>
-	<td class="summary">This function delete from the system all agents marked as not alive (a value of false in its parameter 'alive'), it will also delete all the relational agents that involve a not-alive agent.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#__producer">__producer (list, list)</a></td>
-	<td class="summary">Internal function to make the iterator.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#__consumer">__consumer (list, index)</a></td>
-	<td class="summary">Beside __producer, this functions are a coroutine to implement the Fisher-Yates shuffle.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
@@ -117,21 +93,7 @@
     A function to create a bidimensional grid of patches quickily
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">x</span>
-         Number. Dimension of x axis of the grid
-        </li>
-        <li><span class="parameter">y</span>
-         Number. Dimension of y axis of the grid
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A FamilyCell instance
-    </ol>
 
 
 
@@ -149,24 +111,7 @@
     Create n new Agents in the family.  The type of the agent depends on the family it will be created.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         The family where the agents will be created.
-        </li>
-        <li><span class="parameter">num</span>
-         The number of agents that will be added to the family.
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonymous function that will be executed to create the Cell.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
 
 
 
@@ -185,30 +130,10 @@
     <strong>clone_n (family, n, agent, funct)</strong>
     </dt>
     <dd>
-    This function encapsulates a call to the function clone_n_act in the Family given as parameter.
+    This function encapsulates a call to the function clone<em>n</em>act in the Family given as parameter.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         The Family where the agent belongs to and where the clones will be added.
-        </li>
-        <li><span class="parameter">n</span>
-         Number. The number of agents to clone
-        </li>
-        <li><span class="parameter">agent</span>
-         The Agent instance used as model to create the clones
-        </li>
-        <li><span class="parameter">funct</span>
-         Optional. An anonymous function to ask the clones to do something
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
 
 
     <h3>See also:</h3>
@@ -232,18 +157,7 @@
     This function delete from the system all agents marked as not alive (a value of false in its parameter 'alive'), it will also delete all the relational agents that involve a not-alive agent.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">...</span>
-         Undefined number of Families from where we want to purge agents. If no Family is passed, it purge all families in the system.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
 
 
 
@@ -261,21 +175,7 @@
     Internal function to make the iterator.  It yields a random item of the list gived as parameter every time it is called. This function is called by a consumer function when a new element is needed
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">list</span>
-         A index of the list
-        </li>
-        <li><span class="parameter">list</span>
-         A index of the list
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A random element in a position lower or equal to "index" parameter
-    </ol>
 
 
 
@@ -293,21 +193,7 @@
     Beside __producer, this functions are a coroutine to implement the Fisher-Yates shuffle.  __consumer calls the __producer to take a new element of the list.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">list</span>
-         A List of elements.
-        </li>
-        <li><span class="parameter">index</span>
-         A position in the list.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A new element of the list
-    </ol>
 
 
 
@@ -327,7 +213,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

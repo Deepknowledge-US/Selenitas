@@ -1,4 +1,8 @@
--------
+--- Manipulating iterators as sequences.
+-- See @{07-functional.md.Sequences|The Guide}
+--
+-- Dependencies: `pl.utils`, `pl.types`, `debug`
+-- @module pl.seq
 
 local next,assert,pairs,tonumber,type,setmetatable = next,assert,pairs,tonumber,type,setmetatable
 local strfind,format = string.find,string.format
@@ -43,7 +47,7 @@ function seq.equal_to(x)
   end
 end
 
--- given a string, return a function(y) which matches y against the string.
+--- given a string, return a function(y) which matches y against the string.
 -- @param s a string
 function seq.matching(s)
   return function(v)
@@ -53,7 +57,7 @@ end
 
 local nexti
 
--- sequence adaptor for a table.   Note that if any generic function is
+--- sequence adaptor for a table.   Note that if any generic function is
 -- passed a table, it will automatically use seq.list()
 -- @param t a list-like table
 -- @usage sum(list(t)) is the sum of all elements of t
@@ -70,7 +74,7 @@ function seq.list(t)
   end
 end
 
--- return the keys of the table.
+--- return the keys of the table.
 -- @param t an arbitrary table
 -- @return iterator over keys
 function seq.keys(t)
@@ -90,7 +94,7 @@ end
 
 seq.iter = default_iter
 
--- create an iterator over a numerical range. Like the standard Python function xrange.
+--- create an iterator over a numerical range. Like the standard Python function xrange.
 -- @param start a number
 -- @param finish a number greater than start
 function seq.range(start,finish)
@@ -115,7 +119,7 @@ function seq.count(iter,condn,arg)
   return i
 end
 
--- return the minimum and the maximum value of the sequence.
+--- return the minimum and the maximum value of the sequence.
 -- @param iter a sequence
 -- @return minimum value
 -- @return maximum value
@@ -129,7 +133,7 @@ function seq.minmax(iter)
   return vmin,vmax
 end
 
--- return the sum and element count of the sequence.
+--- return the sum and element count of the sequence.
 -- @param iter a sequence
 -- @param fn an optional function to apply to the values
 function seq.sum(iter,fn)
@@ -143,7 +147,7 @@ function seq.sum(iter,fn)
   return s,i
 end
 
--- create a table from the sequence. (This will make the result a List.)
+--- create a table from the sequence. (This will make the result a List.)
 -- @param iter a sequence
 -- @return a List
 -- @usage copy(list(ls)) is equal to ls
@@ -158,7 +162,7 @@ function seq.copy(iter)
     return res
 end
 
--- create a table of pairs from the double-valued sequence.
+--- create a table of pairs from the double-valued sequence.
 -- @param iter a double-valued sequence
 -- @param i1 used to capture extra iterator values
 -- @param i2 as with pairs & ipairs
@@ -173,7 +177,7 @@ function seq.copy2 (iter,i1,i2)
     return res
 end
 
--- create a table of 'tuples' from a multi-valued sequence.
+--- create a table of 'tuples' from a multi-valued sequence.
 -- A generalization of copy2 above
 -- @param iter a multiple-valued sequence
 -- @return a list-like table
@@ -188,7 +192,7 @@ function seq.copy_tuples (iter)
     return res
 end
 
--- return an iterator of random numbers.
+--- return an iterator of random numbers.
 -- @param n the length of the sequence
 -- @param l same as the first optional argument to math.random
 -- @param u same as the second optional argument to math.random
@@ -213,7 +217,7 @@ function seq.random(n,l,u)
   end
 end
 
--- return an iterator to the sorted elements of a sequence.
+--- return an iterator to the sorted elements of a sequence.
 -- @param iter a sequence
 -- @param comp an optional comparison function (comp(x,y) is true if x < y)
 function seq.sort(iter,comp)
@@ -222,7 +226,7 @@ function seq.sort(iter,comp)
     return list(t)
 end
 
--- return an iterator which returns elements of two sequences.
+--- return an iterator which returns elements of two sequences.
 -- @param iter1 a sequence
 -- @param iter2 a sequence
 -- @usage for x,y in seq.zip(ls1,ls2) do....end
@@ -234,7 +238,7 @@ function seq.zip(iter1,iter2)
     end
 end
 
--- Makes a table where the key/values are the values and value counts of the sequence.
+--- Makes a table where the key/values are the values and value counts of the sequence.
 -- This version works with 'hashable' values like strings and numbers.
 -- `pl.tablex.count_map` is more general.
 -- @param iter a sequence
@@ -268,7 +272,7 @@ function seq.unique(iter,returns_table)
     end
 end
 
--- print out a sequence iter with a separator.
+--- print out a sequence iter with a separator.
 -- @param iter a sequence
 -- @param sep the separator (default space)
 -- @param nfields maximum number of values per line (default 7)
@@ -318,7 +322,7 @@ function seq.splice(iter1,iter2)
  end
 end
 
--- return a sequence where every element of a sequence has been transformed
+--- return a sequence where every element of a sequence has been transformed
 -- by a function. If you don't supply an argument, then the function will
 -- receive both values of a double-valued sequence, otherwise behaves rather like
 -- tablex.map.
@@ -335,7 +339,7 @@ function seq.map(fn,iter,arg)
     end
 end
 
--- filter a sequence using a predicate function.
+--- filter a sequence using a predicate function.
 -- @param iter a sequence of one or two values
 -- @param pred a boolean function; may take two arguments
 -- @param arg optional argument to pass to function.
@@ -351,7 +355,7 @@ function seq.filter (iter,pred,arg)
     end
 end
 
--- 'reduce' a sequence using a binary function.
+--- 'reduce' a sequence using a binary function.
 -- @func fn a function of two arguments
 -- @param iter a sequence
 -- @param initval optional initial value
@@ -368,7 +372,7 @@ function seq.reduce (fn,iter,initval)
    return val
 end
 
--- take the first n values from the sequence.
+--- take the first n values from the sequence.
 -- @param iter a sequence of one or two values
 -- @param n number of items to take
 -- @return a sequence of at most n items
@@ -383,7 +387,7 @@ function seq.take (iter,n)
     end
 end
 
--- skip the first n values of a sequence
+--- skip the first n values of a sequence
 -- @param iter a sequence of one or more values
 -- @param n number of items to skip
 function seq.skip (iter,n)
@@ -394,7 +398,7 @@ function seq.skip (iter,n)
     return iter
 end
 
--- a sequence with a sequence count and the original value.
+--- a sequence with a sequence count and the original value.
 -- enum(copy(ls)) is a roundabout way of saying ipairs(ls).
 -- @param iter a single or double valued sequence
 -- @return sequence of (i,v), i = 1..n and v is from iter.
@@ -409,7 +413,7 @@ function seq.enum (iter)
     end
 end
 
--- map using a named method over a sequence.
+--- map using a named method over a sequence.
 -- @param iter a sequence
 -- @param name the method name
 -- @param arg1 optional first extra argument
@@ -425,7 +429,7 @@ function seq.mapmethod (iter,name,arg1,arg2)
     end
 end
 
--- a sequence of (last,current) values from another sequence.
+--- a sequence of (last,current) values from another sequence.
 --  This will return S(i-1),S(i) if given S(i)
 -- @param iter a sequence
 function seq.last (iter)
@@ -439,7 +443,7 @@ function seq.last (iter)
     end
 end
 
--- call the function on each element of the sequence.
+--- call the function on each element of the sequence.
 -- @param iter a sequence with up to 3 values
 -- @param fn a function
 function seq.foreach(iter,fn)
@@ -447,7 +451,7 @@ function seq.foreach(iter,fn)
     for i1,i2,i3 in default_iter(iter) do fn(i1,i2,i3) end
 end
 
--- Sequence Adapters --
+---------------------- Sequence Adapters ---------------------
 
 local SMT
 
@@ -502,7 +506,7 @@ setmetatable(seq,{
     end
 })
 
--- create a wrapped iterator over all lines in the file.
+--- create a wrapped iterator over all lines in the file.
 -- @param f either a filename, file-like object, or 'STDIN' (for standard input)
 -- @param ... for Lua 5.2 only, optional format specifiers, as in `io.read`.
 -- @return a sequence wrapper

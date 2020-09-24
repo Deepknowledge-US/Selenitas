@@ -24,18 +24,24 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Functions">Functions</a></li>
+
+
+<h2>Functions</h2>
+<ul class="nowrap">
+    <li><a href="#__producer">__producer (a_list, index)</a></li>
+    <li><a href="#__consumer">__consumer (a_list, index)</a></li>
+    <li><a href="#__comparator">__comparator (a, b, funct)</a></li>
+    <li><a href="#__comparator_reverse">__comparator_reverse (a, b, funct)</a></li>
+    <li><a href="#shuffled">shuffled (fam_or_list)</a></li>
+    <li><a href="#ordered">ordered (fam_or_list)</a></li>
+    <li><a href="#sorted">sorted (fam_or_list, param, reverse, funct)</a></li>
 </ul>
-
-
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/actions.html">actions</a></li>
@@ -71,43 +77,10 @@
 
 <h1>Module <code>iterators</code></h1>
 <p>Utilities to apply actions to agents or families mainly.</p>
-<p></p>
+<p>
 
+</p>
 
-<h2><a href="#Functions">Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#__producer">__producer (a_list, index)</a></td>
-	<td class="summary">This function is used by shuffled function, It creates a coroutine that returns a new shuffled element in a list everytime it is called..</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#__consumer">__consumer (a_list, index)</a></td>
-	<td class="summary">This function ask to the producer for a new element everytime is called.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#__comparator">__comparator (a, b, funct)</a></td>
-	<td class="summary">Auxiliar function used with merge_sort to compare two elements in an increasing order.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#__comparator_reverse">__comparator_reverse (a, b, funct)</a></td>
-	<td class="summary">Auxiliar function used with merge_sort to compare two elements in an decreasing order.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#shuffled">shuffled (fam_or_list)</a></td>
-	<td class="summary">Iterator.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#ordered">ordered (fam_or_list)</a></td>
-	<td class="summary">Iterator.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#sorted">sorted (fam_or_list, param, reverse, funct)</a></td>
-	<td class="summary">Iterator.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
@@ -121,21 +94,7 @@
     This function is used by shuffled function, It creates a coroutine that returns a new shuffled element in a list everytime it is called..
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">a_list</span>
-         List of elements
-        </li>
-        <li><span class="parameter">index</span>
-         Integer, pointing the current element.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An element of the list
-    </ol>
 
 
     <h3>See also:</h3>
@@ -153,21 +112,7 @@
     This function ask to the producer for a new element everytime is called.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">a_list</span>
-         List of elements
-        </li>
-        <li><span class="parameter">index</span>
-         Integer, pointing the current element.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An element of the list
-    </ol>
 
 
     <h3>See also:</h3>
@@ -185,24 +130,7 @@
     Auxiliar function used with merge_sort to compare two elements in an increasing order.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">a</span>
-         Element A parameter of an agent
-        </li>
-        <li><span class="parameter">b</span>
-         Element A parameter of an agent
-        </li>
-        <li><span class="parameter">funct</span>
-         A function to apply to a and b params
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean true if the result of apply the function to 'a' is less or equal to the result of apply the function to 'b'
-    </ol>
 
 
 
@@ -216,24 +144,7 @@
     Auxiliar function used with merge_sort to compare two elements in an decreasing order.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">a</span>
-         Element A parameter of an agent
-        </li>
-        <li><span class="parameter">b</span>
-         Element A parameter of an agent
-        </li>
-        <li><span class="parameter">funct</span>
-         A function to apply to a and b params
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Boolean true if the result of apply the function to 'a' is greater or equal to the result of apply the function to 'b'
-    </ol>
 
 
 
@@ -247,18 +158,7 @@
     Iterator.  It consist in Fisher-Yates permutations over a list. In each step, it returns a shuffled element of a list.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam_or_list</span>
-         A family or a List to be iterated
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An element of the list
-    </ol>
 
 
     <h3>See also:</h3>
@@ -283,18 +183,7 @@
     Iterator.  Iterates over the elements of a list or a family. This is the cheapest iterator you can use with families if you do not need a random order.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam_or_list</span>
-         A family or a List to be iterated
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An element of the list
-    </ol>
 
 
     <h3>See also:</h3>
@@ -319,27 +208,7 @@
     Iterator.  First, this function sort the elements of a family or list and then it iterates over this list.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam_or_list</span>
-         A family or a List to be sorted and iterated
-        </li>
-        <li><span class="parameter">param</span>
-         String The name of a parameter of the agent
-        </li>
-        <li><span class="parameter">reverse</span>
-         Boolean. Optional parameter, if true, it will sort the list in reverse order
-        </li>
-        <li><span class="parameter">funct</span>
-         function. A function that takes a param of the agent (the one gived as parameter) and returns a numeric value, this numeric value will be used to sort the elements.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An element of the list
-    </ol>
 
 
     <h3>See also:</h3>
@@ -363,7 +232,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

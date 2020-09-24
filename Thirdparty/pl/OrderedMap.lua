@@ -1,4 +1,9 @@
---------
+--- OrderedMap, a map which preserves ordering.
+--
+-- Derived from `pl.Map`.
+--
+-- Dependencies: `pl.utils`, `pl.tablex`, `pl.class`, `pl.List`, `pl.Map`
+-- @classmod pl.OrderedMap
 
 local tablex = require 'pl.tablex'
 local utils = require 'pl.utils'
@@ -13,7 +18,7 @@ OrderedMap._name = 'OrderedMap'
 
 local rawset = rawset
 
--- construct an OrderedMap.
+--- construct an OrderedMap.
 -- Will throw an error if the argument is bad.
 -- @param t optional initialization table, same as for @{OrderedMap:update}
 function OrderedMap:_init (t)
@@ -26,7 +31,7 @@ end
 
 local assert_arg,raise = utils.assert_arg,utils.raise
 
--- update an OrderedMap using a table.
+--- update an OrderedMap using a table.
 -- If the table is itself an OrderedMap, then its entries will be appended.
 -- if it s a table of the form `{{key1=val1},{key2=val2},...}` these will be appended.
 --
@@ -58,7 +63,7 @@ function OrderedMap:update (t)
    return self
 end
 
--- set the key's value.   This key will be appended at the end of the map.
+--- set the key's value.   This key will be appended at the end of the map.
 --
 -- If the value is nil, then the key is removed.
 -- @param key the key
@@ -81,7 +86,7 @@ end
 
 OrderedMap.__newindex = OrderedMap.set
 
--- insert a key/value pair before a given position.
+--- insert a key/value pair before a given position.
 -- Note: if the map already contains the key, then this effectively
 -- moves the item to the new position by first removing at the old position.
 -- Has no effect if the key does not exist and val is nil
@@ -101,21 +106,21 @@ function OrderedMap:insert (pos,key,val)
     return self
 end
 
--- return the keys in order.
+--- return the keys in order.
 -- (Not a copy!)
 -- @return List
 function OrderedMap:keys ()
     return self._keys
 end
 
--- return the values in order.
+--- return the values in order.
 -- this is relatively expensive.
 -- @return List
 function OrderedMap:values ()
     return List(index_by(self,self._keys))
 end
 
--- sort the keys.
+--- sort the keys.
 -- @func cmp a comparison function as for @{table.sort}
 -- @return the map
 function OrderedMap:sort (cmp)
@@ -123,7 +128,7 @@ function OrderedMap:sort (cmp)
     return self
 end
 
--- iterate over key-value pairs in order.
+--- iterate over key-value pairs in order.
 function OrderedMap:iter ()
     local i = 0
     local keys = self._keys
@@ -136,12 +141,12 @@ function OrderedMap:iter ()
     end
 end
 
--- iterate over an ordered map (5.2).
+--- iterate over an ordered map (5.2).
 -- @within metamethods
 -- @function OrderedMap:__pairs
 OrderedMap.__pairs = OrderedMap.iter
 
--- string representation of an ordered map.
+--- string representation of an ordered map.
 -- @within metamethods
 function OrderedMap:__tostring ()
     local res = {}

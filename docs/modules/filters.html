@@ -24,18 +24,33 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Functions">Functions</a></li>
+
+
+<h2>Functions</h2>
+<ul class="nowrap">
+    <li><a href="#one_of">one_of (family)</a></li>
+    <li><a href="#n_of">n_of (n)</a></li>
+    <li><a href="#up_to_n_of">up_to_n_of (n)</a></li>
+    <li><a href="#first_n">first_n (n)</a></li>
+    <li><a href="#last_n">last_n (n, list)</a></li>
+    <li><a href="#others">others (family, agent)</a></li>
+    <li><a href="#with">with (family, pred)</a></li>
+    <li><a href="#one_of_others">one_of_others (family, agent)</a></li>
+    <li><a href="#max_one_of">max_one_of (family, funct)</a></li>
+    <li><a href="#max_n_of">max_n_of (family, num, funct)</a></li>
+    <li><a href="#min_n_of">min_n_of (family, num, funct)</a></li>
+    <li><a href="#min_one_of">min_one_of (family, funct)</a></li>
+    <li><a href="#with_max">with_max (family, funct)</a></li>
+    <li><a href="#with_min">with_min (family, funct)</a></li>
+    <li><a href="#agents_in">agents_in (cell)</a></li>
+    <li><a href="#find_families">find_families (fam_type)</a></li>
 </ul>
-
-
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/actions.html">actions</a></li>
@@ -71,79 +86,10 @@
 
 <h1>Module <code>filters</code></h1>
 <p>Some filter methods.</p>
-<p></p>
+<p>
 
+</p>
 
-<h2><a href="#Functions">Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#one_of">one_of (family)</a></td>
-	<td class="summary">It returns a random selectec element of a family or collection</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#n_of">n_of (n)</a></td>
-	<td class="summary">Select n random elements in a Family, a Collection or a Table.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#up_to_n_of">up_to_n_of (n)</a></td>
-	<td class="summary">Select n (or less if not enough agents) random elements in a Family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#first_n">first_n (n)</a></td>
-	<td class="summary">This function returns the first n elements of a List, or the entire list if not enough elements.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#last_n">last_n (n, list)</a></td>
-	<td class="summary">This function returns the last n elements of a list</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#others">others (family, agent)</a></td>
-	<td class="summary">Given a family and an agent, it returns all the other agents in the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#with">with (family, pred)</a></td>
-	<td class="summary">Filter function.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#one_of_others">one_of_others (family, agent)</a></td>
-	<td class="summary">Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#max_one_of">max_one_of (family, funct)</a></td>
-	<td class="summary">Returns the agent with the minimum value for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#max_n_of">max_n_of (family, num, funct)</a></td>
-	<td class="summary">Returns the n elements producing the maximum values for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#min_n_of">min_n_of (family, num, funct)</a></td>
-	<td class="summary">Returns the n elements producing the minimum values for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#min_one_of">min_one_of (family, funct)</a></td>
-	<td class="summary">Returns the agent with the minimum value for a gived function</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#with_max">with_max (family, funct)</a></td>
-	<td class="summary">Returns a Collection of agents with the min value for a gived function.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#with_min">with_min (family, funct)</a></td>
-	<td class="summary">Returns a Collection of agents with the min value for a gived function.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#agents_in">agents_in (cell)</a></td>
-	<td class="summary">Returns a Collection of agents who have a relation with the cell (usually the agents in the region of the cell).</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#find_families">find_families (fam_type)</a></td>
-	<td class="summary">Returns a List of families of a concrete type.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
@@ -157,18 +103,7 @@
     It returns a random selectec element of a family or collection
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         The family from which we will choose an agent.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An agent
-    </ol>
 
 
 
@@ -191,18 +126,7 @@
     Select n random elements in a Family, a Collection or a Table.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number, the number of agents we want.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        f_c_t A Family, a Collection or a Table from where we will pick the agents.
-    </ol>
 
 
 
@@ -224,18 +148,7 @@
     Select n (or less if not enough agents) random elements in a Family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number, the number of agents we want.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        f_c_t A Family, a Collection or a Table from where we will pick the agents.
-    </ol>
 
 
 
@@ -257,18 +170,7 @@
     This function returns the first n elements of a List, or the entire list if not enough elements.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number, the number of elements we want.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A List of agents.
-    </ol>
 
 
 
@@ -286,21 +188,7 @@
     This function returns the last n elements of a list
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">n</span>
-         Number, the number of elements we want.
-        </li>
-        <li><span class="parameter">list</span>
-         A List of elements.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A List of elements.
-    </ol>
 
 
 
@@ -318,21 +206,7 @@
     Given a family and an agent, it returns all the other agents in the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">agent</span>
-         An Agent instance.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A Collection containing all Agents of the Family except the agent gived as parameter.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -354,21 +228,7 @@
     Filter function.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">pred</span>
-         Anonymous function (boolean predicate)
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of agents in the family satisfying the predicate.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -390,21 +250,7 @@
     Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">agent</span>
-         is an Agent instance.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An Agent instance of the Family distinct of the agent gived as parameter.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -426,21 +272,7 @@
     Returns the agent with the minimum value for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to the agents to searching for the maximum.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Agent.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -463,24 +295,7 @@
     Returns the n elements producing the maximum values for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">num</span>
-         Number of agents we want
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to agents to compute the value
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -502,24 +317,7 @@
     Returns the n elements producing the minimum values for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">num</span>
-         Number of agents we want
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to agents to compute the value
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of agents
-    </ol>
 
 
     <h3>See also:</h3>
@@ -541,21 +339,7 @@
     Returns the agent with the minimum value for a gived function
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonimous function that will be applied to the agents to searching for the minimum.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        An Agent. The type of agent depends on the type of family that has called the method.
-    </ol>
 
 
     <h3>See also:</h3>
@@ -578,21 +362,7 @@
     Returns a Collection of agents with the min value for a gived function.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonymous function to calculate the value for each agent
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection
-    </ol>
 
 
     <h3>See also:</h3>
@@ -614,21 +384,7 @@
     Returns a Collection of agents with the min value for a gived function.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">family</span>
-         the target family.
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonymous function to calculate the value for each agent
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection
-    </ol>
 
 
     <h3>See also:</h3>
@@ -650,18 +406,7 @@
     Returns a Collection of agents who have a relation with the cell (usually the agents in the region of the cell).
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">cell</span>
-         Cell instance.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection
-    </ol>
 
 
 
@@ -681,12 +426,6 @@
     Returns a List of families of a concrete type.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam_type</span>
-         A Family type: FamilyCell, FamilyMobil, or FamilyRelational.
-        </li>
-    </ul>
 
 
 
@@ -704,7 +443,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

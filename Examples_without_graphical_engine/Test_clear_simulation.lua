@@ -48,13 +48,6 @@ STEP(
         -- print( '2', collectgarbage('count')/1024 )
         print( '2', collectgarbage('count')/1024 )
 
-        -- if TT < 20 then
-
-            
-        -- else
-        --     print('AHORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-        --     print("==========",TT,"===========\n")
-        -- end
 
         TT = TT+1
     end

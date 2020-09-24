@@ -1,4 +1,21 @@
---------
+--- Reading and querying simple tabular data.
+--
+--    data.read 'test.txt'
+--    ==> {{10,20},{2,5},{40,50},fieldnames={'x','y'},delim=','}
+--
+-- Provides a way of creating basic SQL-like queries.
+--
+--    require 'pl'
+--    local d = data.read('xyz.txt')
+--    local q = d:select('x,y,z where x > 3 and z < 2 sort by y')
+--    for x,y,z in q do
+--        print(x,y,z)
+--    end
+--
+-- See @{06-data.md.Reading_Columnar_Data|the Guide}
+--
+-- Dependencies: `pl.utils`, `pl.array2d` (fallback methods)
+-- @module pl.data
 
 local utils = require 'pl.utils'
 local _DEBUG = rawget(_G,'_DEBUG')
@@ -106,31 +123,31 @@ DataMT.__index = function(self,name)
     return array2d[name]
 end
 
--- return a particular column as a list of values (method).
+--- return a particular column as a list of values (method).
 -- @param name either name of column, or numerical index.
 -- @function Data.column_by_name
 
--- return a query iterator on this data (method).
+--- return a query iterator on this data (method).
 -- @string condn the query expression
 -- @function Data.select
 -- @see data.query
 
--- return a row iterator on this data (method).
+--- return a row iterator on this data (method).
 -- @string condn the query expression
 -- @function Data.select_row
 
--- return a new data object based on this query (method).
+--- return a new data object based on this query (method).
 -- @string condn the query expression
 -- @function Data.copy_select
 
--- return the field names of this data object (method).
+--- return the field names of this data object (method).
 -- @function Data.column_names
 
--- write out a row (method).
+--- write out a row (method).
 -- @param f file-like object
 -- @function Data.write_row
 
--- write data out to file (method).
+--- write data out to file (method).
 -- @param f file-like object
 -- @function Data.write
 
@@ -172,7 +189,7 @@ local function open_file (f,mode)
     return f,nil,opened
 end
 
--- read a delimited file in a Lua table.
+--- read a delimited file in a Lua table.
 -- By default, attempts to treat first line as separated list of fieldnames.
 -- @param file a filename or a file-like object
 -- @tab cnfg parsing options
@@ -320,7 +337,7 @@ function DataMT:write_row(f,row)
     write_row(self,f,row,self.delim)
 end
 
--- write 2D data to a file.
+--- write 2D data to a file.
 -- Does not assume that the data has actually been
 -- generated with `new` or `read`.
 -- @param data 2D array
@@ -360,7 +377,7 @@ local function massage_fieldnames (fields,copy)
     end
 end
 
--- create a new dataset from a table of rows.
+--- create a new dataset from a table of rows.
 -- Can specify the fieldnames, else the table must have a field called
 -- 'fieldnames', which is either a string of delimiter-separated names,
 -- or a table of names. <br>
@@ -451,7 +468,7 @@ end
 
 
 local function process_select (data,parms)
-    -- preparing fields --
+    --- preparing fields ----
     field_error = nil
     local fields = parms.fields
     local numfields = fields:find '%$'  or #data.fieldnames == 0
@@ -505,7 +522,7 @@ parse_select = function(s,data)
     else return parms end
 end
 
--- create a query iterator from a select string.
+--- create a query iterator from a select string.
 -- Select string has this format: <br>
 -- FIELDLIST [ where LUA-CONDN [ sort by FIELD] ]<br>
 -- FIELDLIST is a comma-separated list of valid fields, or '*'. <br> <br>
@@ -608,7 +625,7 @@ DataMT.select_row = function(d,condn,context)
     return data.query(d,condn,context,true)
 end
 
--- Filter input using a query.
+--- Filter input using a query.
 -- @string Q a query string
 -- @param infile filename or file-like object
 -- @param outfile filename or file-like object

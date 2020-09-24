@@ -24,19 +24,31 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Methods">Methods</a></li>
-<li><a href="#Metamethods">Metamethods</a></li>
+
+
+<h2>Methods</h2>
+<ul class="nowrap">
+    <li><a href="#Agent:_init">Agent:_init ()</a></li>
+    <li><a href="#Agent:set_param">Agent:set_param (name, value)</a></li>
+    <li><a href="#Agent:link_neighbors">Agent:link_neighbors (fam)</a></li>
+    <li><a href="#Agent:in_link_neighbors">Agent:in_link_neighbors (fam)</a></li>
+    <li><a href="#Agent:out_link_neighbors">Agent:out_link_neighbors (fam)</a></li>
 </ul>
-
-
+<h2>Metamethods</h2>
+<ul class="nowrap">
+    <li><a href="#Agent:__delete_in_neighs">Agent:__delete_in_neighs ()</a></li>
+    <li><a href="#Agent:__delete_in_neighs">Agent:__delete_in_neighs ()</a></li>
+    <li><a href="#Agent:__delete_out_neighs">Agent:__delete_out_neighs ()</a></li>
+    <li><a href="#Agent:__delete_links">Agent:__delete_links ()</a></li>
+    <li><a href="#Agent:__purge">Agent:__purge ()</a></li>
+    <li><a href="#Agent:__tostring">Agent:__tostring ()</a></li>
+</ul>
 <h2>Classes</h2>
 <ul class="nowrap">
   <li><strong>Agent</strong></li>
@@ -72,62 +84,10 @@
 
 <h1>Class <code>Agent</code></h1>
 <p>Base agent class,  Mobiles, Cells and Relationals are instances of Agent also.</p>
-<p></p>
+<p>
 
+</p>
 
-<h2><a href="#Methods">Methods</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#Agent:_init">Agent:_init ()</a></td>
-	<td class="summary">When a new agent is created, some properties are given to it.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:set_param">Agent:set_param (name, value)</a></td>
-	<td class="summary">It gives a new value to some parameter of the agent.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:link_neighbors">Agent:link_neighbors (fam)</a></td>
-	<td class="summary">It returns the neighbors of the agent.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:in_link_neighbors">Agent:in_link_neighbors (fam)</a></td>
-	<td class="summary">It returns the links that points to the agent.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:out_link_neighbors">Agent:out_link_neighbors (fam)</a></td>
-	<td class="summary">It returns the links the agent as origin.</td>
-	</tr>
-</table>
-<h2><a href="#Metamethods">Metamethods</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#Agent:__delete_in_neighs">Agent:__delete_in_neighs ()</a></td>
-	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:__delete_in_neighs">Agent:__delete_in_neighs ()</a></td>
-	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:__delete_out_neighs">Agent:__delete_out_neighs ()</a></td>
-	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:__delete_links">Agent:__delete_links ()</a></td>
-	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:__purge">Agent:__purge ()</a></td>
-	<td class="summary">Auxiliar function used by families to purge agents, it is not recommended to use it directly to purge agents, use 'purge_agents()' instead.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Agent:__tostring">Agent:__tostring ()</a></td>
-	<td class="summary">A function to print the Agent.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Methods"></a>Methods</h2>
@@ -142,11 +102,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A new instance of Agent class.
-    </ol>
 
 
 
@@ -164,21 +119,7 @@
     It gives a new value to some parameter of the agent.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">name</span>
-         String, the name of the paprameter
-        </li>
-        <li><span class="parameter">value</span>
-         Anything. The new value of the paprameter could be a String, a number, a table ...
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Agent. The one who calls this method
-    </ol>
 
 
 
@@ -192,18 +133,7 @@
     It returns the neighbors of the agent.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam</span>
-         Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of neighbors of the agent.
-    </ol>
 
 
 
@@ -217,18 +147,7 @@
     It returns the links that points to the agent.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam</span>
-         Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of links of the agent.
-    </ol>
 
 
 
@@ -242,18 +161,7 @@
     It returns the links the agent as origin.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fam</span>
-         Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Collection of links of the agent.
-    </ol>
 
 
 
@@ -272,11 +180,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
 
@@ -291,11 +194,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
 
@@ -310,11 +208,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
 
@@ -329,11 +222,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
 
@@ -348,11 +236,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing.
-    </ol>
 
 
 
@@ -367,11 +250,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A string representation of the agent.
-    </ol>
 
 
 
@@ -388,7 +266,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

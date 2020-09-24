@@ -1,4 +1,3 @@
----------
 local iter = {
    NAME    = "iter 0.1",
    URL     = "https://github.com/starwing/luaiter",
@@ -47,15 +46,15 @@ local pack   = table.pack or function(...) return { n = select('#', ...), ... } 
 -- it puts on map iterator subscript 1.
 --
 -- All iterators has several public routines:
---    rewind: rewind iterator to generates values from start.
---    clone:  clone a iterator
---    call directly: generates next values.
---    as a iterator: iterates values.
+--    - rewind: rewind iterator to generates values from start.
+--    - clone:  clone a iterator
+--    - call directly: generates next values.
+--    - as a iterator: iterates values.
 --
 -- iterators' internal callbacks must not be called directly:
---    reset: prepare another iteration.
---    next:  disable the "iter" callback and makes iterator stateful.
---    iter:  makes iterator stateless.
+--    - reset: prepare another iteration.
+--    - next:  disable the "iter" callback and makes iterator stateful.
+--    - iter:  makes iterator stateless.
 
 
 local Iter   = {}
@@ -1041,8 +1040,7 @@ local Operator = {
    newindex = function(a, b, c) a[b] = c end;
 }
 
---Lua 5.3 operators
-do
+--[[Lua 5.3 operators]] do
    local loader = load [[
       local Operator = ...
       function Operator.idiv(a, b) return a // b end

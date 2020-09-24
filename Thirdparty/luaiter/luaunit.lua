@@ -1,4 +1,13 @@
---------
+--[[
+        luaunit.lua
+
+Description: A unit testing framework
+Homepage: https://github.com/bluebird75/luaunit
+Development by Philippe Fremy <phil@freehackers.org>
+Based on initial work of Ryu, Gwang (http://www.gpgstudy.com/gpgiki/LuaUnit)
+License: BSD License, see LICENSE.txt
+Version: 3.2
+]]--
 
 require("math")
 local M={}
@@ -81,11 +90,11 @@ Options:
 
 local is_equal -- defined here to allow calling from mismatchFormattingPureList
 
---
+----------------------------------------------------------------
 --
 --                 general utility functions
 --
---
+----------------------------------------------------------------
 
 local function pcall_or_abort(func, ...)
     -- unpack is a global function for Lua 5.1, otherwise use table.unpack
@@ -1057,11 +1066,11 @@ local function error_fmt(level, ...)
     error(string.format(...), (level or 1) + 1)
 end
 
---
+----------------------------------------------------------------
 --
 --                     assertions
 --
---
+----------------------------------------------------------------
 
 local function errorMsgEquality(actual, expected, doDeepAnalysis)
 
@@ -1413,9 +1422,9 @@ function M.assertItemsEquals(actual, expected)
     end
 end
 
-
+----------------------------------------------------------------
 --                     Compatibility layer
-
+----------------------------------------------------------------
 
 -- for compatibility with LuaUnit v2.x
 function M.wrapFunctions()
@@ -1560,11 +1569,11 @@ for _,v in ipairs( list_of_funcs ) do
     end
 end
 
---
+----------------------------------------------------------------
 --
 --                     Outputters
 --
---
+----------------------------------------------------------------
 
 -- A common "base" class for outputters
 -- For concepts involved (class inheritance) see http://www.lua.org/pil/16.2.html
@@ -1596,9 +1605,9 @@ function genericOutput:endClass() end
 function genericOutput:endSuite() end
 
 
---
+----------------------------------------------------------------
 --                     class TapOutput
---
+----------------------------------------------------------------
 
 local TapOutput = genericOutput.new() -- derived class
 local TapOutput_MT = { __index = TapOutput } -- metatable
@@ -1644,9 +1653,9 @@ TapOutput.__class__ = 'TapOutput'
 
 -- class TapOutput end
 
---
+----------------------------------------------------------------
 --                     class JUnitOutput
---
+----------------------------------------------------------------
 
 -- See directory junitxml for more information about the junit format
 local JUnitOutput = genericOutput.new() -- derived class
@@ -1731,9 +1740,9 @@ JUnitOutput.__class__ = 'JUnitOutput'
 
 -- class TapOutput end
 
---
+----------------------------------------------------------------
 --                     class TextOutput
---
+----------------------------------------------------------------
 
 --[[
 
@@ -1744,11 +1753,11 @@ For each test: . or F or E
 If some failed tests:
     ==============
     ERROR / FAILURE: TestName (testfile.testclass)
-    --
+    ---------
     Stack trace
 
 
-then --
+then --------------
 then "Ran x tests in 0.000s"
 then OK or FAILED (failures=1, error=1)
 
@@ -1757,7 +1766,7 @@ testname (filename.classname) ... ok
 testname (filename.classname) ... FAIL
 testname (filename.classname) ... ERROR
 
-then --
+then --------------
 then "Ran x tests in 0.000s"
 then OK or FAILED (failures=1, error=1)
 
@@ -1800,9 +1809,9 @@ Tests run: 8,  Failures: 1,  Errors: 0
 -- Maven
 
 # mvn test
---
+-------------------------------------------------------
  T E S T S
---
+-------------------------------------------------------
 Running math.AdditionTest
 Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed:
 0.03 sec <<< FAILURE!
@@ -1816,11 +1825,11 @@ Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
 
 
 -- LuaUnit
--- non verbose
+---- non verbose
 * display . or F or E when running tests
--- verbose
+---- verbose
 * display test name + ok/fail
---
+----
 * blank line
 * number) ERROR or FAILURE: TestName
    Stack trace
@@ -1828,7 +1837,7 @@ Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
 * number) ERROR or FAILURE: TestName
    Stack trace
 
-then --
+then --------------
 then "Ran x tests in 0.000s (%d not selected, %d skipped)"
 then OK or FAILED (failures=1, error=1)
 
@@ -1891,7 +1900,7 @@ TextOutput.__class__ = 'TextOutput'
     function TextOutput:displayFailedTests()
         if self.result.notPassedCount ~= 0 then
             print("Failed tests:")
-            print("--")
+            print("-------------")
             for i, v in ipairs(self.result.notPassed) do
                 self:displayOneFailedTest(i, v)
             end
@@ -1914,9 +1923,9 @@ TextOutput.__class__ = 'TextOutput'
 -- class TextOutput end
 
 
---
+----------------------------------------------------------------
 --                     class NilOutput
---
+----------------------------------------------------------------
 
 local function nopCallable()
     --print(42)
@@ -1930,11 +1939,11 @@ function NilOutput.new(runner)
     return setmetatable( { __class__ = 'NilOutput' }, NilOutput_MT )
 end
 
---
+----------------------------------------------------------------
 --
 --                     class LuaUnit
 --
---
+----------------------------------------------------------------
 
 M.LuaUnit = {
     outputType = TextOutput,
@@ -1951,7 +1960,7 @@ end
         return setmetatable( {}, LuaUnit_MT )
     end
 
-    --[[ Utility methods ]]--
+    -----------------[[ Utility methods ]]---------------------
 
     function M.LuaUnit.asFunction(aObject)
         -- return "aObject" if it is a function, and nil otherwise
@@ -2148,9 +2157,9 @@ end
         os.exit(0)
     end
 
---
+----------------------------------------------------------------
 --                     class NodeStatus
---
+----------------------------------------------------------------
 
     local NodeStatus = { __class__ = 'NodeStatus' } -- class
     local NodeStatus_MT = { __index = NodeStatus } -- metatable
@@ -2219,7 +2228,7 @@ end
         return '            <passed/>\n' -- (not XSD-compliant! normally shouldn't get here)
     end
 
-    --[[ Output methods ]]--
+    --------------[[ Output methods ]]-------------------------
 
     local function conditional_plural(number, singular)
         -- returns a grammatically well-formed string "%d <singular/plural>"
@@ -2408,7 +2417,7 @@ end
         error( 'No such format: '..outputType,2)
     end
 
-    --[[ Runner ]]--
+    --------------[[ Runner ]]-----------------
 
     function M.LuaUnit:protectedCall(classInstance, methodInstance, prettyFuncName)
         -- if classInstance is nil, this is just a function call

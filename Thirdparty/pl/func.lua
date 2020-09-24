@@ -1,4 +1,22 @@
---------
+--- Functional helpers like composition, binding and placeholder expressions.
+-- Placeholder expressions are useful for short anonymous functions, and were
+-- inspired by the Boost Lambda library.
+--
+--    > utils.import 'pl.func'
+--    > ls = List{10,20,30}
+--    > = ls:map(_1+1)
+--    {11,21,31}
+--
+-- They can also be used to _bind_ particular arguments of a function.
+--
+--    > p = bind(print,'start>',_0)
+--    > p(10,20,30)
+--    > start>   10   20  30
+--
+-- See @{07-functional.md.Creating_Functions_from_Functions|the Guide}
+--
+-- Dependencies: `pl.utils`, `pl.tablex`
+-- @module pl.func
 local type,setmetatable,getmetatable,rawset = type,setmetatable,getmetatable,rawset
 local concat,append = table.concat,table.insert
 local tostring = tostring
@@ -102,7 +120,7 @@ local function is_global_table (n)
     return type(_G[n]) == 'table'
 end
 
--- wrap a table of functions. This makes them available for use in
+--- wrap a table of functions. This makes them available for use in
 -- placeholder expressions.
 -- @string tname a table name
 -- @tab context context to put results, defaults to environment of caller
@@ -116,7 +134,7 @@ function func.import(tname,context)
     end
 end
 
--- register a function for use in placeholder expressions.
+--- register a function for use in placeholder expressions.
 -- @func fun a function
 -- @string[opt] name an optional name
 -- @return a placeholder functiond
@@ -167,7 +185,7 @@ binreg (_PEMT,{__add='+',__sub='-',__mul='*',__div='/',__mod='%',__pow='^',__con
 
 binreg (_PEMT,{__eq='=='})
 
--- all elements of a table except the first.
+--- all elements of a table except the first.
 -- @tab ls a list-like table.
 function func.tail (ls)
     assert_arg(1,ls,'table')
@@ -178,7 +196,7 @@ function func.tail (ls)
     return res
 end
 
--- create a string representation of a placeholder expression.
+--- create a string representation of a placeholder expression.
 -- @param e a placeholder expression
 -- @param lastpred not used
 function repr (e,lastpred)
@@ -267,7 +285,7 @@ function collect_values (e,vlist)
 end
 func.collect_values = collect_values
 
--- instantiate a PE into an actual function. First we find the largest placeholder used,
+--- instantiate a PE into an actual function. First we find the largest placeholder used,
 -- e.g. _2; from this a list of the formal parameters can be build. Then we collect and replace
 -- any non-PE values from the PE, and build up a constant binding list.
 -- Finally, the expression can be compiled, and e.__PE_function is set.
@@ -297,7 +315,7 @@ function func.instantiate (e)
     return fun
 end
 
--- instantiate a PE unless it has already been done.
+--- instantiate a PE unless it has already been done.
 -- @param e a placeholder expression
 -- @return the function
 function func.I(e)
@@ -309,7 +327,7 @@ end
 
 utils.add_function_factory(_PEMT,func.I)
 
--- bind the first parameter of the function to a value.
+--- bind the first parameter of the function to a value.
 -- @function func.bind1
 -- @func fn a function of one or more arguments
 -- @param p a value
@@ -318,7 +336,7 @@ utils.add_function_factory(_PEMT,func.I)
 func.bind1 = utils.bind1
 func.curry = func.bind1
 
--- create a function which chains two functions.
+--- create a function which chains two functions.
 -- @func f a function of at least one argument
 -- @func g a function of at least one argument
 -- @return a function
@@ -327,7 +345,7 @@ function func.compose (f,g)
     return function(...) return f(g(...)) end
 end
 
--- bind the arguments of a function to given values.
+--- bind the arguments of a function to given values.
 -- `bind(fn,v,_2)` is equivalent to `bind1(fn,v)`.
 -- @func fn a function of at least one argument
 -- @param ... values or placeholder variables

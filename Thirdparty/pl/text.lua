@@ -1,4 +1,22 @@
-------
+--- Text processing utilities.
+--
+-- This provides a Template class (modeled after the same from the Python
+-- libraries, see string.Template). It also provides similar functions to those
+-- found in the textwrap module.
+--
+-- See  @{03-strings.md.String_Templates|the Guide}.
+--
+-- Calling `text.format_operator()` overloads the % operator for strings to give Python/Ruby style formated output.
+-- This is extended to also do template-like substitution for map-like data.
+--
+--    > require 'pl.text'.format_operator()
+--    > = '%s = %5.3f' % {'PI',math.pi}
+--    PI = 3.142
+--    > = '$name = $value' % {name='dog',value='Pluto'}
+--    dog = Pluto
+--
+-- Dependencies: `pl.utils`, `pl.types`
+-- @module pl.text
 
 local gsub = string.gsub
 local concat,append = table.concat,table.insert
@@ -29,7 +47,7 @@ local function _indent (s,sp)
     return concat(imap(bind1('..',sp),sl),'\n')..'\n'
 end
 
--- indent a multiline string.
+--- indent a multiline string.
 -- @param s the string
 -- @param n the size of the indent
 -- @param ch the character to use when indenting (default ' ')
@@ -40,7 +58,7 @@ function text.indent (s,n,ch)
     return _indent(s,string.rep(ch or ' ',n))
 end
 
--- dedent a multiline string by removing any initial indent.
+--- dedent a multiline string by removing any initial indent.
 -- useful when working with [[..]] strings.
 -- @param s the string
 -- @return a string with initial indent zero.
@@ -52,7 +70,7 @@ function text.dedent (s)
     return concat(sl,'\n')..'\n'
 end
 
--- format a paragraph into lines so that they fit into a line width.
+--- format a paragraph into lines so that they fit into a line width.
 -- It will not break long words, so lines can be over the length
 -- to that extent.
 -- @param s the string
@@ -77,7 +95,7 @@ function text.wrap (s,width)
     return makelist(lines)
 end
 
--- format a paragraph so that it fits into a line width.
+--- format a paragraph so that it fits into a line width.
 -- @param s the string
 -- @param width the margin width, default 70
 -- @return a string
@@ -124,7 +142,7 @@ local function _substitute(s,tbl,safe)
     return (gsub(res,'%$([%w_]+)',subst))
 end
 
--- substitute values into a template, throwing an error.
+--- substitute values into a template, throwing an error.
 -- This will throw an error if no name is found.
 -- @param tbl a table of name-value pairs.
 function Template:substitute(tbl)
@@ -132,7 +150,7 @@ function Template:substitute(tbl)
     return _substitute(self.tmpl,tbl,false)
 end
 
--- substitute values into a template.
+--- substitute values into a template.
 -- This version just passes unknown names through.
 -- @param tbl a table of name-value pairs.
 function Template:safe_substitute(tbl)
@@ -140,7 +158,7 @@ function Template:safe_substitute(tbl)
     return _substitute(self.tmpl,tbl,true)
 end
 
--- substitute values into a template, preserving indentation. <br>
+--- substitute values into a template, preserving indentation. <br>
 -- If the value is a multiline string _or_ a template, it will insert
 -- the lines at the correct indentation. <br>
 -- Furthermore, if a template, then that template will be subsituted
@@ -177,7 +195,7 @@ function Template:indent_substitute(tbl)
     return concat(lines,'\n')..'\n'
 end
 
--- Python-style formatting operator --
+------- Python-style formatting operator ------
 -- (see <a href="http://lua-users.org/wiki/StringInterpolation">the lua-users wiki</a>) --
 
 function text.format_operator()

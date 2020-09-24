@@ -1,4 +1,15 @@
---------
+--- Iterators for extracting words or numbers from an input source.
+--
+--    require 'pl'
+--    local total,n = seq.sum(input.numbers())
+--    print('average',total/n)
+--
+-- _source_ is defined as a string or a file-like object (i.e. has a read() method which returns the next line)
+--
+-- See @{06-data.md.Reading_Unstructured_Text_Data|here}
+--
+-- Dependencies: `pl.utils`
+-- @module pl.input
 local strfind = string.find
 local strsub = string.sub
 local strmatch = string.match
@@ -10,7 +21,7 @@ local io = io
 
 local input = {}
 
--- create an iterator over all tokens.
+--- create an iterator over all tokens.
 -- based on allwords from PiL, 7.1
 -- @func getter any function that returns a line of text
 -- @string pattern
@@ -39,7 +50,7 @@ local alltokens = input.alltokens
 
 -- question: shd this _split_ a string containing line feeds?
 
--- create a function which grabs the next value from a source. If the source is a string, then the getter
+--- create a function which grabs the next value from a source. If the source is a string, then the getter
 -- will return the string and thereafter return nil. If not specified then the source is assumed to be stdin.
 -- @param f a string or a file-like object (i.e. has a read() method which returns the next line)
 -- @return a getter function
@@ -63,7 +74,7 @@ function input.create_getter(f)
     end
 end
 
--- generate a sequence of numbers from a source.
+--- generate a sequence of numbers from a source.
 -- @param f A source
 -- @return An iterator
 function input.numbers(f)
@@ -71,7 +82,7 @@ function input.numbers(f)
         '('..patterns.FLOAT..')',tonumber)
 end
 
--- generate a sequence of words from a source.
+--- generate a sequence of words from a source.
 -- @param f A source
 -- @return An iterator
 function input.words(f)
@@ -91,7 +102,7 @@ local function apply_tonumber (no_fail,...)
     return args
 end
 
--- parse an input source into fields.
+--- parse an input source into fields.
 -- By default, will fail if it cannot convert a field to a number.
 -- @param ids a list of field indices, or a maximum field index
 -- @string delim delimiter to parse fields (default space)

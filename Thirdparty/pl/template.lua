@@ -1,4 +1,32 @@
------
+--- A template preprocessor.
+-- Originally by [Ricki Lake](http://lua-users.org/wiki/SlightlyLessSimpleLuaPreprocessor)
+--
+-- There are two rules:
+--
+--  * lines starting with # are Lua
+--  * otherwise, `$(expr)` is the result of evaluating `expr`
+--
+-- Example:
+--
+--    #  for i = 1,3 do
+--       $(i) Hello, Word!
+--    #  end
+--    ===>
+--    1 Hello, Word!
+--    2 Hello, Word!
+--    3 Hello, Word!
+--
+-- Other escape characters can be used, when the defaults conflict
+-- with the output language.
+--
+--    > for _,n in pairs{'one','two','three'} do
+--    static int l_${n} (luaState *state);
+--    > end
+--
+-- See  @{03-strings.md.Another_Style_of_Template|the Guide}.
+--
+-- Dependencies: `pl.utils`
+-- @module pl.template
 
 local utils = require 'pl.utils'
 
@@ -59,7 +87,7 @@ end
 
 local template = {}
 
--- expand the template using the specified environment.
+--- expand the template using the specified environment.
 -- This function will compile and render the template. For more performant
 -- recurring usage use the two step approach by using `compile` and `ct:render`.
 -- There are six special fields in the environment table `env`
@@ -91,7 +119,7 @@ function template.substitute(str,env)
     return t:render(env, rawget(env,"_parent"), rawget(env,"_debug"))
 end
 
--- executes the previously compiled template and renders it.
+--- executes the previously compiled template and renders it.
 -- @function ct:render
 -- @tab[opt] env the environment.
 -- @tab[opt] parent continue looking up in this table (e.g. `parent=_G`).
@@ -117,7 +145,7 @@ local render = function(self, env, parent, db)
     return table.concat(out), nil, self.code
 end
 
--- compiles the template.
+--- compiles the template.
 -- Returns an object that can repeatedly be rendered without parsing/compiling
 -- the template again.
 -- The options passed in the `opts` table support the following options:

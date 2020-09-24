@@ -24,18 +24,23 @@
 
 <div id="navigation">
 <br/>
-<h1>ldoc</h1>
+<h1>Selenitas</h1>
 
 <ul>
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Methods">Methods</a></li>
+
+
+<h2>Methods</h2>
+<ul class="nowrap">
+    <li><a href="#FamilyCell:_init">FamilyCell:_init ()</a></li>
+    <li><a href="#FamilyCell:new">FamilyCell:new (object)</a></li>
+    <li><a href="#FamilyCell:create_n">FamilyCell:create_n (num, funct)</a></li>
+    <li><a href="#FamilyCell:diffuse">FamilyCell:diffuse (param, perc, num)</a></li>
+    <li><a href="#FamilyCell:cell_of">FamilyCell:cell_of (table_)</a></li>
+    <li><a href="#FamilyCell:cell_in_pos">FamilyCell:cell_in_pos (table_)</a></li>
 </ul>
-
-
 <h2>Classes</h2>
 <ul class="nowrap">
   <li><a href="../classes/Agent.html">Agent</a></li>
@@ -71,39 +76,10 @@
 
 <h1>Class <code>FamilyCell</code></h1>
 <p>A Family to hold Cell agents, new elements will be added to the collection as Cell instances.</p>
-<p></p>
+<p>
 
+</p>
 
-<h2><a href="#Methods">Methods</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:_init">FamilyCell:_init ()</a></td>
-	<td class="summary">FamilyCell constructor.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:add">FamilyCell:add (object)</a></td>
-	<td class="summary">Add a new Cell to the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:create_n">FamilyCell:create_n (num, funct)</a></td>
-	<td class="summary">Create n new Cells in the family.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:diffuse">FamilyCell:diffuse (param, perc, num)</a></td>
-	<td class="summary">Produces the diffusion of a parameter of each Cell between its neighbors.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:cell_of">FamilyCell:cell_of (table_)</a></td>
-	<td class="summary">Given a vector position or an agent, it returns the Cell of the family to which the position belongs.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#FamilyCell:cell_in_pos">FamilyCell:cell_in_pos (table_)</a></td>
-	<td class="summary">It finds for a Cell in the family with the (exactly) same position as the one gived as parameter.</td>
-	</tr>
-</table>
-
-<br/>
-<br/>
 
 
     <h2 class="section-header "><a name="Methods"></a>Methods</h2>
@@ -118,11 +94,6 @@
 
 
 
-    <h3>Returns:</h3>
-    <ol>
-
-        A new instance of FamilyCell class.
-    </ol>
 
 
 
@@ -133,25 +104,14 @@
 
 </dd>
     <dt>
-    <a name = "FamilyCell:add"></a>
-    <strong>FamilyCell:add (object)</strong>
+    <a name = "FamilyCell:new"></a>
+    <strong>FamilyCell:new (object)</strong>
     </dt>
     <dd>
-    Add a new Cell to the family.
+    Insert a new Cell to the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">object</span>
-         A table with the params of the new Cell
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
 
 
 
@@ -159,7 +119,7 @@
     <ul>
         <pre class="example"><span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
     <span class="keyword">for</span> j=<span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
-         Cells_family:add( {[<span class="string">'pos'</span>]={i,j}} )
+         Cells_family:new( {[<span class="string">'pos'</span>]={i,j}} )
     <span class="keyword">end</span>
 <span class="keyword">end</span></pre>
     </ul>
@@ -173,21 +133,7 @@
     Create n new Cells in the family.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">num</span>
-         The number of agents that will be added to the family
-        </li>
-        <li><span class="parameter">funct</span>
-         An anonymous function that will be executed to create the Cell.
-        </li>
-    </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-        Nothing
-    </ol>
 
 
     <h3>See also:</h3>
@@ -205,7 +151,7 @@
 
 <span class="comment">-- If you are not confortable with anonymous functions you can use a 'for' to add new agents to the family. This is equivalent to:
 </span><span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">10</span> <span class="keyword">do</span>
-    Cells:add({ [<span class="string">'pos'</span>] = {<span class="global">math</span>.random[<span class="number">100</span>],<span class="global">math</span>.random[<span class="number">100</span>]} })
+    Cells:new({ [<span class="string">'pos'</span>] = {<span class="global">math</span>.random[<span class="number">100</span>],<span class="global">math</span>.random[<span class="number">100</span>]} })
 <span class="keyword">end</span></pre>
     </ul>
 
@@ -218,18 +164,6 @@
     Produces the diffusion of a parameter of each Cell between its neighbors.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">param</span>
-         Name of an Agent parameter, the one we want to diffuse.
-        </li>
-        <li><span class="parameter">perc</span>
-         Percentage of param to be diffused in a [0,1] range
-        </li>
-        <li><span class="parameter">num</span>
-         Number. Optional parameter with 1 by default. The number of diffusions we want to do.
-        </li>
-    </ul>
 
 
 
@@ -258,12 +192,6 @@ Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>
     Given a vector position or an agent, it returns the Cell of the family to which the position belongs.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">table_</span>
-         Agent or position vector
-        </li>
-    </ul>
 
 
 
@@ -286,12 +214,6 @@ Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>
     It finds for a Cell in the family with the (exactly) same position as the one gived as parameter.
 
 
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">table_</span>
-         Agent or position vector.
-        </li>
-    </ul>
 
 
 
@@ -305,7 +227,7 @@ Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-21 13:31:01 </i>
+<i style="float:right;">Last updated 2020-09-24 09:27:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
