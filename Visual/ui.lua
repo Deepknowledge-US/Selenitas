@@ -1,7 +1,9 @@
 local Slab = require "Thirdparty.Slab.Slab"
 local DebugGraph = require("Thirdparty.debuggraph.debugGraph")
+local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
 local FileUtils = require "Visual.fileutils"
 local View = require "Visual.view"
+
 -- GraphicEngine already required from main.lua
 
 local UI = {}
@@ -16,10 +18,14 @@ local speed_slider_value = 20
 local default_font = love.graphics.newFont(12)
 local fps_graph = DebugGraph:new('fps', 0, 0, 100, 60, 0.5, nil, default_font)
 local mem_graph = DebugGraph:new('mem', 0, 60, 100, 60, 0.5, nil, default_font)
+local toolbar_buttons_params = {
+    base_color = {0.549, 0.549, 0.549},
+    hover_color = {0.698, 0.698, 0.698},
+    disabled_color = {0.352, 0.352, 0.352},
+}
 
 -- Simulation state trackers
 local setup_executed = false
-local go_enabled = false
 
 -- Wrapper for FileUtils.load_model_file,
 -- Checks for errors and sets window name
@@ -35,6 +41,44 @@ local function load_model(path)
     end
 end
 
+local on_click_functions = {
+    setup = function()
+        local err = GraphicEngine.setup_simulation()
+        setup_executed = not err
+        if err then
+            UI.show_error_message(err)
+        end
+    end,
+
+    step = function()
+        local err = GraphicEngine.step_simulation()
+        if err then
+            UI.show_error_message(err)
+        end
+    end,
+
+    go = function()
+        Simulation:start()
+    end,
+
+    stop = function()
+        Simulation:stop()
+    end,
+
+    reload = function()
+        GraphicEngine.reset_simulation()
+        load_model(file_loaded_path)
+    end,
+
+    load_file = function()
+        show_file_picker = true
+    end,
+
+    edit_file = function()
+        FileUtils.open_in_editor(file_loaded_path)
+    end,
+}
+
 function UI.show_error_message(err)
     error_msg = err
 end
@@ -45,9 +89,24 @@ end
 
 function UI.reset()
     setup_executed = false
-    go_enabled = false
     show_params_window = false
     Interface.ui_settings = {}
+end
+
+local function add_toolbar_button(name, love_img, disabled, tooltip, on_click_func)
+    local col = toolbar_buttons_params.base_color
+    if toolbar_buttons_params[name .. "hovered"] then
+        col = toolbar_buttons_params.hover_color
+    end
+    if disabled then
+        col = toolbar_buttons_params.disabled_color
+    end
+    Slab.Image(name, {Image = love_img, ReturnOnClick = true, Color = col, Scale = 0.4, Tooltip = tooltip})
+    toolbar_buttons_params[name .. "hovered"] = Slab.IsControlHovered()
+    if Slab.IsControlClicked() and not disabled then
+        on_click_func()
+    end
+
 end
 
 function UI.update(dt)
@@ -60,20 +119,20 @@ function UI.update(dt)
         -- "File" section
         if Slab.BeginMenu("File") then
             if Slab.MenuItem("Load file...") then
-                show_file_picker = true
+                on_click_functions.load_file()
             end
 
             -- Show "Reload file" option if file was loaded
             if file_loaded_path then
                 if Slab.MenuItem("Reload file") then
-                    load_model(file_loaded_path)
+                    on_click_functions.reload()
                 end
             end
 
             -- Show "Edit loaded file" option if file was loaded
             if file_loaded_path then
                 if Slab.MenuItem("Edit loaded file") then
-                    FileUtils.open_in_editor(file_loaded_path)
+                    on_click_functions.edit_file()
                 end
             end
 
@@ -234,7 +293,7 @@ function UI.update(dt)
         X = 0,
         Y = 15,
         W = screen_w - 2,
-        H = 35,
+        H = 40,
         AutoSizeWindow = false,
         AllowResize = false
     })
@@ -246,45 +305,43 @@ function UI.update(dt)
         AlignRowY = 'center'
     })
 
-    -- Setup button
-    if Slab.Button("Setup", {Disabled = file_loaded_path == nil}) then
-        local err = GraphicEngine.setup_simulation()
-        setup_executed = not err
-        if err then
-            UI.show_error_message(err)
-        end
-    end
-
+    add_toolbar_button("New", ResourceManager.ui.newfile, false,
+        "New file", function() end) -- TODO
     Slab.SameLine()
 
-    -- Step button
-    if Slab.Button("Step", {Disabled = not setup_executed}) then
-        local err = GraphicEngine.step_simulation()
-        if err then
-            UI.show_error_message(err)
-        end
-    end
-
+    add_toolbar_button("Edit", ResourceManager.ui.edit, file_loaded_path == nil,
+        "Edit in external editor", on_click_functions.edit_file)
     Slab.SameLine()
 
-    -- Go button
-    local go_button_label = go_enabled and "Stop" or "Go" -- Change "go" button label if it's already running
-    if Slab.Button(go_button_label, {Disabled = not setup_executed}) then
-        go_enabled = not go_enabled
-        if go_enabled then
-            Simulation:start()
-        else
-            Simulation:stop()
-        end
-    end
-
+    add_toolbar_button("Open", ResourceManager.ui.open, false,
+        "Open file", on_click_functions.load_file)
     Slab.SameLine()
 
-    if Slab.Button("Reload", {Disabled = file_loaded_path == nil}) then
-        GraphicEngine.reset_simulation()
-        load_model(file_loaded_path)
-    end
+    Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
+    Slab.SameLine()
 
+    add_toolbar_button("Setup", ResourceManager.ui.setup, file_loaded_path == nil,
+        "Run setup function", on_click_functions.setup)
+    Slab.SameLine()
+
+    add_toolbar_button("Step", ResourceManager.ui.step, not setup_executed,
+        "Run step function once", on_click_functions.step)
+    Slab.SameLine()
+
+    add_toolbar_button("Go", ResourceManager.ui.play, not setup_executed,
+        "Run step function until stopped", on_click_functions.go)
+    Slab.SameLine()
+
+    add_toolbar_button("Stop", ResourceManager.ui.pause, not setup_executed,
+        "Stop execution", on_click_functions.stop)
+    Slab.SameLine()
+
+    add_toolbar_button("Reload", ResourceManager.ui.refresh, file_loaded_path == nil,
+        "Reload model", on_click_functions.reload)
+    Slab.SameLine()
+
+    Slab.SameLine()
+    Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
     Slab.SameLine()
 
     Slab.EndLayout()
@@ -301,14 +358,18 @@ function UI.update(dt)
         AllowResize = false
     })
 
-    Slab.BeginLayout("ToolbarLayout", {
+    Slab.BeginLayout("StatusBarLayout", {
         AlignY = 'center',
         AlignRowY = 'center',
         AlignX = 'right'
     })
 
     -- "Speed" slider: it changes time_between_steps value
-    Slab.Text(" Speed: ", {})
+    Slab.Text(" Time (steps): ", {})
+    Slab.SameLine()
+    Slab.Text(tostring(Simulation:get_time()))
+    Slab.SameLine()
+    Slab.Text(" | Speed: ", {})
     Slab.SameLine()
     --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
     if Slab.InputNumberSlider("tbs_slider", speed_slider_value, 0.0, 10.0, {step=1}) then

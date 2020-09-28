@@ -32,7 +32,7 @@ function GraphicEngine.reset_simulation()
     agents_families = {}
     links_families = {}
     cells_families = {}
-    Simulation:stop()
+    Simulation:reset()
     setup_executed = false
     love.window.setTitle("Selenitas")
     GraphicEngine.set_background_color(0, 0, 0)
@@ -72,6 +72,8 @@ function GraphicEngine.step_simulation()
         local ok, err = pcall(STEP)
         if not ok then
             ret_err = err
+        else
+            Simulation.time = Simulation.time + 1
         end
     end
     return ret_err
