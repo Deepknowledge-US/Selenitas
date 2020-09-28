@@ -4,7 +4,7 @@
 -- main
 
 -- Math constants
-
+__pi    = math.pi
 __2pi   = 2*math.pi
 
 
@@ -21,7 +21,9 @@ Agent               = require 'Engine.classes.Agent'
 Cell                = require 'Engine.classes.Cell'
 Mobil               = require 'Engine.classes.Mobil'
 Relational          = require 'Engine.classes.Relational'
-Params              = require 'Engine.classes.Params'
+Observer            = require 'Engine.classes.Observer'
+Interface           = require 'Engine.classes.Interface'
+Simulation          = require 'Engine.classes.Simulation'
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 list_copy           = __list_tables.list_copy
@@ -90,6 +92,18 @@ pretty  = require 'pl.pretty'
 pd      = pretty.dump
 
 
+-- Init Params
+
+Simulation  = Simulation()
+Interface   = Interface()
+Observer    = Observer()
+
+
+
+--===========--
+-- FUNCTIONS --
+--===========--
+
 ------------------
 -- This function removes from the system all agents and all families
 -- @function clear_simulation
@@ -99,14 +113,14 @@ pd      = pretty.dump
 clear = function(str)
 
     if string.lower(str) == 'all' then
-        for k,v in ipairs(Config.__all_families)do
+        for k,v in ipairs(Simulation.families)do
             for _,ag in ordered(v)do
                 ag = nil
             end
             v = nil
         end
-        Config.__all_families = {}
-        Config.__num_agents   = 0
+        Simulation.families     = {}
+        Simulation.num_agents   = 0
 
     end
 end
@@ -128,9 +142,8 @@ end
 -- end)
 -- -- This will result in a grid of 100x100, and 50 agents randomly positioned in the grid.
 SETUP = function( funct )
-    math.randomseed(os.time())
-    __ticks = 1
     funct()
+    Simulation:start()
 end
 
 
@@ -138,41 +151,22 @@ end
 -- This function encapsulates the anonymous function defined in the "run" call of the
 -- file main_code.lua.
 -- It is running until one of the stop condition is reached.
--- Config.ticks simulate the ticks slider in netlogo.
--- Config.go simulate the go button in NetLogo interface.
 
 ------------------
 -- This function is called until we reach a stop condition. Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
--- @function run
+-- @function STEP
 -- @param funct, An anonymous function
 -- @return Nothing
 -- @usage
--- run(function()
---     if Agents.count == 0 then
---         Config.go = false
---     end
---
---     ask(Agents, function(ag)
---         ag:gtrn()
---         if(ag.pos == {0,0}) then die(ag) end
---     end)
---
---     purge_agents()
--- end)
+-- TODO
 STEP = function(funct)
-    while Config.go do -- While the 'go' button is pushed
-        if __ticks <= Config.ticks then
+    while Simulation.is_running do -- While the 'run' button is pushed
+        if Simulation.max_time > 0 and Simulation.time < Simulation.max_time then
+            Simulation.time = Simulation.time+1
             funct()
-            __ticks = __ticks+1
         else
-            Config.go = false
+            Simulation:stop()
         end
     end
 end
 
-Config = Params({
-    ['start']  = true,
-    ['go']     = true,
-    ['xsize']  = 50, -- This is scaled to pixels using the coord_scale property
-    ['ysize'] = 35,
-})

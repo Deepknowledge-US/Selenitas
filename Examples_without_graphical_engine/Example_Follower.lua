@@ -3,23 +3,15 @@ require 'Engine.utilities.utl_main'
 
 local pr = require 'pl.pretty'
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 100,
-    ['xsize'] = 15,
-    ['ysize'] = 15,
-    ['stride']= 1
-})
-
+local xsize,ysize = 15,15
 
 local function print_current_config()
 
-    print('\n========= tick: '.. __ticks ..' =========')
+    print('\n========= tick: '.. Simulation.time ..' =========')
 
-    for i=Config.ysize-1,0,-1 do
+    for i=ysize-1,0,-1 do
         local line = ""
-        for j = 0,Config.xsize-1 do
+        for j = 0,xsize-1 do
             local target = Cells:cell_of({j,i})
             local label  = target.my_agents.count > 0 and target.my_agents.count or '_'
             if Choosen:is_in(target.my_agents) then
@@ -40,13 +32,13 @@ end
 SETUP(function()
 
     print('\n\n\n\n\n')
-    Cells = create_grid(Config.xsize, Config.ysize)
+    Cells = create_grid(xsize, ysize)
 
     Agents = FamilyMobil()
 
     Agents:create_n( 2, function()
         return {
-            ['pos']     ={Config.xsize-1,Config.ysize-1},
+            ['pos']     ={xsize-1,ysize-1},
             ['heading'] = 0,
             ['age']     = 0
         }
@@ -76,7 +68,7 @@ SETUP(function()
     Other   = one_of(Agents:others(Choosen))
 
     Choosen
-        :move_to({Config.xsize/2,Config.ysize/2})
+        :move_to({xsize/2,ysize/2})
         :update_cell()
         :face(Other)
 
@@ -85,25 +77,25 @@ end)
 
 STEP(function()
 
-    if __ticks % 5 == 0 then
+    if Simulation.time % 5 == 0 then
         Other
             :set_param('heading',math.random(2*math.pi))
             :fd(7)
-            :update_position(0,Config.xsize)
+            :update_position(0,xsize)
             :update_cell()
     end
 
     Choosen
         :face(Other)
         :fd(2)
-        :update_position(0,Config.xsize)
+        :update_position(0,xsize)
         :update_cell()
 
     print_current_config()
 
     if Choosen.current_cells[1] == Other.current_cells[1] then
         print(Other.current_cells[1]:xcor(),Other.current_cells[1]:ycor())
-        Config.go = false
+        Simulation.is_running = false
     end
 
 end)

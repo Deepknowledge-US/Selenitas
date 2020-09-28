@@ -1,14 +1,7 @@
 -----------------
 require "Engine.utilities.utl_main"
 
-Config =
-    Params(
-    {
-        ["start"] = true,
-        ["go"] = true,
-        ["ticks"] = 1
-    }
-)
+Simulation.max_time = 1
 
 -- fill A with random numbers between 1 and 100
 local function randArray(A,n)

@@ -47,7 +47,7 @@ function UI.reset()
     setup_executed = false
     go_enabled = false
     show_params_window = false
-    Config.ui_settings = {}
+    Interface.ui_settings = {}
 end
 
 function UI.update(dt)
@@ -189,7 +189,7 @@ function UI.update(dt)
                 -- Load selected file
                 GraphicEngine.reset_simulation()
                 load_model(result.Files[1])
-                if next(Config.ui_settings) ~= nil then
+                if next(Interface.ui_settings) ~= nil then
                     -- Loaded simulation has params, show params window
                     show_params_window = true
                 end
@@ -339,32 +339,32 @@ function UI.update(dt)
     })
 
     -- Parse simulation params
-    -- Config object taken from 'utl_main'
-    for k, v in pairs(Config.ui_settings) do
+    -- Interface object taken from 'utl_main'
+    for k, v in pairs(Interface.ui_settings) do
         -- Checkbox
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.CheckBox(Config[k], "Enabled") then
-                Config[k] = not Config[k]
+            if Slab.CheckBox(Interface[k], "Enabled") then
+                Interface[k] = not Interface[k]
             end
         -- Slider
         elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberSlider(k .. "Slider", Config[k], v.min, v.max, {Step = v.step}) then
-                Config[k] = Slab.GetInputNumber()
+            if Slab.InputNumberSlider(k .. "Slider", Interface[k], v.min, v.max, {Step = v.step}) then
+                Interface[k] = Slab.GetInputNumber()
             end
         -- Number input
         elseif v.type == "input" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberDrag(k .. "InputNumber", Config[k], nil, nil, {}) then
-                Config[k] = Slab.GetInputNumber()
+            if Slab.InputNumberDrag(k .. "InputNumber", Interface[k], nil, nil, {}) then
+                Interface[k] = Slab.GetInputNumber()
             end
         -- Radio buttons
         elseif v.type == "enum" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
             for i, e in ipairs(v.options) do
-                if Slab.RadioButton(e, {Index = i, SelectedIndex = Config[k]}) then
-                    Config[k] = i
+                if Slab.RadioButton(e, {Index = i, SelectedIndex = Interface[k]}) then
+                    Interface[k] = i
                 end
             end
         else

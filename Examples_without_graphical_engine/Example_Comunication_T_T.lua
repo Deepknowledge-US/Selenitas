@@ -12,17 +12,9 @@ local lambda        = utl.string_lambda
 -- Agents will share the message with others in the same patch.
 -- The simulation ends when all agents have the message.
 
+Simulation.max_time = 500
 
--- An instance of Params class is needed to define some usefull parameters.
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 200,
-    ['xsize'] = 15,
-    ['ysize'] = 15
-
-})
-
+local xsize,ysize = 15,15
 
 -- Agents with the message will share it with other agents in the same patch
 local function comunicate(agent)
@@ -48,18 +40,12 @@ end
 -- This function is only needed in a non graphical environment to print current configuration of the system.
 local function print_current_config()
 
-    print('\n\n========== tick '.. __ticks .. ' ===========')
+    print('\n\n========== tick '.. Simulation.time .. ' ===========')
 
     -- ask_ordered(Patches, function(x) x.label = 0 end)
     for _,x in ordered(Patches)do
         x.label = 0
     end
-
-    -- ask_ordered(People, function(ag)
-    --     ordered(Patches:cell_of(ag), function(p)
-    --         p.label = p.label + 1
-    --     end)
-    -- end)
 
     for _,ag in ordered(People)do
         local cell = Patches:cell_of(ag)
@@ -67,9 +53,9 @@ local function print_current_config()
     end
 
     -- Print the number of agents in each patch
-    for i = Config.ysize-1,0,-1 do
+    for i = ysize-1,0,-1 do
         local line = ""
-        for j = 0, Config.xsize-1 do
+        for j = 0, xsize-1 do
             local target = Patches:cell_of({j,i})
             line = line .. target.label .. ','
         end
@@ -85,7 +71,7 @@ end
 SETUP(function()
 
     -- Create a grid of patches with the specified dimensions
-    Patches = create_grid(Config.xsize,Config.ysize)
+    Patches = create_grid(xsize,ysize)
 
     -- Create a new collection of agents
     People = FamilyMobil()
@@ -93,7 +79,7 @@ SETUP(function()
     -- Populate the collection with Agents. Each agent will be randomly positioned.
     People:create_n( 10, function()
         return {
-            ['pos']     = {math.random(Config.xsize-1),math.random(Config.ysize-1)},
+            ['pos']     = {math.random(xsize-1),math.random(ysize-1)},
             ['message'] = false
         }
     end)
@@ -121,40 +107,14 @@ SETUP(function()
 
 end)
 
--- local function producer(a_list, an_index)
---     return coroutine.create(
---         function()
---             local j = math.random(an_index)
---             a_list[an_index], a_list[j] = a_list[j], a_list[an_index]
---             coroutine.yield(a_list[an_index], an_index-1)
---         end
---     )
--- end
-
--- local function consumer(a_list, an_index)
---     local status, element, new_index = coroutine.resume(producer(a_list, an_index))
---     a_list[an_index] = nil
---     return new_index, element
--- end
-
--- local function shuffled(fam_or_list)
---     local list
---     if fam_or_list.agents then
---         list = fam_to_list(fam_or_list)
---     else
---         list = list_copy(fam_or_list)
---     end
-
---     return consumer, list, #list
--- end
-
 -- This function is executed until the stop condition is reached, or until
 -- the number of iterations equals the number of ticks specified inf config_file
 STEP(function()
 
     -- Stop condition: All agents have the message
     if People:with(function(x) return x.message == false end).count == 0 then
-        Config.go = false
+        Simulation.is_running = false
+        print('Seed:',Simulation:get_seed())
         return
     end
 

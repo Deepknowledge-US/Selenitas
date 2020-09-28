@@ -6,8 +6,8 @@
     each node will create a link with the others.
 ]]--
 
-Config:create_slider('nodes', 0, 100, 1, 20)
-Config:create_slider('radius', 0, 100, 1, 15)
+Interface:create_slider('nodes', 0, 100, 1, 20)
+Interface:create_slider('radius', 0, 100, 1, 15)
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 2\pi by
 -- the number of agents to obtain the degrees of separation between agents (step).
@@ -27,18 +27,19 @@ end
 
 SETUP = function()
     clear('all')
+    Simulation:reset()
 
-    Config.go = true
+    Simulation.is_running = true
 
     Nodes = FamilyMobil()
-    Nodes:create_n( Config.nodes, function()
+    Nodes:create_n( Interface.nodes, function()
         return {
             ['pos']     = {0,0},
             ['heading'] = 0
         }
     end)
 
-    layout_circle(Nodes, Config.radius )
+    layout_circle(Nodes, Interface.radius )
 
     -- A new collection to store the links
     Links = FamilyRelational()

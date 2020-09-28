@@ -1,8 +1,8 @@
 -----------------
 
-Config:create_slider('num_agents', 0, 10, 1, 3)
-Config:create_slider('max_age', 5, 100, 1, 30)
-Config:create_slider('clone_probability', 0, 100, 1, 20)
+Interface:create_slider('num_agents', 0, 10, 1, 3)
+Interface:create_slider('max_age', 5, 100, 1, 30)
+Interface:create_slider('clone_probability', 0, 100, 1, 20)
 
 -- In the 'setup' block we define the initial configuration of the system.
 SETUP = function()
@@ -13,7 +13,7 @@ SETUP = function()
 
     -- Populate the Family with 3 agents. Each agent will have the parameters
     -- specified in the table (and some parameters obteined just for be a Mobil instance)
-    Agents:create_n( Config.num_agents, function()
+    Agents:create_n( Interface.num_agents, function()
         return {
             ['pos']     = {math.random(0,10),math.random(0,10)}
             ,['head']    = math.random(2*math.pi)
@@ -29,7 +29,7 @@ SETUP = function()
     Agents:add_method('grow_old', function(agent)
         agent.age = agent.age + 1
         agent.scale = agent.age / 10
-        if agent.age > Config.max_age then
+        if agent.age > Interface.max_age then
             die(agent)
         end
         return agent
@@ -58,7 +58,7 @@ SETUP = function()
     -- Grey agents have a chance to clone itself in each iteration
     Agents:add_method('reproduce', function(agent)
         if agent.alive then
-            if same_rgb(agent, {1,0,0,1}) and math.random(100) <= Config.clone_probability then
+            if same_rgb(agent, {1,0,0,1}) and math.random(100) <= Interface.clone_probability then
                 Agents:clone_n(1, agent, function(x)
                     x.color = math.random(10) > 1 and {0,0,1,1} or {1,0,0,1}
                     x.age   = 0
@@ -75,7 +75,7 @@ STEP = function()
 
     -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
     if Agents.count == 0 then
-        Config.go = false
+        Simulation.is_running = false
         return
     end
 

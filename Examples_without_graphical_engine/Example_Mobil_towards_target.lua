@@ -2,23 +2,14 @@
 require 'Engine.utilities.utl_main'
 
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 100,
-    ['xsize'] = 16,
-    ['ysize'] = 16,
-    ['num_nodes'] = 5
-})
-
-
-Config:create_slider('houses', 5, 500, 1, 20)
-
 --[[
     In this example we create n houses and distribute them in the grid. Once this is done,
     each node will create a link with the anothers.
 ]]--
 
+local xsize,ysize = 16,16
+
+Interface:create_slider('houses', 5, 500, 1, 20)
 -- A function to represent the space in a non graphical environment
 local function print_current_config()
     -- This function prints a 0 in the grid position of a node.
@@ -28,10 +19,10 @@ local function print_current_config()
     for _,ag in ordered(People) do ag.current_cells[1].label = 'I' end
 
 
-    print('\n\n========== tick '.. __ticks .. ' ===========')
-    for i=Config.ysize-1,0,-1 do
+    print('\n\n========== tick '.. Simulation.time .. ' ===========')
+    for i=ysize-1,0,-1 do
         local line = ""
-        for j = 0,Config.xsize-1 do
+        for j = 0,xsize-1 do
             local target = Patches:cell_of({j,i})
             line = line .. target.label .. ','
         end
@@ -41,7 +32,7 @@ local function print_current_config()
 
 end
 
-local x,y  =  Config.xsize, Config.ysize
+local x,y  =  xsize, ysize
 local size =  x > y and math.floor(x/2) or math.floor(y/2)
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 2*pi by
@@ -70,10 +61,10 @@ end
 
 SETUP(function()
 
-    Patches = create_grid(Config.xsize, Config.ysize)
+    Patches = create_grid(xsize, ysize)
 
     Houses = FamilyMobil()
-    Houses:create_n( Config.houses, function()
+    Houses:create_n( Interface.houses, function()
         return {
             ['pos']     = {size,size},
             ['heading'] = 0
@@ -117,8 +108,8 @@ STEP(function()
     print_current_config()
     local list = {math.random(10,19),math.random(20,29),math.random(30,39)}
 
-    if Config.ticks <=0 then
-        Config.go = false
+    if Simulation.time >= Simulation.max_time then
+        Simulation.is_running = false
     end
 end)
 

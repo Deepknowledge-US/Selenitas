@@ -14,7 +14,7 @@ local FM = class.FamilyMobil(Family)
 -- @usage New_Instance = FamilyMobil()
 FM._init = function(self)
     self:super()
-    table.insert(Config.__all_families, self)
+    table.insert(Simulation.families, self)
     self.z_order = 3
     return self
 end
@@ -32,7 +32,7 @@ end
 FM.new = function(self,object)
 
     local new_agent
-    local key  = Config:__new_id()
+    local key  = Simulation:__new_id()
 
     -- If the input is a Mobil agent, the object is added to the collection, otherwise, a new Mobil is created using the input table.
     if pcall( function() return object.is_a(self,Mobil) end ) then
@@ -51,7 +51,7 @@ FM.new = function(self,object)
     local cell_fams = find_families(FamilyCell)
     for i=1,#cell_fams do
         local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
-        if my_cell then 
+        if my_cell then
             self.agents[key].current_cells[i] = my_cell
             my_cell:come_in(self.agents[key])
         end

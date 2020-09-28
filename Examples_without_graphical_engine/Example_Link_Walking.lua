@@ -3,23 +3,15 @@ require 'Engine.utilities.utl_main'
 
 local pr = require 'pl.pretty'
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 200,
-    ['xsize'] = 15,
-    ['ysize'] = 15,
-    ['stride']= 1
-})
-
+local xsize,ysize = 15,15
 
 local function print_current_config()
 
-    print('\n========= tick: '.. __ticks ..' =========')
+    print('\n========= tick: '.. Simulation.time ..' =========')
 
-    for i=Config.ysize-1,0,-1 do
+    for i=ysize-1,0,-1 do
         local line = ""
-        for j = 0,Config.xsize-1 do
+        for j = 0,xsize-1 do
             local target = Cells:cell_of({j,i})
             local label  = target.visited
 
@@ -44,25 +36,12 @@ end
 
 
 SETUP(function()
-    Cells  = create_grid(Config.xsize, Config.ysize)
+    Cells  = create_grid(xsize, ysize)
     Nodes  = FamilyMobil()
     Edges  = FamilyRelational()
     Walkers= FamilyMobil()
 
-    -- -- AKIIIIIIIIIIIII el n_of falla pq llama al ask
-
-
     local n_cells = fam_to_list(n_of(10,Cells))
-    -- local n_cells = n_of(10,Cells)
-    -- print(n_cells.count)
-    
-    -- -- ask(Cells, function(c)
-    -- --     if is_in_list(c,n_cells) then
-    -- --         c['visited'] = 'N'
-    -- --     else
-    -- --         c['visited'] = '_'
-    -- --     end
-    -- -- end)
 
     for _,c in ordered(Cells)do
         if is_in_list(c,n_cells) then
@@ -127,9 +106,9 @@ STEP(function()
     Wlkr:fd(1)
     Wlkr:update_cell()
 
-    Config.ticks = Config.ticks-1
-    if Config.ticks <= 0 then
-        Config.go = false
+    Simulation.time = Simulation.time+1
+    if Simulation.time <= Simulation.max_time then
+        Simulation.is_running = false
     end
 
     print_current_config()

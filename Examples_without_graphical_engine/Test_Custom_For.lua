@@ -1,14 +1,7 @@
 -----------------
 require "Engine.utilities.utl_main"
 
-Config =
-    Params(
-    {
-        ["start"] = true,
-        ["go"] = true,
-        ["ticks"] = 5
-    }
-)
+Simulation.max_time = 1
 
 SETUP(
     function()

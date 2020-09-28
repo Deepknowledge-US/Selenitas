@@ -14,7 +14,7 @@ local FR    = class.FamilyRelational(Family)
 -- @usage New_Instance = FamilyRelational()
 FR._init = function(self,c)
     self:super(c)
-    table.insert(Config.__all_families, self)
+    table.insert(Simulation.families, self)
     self.z_order = 2
     return self
 end
@@ -39,7 +39,7 @@ FR.new = function(self,object)
         local obj1,id1 = object.source, object.source.id
         local obj2,id2 = object.target, object.target.id
 
-        local new_id   = Config:__new_id()
+        local new_id   = Simulation:__new_id()
         local new_rel  = {}
 
         for k,v in pairs(object) do

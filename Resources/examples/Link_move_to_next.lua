@@ -1,6 +1,6 @@
 -----------------
 
-Config:create_slider('nodes', 0, 50, 1, 12)
+Interface:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
 
@@ -10,7 +10,7 @@ SETUP = function()
     Edges   = FamilyRelational()
     Walkers = FamilyMobil()
 
-    for i=1,Config.nodes do
+    for i=1,Interface.nodes do
         Nodes:new({
             ['pos']   = {math.random(-20,20), math.random(-20,20)}
             ,['shape'] = 'circle'

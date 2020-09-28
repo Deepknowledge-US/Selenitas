@@ -1,7 +1,7 @@
 -----------------
 local radius = 20
-Config:create_slider('houses', 0, 100, 1, 22)
-Config:create_slider('people', 10, 1000, 1, 25)
+Interface:create_slider('houses', 0, 100, 1, 22)
+Interface:create_slider('people', 10, 1000, 1, 25)
 
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 360º by
@@ -25,7 +25,7 @@ SETUP = function()
 
     clear('all')
     Houses = FamilyMobil()
-    Houses:create_n( Config.houses, function()
+    Houses:create_n( Interface.houses, function()
         --local tree_or_house = math.random(100)<=50 and "house" or "tree"
         local tree_or_house = one_of {"house", "tree"}
         return {
@@ -39,7 +39,7 @@ SETUP = function()
     layout_circle(Houses, radius)
 
     People = FamilyMobil()
-    People:create_n(Config.people, function()
+    People:create_n(Interface.people, function()
         return {
             ['pos']     = {math.random(-radius,radius),math.random(-radius,radius)}
             , ['shape']   = "person"

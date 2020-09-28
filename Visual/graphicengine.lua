@@ -52,7 +52,7 @@ function GraphicEngine.setup_simulation()
         end
         setup_executed = true
         -- This loop can be moved to draw loop for direct family retrieval when z-order is implemented
-        for k, f in ipairs(Config.__all_families) do
+        for k, f in ipairs(Simulation.families) do
             if f:is_a(FamilyMobil) then
                 table.insert(agents_families, f)
             elseif f:is_a(FamilyRelational) then

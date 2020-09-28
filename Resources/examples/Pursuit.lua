@@ -1,5 +1,5 @@
 -----------------
-Config:create_slider('Num_pursuers', 0, 100, 1, 10)
+Interface:create_slider('Num_pursuers', 0, 100, 1, 10)
 
 -- pos_to_torus relocate the agents as they are living in a torus
 local function pos_to_torus(agent, size_x, size_y)
@@ -24,7 +24,7 @@ end
 
 
 SETUP = function()
-    
+
     clear('all')
 
     -- Test collection
@@ -45,7 +45,7 @@ SETUP = function()
     Pursuers = FamilyMobil()
 
     -- Populate the collection with Agents.
-    Pursuers:create_n( Config.Num_pursuers, function()
+    Pursuers:create_n( Interface.Num_pursuers, function()
         return {
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['heading'] = math.random(__2pi)
@@ -69,14 +69,12 @@ SETUP = function()
 
     pursued = one_of(Pursueds)
 
-    Config.go = true
-
 end
 
 -- This function is executed until the stop condition is reached, 
 -- or the button go/stop is stop
 STEP = function()
-    
+
     pursued:lt(random_float(-0.6,0.6))
     pursued:fd(1)
     pos_to_torus(pursued,100,100)

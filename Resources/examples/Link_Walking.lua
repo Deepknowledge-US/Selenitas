@@ -1,7 +1,7 @@
 -----------------
 
-Config:create_slider('nodes', 0, 50, 1, 12)
-Config:create_slider('speed', 0, 2, .01, 1)
+Interface:create_slider('nodes', 0, 50, 1, 12)
+Interface:create_slider('speed', 0, 2, .01, 1)
 
 SETUP = function()
     clear('all')
@@ -9,7 +9,7 @@ SETUP = function()
     Edges   = FamilyRelational()
     Walkers = FamilyMobil()
 
-    for i=1,Config.nodes do
+    for i=1,Interface.nodes do
         Nodes:new({
             ['pos']     = {math.random(-20,20), math.random(-20,20)},
             ['shape']   = 'circle',
@@ -54,10 +54,10 @@ end
 
 
 STEP = function()
-    if Wlkr:dist_euc_to(Wlkr.next_node) < Config.speed then
+    if Wlkr:dist_euc_to(Wlkr.next_node) < Interface.speed then
         Wlkr:move_to(Wlkr.next_node)
         Wlkr.curr_node = Wlkr.next_node
         Wlkr:search_next_node()
     end
-    Wlkr:fd(Config.speed)
+    Wlkr:fd(Interface.speed)
 end

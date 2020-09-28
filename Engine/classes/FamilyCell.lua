@@ -14,7 +14,7 @@ local FC = class.FamilyCell(Family)
 -- @usage New_Instance = FamilyCell()
 FC._init = function(self,c)
     self:super(c)
-    table.insert(Config.__all_families, self)
+    table.insert(Simulation.families, self)
     self.z_order = 1
     self.cell_width = c.cell_width or 1
     self.cell_height= c.cell_height or 1
@@ -34,7 +34,7 @@ end
 -- end
 FC.new = function(self,object)
     local new_agent
-    local k  = Config:__new_id()
+    local k  = Simulation:__new_id()
 
     -- If the input is a Cell, the object is added to the collection, otherwise, a new Cell is created using the input table.
     if pcall( function() return object:is_a(Cell) end ) then

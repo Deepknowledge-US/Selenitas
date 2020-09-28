@@ -1,7 +1,7 @@
 -----------------
-Config:create_slider('nodes', 0, 100, 1.0, 12)
-Config:create_boolean('rt_lt', true)
-Config:create_boolean('pos_ang', true)
+Interface:create_slider('nodes', 0, 100, 1.0, 12)
+Interface:create_boolean('rt_lt', true)
+Interface:create_boolean('pos_ang', true)
 
 local function layout_circle(collection, rad)
     local step = 2*math.pi / collection.count
@@ -28,7 +28,7 @@ SETUP = function()
     clear('all')
 
     Nodes = FamilyMobil()
-    Nodes:create_n( Config.nodes, function()
+    Nodes:create_n( Interface.nodes, function()
         return {
             ['pos']     = {0,0}
             ,['scale']   = 1.5
@@ -71,7 +71,7 @@ end
 
 STEP = function()
 
-    if Config.rt_lt then
+    if Interface.rt_lt then
         central:rt(2*math.pi/Nodes.count)
     else
         central:lt(2*math.pi/Nodes.count)
@@ -79,19 +79,10 @@ STEP = function()
     central.heading = math.fmod(central.heading,__2pi)
     central.label   = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'
 
-    if Config.pos_ang then
+    if Interface.pos_ang then
         central.label = '(' .. round(central:xcor(),1) .. ' , ' .. round(central:ycor(),1) .. ')'
     else
         central.label = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'
     end
-    -- if Config.pos_ang then
-    --     for _,ag in pairs(Nodes.agents) do
-    --         ag.label = '(' .. round(ag:xcor(),1) .. ' , ' .. round(ag:ycor(),1) .. ')'
-    --     end
-    -- else
-    --     for _,ag in pairs(Nodes.agents) do
-    --         ag.label = '(' .. round(ag.heading,1) .. ' , ' .. round(math.deg(ag.heading),1) .. ')'
-    --     end
-    -- end
 
 end

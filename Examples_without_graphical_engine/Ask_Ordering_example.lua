@@ -13,20 +13,15 @@ local lambda        = utl.string_lambda
 -- The simulation ends when all agents have the message.
 
 
--- An instance of Params class is needed to define some usefull parameters.
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 5,
-    ['xsize'] = 10,
-    ['ysize'] = 10
 
-})
+
+local xsize,ysize = 10,10
+local random_order= true
 
 -- This function is only needed in a non graphical environment to print current configuration of the system.
 local function print_current_config()
 
-    print('\n\n========== tick '.. __ticks .. ' ===========')
+    print('\n\n========== tick '.. Simulation.time .. ' ===========')
 
     -- ask_ordered(Patches, function(x) x.label = 0 end)
     for _,x in ordered(Patches)do
@@ -39,9 +34,9 @@ local function print_current_config()
     end
 
     -- Print the number of agents in each patch
-    for i = Config.ysize-1,0,-1 do
+    for i = ysize-1,0,-1 do
         local line = ""
-        for j = 0, Config.xsize-1 do
+        for j = 0, xsize-1 do
             local target = Patches:cell_of({j,i})
             line = line .. target.label .. ','
         end
@@ -57,7 +52,7 @@ end
 SETUP(function()
 
     -- Create a grid of patches with the specified dimensions
-    Patches = create_grid(Config.xsize,Config.ysize)
+    Patches = create_grid(xsize,ysize)
 
     -- Create a new collection of agents
     Mobils = FamilyMobil()
@@ -92,7 +87,7 @@ SETUP(function()
     end)
 
     for _,ag in ordered(Mobils)do
-        ag:update_pos(0,Config.xsize):update_cell()
+        ag:update_pos(0,xsize):update_cell()
     end
 
 end)
@@ -101,16 +96,16 @@ end)
 -- the number of iterations equals the number of ticks specified inf config_file
 STEP(function()
 
-    if Config.random_ordered then
+    if random_order then
         for _,ag in shuffled(Mobils) do
             ag:fd(1)
-            :update_pos(0,Config.xsize)
+            :update_pos(0,xsize)
             :update_cell()
         end
     else
         for _,ag in ordered(Mobils) do
             ag:fd(1)
-            :update_pos(0,Config.xsize)
+            :update_pos(0,xsize)
             :update_cell()
         end
     end

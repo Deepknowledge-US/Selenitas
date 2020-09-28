@@ -3,23 +3,14 @@ require "Engine.utilities.utl_main"
 
 local pl = require "pl"
 
-Config =
-    Params(
-    {
-        ["start"] = true,
-        ["go"] = true,
-        ["ticks"] = 100,
-        ["xsize"] = 60,
-        ["ysize"] = 60
-    }
-)
- --
 
 --[[
     In this example, we divide the space in 7 regions and count in every iteration the number
     of agents in them. The agents are positioned in the center of the grid in the setup.
+]]
 
-]] local histogram = {}
+local xsize,ysize = 15,15
+local histogram = {}
 local num_of_bars = 7
 local bar_breaks = {}
 
@@ -31,9 +22,9 @@ end
 
 -- Set the intervals in function of grid size and init the histogram table using this values as keys
 local function set_intervals_and_init_histogram()
-    local mod = Config.xsize / num_of_bars
+    local mod = xsize / num_of_bars
     for i = 1, num_of_bars do
-        local limit = i ~= num_of_bars and n_decimals(2, i * mod) or Config.xsize
+        local limit = i ~= num_of_bars and n_decimals(2, i * mod) or xsize
         table.insert(bar_breaks, limit)
         histogram[limit] = 0
     end
@@ -47,7 +38,7 @@ local function reset_histogram()
 end
 
 local function print_current_config()
-    print("========= tick " .. __ticks .. " ==========")
+    print("========= tick " .. Simulation.time .. " ==========")
     reset_histogram()
 
     -- Each agent will increment the counter of the histogram table depending on its position.
@@ -76,7 +67,7 @@ SETUP(
             1000,
             function()
                 return {
-                    ["pos"]     = {math.floor(Config.xsize / 2), math.floor(Config.ysize / 2)},
+                    ["pos"]     = {math.floor(xsize / 2), math.floor(ysize / 2)},
                     ["heading"] = math.random(__2pi)
                 }
             end
@@ -111,7 +102,7 @@ SETUP(
 STEP(
     function()
         for _,x in ordered(Agents)do
-            x:lt(math.random(__2pi)):fd(1):update_position(0,Config.xsize):update_cell()
+            x:lt(math.random(__2pi)):fd(1):update_position(0,xsize):update_cell()
         end
 
         print_current_config()

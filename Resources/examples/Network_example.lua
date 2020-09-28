@@ -1,7 +1,7 @@
 -----------------
 local radius = 20
-Config:create_slider('nodes', 0, 100, 1, 22)
-Config:create_slider('links', 0, 10000, 1, 15)
+Interface:create_slider('nodes', 0, 100, 1, 22)
+Interface:create_slider('links', 0, 10000, 1, 15)
 
 
 local function layout_circle(collection, rad)
@@ -20,10 +20,10 @@ SETUP = function()
 
     clear('all')
 
-    Config.go = true
+    Simulation.is_running = true
 
     Nodes = FamilyMobil()
-    Nodes:create_n( Config.nodes, function()
+    Nodes:create_n( Interface.nodes, function()
         return {
             ['pos']     = {0,0}
             ,['scale']   = 1.5
@@ -50,11 +50,11 @@ STEP = function()
         ['source'] = node_1,
         ['target'] = node_2,
         --['label'] = node_1.id .. '->' .. node_2.id,
-        ['color'] = {0.75, 0, 0, .2},
+        ['color'] = {0.75, 0, 0, .5},
         ['visible'] = true
     })
 
-    while Links.count > Config.links do
+    while Links.count > Interface.links do
         Links:kill_and_purge(one_of(Links))
     end
 

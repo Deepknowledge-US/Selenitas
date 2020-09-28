@@ -2,17 +2,9 @@
 require 'Engine.utilities.utl_main'
 
 
-Config = Params({
-    ['start'] = true,
-    ['go']    = true,
-    ['ticks'] = 100,
-    ['xsize'] = 16,
-    ['ysize'] = 16,
-    ['num_nodes'] = 5
-})
+local xsize,ysize = 15,15
 
-
-Nodes = Config:create_slider('nodes', 5, 500, 1, 20)
+Interface:create_slider('nodes', 5, 500, 1, 15)
 
 --[[
     In this example we create n nodes and distribute them in the grid. Once this is done,
@@ -37,10 +29,10 @@ local function print_current_config()
         ag.current_cells[1].label = 'O'
     end
 
-    print('\n\n========== tick '.. __ticks .. ' ===========')
-    for i=Config.ysize-1,0,-1 do
+    print('\n\n========== tick '.. Simulation.time .. ' ===========')
+    for i=ysize-1,0,-1 do
         local line = ""
-        for j = 0,Config.xsize-1 do
+        for j = 0,xsize-1 do
             local target = Patches:cell_of({j,i})
             line = line .. target.label .. ','
         end
@@ -50,7 +42,7 @@ local function print_current_config()
 
 end
 
-local x,y  =  Config.xsize, Config.ysize
+local x,y  =  xsize, ysize
 local size =  x > y and math.floor(x/2) or math.floor(y/2)
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 2*pi by
@@ -62,7 +54,7 @@ local function layout_circle(family, radius)
     local step = (math.pi * 2) / num
     local radians = 0
 
-    for k,v in pairs(family.agents)do
+    for k,v in ordered(family)do
         rt(v, radians)
         fd(v, radius)
         v:update_cell()
@@ -78,11 +70,10 @@ local function cell_n_pos(ag)
 end
 
 SETUP(function()
-
-    Patches = create_grid(Config.xsize, Config.ysize)
+    Patches = create_grid(xsize, ysize)
 
     Nodes = FamilyMobil()
-    Nodes:create_n( Config.nodes, function()
+    Nodes:create_n( Interface.nodes, function()
         return {
             ['pos']     = {size,size},
             ['heading'] = 0
@@ -116,7 +107,7 @@ STEP(function()
 
     print_current_config()
 
-    Config.go = false
+    Simulation.is_running = false
     -- print(Links)
 end)
 
