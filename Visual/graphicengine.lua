@@ -11,7 +11,6 @@ local Draw = require 'Visual.draw'
 local GraphicEngine = {}
 
 -- Simulation info
-local go = false
 local setup_executed = false
 local agents_families = {}
 local links_families = {}
@@ -33,7 +32,7 @@ function GraphicEngine.reset_simulation()
     agents_families = {}
     links_families = {}
     cells_families = {}
-    go = false
+    Simulation:stop()
     setup_executed = false
     love.window.setTitle("Selenitas")
     GraphicEngine.set_background_color(0, 0, 0)
@@ -61,7 +60,7 @@ function GraphicEngine.setup_simulation()
                 table.insert(cells_families, f)
             end
         end
-        go = false -- Reset 'go' in case Setup button is pressed more than once
+        Simulation:stop() -- Reset 'go' in case Setup button is pressed more than once
     end
     ::skipsetup::
     return ret_err
@@ -76,14 +75,6 @@ function GraphicEngine.step_simulation()
         end
     end
     return ret_err
-end
-
-function GraphicEngine.run_simulation()
-    go = true
-end
-
-function GraphicEngine.stop_simulation()
-    go = false
 end
 
 ------------------
@@ -114,18 +105,18 @@ function love.update(dt)
     UI.update(dt)
     View.update()
 
-    if not go then
+    if not Simulation.is_running then
         do return end
     end
 
     -- Skips until time between steps is covered
     _time_acc = _time_acc + dt
     if _time_acc >= time_between_steps then
-        if go then
+        if Simulation.is_running then
             local err = GraphicEngine.step_simulation()
             if err then
                 UI.show_error_message(err)
-                go = false
+                Simulation.stop()
             end
         end
       _time_acc = 0

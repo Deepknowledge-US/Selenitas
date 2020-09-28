@@ -272,9 +272,9 @@ function UI.update(dt)
     if Slab.Button(go_button_label, {Disabled = not setup_executed}) then
         go_enabled = not go_enabled
         if go_enabled then
-            GraphicEngine.run_simulation()
+            Simulation:start()
         else
-            GraphicEngine.stop_simulation()
+            Simulation:stop()
         end
     end
 
