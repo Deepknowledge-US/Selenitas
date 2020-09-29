@@ -22,6 +22,7 @@ local _time_acc = 0
 
 -- Drawing settings
 local draw_enabled = true
+local background_color_set = {0, 0, 0}
 
 function GraphicEngine.init()
     -- TODO: read user settings
@@ -84,6 +85,13 @@ end
 
 function GraphicEngine.set_draw_enabled(enabled)
     draw_enabled = enabled
+    if not draw_enabled then
+        -- If draw disabled, set background color to black
+        love.graphics.setBackgroundColor(0, 0, 0)
+    else
+        -- Set previous background color again if drawing is resumed
+        love.graphics.setBackgroundColor(background_color_set)
+    end
 end
 
 ------------------
@@ -101,6 +109,7 @@ end
 -- @param b Blue channel of the color. Must be in the 0..1 range.
 function GraphicEngine.set_background_color(r, g, b)
     love.graphics.setBackgroundColor(r, g, b)
+    background_color_set = {r, g, b}
 end
 
 -- LOVE2D load function

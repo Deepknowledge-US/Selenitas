@@ -11,6 +11,7 @@ local UI = {}
 local show_file_picker = false
 local file_loaded_path = nil
 local show_params_window = false
+local show_families = true
 local show_about_dialog = false
 local show_debug_graph = false
 local error_msg = nil
@@ -66,6 +67,14 @@ local on_click_functions = {
         Simulation:stop()
     end,
 
+    toggle_running = function()
+        if Simulation.is_running then
+            Simulation:stop()
+        else
+            Simulation:start()
+        end
+    end,
+
     reload = function()
         GraphicEngine.reset_simulation()
         load_model(file_loaded_path)
@@ -83,7 +92,28 @@ local on_click_functions = {
         draw_enabled = not draw_enabled
         GraphicEngine.set_draw_enabled(draw_enabled)
     end,
+
+    toggle_performance_stats = function()
+        show_debug_graph = not show_debug_graph
+    end,
 }
+
+
+-- TODO: Read windows and create menu entries
+-- This must be called inside of a Menu
+local function build_window_show_tree()
+    if Slab.MenuItemChecked("All", show_params_window) then
+        show_params_window = not show_params_window
+    end
+end
+
+-- TODO: Read families and create menu entries
+-- This must be called inside of a Menu
+local function build_family_show_tree()
+    if Slab.MenuItemChecked("All", show_families) then
+        -- TODO
+    end
+end
 
 function UI.show_error_message(err)
     error_msg = err
@@ -218,16 +248,12 @@ function UI.update(dt)
             end
 
             if Slab.BeginMenu("Windows") then
-                if Slab.MenuItemChecked("All", show_params_window) then
-                    show_params_window = not show_params_window
-                end
+                build_window_show_tree()
                 Slab.EndMenu()
             end
 
             if Slab.BeginMenu("Families") then
-                if Slab.MenuItem("All") then
-                    
-                end
+                build_family_show_tree()
                 Slab.EndMenu()
             end
 
@@ -235,7 +261,7 @@ function UI.update(dt)
             end
 
             if Slab.MenuItemChecked("Show performance stats", show_debug_graph) then
-                show_debug_graph = not show_debug_graph
+                on_click_functions.toggle_performance_stats()
             end
 
             Slab.EndMenu()
@@ -330,6 +356,7 @@ function UI.update(dt)
         AlignRowY = 'center'
     })
 
+    ------- File options -------
     add_toolbar_button("New", ResourceManager.ui.newfile, false,
         "New file", function() end) -- TODO
     Slab.SameLine()
@@ -342,31 +369,74 @@ function UI.update(dt)
         "Open file", on_click_functions.load_file)
     Slab.SameLine()
 
+    -------
     Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
     Slab.SameLine()
+    -------
 
+    ------- Simulation control -------
     add_toolbar_button("Setup", ResourceManager.ui.setup, file_loaded_path == nil,
         "Run setup function", on_click_functions.setup)
+    Slab.SameLine()
+
+    if Simulation.is_running then
+        add_toolbar_button("Stop", ResourceManager.ui.pause, not setup_executed,
+            "Stop simulation", on_click_functions.toggle_running)
+    else
+        add_toolbar_button("Go", ResourceManager.ui.play, not setup_executed,
+            "Run simulation", on_click_functions.toggle_running)
+    end
     Slab.SameLine()
 
     add_toolbar_button("Step", ResourceManager.ui.step, not setup_executed,
         "Run step function once", on_click_functions.step)
     Slab.SameLine()
 
-    add_toolbar_button("Go", ResourceManager.ui.play, not setup_executed,
-        "Run step function until stopped", on_click_functions.go)
-    Slab.SameLine()
-
-    add_toolbar_button("Stop", ResourceManager.ui.pause, not setup_executed,
-        "Stop execution", on_click_functions.stop)
-    Slab.SameLine()
-
     add_toolbar_button("Reload", ResourceManager.ui.refresh, file_loaded_path == nil,
         "Reload model", on_click_functions.reload)
     Slab.SameLine()
 
+    -------
     Slab.SameLine()
     Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
+    Slab.SameLine()
+    -------
+
+    ------- View options -------
+    if draw_enabled then
+        add_toolbar_button("DisableDraw", ResourceManager.ui.eye_on, false,
+            "Disable drawing", on_click_functions.toggle_draw_enabled)
+    else
+        add_toolbar_button("EnableDraw", ResourceManager.ui.eye_off, false,
+            "Enable drawing", on_click_functions.toggle_draw_enabled)
+    end
+    Slab.SameLine()
+
+    add_toolbar_button("ShowGraph", ResourceManager.ui.showgraph, false,
+        "Toggle performance stats", on_click_functions.toggle_performance_stats)
+    Slab.SameLine()
+
+    add_toolbar_button("WindowShow", ResourceManager.ui.window, false,
+        "Windows visibility", function() end) -- TODO
+    Slab.SameLine()
+
+    add_toolbar_button("FamilyShow", ResourceManager.ui.family, false,
+        "Families visibility", function() end) -- TODO
+    Slab.SameLine()
+
+    add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
+        "Toggle grid", function() end) -- TODO
+    Slab.SameLine()
+
+    -------
+    Slab.SameLine()
+    Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
+    Slab.SameLine()
+    -------
+
+    ------- Help -------
+    add_toolbar_button("Help", ResourceManager.ui.help, false,
+        "Open docs", function() end) -- TODO
     Slab.SameLine()
 
     Slab.EndLayout()
