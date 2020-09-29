@@ -234,7 +234,7 @@ function UI.update(dt)
             if Slab.MenuItem("Show grid") then
             end
 
-            if Slab.MenuItem("Show performance stats") then
+            if Slab.MenuItemChecked("Show performance stats", show_debug_graph) then
                 show_debug_graph = not show_debug_graph
             end
 
