@@ -20,6 +20,9 @@ local cells_families = {}
 local time_between_steps = 0
 local _time_acc = 0
 
+-- Drawing settings
+local draw_enabled = true
+
 function GraphicEngine.init()
     -- TODO: read user settings
     love.window.setMode(900,600, {resizable=true, minwidth=400, minheight=300})
@@ -79,6 +82,10 @@ function GraphicEngine.step_simulation()
     return ret_err
 end
 
+function GraphicEngine.set_draw_enabled(enabled)
+    draw_enabled = enabled
+end
+
 ------------------
 -- Sets time between steps in seconds for better visualization
 -- @function set_time_between_steps
@@ -129,7 +136,7 @@ end
 function love.draw()
     View.start()
 
-    if not setup_executed then
+    if not setup_executed or not draw_enabled then
         goto skip
     end
 

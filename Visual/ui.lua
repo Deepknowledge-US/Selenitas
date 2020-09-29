@@ -26,6 +26,7 @@ local toolbar_buttons_params = {
 
 -- Simulation state trackers
 local setup_executed = false
+local draw_enabled = true
 
 -- Wrapper for FileUtils.load_model_file,
 -- Checks for errors and sets window name
@@ -76,6 +77,11 @@ local on_click_functions = {
 
     edit_file = function()
         FileUtils.open_in_editor(file_loaded_path)
+    end,
+
+    toggle_draw_enabled = function()
+        draw_enabled = not draw_enabled
+        GraphicEngine.set_draw_enabled(draw_enabled)
     end,
 }
 
@@ -169,19 +175,38 @@ function UI.update(dt)
         end
 
         if Slab.BeginMenu("Simulation") then
-            if Slab.MenuItem("Setup/Reset") then
+            if Slab.MenuItem("Setup") then
+                if file_loaded_path ~= nil then -- TODO: disabled menu item when Slab implements it
+                    on_click_functions.setup()
+                end
             end
 
             if Slab.MenuItem("Step") then
-            
+                if setup_executed then
+                    on_click_functions.step()
+                end
             end
 
-            if Slab.MenuItem("Run/Stop") then
-                
+            if Slab.MenuItem("Run") then
+                if setup_executed then
+                    on_click_functions.go()
+                end
             end
 
-            if Slab.MenuItem("Update view") then
-                
+            if Slab.MenuItem("Stop") then
+                if setup_executed then
+                    on_click_functions.stop()
+                end
+            end
+
+            if Slab.MenuItem("Reset") then
+                if file_loaded_path ~= nil then
+                    on_click_functions.reload()
+                end
+            end
+
+            if Slab.MenuItemChecked("Draw enabled", draw_enabled) then
+                on_click_functions.toggle_draw_enabled()
             end
 
             Slab.EndMenu()
@@ -193,8 +218,8 @@ function UI.update(dt)
             end
 
             if Slab.BeginMenu("Windows") then
-                if Slab.MenuItem("All") then
-                    show_params_window = true
+                if Slab.MenuItemChecked("All", show_params_window) then
+                    show_params_window = not show_params_window
                 end
                 Slab.EndMenu()
             end
