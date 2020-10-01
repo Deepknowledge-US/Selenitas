@@ -10,9 +10,8 @@ local UI = {}
 
 local show_file_picker = false
 local file_loaded_path = nil
-local show_params_window = false
-local show_families = true
 local show_about_dialog = false
+local show_params_window = false
 local show_debug_graph = false
 local error_msg = nil
 local speed_slider_value = 20
@@ -23,6 +22,12 @@ local toolbar_buttons_params = {
     base_color = {0.549, 0.549, 0.549},
     hover_color = {0.698, 0.698, 0.698},
     disabled_color = {0.352, 0.352, 0.352},
+}
+local families_visibility = {
+    all = true
+}
+local windows_visibility = {
+    all = false
 }
 
 -- Simulation state trackers
@@ -96,6 +101,14 @@ local on_click_functions = {
     toggle_performance_stats = function()
         show_debug_graph = not show_debug_graph
     end,
+
+    toggle_families_visibility = function()
+        families_visibility.all = not families_visibility.all
+    end,
+
+    toggle_windows_visibility = function()
+        windows_visibility.all = not windows_visibility.all
+    end,
 }
 
 
@@ -105,13 +118,37 @@ local function build_window_show_tree()
     if Slab.MenuItemChecked("All", show_params_window) then
         show_params_window = not show_params_window
     end
+    Slab.Separator()
 end
 
 -- TODO: Read families and create menu entries
 -- This must be called inside of a Menu
 local function build_family_show_tree()
-    if Slab.MenuItemChecked("All", show_families) then
-        -- TODO
+    if Slab.MenuItemChecked("All", true) then
+        local all = not families_visibility.all -- toggled
+        families_visibility.all = all
+        if all then
+            for k, _ in ipairs(families_visibility) do
+                families_visibility[k] = true
+            end
+        end
+    end
+    Slab.Separator()
+    for _, f in ipairs(Simulation.families) do
+        -- TODO: family id
+        --local family_type = "Mobil"
+        --if f:is_a(FamilyRelational) then
+        --    family_type = "Relational"
+        --elseif f:is_a(FamilyCell) then
+        --    family_type = "Cell"
+        --end
+        --if Slab.MenuItemChecked(f.id .. "(" .. family_type .. ")", families_visibility[f.id]) then
+        --    local new_val = not families_visibility[f.id]
+        --    families_visibility[f.id] = not families_visibility[f.id]
+        --    if not new_val then
+        --        families_visibility.all = false
+        --    end
+        --end
     end
 end
 
@@ -144,20 +181,22 @@ local function add_toolbar_button(name, love_img, disabled, tooltip, on_click_fu
     if Slab.IsControlClicked() and not disabled then
         on_click_func()
     end
+    if Slab.BeginContextMenuItem() then
+        Slab.MenuItem("My Window Item 1")
+        Slab.MenuItem("My Window Item 2")
+        Slab.EndContextMenu()
+    end
     Slab.SameLine()
     Slab.Rectangle({W=2, H=10, Color={0,0,0,0}})
-    
-
-
 end
 
 local function toolbar_separator(w)
-    Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})  
+    Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})
     Slab.SameLine()
 --    Slab.Rectangle({W=6, H=25, Color=toolbar_buttons_params.base_color})
     Slab.Rectangle({W=6, H=25, Color={1,1,1,.3}})
     Slab.SameLine()
-    Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})  
+    Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})
     Slab.SameLine()
 end
 
@@ -363,7 +402,7 @@ local function toolbar(screen_w, screen_h)
     add_toolbar_button("New", ResourceManager.ui.newfile, false,
         "New File", function() end) -- TODO
     Slab.SameLine()
-        
+
     add_toolbar_button("Open", ResourceManager.ui.open, false,
         "Open File", on_click_functions.load_file)
     Slab.SameLine()
@@ -561,14 +600,13 @@ function UI.update(dt)
     status_bar(screen_w, screen_h)
 
     params_window()
-  
 
     -- Update graphs
     fps_graph:update(dt)
     mem_graph:update(dt)
 end
 
-local function draw_debug_graphs(dt)
+local function draw_debug_graphs()
     local screen_w, screen_h, _ = love.window.getMode()
     local panel_width = 100 + 30
     local panel_height = 60 * 2 + 5
