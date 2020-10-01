@@ -137,19 +137,67 @@ local function add_toolbar_button(name, love_img, disabled, tooltip, on_click_fu
     if disabled then
         col = toolbar_buttons_params.disabled_color
     end
+    Slab.Rectangle({W=2, H=10, Color={0,0,0,0}})
+    Slab.SameLine()
     Slab.Image(name, {Image = love_img, ReturnOnClick = true, Color = col, Scale = 0.4, Tooltip = tooltip})
     toolbar_buttons_params[name .. "hovered"] = Slab.IsControlHovered()
     if Slab.IsControlClicked() and not disabled then
         on_click_func()
     end
+    Slab.SameLine()
+    Slab.Rectangle({W=2, H=10, Color={0,0,0,0}})
+    
+
 
 end
 
-function UI.update(dt)
-    -- Re-draw UI in each step
-    Slab.Update(dt)
+local function toolbar_separator(w)
+    Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})  
+    Slab.SameLine()
+--    Slab.Rectangle({W=6, H=25, Color=toolbar_buttons_params.base_color})
+    Slab.Rectangle({W=6, H=25, Color={1,1,1,.3}})
+    Slab.SameLine()
+    Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})  
+    Slab.SameLine()
+end
 
-    -- Build menu bar
+local function file_picker()
+  local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
+  if result.Button ~= "" then
+    show_file_picker = false
+    if result.Button == "OK" then
+      -- Load selected file
+      GraphicEngine.reset_simulation()
+      load_model(result.Files[1])
+      if next(Interface.ui_settings) ~= nil then
+        -- Loaded simulation has params, show params window
+        show_params_window = true
+      end
+    end
+  end
+end
+
+local function about_dialog()
+  Slab.OpenDialog("About")
+  Slab.BeginDialog("About", {Title = "About"})
+  Slab.BeginLayout("AboutLayout", {AlignX = "center"})
+  Slab.Text("Selenitas (alpha)")
+  Slab.NewLine()
+  Slab.Text("Webpage: ")
+  Slab.SameLine()
+  Slab.Text("https://github.com/Deepknowledge-US/Selenitas",
+    {URL = "https://github.com/Deepknowledge-US/Selenitas"})
+  Slab.NewLine()
+  if Slab.Button("OK") then
+    show_about_dialog = false
+    Slab.CloseDialog()
+  end
+  Slab.EndLayout()
+  Slab.EndDialog()
+end
+
+local function menu_bar()
+   -- Build menu bar
     if Slab.BeginMainMenuBar() then
 
         -- "File" section
@@ -289,54 +337,9 @@ function UI.update(dt)
 
         Slab.EndMenuBar()
     end
+end
 
-    -- Show file picker if selected
-    if show_file_picker then
-        local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
-        if result.Button ~= "" then
-            show_file_picker = false
-            if result.Button == "OK" then
-                -- Load selected file
-                GraphicEngine.reset_simulation()
-                load_model(result.Files[1])
-                if next(Interface.ui_settings) ~= nil then
-                    -- Loaded simulation has params, show params window
-                    show_params_window = true
-                end
-            end
-        end
-    end
-
-    -- Show about dialog if selected
-    if show_about_dialog then
-        Slab.OpenDialog("About")
-        Slab.BeginDialog("About", {Title = "About"})
-        Slab.BeginLayout("AboutLayout", {AlignX = "center"})
-        Slab.Text("Selenitas (alpha)")
-        Slab.NewLine()
-        Slab.Text("Webpage: ")
-        Slab.SameLine()
-        Slab.Text("https://github.com/Deepknowledge-US/Selenitas",
-            {URL = "https://github.com/Deepknowledge-US/Selenitas"})
-        Slab.NewLine()
-        if Slab.Button("OK") then
-            show_about_dialog = false
-            Slab.CloseDialog()
-        end
-        Slab.EndLayout()
-        Slab.EndDialog()
-    end
-
-    -- Show error message if needed
-    if error_msg ~= nil then
-        local res = Slab.MessageBox("An error occurred", "An error occurred:\n " .. error_msg)
-        if res ~= "" then
-            error_msg = nil
-        end
-    end
-
-    -- Get screen size
-    local screen_w, screen_h, _ = love.window.getMode()
+local function toolbar(screen_w, screen_h)
 
     -- Create toolbar with main controls
     Slab.BeginWindow("Toolbar", {
@@ -358,91 +361,85 @@ function UI.update(dt)
 
     ------- File options -------
     add_toolbar_button("New", ResourceManager.ui.newfile, false,
-        "New file", function() end) -- TODO
+        "New File", function() end) -- TODO
+    Slab.SameLine()
+        
+    add_toolbar_button("Open", ResourceManager.ui.open, false,
+        "Open File", on_click_functions.load_file)
     Slab.SameLine()
 
     add_toolbar_button("Edit", ResourceManager.ui.edit, file_loaded_path == nil,
-        "Edit in external editor", on_click_functions.edit_file)
+        "Edit File (external editor)", on_click_functions.edit_file)
     Slab.SameLine()
 
-    add_toolbar_button("Open", ResourceManager.ui.open, false,
-        "Open file", on_click_functions.load_file)
-    Slab.SameLine()
 
-    -------
-    Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
-    Slab.SameLine()
-    -------
+    toolbar_separator(30)
 
     ------- Simulation control -------
     add_toolbar_button("Setup", ResourceManager.ui.setup, file_loaded_path == nil,
-        "Run setup function", on_click_functions.setup)
+        "Setup Simulation", on_click_functions.setup)
     Slab.SameLine()
 
     if Simulation.is_running then
         add_toolbar_button("Stop", ResourceManager.ui.pause, not setup_executed,
-            "Stop simulation", on_click_functions.toggle_running)
+            "Stop Simulation", on_click_functions.toggle_running)
     else
         add_toolbar_button("Go", ResourceManager.ui.play, not setup_executed,
-            "Run simulation", on_click_functions.toggle_running)
+            "Run Simulation", on_click_functions.toggle_running)
     end
     Slab.SameLine()
 
     add_toolbar_button("Step", ResourceManager.ui.step, not setup_executed,
-        "Run step function once", on_click_functions.step)
+        "One Step", on_click_functions.step)
     Slab.SameLine()
 
     add_toolbar_button("Reload", ResourceManager.ui.refresh, file_loaded_path == nil,
-        "Reload model", on_click_functions.reload)
+        "Reload Model", on_click_functions.reload)
     Slab.SameLine()
 
-    -------
-    Slab.SameLine()
-    Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
-    Slab.SameLine()
-    -------
+    toolbar_separator(30)
+
 
     ------- View options -------
     if draw_enabled then
         add_toolbar_button("DisableDraw", ResourceManager.ui.eye_on, false,
-            "Disable drawing", on_click_functions.toggle_draw_enabled)
+            "Refresh Off", on_click_functions.toggle_draw_enabled)
     else
         add_toolbar_button("EnableDraw", ResourceManager.ui.eye_off, false,
-            "Enable drawing", on_click_functions.toggle_draw_enabled)
+            "Refresh On", on_click_functions.toggle_draw_enabled)
     end
     Slab.SameLine()
 
     add_toolbar_button("ShowGraph", ResourceManager.ui.showgraph, false,
-        "Toggle performance stats", on_click_functions.toggle_performance_stats)
+        "Performance Stats", on_click_functions.toggle_performance_stats)
     Slab.SameLine()
 
     add_toolbar_button("WindowShow", ResourceManager.ui.window, false,
-        "Windows visibility", function() end) -- TODO
+        "View Windows", function() end) -- TODO
     Slab.SameLine()
 
     add_toolbar_button("FamilyShow", ResourceManager.ui.family, false,
-        "Families visibility", function() end) -- TODO
+        "View Families", function() end) -- TODO
     Slab.SameLine()
 
     add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
-        "Toggle grid", function() end) -- TODO
+        "Grid", function() end) -- TODO
     Slab.SameLine()
 
-    -------
-    Slab.SameLine()
-    Slab.Text("  |  ", {Color = toolbar_buttons_params.base_color})
-    Slab.SameLine()
-    -------
+    toolbar_separator(30)
+
 
     ------- Help -------
     add_toolbar_button("Help", ResourceManager.ui.help, false,
-        "Open docs", function() end) -- TODO
+        "User Manual", function() end) -- TODO
     Slab.SameLine()
 
     Slab.EndLayout()
     Slab.EndWindow()
+end
 
-    -- Bottom status bar
+local function status_bar(screen_w, screen_h)
+  -- Bottom status bar
     Slab.BeginWindow("StatusBar", {
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
@@ -474,9 +471,10 @@ function UI.update(dt)
 
     Slab.EndLayout()
     Slab.EndWindow()
+end
 
-
-    -- Create panel for simulation params
+local function params_window()
+  -- Create panel for simulation params
     show_params_window = Slab.BeginWindow("Simulation", {
         Title = "Simulation parameters",
         X = 10,
@@ -529,6 +527,41 @@ function UI.update(dt)
     end
     Slab.EndLayout()
     Slab.EndWindow()
+end
+
+function UI.update(dt)
+    -- Re-draw UI in each step
+    Slab.Update(dt)
+
+    menu_bar()
+
+    -- Show file picker if selected
+    if show_file_picker then
+      file_picker()
+    end
+
+    -- Show about dialog if selected
+    if show_about_dialog then
+      about_dialog()
+    end
+
+    -- Show error message if needed
+    if error_msg ~= nil then
+        local res = Slab.MessageBox("An error occurred", "An error occurred:\n " .. error_msg)
+        if res ~= "" then
+            error_msg = nil
+        end
+    end
+
+      -- Get screen size
+    local screen_w, screen_h, _ = love.window.getMode()
+
+    toolbar(screen_w, screen_h)
+
+    status_bar(screen_w, screen_h)
+
+    params_window()
+  
 
     -- Update graphs
     fps_graph:update(dt)
