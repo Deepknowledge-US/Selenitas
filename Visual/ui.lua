@@ -181,11 +181,6 @@ local function add_toolbar_button(name, love_img, disabled, tooltip, on_click_fu
     if Slab.IsControlClicked() and not disabled then
         on_click_func()
     end
-    if Slab.BeginContextMenuItem() then
-        Slab.MenuItem("My Window Item 1")
-        Slab.MenuItem("My Window Item 2")
-        Slab.EndContextMenu()
-    end
     Slab.SameLine()
     Slab.Rectangle({W=2, H=10, Color={0,0,0,0}})
 end
