@@ -16,10 +16,11 @@ local Mobil = class.Mobil(Agent)
 -- @param Table with the properties we want in the agent.
 -- @return A new instance of Agent class.
 -- @usage new_instance = Mobil()
-Mobil._init = function(self,p_table)
+Mobil._init = function(self,a_table)
 
     self:super()
 
+    local p_table = a_table or {}
     for k,v in pairs(p_table) do
         self[k] = v
     end

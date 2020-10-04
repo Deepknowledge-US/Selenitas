@@ -40,7 +40,7 @@ function GraphicEngine.reset_simulation()
     setup_executed = false
     love.window.setTitle("Selenitas")
     GraphicEngine.set_background_color(0, 0, 0)
-    clear("all")
+    -- clear("all")
     View.reset()
     UI.reset()
 end
@@ -55,7 +55,8 @@ function GraphicEngine.setup_simulation()
         end
         setup_executed = true
         -- This loop can be moved to draw loop for direct family retrieval when z-order is implemented
-        for k, f in ipairs(Simulation.families) do
+        -- for k, f in ipairs(Simulation.families) do
+        for k, f in next, Simulation.families do
             if f:is_a(FamilyMobil) then
                 table.insert(agents_families, f)
             elseif f:is_a(FamilyRelational) then

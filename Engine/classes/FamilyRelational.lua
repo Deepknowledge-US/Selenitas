@@ -12,9 +12,8 @@ local FR    = class.FamilyRelational(Family)
 -- @function _init
 -- @return A new instance of FamilyRelational class.
 -- @usage New_Instance = FamilyRelational()
-FR._init = function(self,c)
-    self:super(c)
-    table.insert(Simulation.families, self)
+FR._init = function(self,name)
+    self:super(name)
     self.z_order = 2
     return self
 end
@@ -48,6 +47,14 @@ FR.new = function(self,object)
         new_rel.id      = new_id
         new_rel.family  = self
         new_rel.z_order = self.z_order
+
+        for prop, def_val in next, self.properties do
+            new_agent[prop] = def_val
+        end
+
+        for name, funct in next, self.functions do
+            new_agent[name] = funct
+        end
 
         -- New link added to family. Update agents table and size.
         self.agents[new_id] = Relational(new_rel)

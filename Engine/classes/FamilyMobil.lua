@@ -12,9 +12,8 @@ local FM = class.FamilyMobil(Family)
 -- @function _init
 -- @return A new instance of FamilyMobil class.
 -- @usage New_Instance = FamilyMobil()
-FM._init = function(self)
-    self:super()
-    table.insert(Simulation.families, self)
+FM._init = function(self,name)
+    self:super(name)
     self.z_order = 3
     return self
 end
@@ -45,18 +44,42 @@ FM.new = function(self,object)
     new_agent.family  = self
     new_agent.z_order = self.z_order
 
+    for prop, def_val in next, self.properties do
+        new_agent[prop] = def_val
+    end
+
+    for name, funct in next, self.functions do
+        new_agent[name] = funct
+    end
+
     self.agents[key]  = new_agent
     self.count        = self.count + 1
 
     local cell_fams = find_families(FamilyCell)
     for i=1,#cell_fams do
-        local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
-        if my_cell then
-            self.agents[key].current_cells[i] = my_cell
-            my_cell:come_in(self.agents[key])
+        if cell_fams[i].count > 0 then
+            local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
+            if my_cell then
+                self.agents[key].current_cells[i] = my_cell
+                my_cell:come_in(self.agents[key])
+            end
         end
 
     end
+
+    -- getmetatable(new_agent).__index = function(_table,key)
+    --     if rawget(_table, key) then
+    --         return rawget(_table, key)
+    --     else
+    --         -- return _table['family']['functions'][key]
+    --         -- return _table.family.functions[key]
+    --         return _table.family[key]
+    --         -- return self.functions[key]
+    --         -- return self[key]
+    --     end
+    -- end
+
+
     return self.agents[key]
 end
 

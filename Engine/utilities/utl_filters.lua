@@ -232,10 +232,10 @@ end
 -- @usage 
 -- cell_fams = find_families(FamilyCell)
 function utl_filters.find_families (fam_type)
-    local cell_fams, fams = {}, Simulation.families
-    for i=1,#fams do
-        if fams[i]:is_a(fam_type) then
-            table.insert(cell_fams,fams[i])
+    local cell_fams = {}
+    for _,v in pairs(Simulation.families) do
+        if v:is_a(fam_type) then
+            table.insert(cell_fams,v)
         end
     end
     return cell_fams

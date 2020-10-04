@@ -7,62 +7,45 @@ local Cell = require "Engine.classes.Cell"
 
 local utl_fam = {}
 
-------------------
--- A function to create a bidimensional grid of patches quickily
--- @function create_patches
--- @param x Number. Dimension of x axis of the grid
--- @param y Number. Dimension of y axis of the grid
--- @return A FamilyCell instance
--- @usage
--- Patches = create_patches(100,100)
-function utl_fam.create_grid(x, y, offset_x, offset_y, cell_width, cell_height)
-    local w = cell_width or 1
-    local h = cell_height or 1
-    local half_w = w / 2
-    local half_h = h / 2
+function utl_fam.declare_FamilyMobil(...)
+    local args = {...}
 
-    local step_x = offset_x or 0
-    local step_y = offset_y or 0
+    for i=1,#args do
+        local name = args[i]
 
-    local cells =
-        FamilyCell(
-        {
-            ["cell_width"] = w,
-            ["cell_height"] = h,
-            ["offset_x"] = step_x,
-            ["offset_y"] = step_y
-        }
-    )
-
-    for i = 0 + step_x, x + step_x - 1 do
-        for j = 0 + step_y, x + step_y - 1 do
-            cells:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+        if not _G[name] or not Simulation.families[name] then
+            _G[name] = FamilyMobil(name)
+            Simulation.families[name] = _G[name]
         end
     end
-
-    local grid_neighs = {
-        {-w, h}, {0, h}, {w, h},
-        {-w, 0},         {w, 0},
-        {-w,-h}, {0,-h}, {w,-h}
-    }
-
-    for _, cell in ordered(cells) do
-        local c_x, c_y = cell:xcor(), cell:ycor()
-        local neighs = {}
-
-        for i = 1, 8 do
-            local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
-            if
-                neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
-                    neigh_pos[2] <= y + step_y
-             then
-                cell.neighbors:add(cells:cell_in_pos(neigh_pos))
-            end
-        end
-    end
-
-    return cells
 end
+
+function utl_fam.declare_FamilyRel(...)
+    local args = {...}
+
+    for i=1,#args do
+        local name = args[i]
+
+        if not _G[name] or not Simulation.families[name] then
+            _G[name] = FamilyRelational(name)
+            Simulation.families[name] = _G[name]
+        end
+    end
+end
+
+function utl_fam.declare_FamilyCell(...)
+    local args = {...}
+
+    for i=1,#args do
+        local name = args[i]
+
+        if not _G[name] or not Simulation.families[name] then
+            _G[name] = FamilyCell(name)
+            Simulation.families[name] = _G[name]
+        end
+    end
+end
+
 
 --===================--
 --      ACTIONS      --

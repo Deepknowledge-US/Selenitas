@@ -21,11 +21,13 @@ local Family = class.Family()
 -- @function _init
 -- @return Family. A new instance of Family class.
 -- @usage New_Instance = Family()
-Family._init = function(self)
+Family._init = function(self,name)
+    self.name       = name or 'Collection'
     self.__to_purge = {}
-
-    self.agents = {}
-    self.count = 0
+    self.properties = {}
+    self.functions  = {}
+    self.agents     = {}
+    self.count      = 0
 
     return self
 end
@@ -42,14 +44,58 @@ end
 -- a_node:method_name(an_agent)
 -- -- The euclidean distance from a_node to an_agent is returned
 Family.add_method = function(self, name, funct)
-    self[name] = funct
-    for _,ag in ordered(self)do
-        ag[name] = self[name]
+
+    self.functions[name] = funct
+    for _,v in next,self.agents do
+        v[name] = self.functions[name]
     end
-    -- self:ask_ordered(function(ag)
-    --     ag[name] = self[name]
-    -- end)
+
 end
+
+
+Family.clone_table = function(tab) -- deep-copy a table
+    if type(tab) ~= "table" then
+        return tab
+    end
+    local meta = getmetatable(tab)
+    local target = {}
+    for k, v in pairs(tab) do
+        if type(v) ~= "table" or is_instance(v,Agent) or is_instance(v,Family) then
+            target[k] = v
+        else
+            target[k] = Family.clone_table(v)
+        end
+    end
+    setmetatable(target, meta)
+    return target
+end
+------------------
+-- This function adds a property to the agents of the Family.
+-- @function add_method
+-- @return Nothing.
+-- @usage TODO
+Family.add_properties = function(self, tab)
+
+    for prop_name, def_val in next, tab do
+        self.properties[prop_name] = Family.clone_table(def_val)
+    end
+
+    for _,v in next, self.agents do
+        for prop_name,def_val in next, self.properties do
+            -- local aux = type(def_val) ~= "table" and def_val or self.clone(def_val)
+            -- print(aux)
+            v[prop_name] = Family.clone_table(def_val)
+        end
+    end
+
+    -- for _,v in next,self.agents do
+    --     v[name] = self.functions[name]
+    -- end
+
+end
+
+
+
 
 ------------------
 -- Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.
@@ -490,7 +536,7 @@ Family.keys = function(self)
 end
 
 ------------------
--- This function returns a clone of the agent gived as parameter. Is an auxiliar function used by 'clone_n_act' to obtain an object that is added to the Family later.
+-- This function returns a clone of the table gived as parameter. Is an auxiliar function used by 'clone_n_act' to obtain an object that is added to the Family later.
 -- @function Instance:clone
 -- @param agent is an Agent instance.
 -- @return A new object, clone of the one gived as parameter. The only difference will be the id, unique for any agent or clone.

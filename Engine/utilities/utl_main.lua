@@ -48,6 +48,9 @@ lines_from          = __str_fls.lines_from
 split               = __str_fls.split
 
 __fam               = require 'Engine.utilities.utl_families'
+declare_FamilyMobil = __fam.declare_FamilyMobil
+declare_FamilyRel   = __fam.declare_FamilyRel
+declare_FamilyCell  = __fam.declare_FamilyCell
 create_grid         = __fam.create_grid
 purge_agents        = __fam.purge_agents
 clone_n             = __fam.clone_n
@@ -104,26 +107,26 @@ Observer    = Observer()
 -- FUNCTIONS --
 --===========--
 
-------------------
--- This function removes from the system all agents and all families
--- @function clear_simulation
--- @return Nothing
--- @usage
--- clear_simulation()
-clear = function(str)
+-- ------------------
+-- -- This function removes from the system all agents and all families
+-- -- @function clear_simulation
+-- -- @return Nothing
+-- -- @usage
+-- -- clear_simulation()
+-- clear = function(str)
 
-    if string.lower(str) == 'all' then
-        for k,v in ipairs(Simulation.families)do
-            for _,ag in ordered(v)do
-                ag = nil
-            end
-            v = nil
-        end
-        Simulation.families     = {}
-        Simulation.num_agents   = 0
+--     if string.lower(str) == 'all' then
+--         for k,v in ipairs(Simulation.families)do
+--             for _,ag in ordered(v)do
+--                 ag = nil
+--             end
+--             v = nil
+--         end
+--         Simulation.families     = {}
+--         Simulation.num_agents   = 0
 
-    end
-end
+--     end
+-- end
 
 ------------------
 -- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.

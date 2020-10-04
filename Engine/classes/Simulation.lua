@@ -27,6 +27,36 @@ Simulation._init = function(self)
 end;
 
 ------------------
+-- This function is used to erase a Family of the system.
+-- @function clear
+-- @param ... Variable number of string inputs, the names of the families we want to delete. If the string 'all' is passed as first parameter, all the families will be deleted.
+-- @return Nothing.
+-- @usage
+-- Simulation.clear()
+Simulation.clear = function(self, ...)
+
+    local args = {...}
+
+    self.time = 0
+
+    if string.lower(args[1]) == 'all' then
+        for k,v in next, self.families do
+            for _,ag in ordered(v)do
+                ag = nil
+            end
+
+            self.families[k] = nil
+        end
+        Simulation.families   = {}
+        Simulation.num_agents = 0
+    else
+        for i,v in next, args do
+            self.families[v] = nil
+        end
+    end
+end
+
+------------------
 -- This function controls the ids of the agents, when a new agent is created, an unique id is given to it, this function generates new ids. This function is called by families when adding new agents.
 -- @function __new_id
 -- @return Number, a unique id.

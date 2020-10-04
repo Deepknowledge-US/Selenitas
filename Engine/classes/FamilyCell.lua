@@ -12,12 +12,67 @@ local FC = class.FamilyCell(Family)
 -- @function _init
 -- @return A new instance of FamilyCell class.
 -- @usage New_Instance = FamilyCell()
-FC._init = function(self,c)
-    self:super(c)
-    table.insert(Simulation.families, self)
+FC._init = function(self,name)
+    self:super(name)
     self.z_order = 1
-    self.cell_width = c.cell_width or 1
-    self.cell_height= c.cell_height or 1
+    return self
+end
+------------------
+-- A function to create a bidimensional grid of patches quickily
+-- @function create_grid
+-- @param x_size Number. Dimension of x axis of the grid
+-- @param y_size Number. Dimension of y axis of the grid
+-- @param offset_x Number (Optional). The x point from where the grid starts (0 by default).
+-- @param offset_y Number (Optional). The y point from where the grid starts (0 by default).
+-- @param cell_width Number (Optional). The width of the cell (1 by default).
+-- @param cell_height Number (Optional). The height of the cell (1 by default).
+-- @return A FamilyCell instance
+-- @usage
+-- declare_FamilyCell('Patches')
+-- Patches:create_patches(100,100,-50,-50)
+FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, cell_height)
+    local x      = x_size or 0
+    local y      = y_size or 0
+    local w      = cell_width or 1
+    local h      = cell_height or 1
+    local half_w = w / 2
+    local half_h = h / 2
+
+    local step_x = offset_x or 0
+    local step_y = offset_y or 0
+
+    self["cell_width"]  = w
+    self["cell_height"] = h
+    self["offset_x"]    = step_x
+    self["offset_y"]    = step_y
+
+    for i = 0 + step_x, x + step_x - 1 do
+        for j = 0 + step_y, x + step_y - 1 do
+            self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+        end
+    end
+
+    local grid_neighs = {
+        {-w, h}, {0, h}, {w, h},
+        {-w, 0},         {w, 0},
+        {-w,-h}, {0,-h}, {w,-h}
+    }
+
+    for _, cell in ordered(self) do
+        local c_x, c_y = cell:xcor(), cell:ycor()
+        local neighs = {}
+
+        for i = 1, 8 do
+            local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+            if
+                neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
+                    neigh_pos[2] <= y + step_y
+             then
+                cell.neighbors:add(self:cell_in_pos(neigh_pos))
+            end
+        end
+    end
+
     return self
 end
 
@@ -46,6 +101,14 @@ FC.new = function(self,object)
     new_agent.id      = k
     new_agent.family  = self
     new_agent.z_order = self.z_order
+
+    for prop, def_val in next, self.properties do
+        new_agent[prop] = def_val
+    end
+
+    for name, funct in next, self.functions do
+        new_agent[name] = funct
+    end
 
     self.agents[k]   = new_agent
     self.count       = self.count + 1

@@ -82,9 +82,9 @@ function utl_actions.die(agent, family)
     if family ~= nil then
         family:kill(agent)
     else
-        for i=1,#Simulation.families do
-            if agent == Simulation.families[i].agents[agent.id]  then
-                Simulation.families[i]:kill(agent)
+        for _,fam in next, Simulation.families do
+            if agent == fam.agents[agent.id]  then
+                fam:kill(agent)
             end
         end
     end
