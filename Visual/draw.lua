@@ -129,18 +129,18 @@ function Draw.draw_grid()
     love.graphics.setLineWidth(1)
     -- Horizontal lines
     for i = 0, lines do
-        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(0.3, 0.3, 0.3, 0.3)
         if y == 0 then
-            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.setColor(1, 0, 0, 0.5)
         end
         love.graphics.line(-grid_size / 2, y, grid_size / 2, y)
         y = y - grid_cell_size
     end
     -- Vertical lines
     for i = 0, lines do
-        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(0.3, 0.3, 0.3, 0.3)
         if x == 0 then
-            love.graphics.setColor(0, 1,  0, 1)
+            love.graphics.setColor(0, 1,  0, 0.5)
         end
         love.graphics.line(x, grid_size / 2, x, -grid_size / 2)
         x = x + grid_cell_size

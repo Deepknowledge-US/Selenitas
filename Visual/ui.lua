@@ -82,6 +82,7 @@ local on_click_functions = {
     reload = function()
         GraphicEngine.reset_simulation()
         load_model(file_loaded_path)
+        show_params_window = true
     end,
 
     load_file = function()

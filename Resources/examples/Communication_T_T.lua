@@ -1,9 +1,3 @@
-
-local utl           = require 'pl.utils'
-local lamb          = utl.bind1
-local lambda        = utl.string_lambda
-
-
 -- "COMUNICATION_T_T"
 -- Agents are created and randomly located in the world
 -- A message is given to one of them
@@ -11,15 +5,15 @@ local lambda        = utl.string_lambda
 -- The simulation ends when all agents have the message.
 
 Interface:create_slider('Num_agents', 0, 1000, 1, 100)
-Interface:create_slider('radius', 0, 10, .01, 1)
+Interface:create_slider('radius', 0.0, 10.00001, .01, 1.0)
 
 
 -- Agents with the message will share it with other agents in the same patch
-local function comunicate(x)
+local function comunicate(ag)
 
-    if x.message then
+    if ag.message then
         local neighborhood = People:with(function(other)
-            return x:dist_euc_to(other) <= Interface.radius
+            return ag:dist_euc_to(other) <= Interface.radius
         end)
         for _,other in ordered(neighborhood) do
             other.message = true
@@ -30,19 +24,19 @@ local function comunicate(x)
 end
 
 -- pos_to_torus relocate the agents as they are living in a torus
-local function pos_to_torus(agent, size_x, size_y)
+local function pos_to_torus(agent, minsize_x, maxsize_x, minsize_y, maxsize_y)
     local x,y = agent:xcor(),agent:ycor()
 
-    if x > size_x then
-        agent.pos[1] = agent.pos[1] - size_x
-    elseif x < 0 then
-        agent.pos[1] = agent.pos[1] + size_x
+    if x > maxsize_x then
+        agent.pos[1] = minsize_x + (x - maxsize_x)
+    elseif x < minsize_x then
+        agent.pos[1] =  maxsize_x - (minsize_x - x)
     end
 
-    if y > size_y then
-        agent.pos[2] = agent.pos[2] - size_y
-    elseif y < 0 then
-        agent.pos[2] = agent.pos[2] + size_y
+    if y > maxsize_y then
+        agent.pos[2] = minsize_y + (y - maxsize_y)
+    elseif y < minsize_y then
+        agent.pos[2] = maxsize_y - (minsize_y - y)
     end
 end
 
@@ -51,19 +45,20 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
 
-    GraphicEngine.set_background_color(.8,.8,.8)
+    --GraphicEngine.set_background_color(0.8, 0.8, 0.8)
+
     -- Test collection
     -- Checkpoints = FamilyMobil()
     declare_FamilyMobil('Checkpoints')
-    Checkpoints:new({ ['pos'] = {0, 100} })
-    Checkpoints:new({ ['pos'] = {0,0} })
-    Checkpoints:new({ ['pos'] = { 100,0} })
-    Checkpoints:new({ ['pos'] = { 100, 100} })
+    Checkpoints:new({ ['pos'] = {100, 100} })
+    Checkpoints:new({ ['pos'] = {-100,-100} })
+    Checkpoints:new({ ['pos'] = {-100,100} })
+    Checkpoints:new({ ['pos'] = { 100,-100} })
 
     for _, ch in ordered(Checkpoints) do
-        ch.shape = 'circle'
+        ch.shape = 'square'
         ch.scale = 5
-        ch.color = {1,0,0,1}
+        ch.color = {1,0,0,.5}
         ch.label = ch:xcor() .. ',' .. ch:ycor()
     end
 
@@ -73,7 +68,7 @@ SETUP = function()
     -- Populate the collection with Agents.
     for i=1,Interface.Num_agents do
         People:new({
-            ['pos']     = {math.random(0,100),math.random(0,100)}
+            ['pos']     = {math.random(-100,100),math.random(-100,100)}
             ,['message'] = false
             ,['heading'] = math.random(__2pi)
             ,['scale']   = 2
@@ -102,7 +97,7 @@ STEP = function()
     for _, person in ordered(People) do
         person:lt(math.random(-0.5,0.5))
         person:fd(1)
-        pos_to_torus(person,100,100)
+        pos_to_torus(person,-100,100,-100,100)
         comunicate(person)
     end
 
