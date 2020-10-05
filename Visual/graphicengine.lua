@@ -12,9 +12,6 @@ local GraphicEngine = {}
 
 -- Simulation info
 local setup_executed = false
-local agents_families = {}
-local links_families = {}
-local cells_families = {}
 
 -- Time handling
 local time_between_steps = 0
@@ -34,14 +31,10 @@ end
 
 function GraphicEngine.reset_simulation()
     -- Simulation info
-    agents_families = {}
-    links_families = {}
-    cells_families = {}
     Simulation:reset()
     setup_executed = false
     love.window.setTitle("Selenitas")
     GraphicEngine.set_background_color(0, 0, 0)
-    -- clear("all")
     View.reset()
     UI.reset()
 end
@@ -52,23 +45,11 @@ function GraphicEngine.setup_simulation()
         local ok, err = pcall(SETUP)
         if not ok then
             ret_err = err
-            goto skipsetup
+            return ret_err
         end
         setup_executed = true
-        -- This loop can be moved to draw loop for direct family retrieval when z-order is implemented
-        -- for k, f in ipairs(Simulation.families) do
-        for k, f in next, Simulation.families do
-            if f:is_a(FamilyMobil) then
-                table.insert(agents_families, f)
-            elseif f:is_a(FamilyRelational) then
-                table.insert(links_families, f)
-            elseif f:is_a(FamilyCell) then
-                table.insert(cells_families, f)
-            end
-        end
         Simulation:stop() -- Reset 'go' in case Setup button is pressed more than once
     end
-    ::skipsetup::
     return ret_err
 end
 
@@ -169,23 +150,20 @@ function love.draw()
         Draw.draw_grid()
     end
 
-    if not setup_executed or not draw_enabled then
-        goto skip
+    if setup_executed and draw_enabled then
+        -- Draw families in order
+        for _,fam in sorted(Simulation.families, 'z_order')do
+            if fam:is_a(FamilyMobil) then
+                Draw.draw_agents_family(fam)
+            elseif fam:is_a(FamilyRelational) then
+                Draw.draw_links_family(fam)
+            else
+                Draw.draw_cells_family(fam)
+            end
+        end
+
     end
 
-    -- Draw families in order
-    -- TODO: implement z-order to draw all families on same loop
-    for _, family in pairs(cells_families or {}) do
-        Draw.draw_cells_family(family)
-    end
-    for _, family in pairs(links_families or {}) do
-        Draw.draw_links_family(family)
-    end
-    for _, family in pairs(agents_families or {}) do
-        Draw.draw_agents_family(family)
-    end
-
-    ::skip::
     View.finish()
     UI.draw()
 end

@@ -25,9 +25,11 @@ end
 
 SETUP = function()
 
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
 
-    Nodes = FamilyMobil()
+    declare_FamilyMobil('Nodes')
+
     Nodes:create_n( Interface.nodes, function()
         return {
             ['pos']     = {0,0}
@@ -42,8 +44,7 @@ SETUP = function()
     end
 
     -- A new collection to store the links
-    Links = FamilyRelational()
-
+    declare_FamilyRel('Links')
     -- Each agent will create a link with the other agents.
     for _, agent in pairs(Nodes.agents) do
         for _, another_agent in pairs((Nodes:others(agent)).agents) do
@@ -55,7 +56,7 @@ SETUP = function()
         end
     end
 
-    Agents = FamilyMobil()
+    declare_FamilyMobil('Agents')
 
     -- Agents:new returns an agent, so, in global variable central we have the reference to the agent, becouse it has been asigned to a global variable, we can call this agent directly in step function.
     central = Agents:new({

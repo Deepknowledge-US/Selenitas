@@ -2,21 +2,24 @@
 
 Interface:create_slider('N_agents', 0, 20, 1.0, 5)
 Interface:create_boolean('random_ordered', true)
+Interface:create_boolean('clean_families', true)
 
 
 SETUP = function()
 
-    Simulation:clear('all')
-
-    if Simulation.families['Mobils'] then
-        print('Antes:', Simulation.families['Mobils'])
+    if Interface.clean_families then
+        Simulation:clear('all')
     end
+
+    -- if Simulation.families['Mobils'] then
+    --     print('Antes:', Simulation.families['Mobils'].count)
+    -- end
 
     declare_FamilyMobil('Mobils')
 
-    if Simulation.families['Mobils'] then
-        print('Despues:', Simulation.families['Mobils'].count)
-    end
+    -- if Simulation.families['Mobils'] then
+    --     print('Despues:', Simulation.families['Mobils'].count)
+    -- end
 
     Mobils:create_n( Interface.N_agents, function()
         return {
@@ -41,8 +44,6 @@ end
 
 
 STEP = function()
-    -- Limitación de ask: no puede combinarse con otras variables que cambien en cada ciclo... algo que tiene sentido
-    -- si se considera el ask como una ejecución paralela.
     if Interface.random_ordered then
         for _,ag in shuffled(Mobils) do
             ag:fd(1)

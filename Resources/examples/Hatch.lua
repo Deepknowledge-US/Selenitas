@@ -7,9 +7,11 @@ Interface:create_slider('clone_probability', 0, 100, 1, 20)
 -- In the 'setup' block we define the initial configuration of the system.
 SETUP = function()
 
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
+
     -- Create a Family of Mobil agents
-    Agents = FamilyMobil()
+    declare_FamilyMobil('Agents')
 
     -- Populate the Family with 3 agents. Each agent will have the parameters
     -- specified in the table (and some parameters obteined just for be a Mobil instance)
@@ -40,13 +42,13 @@ SETUP = function()
     --   [0,size_x]x[0,size_y]
     Agents:add_method('pos_to_torus', function(agent, size_x, size_y)
         local x,y = agent:xcor(),agent:ycor()
-    
+
         if x > size_x then
             agent.pos[1] = agent.pos[1] - size_x
         elseif x < 0 then
             agent.pos[1] = agent.pos[1] + size_x
         end
-    
+
         if y > size_y then
             agent.pos[2] = agent.pos[2] - size_y
         elseif y < 0 then

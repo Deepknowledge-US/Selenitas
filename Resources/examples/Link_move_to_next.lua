@@ -4,11 +4,13 @@ Interface:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
 
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
 
-    Nodes   = FamilyMobil()
-    Edges   = FamilyRelational()
-    Walkers = FamilyMobil()
+    declare_FamilyMobil('Nodes')
+    declare_FamilyRel('Edges')
+    declare_FamilyMobil('Walkers')
+    Walkers.z_order = 4
 
     for i=1,Interface.nodes do
         Nodes:new({

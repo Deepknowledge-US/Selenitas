@@ -136,7 +136,7 @@ local function build_family_show_tree()
         end
     end
     Slab.Separator()
-    for _, f in ipairs(Simulation.families) do
+    -- for _, f in ipairs(Simulation.families) do
         -- TODO: family id
         --local family_type = "Mobil"
         --if f:is_a(FamilyRelational) then
@@ -151,7 +151,7 @@ local function build_family_show_tree()
         --        families_visibility.all = false
         --    end
         --end
-    end
+    -- end
 end
 
 function UI.show_error_message(err)

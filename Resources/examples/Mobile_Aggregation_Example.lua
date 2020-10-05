@@ -45,9 +45,10 @@ end
 
 SETUP = function()
 
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
     -- Test collection
-    Checkpoints = FamilyMobil()
+    declare_FamilyMobil('Checkpoints')
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
     Checkpoints:new({ ['pos'] = { 100,0} })
@@ -61,8 +62,8 @@ SETUP = function()
     end
 
     -- Create a new collection
-    Mobiles = FamilyMobil()
-    Links   = FamilyRelational()
+    declare_FamilyMobil('Mobiles')
+    declare_FamilyRel('Links')
 
     -- Populate the collection with Agents.
     Mobiles:create_n( Interface.Num_mobiles, function()
