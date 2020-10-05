@@ -25,10 +25,11 @@ end
 
 SETUP = function()
 
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
 
     -- Test collection
-    Checkpoints = FamilyMobil()
+    declare_FamilyMobil('Checkpoints')
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
     Checkpoints:new({ ['pos'] = { 100,0} })
@@ -42,7 +43,7 @@ SETUP = function()
     end
 
     -- Create a new collection
-    Pursuers = FamilyMobil()
+    declare_FamilyMobil('Pursuers')
 
     -- Populate the collection with Agents.
     Pursuers:create_n( Interface.Num_pursuers, function()
@@ -55,7 +56,7 @@ SETUP = function()
         }
     end)
 
-    Pursueds = FamilyMobil()
+    declare_FamilyMobil('Pursueds')
 
     Pursueds:create_n( 1, function()
         return {

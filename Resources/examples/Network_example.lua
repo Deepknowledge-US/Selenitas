@@ -18,11 +18,12 @@ end
 
 SETUP = function()
 
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
 
     Simulation.is_running = true
 
-    Nodes = FamilyMobil()
+    declare_FamilyMobil('Nodes')
     Nodes:create_n( Interface.nodes, function()
         return {
             ['pos']     = {0,0}
@@ -35,8 +36,7 @@ SETUP = function()
     layout_circle(Nodes, radius)
 
     -- A new collection to store the links
-    Links = nil
-    Links = FamilyRelational()
+    declare_FamilyRel('Links')
 
 end
 

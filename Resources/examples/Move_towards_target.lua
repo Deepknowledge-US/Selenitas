@@ -23,8 +23,9 @@ end
 
 SETUP = function()
 
-    clear('all')
-    Houses = FamilyMobil()
+    -- clear('all')
+    Simulation:reset()
+    declare_FamilyMobil('Houses')
     Houses:create_n( Interface.houses, function()
         --local tree_or_house = math.random(100)<=50 and "house" or "tree"
         local tree_or_house = one_of {"house", "tree"}
@@ -38,7 +39,7 @@ SETUP = function()
 
     layout_circle(Houses, radius)
 
-    People = FamilyMobil()
+    declare_FamilyMobil('People')
     People:create_n(Interface.people, function()
         return {
             ['pos']     = {math.random(-radius,radius),math.random(-radius,radius)}

@@ -48,11 +48,13 @@ end
 
 
 SETUP = function()
-    clear('all')
+    -- clear('all')
+    Simulation:reset()
 
     GraphicEngine.set_background_color(.8,.8,.8)
     -- Test collection
-    Checkpoints = FamilyMobil()
+    -- Checkpoints = FamilyMobil()
+    declare_FamilyMobil('Checkpoints')
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
     Checkpoints:new({ ['pos'] = { 100,0} })
@@ -66,17 +68,17 @@ SETUP = function()
     end
 
     -- Create a new collection
-    People = FamilyMobil()
+    declare_FamilyMobil('People')
 
     -- Populate the collection with Agents.
-    People:create_n( Interface.Num_agents, function()
-        return {
+    for i=1,Interface.Num_agents do
+        People:new({
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['message'] = false
             ,['heading'] = math.random(__2pi)
             ,['scale']   = 2
-        }
-    end)
+        })
+    end
 
     local one_person = one_of(People)
     one_person.message = true
