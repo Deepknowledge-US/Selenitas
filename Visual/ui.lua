@@ -32,7 +32,6 @@ local windows_visibility = {
 
 -- Simulation state trackers
 local setup_executed = false
-local draw_enabled = true
 
 -- Wrapper for FileUtils.load_model_file,
 -- Checks for errors and sets window name
@@ -94,8 +93,7 @@ local on_click_functions = {
     end,
 
     toggle_draw_enabled = function()
-        draw_enabled = not draw_enabled
-        GraphicEngine.set_draw_enabled(draw_enabled)
+        GraphicEngine.set_draw_enabled(not GraphicEngine.is_draw_enabled())
     end,
 
     toggle_performance_stats = function()
@@ -108,6 +106,10 @@ local on_click_functions = {
 
     toggle_windows_visibility = function()
         windows_visibility.all = not windows_visibility.all
+    end,
+
+    toggle_grid_visibility = function()
+        GraphicEngine.set_grid_enabled(not GraphicEngine.is_grid_enabled())
     end,
 }
 
@@ -317,7 +319,7 @@ local function menu_bar()
                 end
             end
 
-            if Slab.MenuItemChecked("Draw enabled", draw_enabled) then
+            if Slab.MenuItemChecked("Draw enabled", GraphicEngine.is_draw_enabled()) then
                 on_click_functions.toggle_draw_enabled()
             end
 
@@ -339,7 +341,8 @@ local function menu_bar()
                 Slab.EndMenu()
             end
 
-            if Slab.MenuItem("Show grid") then
+            if Slab.MenuItemChecked("Show grid", GraphicEngine.is_grid_enabled()) then
+                on_click_functions.toggle_grid_visibility()
             end
 
             if Slab.MenuItemChecked("Show performance stats", show_debug_graph) then
@@ -435,7 +438,7 @@ local function toolbar(screen_w, screen_h)
 
 
     ------- View options -------
-    if draw_enabled then
+    if GraphicEngine.is_draw_enabled() then
         add_toolbar_button("DisableDraw", ResourceManager.ui.eye_on, false,
             "Refresh Off", on_click_functions.toggle_draw_enabled)
     else
@@ -457,7 +460,7 @@ local function toolbar(screen_w, screen_h)
     Slab.SameLine()
 
     add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
-        "Grid", function() end) -- TODO
+        "Grid", on_click_functions.toggle_grid_visibility)
     Slab.SameLine()
 
     toolbar_separator(30)

@@ -22,6 +22,7 @@ local _time_acc = 0
 
 -- Drawing settings
 local draw_enabled = true
+local grid_enabled = false
 local background_color_set = {0, 0, 0}
 
 function GraphicEngine.init()
@@ -95,6 +96,18 @@ function GraphicEngine.set_draw_enabled(enabled)
     end
 end
 
+function GraphicEngine.is_draw_enabled()
+    return draw_enabled
+end
+
+function GraphicEngine.set_grid_enabled(enabled)
+    grid_enabled = enabled
+end
+
+function GraphicEngine.is_grid_enabled()
+    return grid_enabled
+end
+
 ------------------
 -- Sets time between steps in seconds for better visualization
 -- @function set_time_between_steps
@@ -146,14 +159,18 @@ end
 function love.draw()
     View.start()
 
-    if not setup_executed or not draw_enabled then
-        goto skip
-    end
-
     -- Translate (0, 0) to center of the screen (local scope to avoid goto-jump issues)
     do
         local sw, sh, _ = love.window.getMode()
         love.graphics.translate(sw / 2, sh / 2)
+    end
+
+    if grid_enabled then
+        Draw.draw_grid()
+    end
+
+    if not setup_executed or not draw_enabled then
+        goto skip
     end
 
     -- Draw families in order

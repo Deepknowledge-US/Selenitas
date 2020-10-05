@@ -1,8 +1,12 @@
 local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
+local View = require "Visual.view"
+local math = require "math"
 
 local Draw = {}
 
 local coord_scale = 16 -- 16 px = 1 unit
+local grid_cell_size = 64
+local grid_size = 1024 * 16
 
 function Draw.init()
     love.graphics.setNewFont(7) -- Default font for labels
@@ -115,6 +119,31 @@ function Draw.draw_cells_family(family)
           love.graphics.setColor(c.label_color)
           love.graphics.printf(c.label, x - 45, y, 100, 'center')
         end
+    end
+end
+
+function Draw.draw_grid()
+    local lines = grid_size / grid_cell_size
+    local x = - ((lines / 2) * grid_cell_size)
+    local y = (lines / 2) * grid_cell_size
+    love.graphics.setLineWidth(1)
+    -- Horizontal lines
+    for i = 0, lines do
+        love.graphics.setColor(1, 1, 1, 1)
+        if y == 0 then
+            love.graphics.setColor(1, 0, 0, 1)
+        end
+        love.graphics.line(-grid_size / 2, y, grid_size / 2, y)
+        y = y - grid_cell_size
+    end
+    -- Vertical lines
+    for i = 0, lines do
+        love.graphics.setColor(1, 1, 1, 1)
+        if x == 0 then
+            love.graphics.setColor(0, 1,  0, 1)
+        end
+        love.graphics.line(x, grid_size / 2, x, -grid_size / 2)
+        x = x + grid_cell_size
     end
 end
 
