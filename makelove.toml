@@ -1,5 +1,5 @@
 name = "Selenitas"
-default_targets = ["win64", "appimage"]
+default_targets = ["win64", "appimage", "macos"]
 build_directory = "build"
 
 love_files = [
@@ -11,6 +11,7 @@ love_files = [
 "README.md" = "README.md"
 "LICENSE" = "LICENSE"
 
+[windows]
 [windows.exe_metadata]
 FileDescription = "{name}"
 FileVersion = "{version}"
@@ -18,10 +19,17 @@ CompanyName = "Universidad de Sevilla"
 LegalCopyright = "Copyright © 2020 Universidad de Sevilla"
 ProductName = "{name}"
 
-artifacts = "directory"
-
 [linux]
 # These values are included in the .desktop file
 [linux.desktop_file_metadata]
 Comment="Multiagent simulation framework"
 Categories="Education;Science;"
+
+[macos]
+[macos.app_metadata]
+CFBundleIdentifier = "us.selenitas"
+NSHumanReadableCopyright = "Copyright © 2020 Universidad de Sevilla"
+CFBundleShortVersionString = "{version}"
+
+# artifacts
+artifacts = "directory"
