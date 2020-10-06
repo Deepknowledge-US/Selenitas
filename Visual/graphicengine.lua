@@ -20,6 +20,7 @@ local _time_acc = 0
 -- Drawing settings
 local draw_enabled = true
 local grid_enabled = false
+local families_visibility = {}
 local background_color_set = {0, 0, 0}
 
 function GraphicEngine.init()
@@ -89,6 +90,12 @@ function GraphicEngine.is_grid_enabled()
     return grid_enabled
 end
 
+-- Table with family_name:visibility (boolean)
+-- Used internally by UI module
+function GraphicEngine.set_families_visibility(table)
+    families_visibility = table
+end
+
 ------------------
 -- Sets time between steps in seconds for better visualization
 -- @function set_time_between_steps
@@ -152,13 +159,15 @@ function love.draw()
 
     if setup_executed and draw_enabled then
         -- Draw families in order
-        for _,fam in sorted(Simulation.families, 'z_order')do
-            if fam:is_a(FamilyMobil) then
-                Draw.draw_agents_family(fam)
-            elseif fam:is_a(FamilyRelational) then
-                Draw.draw_links_family(fam)
-            else
-                Draw.draw_cells_family(fam)
+        for _, fam in sorted(Simulation.families, 'z_order') do
+            if families_visibility[fam.name] then
+                if fam:is_a(FamilyMobil) then
+                    Draw.draw_agents_family(fam)
+                elseif fam:is_a(FamilyRelational) then
+                    Draw.draw_links_family(fam)
+                else
+                    Draw.draw_cells_family(fam)
+                end
             end
         end
 

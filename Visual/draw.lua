@@ -57,25 +57,25 @@ function Draw.draw_links_family(family)
     for _, l in pairs(family.agents) do
         -- Handle link visibility
         if l.visible then
-          -- Handle link color
-          love.graphics.setColor(l.color)
-          -- Link thickness
-          love.graphics.setLineWidth(l.thickness)
-          -- Agent coordinate is scaled and shifted in its x coordinate
-          -- to account for UI column
-          local sx = l.source:xcor() * coord_scale
-          local sy = - l.source:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
-          local tx = l.target:xcor() * coord_scale
-          local ty = - l.target:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
-          -- Draw line
-          love.graphics.line(sx, sy, tx, ty)
-          -- Draw label
-          love.graphics.setColor(l.label_color)
-          local dirx = tx - sx
-          local diry = ty - sy
-          local midx = sx + dirx * 0.5
-          local midy = sy + diry * 0.5
-          love.graphics.printf(l.label, midx - 45, midy, 100, 'center')
+            -- Handle link color
+            love.graphics.setColor(l.color)
+            -- Link thickness
+            love.graphics.setLineWidth(l.thickness)
+            -- Agent coordinate is scaled and shifted in its x coordinate
+            -- to account for UI column
+            local sx = l.source:xcor() * coord_scale
+            local sy = - l.source:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+            local tx = l.target:xcor() * coord_scale
+            local ty = - l.target:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+            -- Draw line
+            love.graphics.line(sx, sy, tx, ty)
+            -- Draw label
+            love.graphics.setColor(l.label_color)
+            local dirx = tx - sx
+            local diry = ty - sy
+            local midx = sx + dirx * 0.5
+            local midy = sy + diry * 0.5
+            love.graphics.printf(l.label, midx - 45, midy, 100, 'center')
         end
     end
 end
@@ -83,41 +83,41 @@ end
 function Draw.draw_cells_family(family)
     for _, c in pairs(family.agents) do
         if c.visible then
-          -- Handle cell color
-          love.graphics.setColor(c.color)
+            -- Handle cell color
+            love.graphics.setColor(c.color)
 
-          local x = c:xcor() * coord_scale
-          local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
-          if c.shape == "square" then
-              -- Squares are assumed to be 1x1
-              -- Each square is 4 lines
-              local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
-              local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
-              local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
-              local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
-              love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
-              love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
-              love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
-              love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
-          elseif c.shape == "triangle" then
-              -- Each triangle is 3 lines
-              local top = {x, y - (0.5 * coord_scale)}
-              local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
-              local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
-              love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
-              love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
-              love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
-          elseif c.shape == "circle" then
-              -- Circle of radius=0.5
-              love.graphics.circle("line", x, y, 0.5 * coord_scale)
-          else
-              -- Shape is a generic polygon
-              love.graphics.polygon("line", c.shape)
-          end
+            local x = c:xcor() * coord_scale
+            local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+            if c.shape == "square" then
+                -- Squares are assumed to be 1x1
+                -- Each square is 4 lines
+                local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
+                local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
+                local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
+                love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
+                love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
+                love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
+            elseif c.shape == "triangle" then
+                -- Each triangle is 3 lines
+                local top = {x, y - (0.5 * coord_scale)}
+                local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
+                love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
+                love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
+            elseif c.shape == "circle" then
+                -- Circle of radius=0.5
+                love.graphics.circle("line", x, y, 0.5 * coord_scale)
+            else
+                -- Shape is a generic polygon
+                love.graphics.polygon("line", c.shape)
+            end
 
-          -- Draw label
-          love.graphics.setColor(c.label_color)
-          love.graphics.printf(c.label, x - 45, y, 100, 'center')
+            -- Draw label
+            love.graphics.setColor(c.label_color)
+            love.graphics.printf(c.label, x - 45, y, 100, 'center')
         end
     end
 end
