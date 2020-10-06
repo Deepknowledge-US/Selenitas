@@ -8,24 +8,16 @@ SETUP = function()
 
     Simulation:clear('all')
 
-    if Simulation.families['Mobils'] then
-        print('Antes:', Simulation.families['Mobils'])
-    end
-
     declare_FamilyMobil('Mobils')
 
-    if Simulation.families['Mobils'] then
-        print('Despues:', Simulation.families['Mobils'].count)
-    end
-
-    Mobils:create_n( Interface.N_agents, function()
-        return {
+    for i=1,Interface.N_agents do
+        Mobils:new({
             ['pos']      = {0,0}
             ,['scale']   = 1.5
             ,['color']   = {1,0,0,1}
             ,['heading'] = math.pi / 2
-        }
-    end)
+        })
+    end
 
     local x = 0
 

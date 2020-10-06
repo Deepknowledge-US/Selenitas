@@ -26,18 +26,17 @@ local function layout_circle(collection, radius)
 end
 
 SETUP = function()
-    -- clear('all')
+
     Simulation:reset()
 
-    Simulation.is_running = true
-
     declare_FamilyMobil('Nodes')
-    Nodes:create_n( Interface.nodes, function()
-        return {
+
+    for i=1,Interface.nodes do
+        Nodes:new({
             ['pos']     = {0,0},
             ['heading'] = 0
-        }
-    end)
+        })
+    end
 
     layout_circle(Nodes, Interface.radius )
 
@@ -59,5 +58,4 @@ end
 
 
 STEP = function()
-
 end

@@ -13,17 +13,6 @@ SETUP = function()
     -- Create a Family of Mobil agents
     declare_FamilyMobil('Agents')
 
-    -- Populate the Family with 3 agents. Each agent will have the parameters
-    -- specified in the table (and some parameters obteined just for be a Mobil instance)
-    Agents:create_n( Interface.num_agents, function()
-        return {
-            ['pos']     = {math.random(0,10),math.random(0,10)}
-            ,['head']    = math.random(2*math.pi)
-            ,['age']     = 0
-            ,['color']   = {1,0,0,1}
-        }
-    end)
-
     -- The agent dies when it reachs the max age.
     -- Died agents have a value of false to its parameter 'alive', but they still remain in the world until 
     -- a purge is performed. 
@@ -69,6 +58,18 @@ SETUP = function()
         end
     end)
 
+
+    -- Populate the Family with 3 agents. Each agent will have the parameters
+    -- specified in the table (and some parameters obteined just for be a Mobil instance)
+    for i=1,Interface.num_agents do
+        Agents:new({
+            ['pos']     = {math.random(0,10),math.random(0,10)}
+            ,['head']    = math.random(2*math.pi)
+            ,['age']     = 0
+            ,['color']   = {1,0,0,1}
+        })
+    end
+
 end
 
 -- The run function is executed until a stop condition in reached
@@ -85,7 +86,7 @@ STEP = function()
         agent
         :lt(math.random(-0.5,0.5))
         :fd(0.8)
-        :pos_to_torus(100,100)
+        -- :pos_to_torus(100,100)
         :grow_old()
         :reproduce()
     end

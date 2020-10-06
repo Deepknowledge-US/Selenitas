@@ -18,7 +18,7 @@ local Mobil = class.Mobil(Agent)
 -- @usage new_instance = Mobil()
 Mobil._init = function(self,a_table)
 
-    self:super()
+    self:super(a_table)
 
     local p_table = a_table or {}
     for k,v in pairs(p_table) do
@@ -35,11 +35,17 @@ Mobil._init = function(self,a_table)
     self.label_color    = p_table.label_color   or {1,1,1,1}
     self.current_cells  = p_table.current_cells or {}
 
-    if p_table.visible == nil then
-        self.visible = true
-    else
-        self.visible = p_table.visible
-    end
+    -- if p_table.visible == nil then
+    --     self.visible = true
+    -- else
+    --     self.visible = p_table.visible
+    -- end
+
+    -- if p_table.show_label == nil then
+    --     self.show_label = false
+    -- else
+    --     self.show_label = p_table.show_label
+    -- end
 
     return self
 end

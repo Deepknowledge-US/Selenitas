@@ -24,14 +24,14 @@ SETUP = function()
     Simulation.is_running = true
 
     declare_FamilyMobil('Nodes')
-    Nodes:create_n( Interface.nodes, function()
-        return {
+    for i=1,Interface.nodes do
+        Nodes:new({
             ['pos']     = {0,0}
             ,['scale']   = 1.5
             ,['shape']   = 'circle'
             ,['color']   = {0,1,0,0.5}
-        }
-    end)
+        })
+    end
 
     layout_circle(Nodes, radius)
 

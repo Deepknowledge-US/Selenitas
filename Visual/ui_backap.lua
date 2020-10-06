@@ -82,7 +82,6 @@ local on_click_functions = {
     reload = function()
         GraphicEngine.reset_simulation()
         load_model(file_loaded_path)
-        show_params_window = true
     end,
 
     load_file = function()
@@ -522,6 +521,7 @@ local function params_window()
         X = 10,
         Y = 100,
         W = 200,
+        H = 400,
         ContentW = 200,
         AutoSizeWindow = false,
         AllowResize = true,
@@ -537,6 +537,7 @@ local function params_window()
     -- Parse simulation params
     -- Interface object taken from 'utl_main'
     for k, v in pairs(Interface.ui_settings) do
+        Slab.Text('\n')
         -- Checkbox
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
@@ -567,6 +568,12 @@ local function params_window()
             print("UI Control of type \"" .. v.type .. "\" is not recognized.")
         end
     end
+
+    for k,v in next, Simulation.families do
+        Slab.Text('\n')
+        Slab.Text(k .. ': ' .. v.count, {Color = {0.258, 0.529, 0.956}})
+    end
+
     Slab.EndLayout()
     Slab.EndWindow()
 end
