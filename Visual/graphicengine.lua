@@ -136,7 +136,7 @@ function love.update(dt)
             local err = GraphicEngine.step_simulation()
             if err then
                 UI.show_error_message(err)
-                Simulation.stop()
+                Simulation:stop()
             end
         end
       _time_acc = 0

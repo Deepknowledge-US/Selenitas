@@ -66,8 +66,8 @@ SETUP = function()
     declare_FamilyRel('Links')
 
     -- Populate the collection with Agents.
-    Mobiles:create_n( Interface.Num_mobiles, function()
-        return {
+    for i = 1,Interface.Num_mobiles do
+        Mobiles:new({
             ['pos']          = {math.random(0,100),math.random(0,100)}
             ,['heading']     = math.random(__2pi)
             ,['shape']       = "circle"
@@ -75,8 +75,8 @@ SETUP = function()
             ,['color']       = {0,0,1,1}
             ,['speed']       = math.random()
             ,['turn_amount'] = 0
-        }
-    end)
+        })
+    end
 
     for _ , ag in pairs(Mobiles.agents) do
         ag.leader = ag

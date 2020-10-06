@@ -80,10 +80,8 @@ local on_click_functions = {
     end,
 
     reload = function()
-        families_visibility = {all = true} -- new families added in update loop
         GraphicEngine.reset_simulation()
         load_model(file_loaded_path)
-        show_params_window = true
     end,
 
     load_file = function()
@@ -103,22 +101,7 @@ local on_click_functions = {
     end,
 
     toggle_families_visibility = function()
-        -- TODO: Ideally this should show the same
-        -- contextmenu as View > Families, but a Slab
-        -- bug does not allow it: https://github.com/coding-jackalope/Slab/issues/56
-        local visible = false
-        for _, v in pairs(families_visibility) do
-            if v then
-                visible = true
-            end
-        end
-        for k, _ in pairs(families_visibility) do
-            if visible then
-                families_visibility[k] = false
-            else
-                families_visibility[k] = true
-            end
-        end
+        families_visibility.all = not families_visibility.all
     end,
 
     toggle_windows_visibility = function()
@@ -140,32 +123,35 @@ local function build_window_show_tree()
     Slab.Separator()
 end
 
+-- TODO: Read families and create menu entries
 -- This must be called inside of a Menu
 local function build_family_show_tree()
-    if Slab.MenuItemChecked("All", families_visibility.all) then
-        families_visibility.all = not families_visibility.all -- toggled
-    end
-    if families_visibility.all then
-        for k, _ in pairs(families_visibility) do
-            families_visibility[k] = true
-        end
-    end
-    Slab.Separator()
-    for _, f in pairs(Simulation.families) do
-        local family_type = "Mobil"
-        if f:is_a(FamilyRelational) then
-            family_type = "Relational"
-        elseif f:is_a(FamilyCell) then
-            family_type = "Cell"
-        end
-        if Slab.MenuItemChecked(f.name .. " (" .. family_type .. ")", families_visibility[f.name]) then
-            local new_val = not families_visibility[f.name]
-            families_visibility[f.name] = new_val
-            if not new_val then
-                families_visibility.all = false
+    if Slab.MenuItemChecked("All", true) then
+        local all = not families_visibility.all -- toggled
+        families_visibility.all = all
+        if all then
+            for k, _ in ipairs(families_visibility) do
+                families_visibility[k] = true
             end
         end
     end
+    Slab.Separator()
+    -- for _, f in ipairs(Simulation.families) do
+        -- TODO: family id
+        --local family_type = "Mobil"
+        --if f:is_a(FamilyRelational) then
+        --    family_type = "Relational"
+        --elseif f:is_a(FamilyCell) then
+        --    family_type = "Cell"
+        --end
+        --if Slab.MenuItemChecked(f.id .. "(" .. family_type .. ")", families_visibility[f.id]) then
+        --    local new_val = not families_visibility[f.id]
+        --    families_visibility[f.id] = not families_visibility[f.id]
+        --    if not new_val then
+        --        families_visibility.all = false
+        --    end
+        --end
+    -- end
 end
 
 function UI.show_error_message(err)
@@ -212,38 +198,38 @@ local function toolbar_separator(w)
 end
 
 local function file_picker()
-    local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
-    if result.Button ~= "" then
-      show_file_picker = false
-      if result.Button == "OK" then
-          -- Load selected file
-          GraphicEngine.reset_simulation()
-          load_model(result.Files[1])
-          if next(Interface.ui_settings) ~= nil then
-            -- Loaded simulation has params, show params window
-            show_params_window = true
-          end
+  local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
+  if result.Button ~= "" then
+    show_file_picker = false
+    if result.Button == "OK" then
+      -- Load selected file
+      GraphicEngine.reset_simulation()
+      load_model(result.Files[1])
+      if next(Interface.ui_settings) ~= nil then
+        -- Loaded simulation has params, show params window
+        show_params_window = true
       end
     end
+  end
 end
 
 local function about_dialog()
-    Slab.OpenDialog("About")
-    Slab.BeginDialog("About", {Title = "About"})
-    Slab.BeginLayout("AboutLayout", {AlignX = "center"})
-    Slab.Text("Selenitas (alpha)")
-    Slab.NewLine()
-    Slab.Text("Webpage: ")
-    Slab.SameLine()
-    Slab.Text("https://github.com/Deepknowledge-US/Selenitas",
-        {URL = "https://github.com/Deepknowledge-US/Selenitas"})
-    Slab.NewLine()
-    if Slab.Button("OK") then
-        show_about_dialog = false
-        Slab.CloseDialog()
-    end
-    Slab.EndLayout()
-    Slab.EndDialog()
+  Slab.OpenDialog("About")
+  Slab.BeginDialog("About", {Title = "About"})
+  Slab.BeginLayout("AboutLayout", {AlignX = "center"})
+  Slab.Text("Selenitas (alpha)")
+  Slab.NewLine()
+  Slab.Text("Webpage: ")
+  Slab.SameLine()
+  Slab.Text("https://github.com/Deepknowledge-US/Selenitas",
+    {URL = "https://github.com/Deepknowledge-US/Selenitas"})
+  Slab.NewLine()
+  if Slab.Button("OK") then
+    show_about_dialog = false
+    Slab.CloseDialog()
+  end
+  Slab.EndLayout()
+  Slab.EndDialog()
 end
 
 local function menu_bar()
@@ -470,7 +456,7 @@ local function toolbar(screen_w, screen_h)
     Slab.SameLine()
 
     add_toolbar_button("FamilyShow", ResourceManager.ui.family, false,
-        "View Families", on_click_functions.toggle_families_visibility)
+        "View Families", function() end) -- TODO
     Slab.SameLine()
 
     add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
@@ -535,6 +521,7 @@ local function params_window()
         X = 10,
         Y = 100,
         W = 200,
+        H = 400,
         ContentW = 200,
         AutoSizeWindow = false,
         AllowResize = true,
@@ -550,6 +537,7 @@ local function params_window()
     -- Parse simulation params
     -- Interface object taken from 'utl_main'
     for k, v in pairs(Interface.ui_settings) do
+        Slab.Text('\n')
         -- Checkbox
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
@@ -580,6 +568,12 @@ local function params_window()
             print("UI Control of type \"" .. v.type .. "\" is not recognized.")
         end
     end
+
+    for k,v in next, Simulation.families do
+        Slab.Text('\n')
+        Slab.Text(k .. ': ' .. v.count, {Color = {0.258, 0.529, 0.956}})
+    end
+
     Slab.EndLayout()
     Slab.EndWindow()
 end
@@ -587,14 +581,6 @@ end
 function UI.update(dt)
     -- Re-draw UI in each step
     Slab.Update(dt)
-    -- Update families visibility settings
-    -- Check for newly added families
-    for _, f in pairs(Simulation.families) do
-        if families_visibility[f.name] == nil then
-            families_visibility[f.name] = true
-        end
-    end
-    GraphicEngine.set_families_visibility(families_visibility)
 
     menu_bar()
 

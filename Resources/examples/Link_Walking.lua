@@ -11,6 +11,12 @@ SETUP = function()
     declare_FamilyRel('Edges')
     declare_FamilyMobil('Walkers')
 
+    Walkers:add_method('search_next_node',function(self)
+        local nn = one_of(self.curr_node:out_link_neighbors())
+        self:face(nn)
+        self.next_node = nn
+    end)
+
     for i=1,Interface.nodes do
         Nodes:new({
             ['pos']     = {math.random(-20,20), math.random(-20,20)},
@@ -34,24 +40,17 @@ SETUP = function()
         ['target']  = list_of_nodes[1],
     })
 
-    Walkers:create_n( 1, function()
-        local node = one_of(Nodes)
-        return {
-            ['pos']       = {node:xcor(), node:ycor()},
-            ['head']      = {0,nil},
-            ['curr_node'] = node,
-            ['color']     = {0,0,1,1},
-            ['scale']     = 1.5,
-            ['shape']     = 'triangle_2',
-            ['next_node'] = node
-        }
-    end)
-    Walkers:add_method('search_next_node',function(self)
-        local nn = one_of(self.curr_node:out_link_neighbors())
-        self:face(nn)
-        self.next_node = nn
-    end)
-    Wlkr = one_of(Walkers)
+    local node = one_of(Nodes)
+    Wlkr = Walkers:new({
+        ['pos']       = {node:xcor(), node:ycor()},
+        ['head']      = {0,nil},
+        ['curr_node'] = node,
+        ['color']     = {0,0,1,1},
+        ['scale']     = 1.5,
+        ['shape']     = 'triangle_2',
+        ['next_node'] = node
+    })
+
 end
 
 

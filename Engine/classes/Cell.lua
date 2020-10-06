@@ -18,7 +18,7 @@ local Cell = class.Cell(Agent)
 -- @usage new_instance = Cell( {} )
 Cell._init = function(self,p_table)
 
-    self:super()
+    self:super(p_table)
 
     for k,v in pairs(p_table) do
         self[k] = v
@@ -36,11 +36,17 @@ Cell._init = function(self,p_table)
     self.my_agents  = p_table.my_agents   or Collection()
     self.z_order    = p_table.z_order     or 0
 
-    if p_table.visible == nil then
-        self.visible = true
-    else
-        self.visible = p_table.visible
-    end
+    -- if p_table.visible == nil then
+    --     self.visible = true
+    -- else
+    --     self.visible = p_table.visible
+    -- end
+
+    -- if p_table.show_label == nil then
+    --     self.show_label = false
+    -- else
+    --     self.show_label = p_table.show_label
+    -- end
 
     return self
 end;

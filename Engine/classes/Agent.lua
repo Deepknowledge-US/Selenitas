@@ -13,7 +13,7 @@ local Agent = class.Agent()
 -- @function _init
 -- @return A new instance of Agent class.
 -- @usage agent_1 = Agent({})
-Agent._init = function(self)
+Agent._init = function(self, p_table)
 
     self.family     = nil
     self.alive      = true
@@ -21,6 +21,18 @@ Agent._init = function(self)
     self.out_links  = {}
     self.in_neighs  = {}
     self.out_neighs = {}
+
+    if p_table and p_table.visible == nil then
+        self.visible = true
+    else
+        self.visible = p_table.visible
+    end
+
+    if p_table and p_table.show_label == nil then
+        self.show_label = false
+    else
+        self.show_label = p_table.show_label
+    end
 
     return self
 end;

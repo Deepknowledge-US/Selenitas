@@ -46,29 +46,25 @@ SETUP = function()
     declare_FamilyMobil('Pursuers')
 
     -- Populate the collection with Agents.
-    Pursuers:create_n( Interface.Num_pursuers, function()
-        return {
+    for i = 1,Interface.Num_pursuers do
+        Pursuers:new({
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['heading'] = math.random(__2pi)
             ,['scale']   = 2
             ,['color']   = {0,0,1,1}
             ,['speed']   = math.random()
-        }
-    end)
+        })
+    end
 
     declare_FamilyMobil('Pursueds')
 
-    Pursueds:create_n( 1, function()
-        return {
-            ['pos']     = {math.random(0,100),math.random(0,100)}
-            ,['heading'] = math.random(__2pi)
-            ,['scale']   = 2
-            ,['color']   = {0,1,0,1}
-            ,['speed']   = 1
-        }
-    end)
-
-    pursued = one_of(Pursueds)
+    pursued = Pursueds:new({
+        ['pos']     = {math.random(0,100),math.random(0,100)}
+        ,['heading'] = math.random(__2pi)
+        ,['scale']   = 2
+        ,['color']   = {0,1,0,1}
+        ,['speed']   = 1
+    })
 
 end
 

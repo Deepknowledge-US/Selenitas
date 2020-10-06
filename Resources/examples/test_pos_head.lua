@@ -30,12 +30,12 @@ SETUP = function()
 
     declare_FamilyMobil('Nodes')
 
-    Nodes:create_n( Interface.nodes, function()
-        return {
+    for i=1,Interface.nodes do
+        Nodes:new({
             ['pos']     = {0,0}
             ,['scale']   = 1.5
-        }
-    end)
+        })
+    end
 
     layout_circle(Nodes, 10)
 
