@@ -503,7 +503,7 @@ local function toolbar(screen_w, screen_h)
     Slab.SameLine()
 
     add_toolbar_button("WindowShow", ResourceManager.ui.window, false,
-        "View Windows", function() end) -- TODO
+        "View Windows", on_click_functions.toggle_windows_visibility)
     Slab.SameLine()
 
     add_toolbar_button("FamilyShow", ResourceManager.ui.family, false,
