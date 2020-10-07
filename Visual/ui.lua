@@ -205,7 +205,7 @@ local function toolbar_separator(w)
     Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})
     Slab.SameLine()
 --    Slab.Rectangle({W=6, H=25, Color=toolbar_buttons_params.base_color})
-    Slab.Rectangle({W=6, H=25, Color={1,1,1,.3}})
+    Slab.Rectangle({W=3, H=30, Color={1,1,1,.3}})
     Slab.SameLine()
     Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})
     Slab.SameLine()
@@ -424,7 +424,7 @@ local function toolbar(screen_w, screen_h)
     Slab.SameLine()
 
 
-    toolbar_separator(30)
+    toolbar_separator(15)
 
     ------- Simulation control -------
     add_toolbar_button("Setup", ResourceManager.ui.setup, file_loaded_path == nil,
@@ -448,7 +448,7 @@ local function toolbar(screen_w, screen_h)
         "Reload Model", on_click_functions.reload)
     Slab.SameLine()
 
-    toolbar_separator(30)
+    toolbar_separator(15)
 
 
     ------- View options -------
@@ -477,7 +477,7 @@ local function toolbar(screen_w, screen_h)
         "Grid", on_click_functions.toggle_grid_visibility)
     Slab.SameLine()
 
-    toolbar_separator(30)
+    toolbar_separator(15)
 
 
     ------- Help -------
@@ -490,13 +490,14 @@ local function toolbar(screen_w, screen_h)
 end
 
 local function status_bar(screen_w, screen_h)
-  -- Bottom status bar
+    local col = toolbar_buttons_params.base_color
+    -- Bottom status bar
     Slab.BeginWindow("StatusBar", {
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
-        Y = screen_h - 23,
-        W = screen_w - 2,
-        H = 20,
+        Y = screen_h - 30,
+        W = screen_w + 10,
+        H = 25,
         AutoSizeWindow = false,
         AllowResize = false
     })
@@ -504,29 +505,124 @@ local function status_bar(screen_w, screen_h)
     Slab.BeginLayout("StatusBarLayout", {
         AlignY = 'center',
         AlignRowY = 'center',
-        AlignX = 'right'
+        AlignX = 'left'
     })
 
+    -- Seed
+    -- Slab.Text(" Seed : ", {})
+    Slab.Image('Icon_dice', {Image = ResourceManager.ui.dice, Color = col, Scale = 0.4})
+    Slab.SameLine()
+    Slab.Text(tostring(Simulation:get_seed()))
+    Slab.SameLine()
+    toolbar_separator(15)
+
     -- "Speed" slider: it changes time_between_steps value
-    Slab.Text(" Time (steps): ", {})
+    Slab.SameLine()
+    Slab.Image('Icon_time', {Image = ResourceManager.ui.time, Color = col, Scale = 0.4})
     Slab.SameLine()
     Slab.Text(tostring(Simulation:get_time()))
     Slab.SameLine()
-    Slab.Text("  |  Speed: ", {})
+    Slab.Text("    Speed: ", {})
     Slab.SameLine()
-    --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
     if Slab.InputNumberSlider("tbs_slider", speed_slider_value, 0.0, 10.0, {step=1}) then
         speed_slider_value = Slab.GetInputNumber()
         GraphicEngine.set_time_between_steps((math.log(11) - math.log (speed_slider_value + 1))/math.log(11))
     end
     Slab.SameLine()
-    Slab.Text("  |  Seed : ", {})
+    Slab.Text("  ",{})
     Slab.SameLine()
-    Slab.Text(tostring(Simulation:get_seed()))
+    toolbar_separator(15)
+
+    -- Center point in View
+    Slab.SameLine()
+    Slab.Image('Icon_center', {Image = ResourceManager.ui.center2, Color = col, Scale = 0.4})
+    Slab.SameLine()
+    local center = Observer:get_center()
+    Slab.Text( ' (' .. tostring(center[1]) .. ' , ' .. tostring(center[2]) .. ')  ' )
+    Slab.SameLine()
+    toolbar_separator(15)
+
+    -- Zoom in View
+    Slab.SameLine()
+    Slab.Image('Icon_zoom', {Image = ResourceManager.ui.zoom, Color = col, Scale = 0.4})
+    Slab.SameLine()
+    Slab.Text( tostring(Observer:get_zoom()) )
+    Slab.SameLine()
+    toolbar_separator(15)
+
+    -- Mobils info
+    local cells,mobils,rels = Simulation:number_of_agents()
+    Slab.SameLine()
+    Slab.Image('Icon_mobils ', {Image = ResourceManager.ui.directions_run, Color = col, Scale = 0.4})
+    Slab.SameLine()
+    Slab.Text(tostring(mobils))
+    Slab.SameLine()
+    toolbar_separator(15)
+
+    -- Cells info
+    Slab.SameLine()
+    Slab.Image('Icon_cells ', {Image = ResourceManager.ui.cell, Color = col, Scale = 0.4})
+    -- add_toolbar_button("Cells", ResourceManager.ui.cell, false,
+    --     "Cell agents", function()end )
+    Slab.SameLine()
+    Slab.Text(tostring(cells))
+    Slab.SameLine()
+    toolbar_separator(15)
+
+    -- Relationals info
+    Slab.SameLine()
+    Slab.Image('Icon_relationals ', {Image = ResourceManager.ui.share, Color = col, Scale = 0.4})
+    -- add_toolbar_button("Relationals", ResourceManager.ui.share, false,
+        -- "Relational agents", function()end )
+    Slab.SameLine()
+    Slab.Text(tostring(rels))
+    Slab.SameLine()
+    toolbar_separator(15)
+
 
     Slab.EndLayout()
+
     Slab.EndWindow()
 end
+
+-- local function status_bar(screen_w, screen_h)
+--   -- Bottom status bar
+--     Slab.BeginWindow("StatusBar", {
+--         Title = "", -- No title means it shows no title border and is not movable
+--         X = 0,
+--         Y = screen_h - 23,
+--         W = screen_w - 2,
+--         H = 20,
+--         AutoSizeWindow = false,
+--         AllowResize = false
+--     })
+
+--     Slab.BeginLayout("StatusBarLayout", {
+--         AlignY = 'center',
+--         AlignRowY = 'center',
+--         AlignX = 'right'
+--     })
+
+--     -- "Speed" slider: it changes time_between_steps value
+--     Slab.Text(" Time (steps): ", {})
+--     Slab.SameLine()
+--     Slab.Text(tostring(Simulation:get_time()))
+--     Slab.SameLine()
+--     Slab.Text("  |  Speed: ", {})
+--     Slab.SameLine()
+--     --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
+--     if Slab.InputNumberSlider("tbs_slider", speed_slider_value, 0.0, 10.0, {step=1}) then
+--         speed_slider_value = Slab.GetInputNumber()
+--         GraphicEngine.set_time_between_steps((math.log(11) - math.log (speed_slider_value + 1))/math.log(11))
+--     end
+--     Slab.SameLine()
+--     Slab.Text("  |  Seed : ", {})
+--     Slab.SameLine()
+--     Slab.Text(tostring(Simulation:get_seed()))
+
+--     Slab.EndLayout()
+--     Slab.EndWindow()
+-- end
 
 local function params_window()
   -- Create panel for simulation params

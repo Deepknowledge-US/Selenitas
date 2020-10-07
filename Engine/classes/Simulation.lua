@@ -205,5 +205,27 @@ Simulation.reset = function(self)
     self.num_agents     = 0
 end;
 
+------------------
+-- TODO
+-- @function reset
+-- @return Nothing.
+-- @usage
+-- -- TODO
+Simulation.number_of_agents = function(self)
+    local cells,mobils,rels = 0,0,0
+    for k,v in next, self.families do
+        if v:is_a(FamilyMobil) then
+            mobils = mobils + v.count
+        elseif v:is_a(FamilyCell) then
+            cells = cells + v.count
+
+        else
+            rels = rels + v.count
+        end
+    end
+    return cells,mobils,rels
+end
+
+
 
 return Simulation
