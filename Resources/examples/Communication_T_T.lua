@@ -42,7 +42,7 @@ SETUP = function()
     People:add_method('comunicate', function(self)
         if self.message then
             local neighborhood = People:with(function(other)
-                return self:dist_euc_to(other) <= Interface.radius
+                return self:dist_euc_to(other) <= Interface:get_value("radius", "testwindow")
             end)
             for _,other in ordered(neighborhood) do
                 other.message = true
@@ -69,7 +69,7 @@ SETUP = function()
     end)
 
     -- Populate the collection with Agents.
-    for i=1,Interface.Num_agents do
+    for i=1,Interface:get_value("Num_agents") do
         People:new({
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['message'] = false

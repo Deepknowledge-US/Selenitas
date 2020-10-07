@@ -10,7 +10,7 @@ SETUP = function()
 
     declare_FamilyMobil('Mobils')
 
-    for i=1,Interface.N_agents do
+    for i=1,Interface:get_value("N_agents") do
         Mobils:new({
             ['pos']      = {0,0}
             ,['scale']   = 1.5
@@ -35,7 +35,7 @@ end
 STEP = function()
     -- Limitación de ask: no puede combinarse con otras variables que cambien en cada ciclo... algo que tiene sentido
     -- si se considera el ask como una ejecución paralela.
-    if Interface.random_ordered then
+    if Interface:get_value("random_ordered") then
         for _,ag in shuffled(Mobils) do
             ag:fd(1)
         end

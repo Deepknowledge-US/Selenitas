@@ -31,14 +31,14 @@ SETUP = function()
 
     declare_FamilyMobil('Nodes')
 
-    for i=1,Interface.nodes do
+    for i=1,Interface:get_value("nodes") do
         Nodes:new({
             ['pos']     = {0,0},
             ['heading'] = 0
         })
     end
 
-    layout_circle(Nodes, Interface.radius )
+    layout_circle(Nodes, Interface:get_value("radius"))
 
     -- A new collection to store the links
     declare_FamilyRel('Links')

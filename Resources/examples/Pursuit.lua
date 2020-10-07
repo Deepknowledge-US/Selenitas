@@ -46,7 +46,7 @@ SETUP = function()
     declare_FamilyMobil('Pursuers')
 
     -- Populate the collection with Agents.
-    for i = 1,Interface.Num_pursuers do
+    for i = 1,Interface:get_value("Num_pursuers") do
         Pursuers:new({
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['heading'] = math.random(__2pi)

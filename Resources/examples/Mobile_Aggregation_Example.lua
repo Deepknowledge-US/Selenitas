@@ -66,7 +66,7 @@ SETUP = function()
     declare_FamilyRel('Links')
 
     -- Populate the collection with Agents.
-    for i = 1,Interface.Num_mobiles do
+    for i = 1,Interface:get_value("Num_mobiles") do
         Mobiles:new({
             ['pos']          = {math.random(0,100),math.random(0,100)}
             ,['heading']     = math.random(__2pi)
@@ -111,7 +111,7 @@ STEP = function()
 
     for _,ag in pairs(Mobiles.agents) do
         local candidates = Mobiles:with(function(other)
-            return (ag:dist_euc_to(other) < Interface.Attraction_radius) and (ag.leader ~= other.leader)
+            return (ag:dist_euc_to(other) < Interface:get_value("Attraction_radius")) and (ag.leader ~= other.leader)
         end)
         if candidates.count > 0 then
             for _,ag2 in ordered(candidates) do

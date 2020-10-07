@@ -7,13 +7,13 @@ Interface:create_boolean('clean_families', true)
 
 SETUP = function()
 
-    if Interface.clean_families then
+    if Interface:get_value("clean_families") then
         Simulation:clear('all')
     end
 
     declare_FamilyMobil('Mobils')
 
-    for i=1,Interface.N_agents do
+    for i=1,Interface:get_value("N_agents") do
         Mobils:new({
             ['pos']      = {0,0}
             ,['scale']   = 1.5
@@ -24,7 +24,7 @@ SETUP = function()
 
     local x = 0
 
-    local iter = Interface.random_ordered and shuffled or ordered
+    local iter = Interface:get_value("random_ordered") and shuffled or ordered
 
     for k,ag1 in iter(Mobils) do
         ag1:move_to({x,0})
@@ -36,7 +36,7 @@ end
 
 
 STEP = function()
-    if Interface.random_ordered then
+    if Interface:get_value("random_ordered") then
         for _,ag in shuffled(Mobils) do
             ag:fd(1)
         end

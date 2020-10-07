@@ -24,7 +24,7 @@ SETUP = function()
     Simulation.is_running = true
 
     declare_FamilyMobil('Nodes')
-    for i=1,Interface.nodes do
+    for i=1,Interface:get_value("nodes") do
         Nodes:new({
             ['pos']     = {0,0}
             ,['scale']   = 1.5
@@ -54,7 +54,7 @@ STEP = function()
         ['visible'] = true
     })
 
-    while Links.count > Interface.links do
+    while Links.count > Interface:get_value("links") do
         Links:kill_and_purge(one_of(Links))
     end
 

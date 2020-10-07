@@ -11,7 +11,7 @@ SETUP = function()
     declare_FamilyMobil('Walkers')
     Walkers.z_order = 4 -- By default, all mobil families have a z_order = 3, by setting this to 4, all Walkers will be painted over the other Mobil agents
 
-    for i=1,Interface.nodes do
+    for i=1,Interface:get_value("nodes") do
         Nodes:new({
             ['pos']   = {math.random(-20,20), math.random(-20,20)}
             ,['shape'] = 'circle'

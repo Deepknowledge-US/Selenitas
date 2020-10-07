@@ -20,7 +20,7 @@ SETUP = function()
     Agents:add_method('grow_old', function(agent)
         agent.age = agent.age + 1
         agent.scale = agent.age / 10
-        if agent.age > Interface.max_age then
+        if agent.age > Interface:get_value("max_age") then
             die(agent)
         end
         return agent
@@ -49,7 +49,7 @@ SETUP = function()
     -- Grey agents have a chance to clone itself in each iteration
     Agents:add_method('reproduce', function(agent)
         if agent.alive then
-            if same_rgb(agent, {1,0,0,1}) and math.random(100) <= Interface.clone_probability then
+            if same_rgb(agent, {1,0,0,1}) and math.random(100) <= Interface:get_value("clone_probability") then
                 Agents:clone_n(1, agent, function(x)
                     x.color = math.random(10) > 1 and {0,0,1,1} or {1,0,0,1}
                     x.age   = 0
@@ -61,7 +61,7 @@ SETUP = function()
 
     -- Populate the Family with 3 agents. Each agent will have the parameters
     -- specified in the table (and some parameters obteined just for be a Mobil instance)
-    for i=1,Interface.num_agents do
+    for i=1,Interface:get_value("num_agents") do
         Agents:new({
             ['pos']     = {math.random(0,10),math.random(0,10)}
             ,['head']    = math.random(2*math.pi)

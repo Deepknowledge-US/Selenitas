@@ -11,7 +11,6 @@ local UI = {}
 local show_file_picker = false
 local file_loaded_path = nil
 local show_about_dialog = false
-local show_params_window = false
 local show_debug_graph = false
 local error_msg = nil
 local speed_slider_value = 20
@@ -27,7 +26,8 @@ local families_visibility = {
     all = true
 }
 local windows_visibility = {
-    all = false
+    all = false,
+    Parameters = false
 }
 
 -- Simulation state trackers
@@ -81,9 +81,12 @@ local on_click_functions = {
 
     reload = function()
         families_visibility = {all = true} -- new families added in update loop
+        windows_visibility = {
+            all = false,
+            Parameters = false
+        }
         GraphicEngine.reset_simulation()
         load_model(file_loaded_path)
-        show_params_window = true
     end,
 
     load_file = function()
@@ -122,7 +125,22 @@ local on_click_functions = {
     end,
 
     toggle_windows_visibility = function()
-        windows_visibility.all = not windows_visibility.all
+        -- TODO: Ideally this should show the same
+        -- contextmenu as View > Windows, but a Slab
+        -- bug does not allow it: https://github.com/coding-jackalope/Slab/issues/56
+        local visible = false
+        for _, v in pairs(windows_visibility) do
+            if v then
+                visible = true
+            end
+        end
+        for k, _ in pairs(windows_visibility) do
+            if visible then
+                windows_visibility[k] = false
+            else
+                windows_visibility[k] = true
+            end
+        end
     end,
 
     toggle_grid_visibility = function()
@@ -131,11 +149,25 @@ local on_click_functions = {
 }
 
 
--- TODO: Read windows and create menu entries
 -- This must be called inside of a Menu
 local function build_window_show_tree()
-    if Slab.MenuItemChecked("All", show_params_window) then
-        show_params_window = not show_params_window
+    if Slab.MenuItemChecked("All", windows_visibility.all) then
+        windows_visibility.all = not windows_visibility.all
+    end
+    if windows_visibility.all then
+        for k, _ in pairs(windows_visibility) do
+            windows_visibility[k] = true
+        end
+    end
+    Slab.Separator()
+    for name, _ in pairs(Interface.ui_settings) do
+        if Slab.MenuItemChecked(name, windows_visibility[name]) then
+            local new_val = not windows_visibility[name]
+            windows_visibility[name] = new_val
+            if not new_val then
+                windows_visibility.all = false
+            end
+        end
     end
     Slab.Separator()
 end
@@ -178,8 +210,11 @@ end
 
 function UI.reset()
     setup_executed = false
-    show_params_window = false
-    Interface.ui_settings = {}
+    windows_visibility = {
+        all = false,
+        Parameters = false
+    }
+    Interface:clear()
 end
 
 local function add_toolbar_button(name, love_img, disabled, tooltip, on_click_func)
@@ -220,8 +255,10 @@ local function file_picker()
           GraphicEngine.reset_simulation()
           load_model(result.Files[1])
           if next(Interface.ui_settings) ~= nil then
-            -- Loaded simulation has params, show params window
-            show_params_window = true
+            -- Loaded simulation has params, show params windows
+            for k, _ in pairs(windows_visibility) do
+                windows_visibility[k] = true
+            end
           end
       end
     end
@@ -585,56 +622,17 @@ local function status_bar(screen_w, screen_h)
     Slab.EndWindow()
 end
 
--- local function status_bar(screen_w, screen_h)
---   -- Bottom status bar
---     Slab.BeginWindow("StatusBar", {
---         Title = "", -- No title means it shows no title border and is not movable
---         X = 0,
---         Y = screen_h - 23,
---         W = screen_w - 2,
---         H = 20,
---         AutoSizeWindow = false,
---         AllowResize = false
---     })
-
---     Slab.BeginLayout("StatusBarLayout", {
---         AlignY = 'center',
---         AlignRowY = 'center',
---         AlignX = 'right'
---     })
-
---     -- "Speed" slider: it changes time_between_steps value
---     Slab.Text(" Time (steps): ", {})
---     Slab.SameLine()
---     Slab.Text(tostring(Simulation:get_time()))
---     Slab.SameLine()
---     Slab.Text("  |  Speed: ", {})
---     Slab.SameLine()
---     --  Speed 0 = 1 sec. ... Speed 5 = 0 sec.
---     if Slab.InputNumberSlider("tbs_slider", speed_slider_value, 0.0, 10.0, {step=1}) then
---         speed_slider_value = Slab.GetInputNumber()
---         GraphicEngine.set_time_between_steps((math.log(11) - math.log (speed_slider_value + 1))/math.log(11))
---     end
---     Slab.SameLine()
---     Slab.Text("  |  Seed : ", {})
---     Slab.SameLine()
---     Slab.Text(tostring(Simulation:get_seed()))
-
---     Slab.EndLayout()
---     Slab.EndWindow()
--- end
-
-local function params_window()
+local function params_window(title, xpos, ypos)
   -- Create panel for simulation params
-    show_params_window = Slab.BeginWindow("Simulation", {
-        Title = "Simulation parameters",
-        X = 10,
-        Y = 100,
-        W = 200,
-        ContentW = 200,
+    windows_visibility[title] = Slab.BeginWindow("ParamWindow" .. title, {
+        Title = title,
+        X = xpos,
+        Y = ypos,
+        W = 150,
+        ContentW = 150,
         AutoSizeWindow = false,
         AllowResize = true,
-        IsOpen = show_params_window,
+        IsOpen = windows_visibility[title],
         NoSavedSettings = true
     })
 
@@ -645,31 +643,31 @@ local function params_window()
 
     -- Parse simulation params
     -- Interface object taken from 'utl_main'
-    for k, v in pairs(Interface.ui_settings) do
+    for k, v in pairs(Interface.ui_settings[title]) do
         -- Checkbox
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.CheckBox(Interface[k], "Enabled") then
-                Interface[k] = not Interface[k]
+            if Slab.CheckBox(Interface.values[title][k], "Enabled") then
+                Interface.values[title][k] = not Interface.values[title][k]
             end
         -- Slider
         elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberSlider(k .. "Slider", Interface[k], v.min, v.max, {Step = v.step}) then
-                Interface[k] = Slab.GetInputNumber()
+            if Slab.InputNumberSlider(k .. "Slider", Interface.values[title][k], v.min, v.max, {Step = v.step}) then
+                Interface.values[title][k] = Slab.GetInputNumber()
             end
         -- Number input
         elseif v.type == "input" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberDrag(k .. "InputNumber", Interface[k], nil, nil, {}) then
-                Interface[k] = Slab.GetInputNumber()
+            if Slab.InputNumberDrag(k .. "InputNumber", Interface.values[title][k], nil, nil, {}) then
+                Interface.values[title][k] = Slab.GetInputNumber()
             end
         -- Radio buttons
         elseif v.type == "enum" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
             for i, e in ipairs(v.options) do
-                if Slab.RadioButton(e, {Index = i, SelectedIndex = Interface[k]}) then
-                    Interface[k] = i
+                if Slab.RadioButton(e, {Index = i, SelectedIndex = Interface.values[title][k]}) then
+                    Interface.values[title][k] = i
                 end
             end
         else
@@ -719,7 +717,14 @@ function UI.update(dt)
 
     status_bar(screen_w, screen_h)
 
-    params_window()
+    local window_x = 10
+    for k, _ in pairs(Interface.ui_settings) do
+        if windows_visibility[k] == nil then
+            windows_visibility[k] = true
+        end
+        params_window(k, window_x, 100)
+        window_x = window_x + 160
+    end
 
     -- Update graphs
     fps_graph:update(dt)

@@ -17,7 +17,7 @@ SETUP = function()
         self.next_node = nn
     end)
 
-    for i=1,Interface.nodes do
+    for i=1,Interface:get_value("nodes") do
         Nodes:new({
             ['pos']     = {math.random(-20,20), math.random(-20,20)},
             ['shape']   = 'circle',
@@ -55,10 +55,10 @@ end
 
 
 STEP = function()
-    if Wlkr:dist_euc_to(Wlkr.next_node) < Interface.speed then
+    if Wlkr:dist_euc_to(Wlkr.next_node) < Interface:get_value("speed") then
         Wlkr:move_to(Wlkr.next_node)
         Wlkr.curr_node = Wlkr.next_node
         Wlkr:search_next_node()
     end
-    Wlkr:fd(Interface.speed)
+    Wlkr:fd(Interface:get_value("speed"))
 end
