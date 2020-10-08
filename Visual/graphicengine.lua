@@ -154,7 +154,7 @@ function love.draw()
     end
 
     if grid_enabled then
-        Draw.draw_grid()
+        Draw.draw_scalable_grid(2)
     end
 
     if setup_executed and draw_enabled then
@@ -170,7 +170,6 @@ function love.draw()
                 end
             end
         end
-
     end
 
     View.finish()

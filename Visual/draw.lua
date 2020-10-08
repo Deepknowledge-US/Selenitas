@@ -5,8 +5,8 @@ local math = require "math"
 local Draw = {}
 
 local coord_scale = 16 -- 16 px = 1 unit
-local grid_cell_size = 64
-local grid_size = 1024 * 16
+--local grid_cell_size = 64
+--local grid_size = 1024 * 16
 
 function Draw.init()
     love.graphics.setNewFont(7) -- Default font for labels
@@ -122,28 +122,50 @@ function Draw.draw_cells_family(family)
     end
 end
 
-function Draw.draw_grid()
-    local lines = grid_size / grid_cell_size
-    local x = - ((lines / 2) * grid_cell_size)
-    local y = (lines / 2) * grid_cell_size
-    love.graphics.setLineWidth(1)
+local function draw_grid(grid_size, cell_size, alpha)
+    local lines = grid_size / cell_size
+    local x = - ((lines / 2) * cell_size)
+    local y = (lines / 2) * cell_size
+    local alpha_scaled = alpha * 0.3
+    love.graphics.setLineWidth(1.0)
     -- Horizontal lines
     for i = 0, lines do
-        love.graphics.setColor(0.3, 0.3, 0.3, 0.3)
+        love.graphics.setColor(0.3, 0.3, 0.3, alpha_scaled)
         if y == 0 then
             love.graphics.setColor(1, 0, 0, 0.5)
         end
         love.graphics.line(-grid_size / 2, y, grid_size / 2, y)
-        y = y - grid_cell_size
+        y = y - cell_size
     end
     -- Vertical lines
     for i = 0, lines do
-        love.graphics.setColor(0.3, 0.3, 0.3, 0.3)
+        love.graphics.setColor(0.3, 0.3, 0.3, alpha_scaled)
         if x == 0 then
             love.graphics.setColor(0, 1,  0, 0.5)
         end
         love.graphics.line(x, grid_size / 2, x, -grid_size / 2)
-        x = x + grid_cell_size
+        x = x + cell_size
+    end
+end
+
+function Draw.draw_scalable_grid(base)
+    local grid_size = 1
+    while grid_size * base <= 20000 do -- 20000 -> max grid size
+        grid_size = grid_size * base
+    end
+    local cell_size = 1
+    while cell_size * base <= 100 do
+        cell_size = cell_size * base
+    end
+    local z = Observer:get_zoom()
+    local current_k = math.min(math.floor(z), 4)
+    local next_k = math.min(math.ceil(z), 5)
+    local rem = z - math.floor(z)
+    local curr_alpha = next_k >= 5 and 1 or 1 - rem
+    local next_alpha = 1 - (curr_alpha + 0.3)
+    draw_grid(grid_size, cell_size / math.pow(base, current_k), curr_alpha)
+    if next_k < 5 then
+        draw_grid(grid_size, cell_size / math.pow(base, next_k), next_alpha)
     end
 end
 
