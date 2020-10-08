@@ -25,10 +25,10 @@ function Draw.draw_agents_family(family)
             local y = - a:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
 
             -- Handle agent shape, scale and rotation
-            -- Base resources are 100x100 px, using 10x10 px as base scale (0.1 factor)
+            -- Base resources are 128x128 px, using 16x16 px as base scale (0.125 factor)
             local rot = -( a.heading - (math.pi/2) )
-            local scl = 0.1 * a.scale
-            local shift = 50 -- pixels to shift to center the figure
+            local scl = 0.125 * a.scale
+            local shift = 64 -- pixels to shift to center the figure
             local shape_img = ResourceManager.images.circle -- Default to circle
             if a.shape == "triangle" then
                 shape_img = ResourceManager.images.triangle
