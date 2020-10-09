@@ -122,12 +122,17 @@ function Draw.draw_cells_family(family)
     end
 end
 
-local function draw_grid(grid_size, cell_size, alpha)
+local function draw_grid(grid_size, cell_size, alpha, line_width)
     local lines = grid_size / cell_size
     local x = - ((lines / 2) * cell_size)
     local y = (lines / 2) * cell_size
     local alpha_scaled = alpha * 0.3
-    love.graphics.setLineWidth(1.0)
+    if line_width < 0.9 then
+        love.graphics.setLineStyle("rough")
+    else
+        love.graphics.setLineStyle("smooth")
+    end
+    love.graphics.setLineWidth(line_width)
     -- Horizontal lines
     for i = 0, lines do
         love.graphics.setColor(0.3, 0.3, 0.3, alpha_scaled)
@@ -163,9 +168,9 @@ function Draw.draw_scalable_grid(base)
     local rem = z - math.floor(z)
     local curr_alpha = next_k >= 5 and 1 or 1 - rem
     local next_alpha = 1 - (curr_alpha + 0.3)
-    draw_grid(grid_size, cell_size / math.pow(base, current_k), curr_alpha)
+    draw_grid(grid_size, cell_size / math.pow(base, current_k), curr_alpha, 1 / z)
     if next_k < 5 then
-        draw_grid(grid_size, cell_size / math.pow(base, next_k), next_alpha)
+        draw_grid(grid_size, cell_size / math.pow(base, next_k), next_alpha, 1 / z)
     end
 end
 
