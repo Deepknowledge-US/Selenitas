@@ -12,7 +12,7 @@ local utl_checks = {}
 -- @param obj An object to check
 -- @usage
 --
--- Agents = FamilyMobil()
+-- Agents = FamilyMobile()
 --
 -- is_family('hello') -- => false
 -- is_family( Agents ) -- => true
