@@ -14,7 +14,7 @@ function utl_fam.declare_FamilyMobil(...)
         local name = args[i]
 
         if not _G[name] or not Simulation.families[name] then
-            _G[name] = FamilyMobil(name)
+            _G[name] = FamilyMobile(name)
             Simulation.families[name] = _G[name]
         end
     end

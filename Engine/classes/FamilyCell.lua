@@ -116,32 +116,7 @@ FC.new = function(self,object)
     return self.agents[k]
 end
 
-------------------
--- Create n new Cells in the family.
--- @function create_n
--- @param num The number of agents that will be created in the family
--- @param funct An anonymous function that will be executed to create the Cell.
--- @return Nothing
--- @usage
--- Cells:create_n( 10, function()
---     return {
---         ['pos'] = {math.random[100],math.random[100]}
---     }
--- end)
---
--- -- If you are not confortable with anonymous functions you can use a 'for' to add new agents to the family. This is equivalent to:
--- for i=1,10 do
---     Cells:new({ ['pos'] = {math.random[100],math.random[100]} })
--- end
--- @see families.create_n
-FC.create_n = function(self,num, funct)
-    local res = Collection()
-    for i=1,num do
-        local cell = self:new(Cell( funct() ))
-        res:add(cell)
-    end
-    return res
-end
+
 
 ------------------
 -- Produces the diffusion of a parameter of each Cell between its neighbors.
@@ -166,18 +141,33 @@ FC.diffuse = function(self,param,perc,num)
     local n = num or 1
 
     for i=1,n do
-        self:ask_ordered(function(cell)
+        -- self:ask_ordered(function(cell)
+        --     param_table[cell.id] = cell[param] * (1-perc)
+        --     cell[param] = cell[param] * perc / cell.neighbors.count
+        -- end)
+        -- self:ask_ordered( function(cell)
+        --     ask_ordered(cell.neighbors, function(neigh)
+        --         param_table[neigh.id] = param_table[neigh.id] + cell[param]
+        --     end)
+        -- end)
+        -- self:ask_ordered(function(cell)
+        --     cell[param] = param_table[cell.id]
+        -- end)
+
+        for _,cell in ordered(self.agents) do
             param_table[cell.id] = cell[param] * (1-perc)
-            cell[param] = cell[param] * perc / cell.neighbors.count
-        end)
-        self:ask_ordered( function(cell)
-            ask_ordered(cell.neighbors, function(neigh)
+            cell[param] = cell[param] * perc / cell.neighbors.count            
+        end
+
+        for _,cell in ordered(self.agents) do
+            for _,neigh in ordered(cell.neighbors) do
                 param_table[neigh.id] = param_table[neigh.id] + cell[param]
-            end)
-        end)
-        self:ask_ordered(function(cell)
+            end
+        end
+        for _,cell in ordered(self.agents) do
             cell[param] = param_table[cell.id]
-        end)
+        end
+
     end
 end
 

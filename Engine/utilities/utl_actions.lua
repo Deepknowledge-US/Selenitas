@@ -34,7 +34,7 @@ end;
 -- @param num Number of degrees to turn.
 -- @return Nothing
 -- @usage rt(agent,180)
--- @see Mobil.rt
+-- @see Mobile.rt
 function utl_actions.rt(agent, num)
     return agent:rt(num)
 end
@@ -46,7 +46,7 @@ end
 -- @param num Number of degrees to turn.
 -- @return Nothing
 -- @usage lt(agent,180)
--- @see Mobil.lt
+-- @see Mobile.lt
 function utl_actions.lt(agent, num)
     return agent:lt(num)
 end
@@ -58,7 +58,7 @@ end
 -- @param num Number of units to advance.
 -- @return Nothing
 -- @usage fd(agent,2)
--- @see Mobil.fd
+-- @see Mobile.fd
 function utl_actions.fd(agent, num)
     return agent:fd(num)
 end

@@ -160,12 +160,14 @@ local function build_window_show_tree()
         end
     end
     Slab.Separator()
-    for name, _ in pairs(Interface.ui_settings) do
-        if Slab.MenuItemChecked(name, windows_visibility[name]) then
-            local new_val = not windows_visibility[name]
-            windows_visibility[name] = new_val
-            if not new_val then
-                windows_visibility.all = false
+    for _, window in pairs(Interface.windows) do
+        for name,_ in window.ui_settings do
+            if Slab.MenuItemChecked(name, windows_visibility[name]) then
+                local new_val = not windows_visibility[name]
+                windows_visibility[name] = new_val
+                if not new_val then
+                    windows_visibility.all = false
+                end
             end
         end
     end
@@ -184,7 +186,7 @@ local function build_family_show_tree()
     end
     Slab.Separator()
     for _, f in pairs(Simulation.families) do
-        local family_type = "Mobil"
+        local family_type = "Mobile"
         if f:is_a(FamilyRelational) then
             family_type = "Relational"
         elseif f:is_a(FamilyCell) then
@@ -254,7 +256,7 @@ local function file_picker()
           -- Load selected file
           GraphicEngine.reset_simulation()
           load_model(result.Files[1])
-          if next(Interface.ui_settings) ~= nil then
+          if next(Interface.windows) ~= nil then
             -- Loaded simulation has params, show params windows
             for k, _ in pairs(windows_visibility) do
                 windows_visibility[k] = true
@@ -532,9 +534,9 @@ local function status_bar(screen_w, screen_h)
     Slab.BeginWindow("StatusBar", {
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
-        Y = screen_h - 30,
+        Y = screen_h - 34,
         W = screen_w + 10,
-        H = 25,
+        H = 27,
         AutoSizeWindow = false,
         AllowResize = false
     })
@@ -622,58 +624,67 @@ local function status_bar(screen_w, screen_h)
     Slab.EndWindow()
 end
 
-local function params_window(title, xpos, ypos)
+local function params_window(title)
+
+    local window = Interface.windows[title]
+
   -- Create panel for simulation params
     windows_visibility[title] = Slab.BeginWindow("ParamWindow" .. title, {
         Title = title,
-        X = xpos,
-        Y = ypos,
-        W = 150,
-        ContentW = 150,
+        X = window.x,
+        Y = window.y,
+        W = window.width,
+        ContentW = window.width,
         AutoSizeWindow = false,
         AllowResize = true,
         IsOpen = windows_visibility[title],
         NoSavedSettings = true
     })
 
+
     -- Layout to horizontally expand all controls
     Slab.BeginLayout("Layout", {
         ExpandW = true
     })
 
-    -- Parse simulation params
-    -- Interface object taken from 'utl_main'
-    for k, v in pairs(Interface.ui_settings[title]) do
-        -- Checkbox
+
+    for pos=1,window.num_items do
+
+        Slab.Rectangle({W=window.width - 4, H=2, Color={0,0,0,0}})
+
+        local k = window.order[pos]
+        local v = window.ui_settings[k]
+                -- Checkbox
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.CheckBox(Interface.values[title][k], "Enabled") then
-                Interface.values[title][k] = not Interface.values[title][k]
+            if Slab.CheckBox(Interface.windows[title][k], "Enabled") then
+                Interface.windows[title][k] = not Interface.windows[title][k]
             end
         -- Slider
         elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberSlider(k .. "Slider", Interface.values[title][k], v.min, v.max, {Step = v.step}) then
-                Interface.values[title][k] = Slab.GetInputNumber()
+            if Slab.InputNumberSlider(k .. "Slider", Interface.windows[title][k], v.min, v.max, {Step = v.step}) then
+                Interface.windows[title][k] = Slab.GetInputNumber()
             end
         -- Number input
         elseif v.type == "input" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberDrag(k .. "InputNumber", Interface.values[title][k], nil, nil, {}) then
-                Interface.values[title][k] = Slab.GetInputNumber()
+            if Slab.InputNumberDrag(k .. "InputNumber", Interface.windows[title][k], nil, nil, {}) then
+                Interface.windows[title][k] = Slab.GetInputNumber()
             end
         -- Radio buttons
         elseif v.type == "enum" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
             for i, e in ipairs(v.options) do
-                if Slab.RadioButton(e, {Index = i, SelectedIndex = Interface.values[title][k]}) then
-                    Interface.values[title][k] = i
+                if Slab.RadioButton(e, {Index = i, SelectedIndex = Interface.windows[title][k]}) then
+                    Interface.windows[title][k] = i
                 end
             end
         else
             print("UI Control of type \"" .. v.type .. "\" is not recognized.")
         end
     end
+
     Slab.EndLayout()
     Slab.EndWindow()
 end
@@ -717,13 +728,11 @@ function UI.update(dt)
 
     status_bar(screen_w, screen_h)
 
-    local window_x = 10
-    for k, _ in pairs(Interface.ui_settings) do
+    for k, _ in pairs(Interface.windows) do
         if windows_visibility[k] == nil then
             windows_visibility[k] = true
         end
-        params_window(k, window_x, 100)
-        window_x = window_x + 160
+        params_window(k)
     end
 
     -- Update graphs

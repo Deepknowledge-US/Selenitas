@@ -161,7 +161,7 @@ function love.draw()
         -- Draw families in order
         for _, fam in sorted(Simulation.families, 'z_order') do
             if families_visibility[fam.name] then
-                if fam:is_a(FamilyMobil) then
+                if fam:is_a(FamilyMobile) then
                     Draw.draw_agents_family(fam)
                 elseif fam:is_a(FamilyRelational) then
                     Draw.draw_links_family(fam)

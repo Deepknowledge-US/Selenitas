@@ -13,15 +13,16 @@ __2pi   = 2*math.pi
 
 Family              = require 'Engine.classes.Family'
 FamilyCell          = require 'Engine.classes.FamilyCell'
-FamilyMobil         = require 'Engine.classes.FamilyMobil'
+FamilyMobile        = require 'Engine.classes.FamilyMobile'
 FamilyRelational    = require 'Engine.classes.FamilyRelational'
 Collection          = require 'Engine.classes.Collection'
 
 Agent               = require 'Engine.classes.Agent'
 Cell                = require 'Engine.classes.Cell'
-Mobil               = require 'Engine.classes.Mobil'
+Mobile              = require 'Engine.classes.Mobile'
 Relational          = require 'Engine.classes.Relational'
 Observer            = require 'Engine.classes.Observer'
+Window              = require 'Engine.classes.Window'
 Interface           = require 'Engine.classes.Interface'
 Simulation          = require 'Engine.classes.Simulation'
 
@@ -107,27 +108,6 @@ Observer    = Observer()
 -- FUNCTIONS --
 --===========--
 
--- ------------------
--- -- This function removes from the system all agents and all families
--- -- @function clear_simulation
--- -- @return Nothing
--- -- @usage
--- -- clear_simulation()
--- clear = function(str)
-
---     if string.lower(str) == 'all' then
---         for k,v in ipairs(Simulation.families)do
---             for _,ag in ordered(v)do
---                 ag = nil
---             end
---             v = nil
---         end
---         Simulation.families     = {}
---         Simulation.num_agents   = 0
-
---     end
--- end
-
 ------------------
 -- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
 -- @function setup
@@ -136,7 +116,7 @@ Observer    = Observer()
 -- @usage
 -- setup(function()
 --     Cells = create_patches(100,100)
---     Agents= FamilyMobil()
+--     Agents= FamilyMobile()
 --     for i=1,50 do
 --         Agents:add({
 --             ['pos'] = one_of(Cells).pos
