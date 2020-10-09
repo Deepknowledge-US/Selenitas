@@ -132,6 +132,7 @@ local function draw_grid(grid_size, cell_size, alpha, line_width)
     else
         love.graphics.setLineStyle("smooth")
     end
+    local previous_line_width = love.graphics.getLineWidth()
     love.graphics.setLineWidth(line_width)
     -- Horizontal lines
     for i = 0, lines do
@@ -151,6 +152,9 @@ local function draw_grid(grid_size, cell_size, alpha, line_width)
         love.graphics.line(x, grid_size / 2, x, -grid_size / 2)
         x = x + cell_size
     end
+    -- Revert line config
+    love.graphics.setLineWidth(previous_line_width)
+    love.graphics.setLineStyle("smooth")
 end
 
 function Draw.draw_scalable_grid(base)
