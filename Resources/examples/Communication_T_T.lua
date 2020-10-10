@@ -21,7 +21,7 @@ SETUP = function()
     GraphicEngine.set_background_color(.8,.8,.8)
     -- Test collection
     -- Checkpoints = FamilyMobil()
-    declare_FamilyMobil('Checkpoints')
+    declare_FamilyMobile('Checkpoints')
 
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
@@ -36,7 +36,7 @@ SETUP = function()
     end
 
     -- Create a new collection
-    declare_FamilyMobil('People')
+    declare_FamilyMobile('People')
 
     -- Agents with the message will share it with other agents in the same patch.
     People:add_method('comunicate', function(self)

@@ -8,6 +8,14 @@ local View = require "Visual.view"
 
 local UI = {}
 
+local SlabDebug_MultiLine = {Title = "Multi-Line Input", AllowResize = false, AutoSizeWindow=true}
+local SlabDebug_MultiLine_FileDialog = false
+local SlabDebug_MultiLine_FileName = ""
+local SlabDebug_MultiLine_Contents = ""
+
+local Selenitas_Syntax = require "Visual.SyntaxHighlight"
+
+local show_file_editor = false
 local show_file_picker = false
 local file_loaded_path = nil
 local show_about_dialog = false
@@ -146,6 +154,10 @@ local on_click_functions = {
     toggle_grid_visibility = function()
         GraphicEngine.set_grid_enabled(not GraphicEngine.is_grid_enabled())
     end,
+    
+    editor = function()
+      show_file_editor = not show_file_editor
+    end
 }
 
 
@@ -284,6 +296,74 @@ local function about_dialog()
     Slab.EndLayout()
     Slab.EndDialog()
 end
+
+local function view_editor()
+	Slab.BeginWindow('SlabDebug_MultiLine', SlabDebug_MultiLine)
+
+	if Slab.Button("Load") then
+		SlabDebug_MultiLine_FileDialog = true
+	end
+
+	Slab.SameLine()
+
+	if Slab.Button("Save", {Disabled = SlabDebug_MultiLine_FileName == ""}) then
+		local Handle, Error = io.open(SlabDebug_MultiLine_FileName, "w")
+
+		if Handle ~= nil then
+			Handle:write(SlabDebug_MultiLine_Contents)
+			Handle:close()
+		end
+	end
+  
+  Slab.SameLine()
+
+	if Slab.Button("Reload") then
+		on_click_functions.reload()
+	end
+  Slab.SameLine()
+
+
+	if Slab.Button("Close") then
+		show_file_editor = false
+	end
+
+	local ItemW, ItemH = Slab.GetControlSize()
+
+	Slab.Separator()
+
+	Slab.Text("File: " .. SlabDebug_MultiLine_FileName)
+
+	if Slab.Input('SlabDebug_MultiLine', {
+		MultiLine = true,
+		Text = SlabDebug_MultiLine_Contents,
+		W = 600 ,
+		H = 500,
+		Highlight = Selenitas_Syntax
+	}) then
+		SlabDebug_MultiLine_Contents = Slab.GetInputText()
+	end
+
+	Slab.EndWindow()
+
+	if SlabDebug_MultiLine_FileDialog then
+		local Result = Slab.FileDialog({AllowMultiSelect = false, Type = 'openfile'})
+
+		if Result.Button ~= "" then
+			SlabDebug_MultiLine_FileDialog = false
+
+			if Result.Button == "OK" then
+				SlabDebug_MultiLine_FileName = Result.Files[1]
+				local Handle, Error = io.open(SlabDebug_MultiLine_FileName, "r")
+
+				if Handle ~= nil then
+					SlabDebug_MultiLine_Contents = Handle:read("*a")
+					Handle:close()
+				end
+			end
+		end
+	end
+end
+
 
 local function menu_bar()
    -- Build menu bar
@@ -462,6 +542,9 @@ local function toolbar(screen_w, screen_h)
         "Edit File (external editor)", on_click_functions.edit_file)
     Slab.SameLine()
 
+    add_toolbar_button("Edit2", ResourceManager.ui.edit, false,
+        "Edit File (internal editor)", on_click_functions.editor)
+    Slab.SameLine()
 
     toolbar_separator(15)
 
@@ -712,6 +795,11 @@ function UI.update(dt)
     if show_about_dialog then
       about_dialog()
     end
+    
+    -- Show File Editor
+    if show_file_editor then
+      view_editor()
+    end
 
     -- Show error message if needed
     if error_msg ~= nil then
@@ -758,6 +846,7 @@ local function draw_debug_graphs()
     fps_graph:draw()
     mem_graph:draw()
 end
+
 
 function UI.draw()
     Slab.Draw()

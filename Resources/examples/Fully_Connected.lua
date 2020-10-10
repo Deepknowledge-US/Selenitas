@@ -1,4 +1,4 @@
------------------
+local colors = require "Visual.Colors"
 
 
 --[[
@@ -6,8 +6,8 @@
     each node will create a link with the others.
 ]]--
 
-Interface:create_slider('nodes', 0, 100, 1, 20)
-Interface:create_slider('radius', 0, 100, 1, 15)
+--Interface:create_slider('nodes', 0, 100, 1, 20)
+--Interface:create_slider('radius', 0, 100, 1, 15)
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 2\pi by
 -- the number of agents to obtain the degrees of separation between agents (step).
@@ -29,16 +29,17 @@ SETUP = function()
 
     Simulation:reset()
 
-    declare_FamilyMobil('Nodes')
+    declare_FamilyMobile('Nodes')
 
-    for i=1,Interface:get_value("nodes") do
+    for i=1,50 do
         Nodes:new({
             ['pos']     = {0,0},
+			['color'] = colors.green,
             ['heading'] = 0
         })
     end
 
-    layout_circle(Nodes, Interface:get_value("radius"))
+    layout_circle(Nodes, 15)
 
     -- A new collection to store the links
     declare_FamilyRel('Links')
