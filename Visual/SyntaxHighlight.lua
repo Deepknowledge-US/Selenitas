@@ -111,6 +111,7 @@ local Selenitas_Syntax = {
   ['reset'] =  SimulationColor,
   ['number_of_agents'] =  SimulationColor,
   -- Observer
+  ['Observer'] = ObserverColor,
   ['_init'] =  ObserverColor,
   ['set_center'] =  ObserverColor,
   ['set_zoom'] =  ObserverColor,

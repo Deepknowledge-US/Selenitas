@@ -1,5 +1,6 @@
 local Camera = require("Thirdparty.brady.camera")
 local Input = require("Visual.input")
+local Slab = require("Thirdparty.Slab.Slab")
 
 local View = {}
 
@@ -17,20 +18,24 @@ Input.add_mouse_moved_callback_func(
         end
     end
 )
-Input.add_scroll_callback_func(
+
+-- La siguiente función no hace lo que debería... si la rueda se mueve lento, sí, pero 
+-- si se mueve deprisa, entonces sigue actuando el zoom desde dentro de las ventanas
+
+Input.add_scroll_callback_func( 
     function(dx, dy)
+      if Slab.IsVoidHovered() then
         local inc = 1 + dy / 25
         camera:scaleToPoint(inc)
-
         Observer:set_zoom( round(camera.scale,3) )
+      end
     end
 )
 
 function View.init()
     local w, h, _ = love.window.getMode()
     camera = Camera(w, h, {translationX = w / 2, translationY = h / 2,
-        resizable = true, maintainAspectRatio = true})
-
+    resizable = true, maintainAspectRatio = true})
     Observer:set_center( { camera.x, camera.y } )
 end
 

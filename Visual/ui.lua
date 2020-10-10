@@ -100,9 +100,21 @@ local on_click_functions = {
     load_file = function()
         show_file_picker = true
     end,
+    
+    close_editor = function()
+      show_file_editor = false
+    end,
 
     edit_file = function()
         FileUtils.open_in_editor(file_loaded_path)
+    end,
+
+    save_file = function()
+      local Handle, Error = io.open(file_loaded_path, "w")
+      if Handle ~= nil then
+        Handle:write(Internal_Editor_Contents)
+        Handle:close()
+      end
     end,
 
     toggle_draw_enabled = function()
@@ -310,44 +322,41 @@ local function view_editor()
   
 --	Slab.SameLine()
   
-	if Slab.Button("Load") then
-		Internal_Editor_FileDialog = true
-	end
+--	if Slab.Button("Load") then
+--		Internal_Editor_FileDialog = true
+--	end
+  add_toolbar_button("Open_int_editor", ResourceManager.ui.open, false,
+        "Open File", function() end) -- TODO
+  Slab.SameLine()
+	
+  add_toolbar_button("Save", ResourceManager.ui.save, file_loaded_path == nil,
+        "Save File", on_click_functions.save_file)
+  Slab.SameLine()
 
-	Slab.SameLine()
+  add_toolbar_button("Reload_int_editor", ResourceManager.ui.refresh, file_loaded_path == nil,
+        "Reload Model", on_click_functions.reload)
+  Slab.SameLine()
 
-	if Slab.Button("Save", {Disabled = file_loaded_path == nil}) then
-		local Handle, Error = io.open(file_loaded_path, "w")
-
-		if Handle ~= nil then
-			Handle:write(Internal_Editor_Contents)
-			Handle:close()
-		end
-	end
+  add_toolbar_button("New_int_editor", ResourceManager.ui.newfile, false,
+        "New File", function() end) -- TODO
+  Slab.SameLine()
   
+  Slab.Rectangle({W=400, H=1, Color={0,0,0,0}})
   Slab.SameLine()
-
-	if Slab.Button("Reload") then
-		on_click_functions.reload()
-	end
-  Slab.SameLine()
-
-
-	if Slab.Button("Close") then
-		show_file_editor = false
-	end
-
-	local ItemW, ItemH = Slab.GetControlSize()
+  
+  add_toolbar_button("Close_int_editor", ResourceManager.ui.close, false,
+        "Close Editor", on_click_functions.close_editor)
+    
+  Slab.Text(" ")
 
 	Slab.Separator()
-
---	Slab.Text("File: " .. Internal_Editor_FileName)
 
 	if Slab.Input('Internal_Editor', {
 		MultiLine = true,
 		Text = Internal_Editor_Contents,
 		W = 600 ,
 		H = 500,
+    MultiLineW = 580,
 		Highlight = Selenitas_Syntax
 	}) then
 		Internal_Editor_Contents = Slab.GetInputText()
@@ -382,13 +391,13 @@ local function menu_bar()
 
         -- "File" section
         if Slab.BeginMenu("File") then
-            if Slab.MenuItem("Load file...") then
+            if Slab.MenuItem("Load Model...") then
                 on_click_functions.load_file()
             end
 
             -- Show "Reload file" option if file was loaded
             if file_loaded_path then
-                if Slab.MenuItem("Reload file") then
+                if Slab.MenuItem("Reload Model") then
                     on_click_functions.reload()
                 end
             end
@@ -542,19 +551,19 @@ local function toolbar(screen_w, screen_h)
 
     ------- File options -------
     add_toolbar_button("New", ResourceManager.ui.newfile, false,
-        "New File", function() end) -- TODO
+        "New Model", function() end) -- TODO
     Slab.SameLine()
 
     add_toolbar_button("Open", ResourceManager.ui.open, false,
-        "Open File", on_click_functions.load_file)
+        "Open Model", on_click_functions.load_file)
     Slab.SameLine()
 
-    add_toolbar_button("Edit", ResourceManager.ui.edit, file_loaded_path == nil,
+    add_toolbar_button("Edit", ResourceManager.ui.edit2, file_loaded_path == nil,
         "Edit File (external editor)", on_click_functions.edit_file)
     Slab.SameLine()
 
-    add_toolbar_button("Edit2", ResourceManager.ui.edit, file_loaded_path == nil,
-        "Edit File (internal editor)", on_click_functions.int_editor)
+    add_toolbar_button("Edit2", ResourceManager.ui.edit2, file_loaded_path == nil,
+        "Edit Model (internal editor)", on_click_functions.int_editor)
     Slab.SameLine()
 
     toolbar_separator(15)
@@ -586,19 +595,19 @@ local function toolbar(screen_w, screen_h)
 
     ------- View options -------
     if GraphicEngine.is_draw_enabled() then
-        add_toolbar_button("DisableDraw", ResourceManager.ui.eye_on, false,
+        add_toolbar_button("DisableDraw", ResourceManager.ui.eye_on2, false,
             "Refresh Off", on_click_functions.toggle_draw_enabled)
     else
-        add_toolbar_button("EnableDraw", ResourceManager.ui.eye_off, false,
+        add_toolbar_button("EnableDraw", ResourceManager.ui.eye_off2, false,
             "Refresh On", on_click_functions.toggle_draw_enabled)
     end
     Slab.SameLine()
 
-    add_toolbar_button("ShowGraph", ResourceManager.ui.showgraph, false,
+    add_toolbar_button("ShowGraph", ResourceManager.ui.showgraph2, false,
         "Performance Stats", on_click_functions.toggle_performance_stats)
     Slab.SameLine()
 
-    add_toolbar_button("WindowShow", ResourceManager.ui.window, false,
+    add_toolbar_button("WindowShow", ResourceManager.ui.window3, false,
         "View Windows", on_click_functions.toggle_windows_visibility)
     Slab.SameLine()
 
@@ -606,9 +615,19 @@ local function toolbar(screen_w, screen_h)
         "View Families", on_click_functions.toggle_families_visibility)
     Slab.SameLine()
 
-    add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
-        "Grid", on_click_functions.toggle_grid_visibility)
+if  GraphicEngine.is_grid_enabled() then
+        add_toolbar_button("GridOff", ResourceManager.ui.gridoff, false,
+        "Grid Off", on_click_functions.toggle_grid_visibility)
+
+    else
+    add_toolbar_button("GridOn", ResourceManager.ui.grid, false,
+        "Grid On", on_click_functions.toggle_grid_visibility)
+    end
     Slab.SameLine()
+
+--    add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
+--        "Grid", on_click_functions.toggle_grid_visibility)
+--    Slab.SameLine()
 
     toolbar_separator(15)
 
@@ -628,9 +647,10 @@ local function status_bar(screen_w, screen_h)
     Slab.BeginWindow("StatusBar", {
         Title = "", -- No title means it shows no title border and is not movable
         X = 0,
-        Y = screen_h - 34,
+        Y = screen_h - 29,
         W = screen_w + 10,
-        H = 27,
+        H = 30,
+        Border = 0,
         AutoSizeWindow = false,
         AllowResize = false
     })
@@ -641,6 +661,8 @@ local function status_bar(screen_w, screen_h)
         AlignX = 'left'
     })
 
+    Slab.Rectangle({W=5, H=28, Color={0,0,0,0}})
+    Slab.SameLine()
     -- Seed
     -- Slab.Text(" Seed : ", {})
     Slab.Image('Icon_dice', {Image = ResourceManager.ui.dice, Color = col, Scale = 0.4})
@@ -651,7 +673,7 @@ local function status_bar(screen_w, screen_h)
 
     -- "Speed" slider: it changes time_between_steps value
     Slab.SameLine()
-    Slab.Image('Icon_time', {Image = ResourceManager.ui.time, Color = col, Scale = 0.4})
+    Slab.Image('Icon_time', {Image = ResourceManager.ui.time3, Color = col, Scale = 0.4})
     Slab.SameLine()
     Slab.Text(tostring(Simulation:get_time()))
     Slab.SameLine()
@@ -668,7 +690,7 @@ local function status_bar(screen_w, screen_h)
 
     -- Center point in View
     Slab.SameLine()
-    Slab.Image('Icon_center', {Image = ResourceManager.ui.center2, Color = col, Scale = 0.4})
+    Slab.Image('Icon_center', {Image = ResourceManager.ui.center3, Color = col, Scale = 0.4})
     Slab.SameLine()
     local center = Observer:get_center()
     Slab.Text( ' (' .. tostring(center[1]) .. ' , ' .. tostring(center[2]) .. ')  ' )
@@ -677,7 +699,7 @@ local function status_bar(screen_w, screen_h)
 
     -- Zoom in View
     Slab.SameLine()
-    Slab.Image('Icon_zoom', {Image = ResourceManager.ui.zoom, Color = col, Scale = 0.4})
+    Slab.Image('Icon_zoom', {Image = ResourceManager.ui.zoom2, Color = col, Scale = 0.4})
     Slab.SameLine()
     Slab.Text( tostring(Observer:get_zoom()) )
     Slab.SameLine()
@@ -686,7 +708,7 @@ local function status_bar(screen_w, screen_h)
     -- Mobils info
     local cells,mobils,rels = Simulation:number_of_agents()
     Slab.SameLine()
-    Slab.Image('Icon_mobils ', {Image = ResourceManager.ui.directions_run, Color = col, Scale = 0.4})
+    Slab.Image('Icon_mobils ', {Image = ResourceManager.ui.family2, Color = col, Scale = 0.4})
     Slab.SameLine()
     Slab.Text(tostring(mobils))
     Slab.SameLine()
@@ -704,7 +726,7 @@ local function status_bar(screen_w, screen_h)
 
     -- Relationals info
     Slab.SameLine()
-    Slab.Image('Icon_relationals ', {Image = ResourceManager.ui.share, Color = col, Scale = 0.4})
+    Slab.Image('Icon_relationals ', {Image = ResourceManager.ui.share2, Color = col, Scale = 0.4})
     -- add_toolbar_button("Relationals", ResourceManager.ui.share, false,
         -- "Relational agents", function()end )
     Slab.SameLine()
