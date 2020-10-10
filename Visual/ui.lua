@@ -155,7 +155,12 @@ local on_click_functions = {
         GraphicEngine.set_grid_enabled(not GraphicEngine.is_grid_enabled())
     end,
     
-    editor = function()
+    int_editor = function()
+      local Handle, Error = io.open(file_loaded_path, "r")
+			if Handle ~= nil then
+				Internal_Editor_Contents = Handle:read("*a")
+				Handle:close()
+			end
       show_file_editor = not show_file_editor
     end
 }
@@ -300,14 +305,19 @@ end
 local function view_editor()
 	Slab.BeginWindow('Internal_Editor', Internal_Editor)
 
+  local model_name = string.gsub(FileUtils.get_filename_from_path(file_loaded_path), ".lua", "")
+	Internal_Editor.Title = ("File: " .. model_name)
+  
+--	Slab.SameLine()
+  
 	if Slab.Button("Load") then
 		Internal_Editor_FileDialog = true
 	end
 
 	Slab.SameLine()
 
-	if Slab.Button("Save", {Disabled = Internal_Editor_FileName == ""}) then
-		local Handle, Error = io.open(Internal_Editor_FileName, "w")
+	if Slab.Button("Save", {Disabled = file_loaded_path == nil}) then
+		local Handle, Error = io.open(file_loaded_path, "w")
 
 		if Handle ~= nil then
 			Handle:write(Internal_Editor_Contents)
@@ -331,7 +341,7 @@ local function view_editor()
 
 	Slab.Separator()
 
-	Slab.Text("File: " .. Internal_Editor_FileName)
+--	Slab.Text("File: " .. Internal_Editor_FileName)
 
 	if Slab.Input('Internal_Editor', {
 		MultiLine = true,
@@ -345,23 +355,24 @@ local function view_editor()
 
 	Slab.EndWindow()
 
-	if Internal_Editor_FileDialog then
-		local Result = Slab.FileDialog({AllowMultiSelect = false, Type = 'openfile'})
+--	if Internal_Editor_FileDialog then
+--		local Result = Slab.FileDialog({AllowMultiSelect = false, Type = 'openfile'})
 
-		if Result.Button ~= "" then
-			Internal_Editor_FileDialog = false
+--		if Result.Button ~= "" then
+--			Internal_Editor_FileDialog = false
 
-			if Result.Button == "OK" then
-				Internal_Editor_FileName = Result.Files[1]
-				local Handle, Error = io.open(Internal_Editor_FileName, "r")
+--			if Result.Button == "OK" then
+--				Internal_Editor_FileName = Result.Files[1]
+--				local Handle, Error = io.open(Internal_Editor_FileName, "r")
 
-				if Handle ~= nil then
-					Internal_Editor_Contents = Handle:read("*a")
-					Handle:close()
-				end
-			end
-		end
-	end
+--				if Handle ~= nil then
+--					Internal_Editor_Contents = Handle:read("*a")
+--					Handle:close()
+--				end
+--			end
+--		end
+--	end
+
 end
 
 
@@ -542,8 +553,8 @@ local function toolbar(screen_w, screen_h)
         "Edit File (external editor)", on_click_functions.edit_file)
     Slab.SameLine()
 
-    add_toolbar_button("Edit2", ResourceManager.ui.edit, false,
-        "Edit File (internal editor)", on_click_functions.editor)
+    add_toolbar_button("Edit2", ResourceManager.ui.edit, file_loaded_path == nil,
+        "Edit File (internal editor)", on_click_functions.int_editor)
     Slab.SameLine()
 
     toolbar_separator(15)

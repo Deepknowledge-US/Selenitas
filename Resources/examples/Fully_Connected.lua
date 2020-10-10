@@ -29,12 +29,12 @@ SETUP = function()
 
     Simulation:reset()
 
-    declare_FamilyMobile('Nodes')
+    declare_FamilyMobil('Nodes')
 
-    for i=1,50 do
+    for i=1,10 do
         Nodes:new({
             ['pos']     = {0,0},
-			['color'] = colors.green,
+			['color'] = colors.lime,
             ['heading'] = 0
         })
     end
