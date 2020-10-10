@@ -8,10 +8,10 @@ local View = require "Visual.view"
 
 local UI = {}
 
-local SlabDebug_MultiLine = {Title = "Multi-Line Input", AllowResize = false, AutoSizeWindow=true}
-local SlabDebug_MultiLine_FileDialog = false
-local SlabDebug_MultiLine_FileName = ""
-local SlabDebug_MultiLine_Contents = ""
+local Internal_Editor = {Title = "Selenitas Editor", AllowResize = false, AutoSizeWindow=true}
+local Internal_Editor_FileDialog = false
+local Internal_Editor_FileName = ""
+local Internal_Editor_Contents = ""
 
 local Selenitas_Syntax = require "Visual.SyntaxHighlight"
 
@@ -298,19 +298,19 @@ local function about_dialog()
 end
 
 local function view_editor()
-	Slab.BeginWindow('SlabDebug_MultiLine', SlabDebug_MultiLine)
+	Slab.BeginWindow('Internal_Editor', Internal_Editor)
 
 	if Slab.Button("Load") then
-		SlabDebug_MultiLine_FileDialog = true
+		Internal_Editor_FileDialog = true
 	end
 
 	Slab.SameLine()
 
-	if Slab.Button("Save", {Disabled = SlabDebug_MultiLine_FileName == ""}) then
-		local Handle, Error = io.open(SlabDebug_MultiLine_FileName, "w")
+	if Slab.Button("Save", {Disabled = Internal_Editor_FileName == ""}) then
+		local Handle, Error = io.open(Internal_Editor_FileName, "w")
 
 		if Handle ~= nil then
-			Handle:write(SlabDebug_MultiLine_Contents)
+			Handle:write(Internal_Editor_Contents)
 			Handle:close()
 		end
 	end
@@ -331,32 +331,32 @@ local function view_editor()
 
 	Slab.Separator()
 
-	Slab.Text("File: " .. SlabDebug_MultiLine_FileName)
+	Slab.Text("File: " .. Internal_Editor_FileName)
 
-	if Slab.Input('SlabDebug_MultiLine', {
+	if Slab.Input('Internal_Editor', {
 		MultiLine = true,
-		Text = SlabDebug_MultiLine_Contents,
+		Text = Internal_Editor_Contents,
 		W = 600 ,
 		H = 500,
 		Highlight = Selenitas_Syntax
 	}) then
-		SlabDebug_MultiLine_Contents = Slab.GetInputText()
+		Internal_Editor_Contents = Slab.GetInputText()
 	end
 
 	Slab.EndWindow()
 
-	if SlabDebug_MultiLine_FileDialog then
+	if Internal_Editor_FileDialog then
 		local Result = Slab.FileDialog({AllowMultiSelect = false, Type = 'openfile'})
 
 		if Result.Button ~= "" then
-			SlabDebug_MultiLine_FileDialog = false
+			Internal_Editor_FileDialog = false
 
 			if Result.Button == "OK" then
-				SlabDebug_MultiLine_FileName = Result.Files[1]
-				local Handle, Error = io.open(SlabDebug_MultiLine_FileName, "r")
+				Internal_Editor_FileName = Result.Files[1]
+				local Handle, Error = io.open(Internal_Editor_FileName, "r")
 
 				if Handle ~= nil then
-					SlabDebug_MultiLine_Contents = Handle:read("*a")
+					Internal_Editor_Contents = Handle:read("*a")
 					Handle:close()
 				end
 			end
