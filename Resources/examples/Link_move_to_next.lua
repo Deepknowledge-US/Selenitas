@@ -1,15 +1,14 @@
 -----------------
-
 Interface:create_slider('nodes', 0, 50, 1, 12)
 
 SETUP = function()
 
     Simulation:reset()
 
-    declare_FamilyMobil('Nodes')
+    declare_FamilyMobile('Nodes')
     declare_FamilyRel('Edges')
-    declare_FamilyMobil('Walkers')
-    Walkers.z_order = 4 -- By default, all mobil families have a z_order = 3, by setting this to 4, all Walkers will be painted over the other Mobil agents
+    declare_FamilyMobile('Walkers')
+    Walkers.z_order = 4 -- By default, all mobil families have a z_order = 3, by setting this to 4, all Walkers will be drown over the other Mobil agents
 
     for i=1,Interface:get_value("nodes") do
         Nodes:new({
@@ -40,15 +39,14 @@ SETUP = function()
     end)
 
     local node = one_of(Nodes)
-
     Wlkr = Walkers:new({
-        ['pos']       = {node:xcor(), node:ycor()}
-        ,['heading']   = 0
-        ,['curr_node'] = node
-        ,['color']     = {0,0,1,1}
-        ,['scale']     = 1.5
-        ,['shape']     = 'triangle_2'
-        ,['next_node'] = node
+        ['pos']       = {node:xcor(), node:ycor()},
+        ['head']      = {0,nil},
+        ['curr_node'] = node,
+        ['color']     = {0,0,1,1},
+        ['scale']     = 1.5,
+        ['shape']     = 'triangle_2',
+        ['next_node'] = node
     })
 
 end

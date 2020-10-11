@@ -1,14 +1,14 @@
 ------------------
--- Mobile agents have some methods to interact with the environment.
+-- Mobil agents have some methods to interact with the environment.
 -- @classmod
--- Mobile
+-- Mobil
 local class     = require 'Thirdparty.pl.class'
 local sin       = math.sin
 local cos       = math.cos
 local rad       = math.rad
 
 
-local Mobile = class.Mobil(Agent)
+local Mobil = class.Mobil(Agent)
 
 ------------------
 -- Mobil agents are are the most common agent to work with.
@@ -16,7 +16,7 @@ local Mobile = class.Mobil(Agent)
 -- @param Table with the properties we want in the agent.
 -- @return A new instance of Agent class.
 -- @usage new_instance = Mobil()
-Mobile._init = function(self,a_table)
+Mobil._init = function(self,a_table)
 
     self:super(a_table)
 
@@ -35,6 +35,18 @@ Mobile._init = function(self,a_table)
     self.label_color    = p_table.label_color   or {1,1,1,1}
     self.current_cells  = p_table.current_cells or {}
 
+    -- if p_table.visible == nil then
+    --     self.visible = true
+    -- else
+    --     self.visible = p_table.visible
+    -- end
+
+    -- if p_table.show_label == nil then
+    --     self.show_label = false
+    -- else
+    --     self.show_label = p_table.show_label
+    -- end
+
     return self
 end
 
@@ -48,7 +60,7 @@ end
 -- local wander = function(x) x:rt(180) x:fd(2) end
 -- local talk   = function(x) x.message = true end
 -- one_of(Agents):does(wander,talk)
-Mobile.does = function(self, ...)
+Mobil.does = function(self, ...)
     for i = 1,select('#', ...)do
         local funct = select( i, ... )
         funct(self)
@@ -71,7 +83,7 @@ end
 -- @return Number.
 -- @usage
 -- an_agent:xcor()
-Mobile.xcor = function(self)
+Mobil.xcor = function(self)
     return self.pos[1]
 end
 
@@ -81,7 +93,7 @@ end
 -- @return Number.
 -- @usage
 -- an_agent:ycor()
-Mobile.ycor = function(self)
+Mobil.ycor = function(self)
     return self.pos[2]
 end
 
@@ -92,7 +104,7 @@ end
 -- @return Number.
 -- @usage
 -- an_agent:zcor()
-Mobile.zcor = function(self)
+Mobil.zcor = function(self)
     return self.pos[3]
 end
 
@@ -111,7 +123,7 @@ end
 -- @param ag_or_pos Agent or vector.
 -- @usage
 -- agent:same_pos({1,1})
-Mobile.same_pos = function(self,ag_or_pos)
+Mobil.same_pos = function(self,ag_or_pos)
     return same_pos(self,ag_or_pos)
 end
 
@@ -127,7 +139,7 @@ end
 -- @return the Agent who has update its cells.
 -- @usage
 -- agent:fd(4):update_cell()
-Mobile.update_cell = function(self)
+Mobil.update_cell = function(self)
     for i=1,#self.current_cells do
 
         local cell      = self.current_cells[i]
@@ -149,7 +161,7 @@ end
 -- @return An Agent. The one who has called the function.
 -- @usage
 -- an_agent:rt(90)
-Mobile.rt = function(self, num)
+Mobil.rt = function(self, num)
     self.heading = (self.heading - num)
     return self
 end
@@ -161,7 +173,7 @@ end
 -- @return An Agent. The one who has called the function.
 -- @usage
 -- an_agent:lt(30)
-Mobile.lt = function(self, num)
+Mobil.lt = function(self, num)
     self.heading = (self.heading + num)
     return self
 end
@@ -173,7 +185,7 @@ end
 -- @return An Agent. The one who has called the function.
 -- @usage
 -- an_agent:face(another_agent)
-Mobile.face = function(self, ag)
+Mobil.face = function(self, ag)
     local x,y    = ag:xcor()-self:xcor(),ag:ycor()-self:ycor()
     self.heading = math.atan2(y,x)
     return self
@@ -186,7 +198,7 @@ end
 -- @return An Agent. The one who has called the function.
 -- @usage
 -- an_agent:fd(3)
-Mobile.fd = function(self, num)
+Mobil.fd = function(self, num)
 
     local s,c = sin(self.heading), cos(self.heading)
 
@@ -208,7 +220,7 @@ end
 -- an_ag:move_to(ag2):rt(90):fd(1)
 --
 -- -- This will position the agent near of another agent but not in the same position
-Mobile.move_to = function(self, agent_or_vector)
+Mobil.move_to = function(self, agent_or_vector)
     local new_pos = agent_or_vector.pos or agent_or_vector
     for i = 1,#new_pos do
         self.pos[i] = new_pos[i]
@@ -234,7 +246,7 @@ end
 -- ag:dist_euc_to( {23, 50.1, 7} )
 -- -- or:
 -- dist_euc_to(ag, {23, 50.1, 7})
-Mobile.dist_euc_to = function(self, ag_or_point)
+Mobil.dist_euc_to = function(self, ag_or_point)
     local pos = self.pos
     local point = ag_or_point.pos or ag_or_point
     local res = 0
@@ -254,7 +266,7 @@ end
 -- @return Number The manhattan distance to the point
 -- @usage
 -- ag:dist_manh( {23, 50, 7} )
-Mobile.dist_manh_to = function(self, ag_or_point)
+Mobil.dist_manh_to = function(self, ag_or_point)
     local pos   = self.pos
     local point = ag_or_point.pos or ag_or_point
     local res   = 0
@@ -270,4 +282,4 @@ Mobile.dist_manh_to = function(self, ag_or_point)
     return res
 end
 
-return Mobile
+return Mobil

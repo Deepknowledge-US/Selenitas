@@ -28,12 +28,12 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
 
-    declare_FamilyMobil('Nodes')
+    declare_FamilyMobile('Nodes')
 
     for i=1,Interface:get_value("nodes") do
         Nodes:new({
             ['pos']     = {0,0}
-            ,['scale']   = 1.5
+            ,['scale']  = 1.5
         })
     end
 
@@ -56,7 +56,7 @@ SETUP = function()
         end
     end
 
-    declare_FamilyMobil('Agents')
+    declare_FamilyMobile('Agents')
 
     -- Agents:new returns an agent, so, in global variable central we have the reference to the agent, becouse it has been asigned to a global variable, we can call this agent directly in step function.
     central = Agents:new({

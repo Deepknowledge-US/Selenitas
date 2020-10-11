@@ -1,5 +1,4 @@
 -- Interface
-
 Interface:create_slider('Num_mobiles', 0, 500, 1, 10)
 Interface:create_slider('Attraction_radius', 0, 3, 1, 1)
 
@@ -48,7 +47,7 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
     -- Test collection
-    declare_FamilyMobil('Checkpoints')
+    declare_FamilyMobile('Checkpoints')
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
     Checkpoints:new({ ['pos'] = { 100,0} })
@@ -62,7 +61,7 @@ SETUP = function()
     end
 
     -- Create a new collection
-    declare_FamilyMobil('Mobiles')
+    declare_FamilyMobile('Mobiles')
     declare_FamilyRel('Links')
 
     -- Populate the collection with Agents.

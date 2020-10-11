@@ -23,6 +23,7 @@ Mobile              = require 'Engine.classes.Mobile'
 Relational          = require 'Engine.classes.Relational'
 Observer            = require 'Engine.classes.Observer'
 Window              = require 'Engine.classes.Window'
+WindowFamilyInfo    = require 'Engine.classes.WindowFamilyInfo'
 Interface           = require 'Engine.classes.Interface'
 Simulation          = require 'Engine.classes.Simulation'
 
@@ -49,7 +50,7 @@ lines_from          = __str_fls.lines_from
 split               = __str_fls.split
 
 __fam               = require 'Engine.utilities.utl_families'
-declare_FamilyMobil = __fam.declare_FamilyMobil
+declare_FamilyMobile= __fam.declare_FamilyMobile
 declare_FamilyRel   = __fam.declare_FamilyRel
 declare_FamilyCell  = __fam.declare_FamilyCell
 create_grid         = __fam.create_grid
@@ -152,4 +153,3 @@ STEP = function(funct)
         end
     end
 end
-

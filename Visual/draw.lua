@@ -33,7 +33,7 @@ function Draw.draw_agents_family(family)
             if a.shape == "triangle" then
                 shape_img = ResourceManager.images.triangle
             elseif a.shape == "triangle_2" then
-                shape_img = ResourceManager.images.triangletest
+                shape_img = ResourceManager.images.triangle_hole
             elseif a.shape == "square" then
                 shape_img = ResourceManager.images.rectangle
             elseif a.shape == "house" then

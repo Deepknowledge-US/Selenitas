@@ -1,16 +1,15 @@
 -----------------
-
 Interface:create_slider('N_agents', 0, 20, 1.0, 5)
 Interface:create_boolean('random_ordered', true)
 
 
 SETUP = function()
 
-    Simulation:clear('all')
+    Simulation:reset()
 
-    declare_FamilyMobil('Mobils')
+    declare_FamilyMobile('Mobils')
 
-    for i=1,Interface:get_value("N_agents") do
+    for i=1,Interface:get_value('params', "N_agents") do
         Mobils:new({
             ['pos']      = {0,0}
             ,['scale']   = 1.5
@@ -21,7 +20,7 @@ SETUP = function()
 
     local x = 0
 
-    local iter = Interface.random_ordered and shuffled or ordered
+    local iter = Interface:get_value('random_ordered') and shuffled or ordered
 
     for k,ag1 in iter(Mobils) do
         ag1:move_to({x,0})

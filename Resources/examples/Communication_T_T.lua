@@ -10,8 +10,9 @@ local lambda        = utl.string_lambda
 -- Agents will share the message with others if close enough.
 -- The simulation ends when all agents have the message.
 
-Interface:create_slider('Num_agents', 0, 1000, 1, 100)
-Interface:create_slider('radius', 0, 10, .01, 1)
+Interface:create_window('params')
+Interface:create_slider('params', 'Num_agents', 0, 1000, 1, 100)
+Interface:create_slider('params', 'radius', 0, 10, .01, 1)
 
 
 SETUP = function()
@@ -42,7 +43,7 @@ SETUP = function()
     People:add_method('comunicate', function(self)
         if self.message then
             local neighborhood = People:with(function(other)
-                return self:dist_euc_to(other) <= Interface:get_value("radius", "testwindow")
+                return self:dist_euc_to(other) <= Interface:get_value('params', "radius", "testwindow")
             end)
             for _,other in ordered(neighborhood) do
                 other.message = true
@@ -69,7 +70,7 @@ SETUP = function()
     end)
 
     -- Populate the collection with Agents.
-    for i=1,Interface:get_value("Num_agents") do
+    for i=1,Interface:get_value('params', "Num_agents") do
         People:new({
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['message'] = false

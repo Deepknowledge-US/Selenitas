@@ -1,7 +1,7 @@
 ------------------
--- A class to control some parameters related with the simulation as created families, number of agents or the time.
+-- A class to content some parameters related with the Interface as sliders or input.
 -- @classmod
--- Simulation
+-- Window
 
 local class  = require 'Thirdparty.pl.class'
 

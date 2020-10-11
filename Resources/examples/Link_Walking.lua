@@ -1,15 +1,14 @@
 -----------------
-
 Interface:create_slider('nodes', 0, 50, 1, 12)
-Interface:create_slider('speed', 0, 2, .01, 1)
+Interface:create_slider('speed', 0, 2, 0.01, 1)
 
 SETUP = function()
     -- clear('all')
     Simulation:reset()
 
-    declare_FamilyMobil('Nodes')
+    declare_FamilyMobile('Nodes')
     declare_FamilyRel('Edges')
-    declare_FamilyMobil('Walkers')
+    declare_FamilyMobile('Walkers')
 
     Walkers:add_method('search_next_node',function(self)
         local nn = one_of(self.curr_node:out_link_neighbors())

@@ -7,7 +7,7 @@ local Cell = require "Engine.classes.Cell"
 
 local utl_fam = {}
 
-function utl_fam.declare_FamilyMobil(...)
+function utl_fam.declare_FamilyMobile(...)
     local args = {...}
 
     for i=1,#args do
@@ -16,6 +16,7 @@ function utl_fam.declare_FamilyMobil(...)
         if not _G[name] or not Simulation.families[name] then
             _G[name] = FamilyMobile(name)
             Simulation.families[name] = _G[name]
+            Interface:create_family_mobile_window( { ['title'] = name } )
         end
     end
 end
@@ -29,6 +30,7 @@ function utl_fam.declare_FamilyRel(...)
         if not _G[name] or not Simulation.families[name] then
             _G[name] = FamilyRelational(name)
             Simulation.families[name] = _G[name]
+            Interface:create_family_rel_window( { ['title'] = name } )
         end
     end
 end
@@ -42,6 +44,7 @@ function utl_fam.declare_FamilyCell(...)
         if not _G[name] or not Simulation.families[name] then
             _G[name] = FamilyCell(name)
             Simulation.families[name] = _G[name]
+            Interface:create_family_cell_window( { ['title'] = name } )
         end
     end
 end

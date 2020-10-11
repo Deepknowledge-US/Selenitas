@@ -30,13 +30,12 @@ local toolbar_buttons_params = {
     hover_color = {0.698, 0.698, 0.698},
     disabled_color = {0.352, 0.352, 0.352},
 }
-local families_visibility = {
-    all = true
-}
-local windows_visibility = {
-    all = false,
-    Parameters = false
-}
+
+local families_visibility = { all = true }
+local windows_visibility = { all = false }
+local family_mobile_visibility = {all = false}
+local family_cell_visibility = {all = false}
+local family_rel_visibility = {all = false}
 
 -- Simulation state trackers
 local setup_executed = false
@@ -89,10 +88,10 @@ local on_click_functions = {
 
     reload = function()
         families_visibility = {all = true} -- new families added in update loop
-        windows_visibility = {
-            all = false,
-            Parameters = false
-        }
+        windows_visibility = {all = false}
+        family_mobile_visibility = {all = false}
+        family_cell_visibility = {all = false}
+        family_rel_visibility = {all = false}
         GraphicEngine.reset_simulation()
         load_model(file_loaded_path)
     end,
@@ -100,7 +99,7 @@ local on_click_functions = {
     load_file = function()
         show_file_picker = true
     end,
-    
+
     close_editor = function()
       show_file_editor = false
     end,
@@ -166,7 +165,55 @@ local on_click_functions = {
     toggle_grid_visibility = function()
         GraphicEngine.set_grid_enabled(not GraphicEngine.is_grid_enabled())
     end,
-    
+
+    toggle_FamilyMobile_windows_visibility = function()
+        local visible = false
+        for _, v in pairs(family_mobile_visibility) do
+            if v then
+                visible = true
+            end
+        end
+        for k, _ in pairs(family_mobile_visibility) do
+            if visible then
+                family_mobile_visibility[k] = false
+            else
+                family_mobile_visibility[k] = true
+            end
+        end
+    end,
+
+    toggle_FamilyCell_windows_visibility = function()
+        local visible = false
+        for _, v in pairs(family_cell_visibility) do
+            if v then
+                visible = true
+            end
+        end
+        for k, _ in pairs(family_cell_visibility) do
+            if visible then
+                family_cell_visibility[k] = false
+            else
+                family_cell_visibility[k] = true
+            end
+        end
+    end,
+
+    toggle_FamilyRel_windows_visibility = function()
+        local visible = false
+        for _, v in pairs(family_rel_visibility) do
+            if v then
+                visible = true
+            end
+        end
+        for k, _ in pairs(family_rel_visibility) do
+            if visible then
+                family_rel_visibility[k] = false
+            else
+                family_rel_visibility[k] = true
+            end
+        end
+    end,
+
     int_editor = function()
       local Handle, Error = io.open(file_loaded_path, "r")
 			if Handle ~= nil then
@@ -241,10 +288,10 @@ end
 
 function UI.reset()
     setup_executed = false
-    windows_visibility = {
-        all = false,
-        Parameters = false
-    }
+    windows_visibility = { all = false }
+    family_mobile_visibility = {all = false}
+    family_cell_visibility = {all = false}
+    family_rel_visibility = {all = false}
     Interface:clear()
 end
 
@@ -708,7 +755,9 @@ local function status_bar(screen_w, screen_h)
     -- Mobils info
     local cells,mobils,rels = Simulation:number_of_agents()
     Slab.SameLine()
-    Slab.Image('Icon_mobils ', {Image = ResourceManager.ui.family2, Color = col, Scale = 0.4})
+    -- Slab.Image('Icon_mobils ', {Image = ResourceManager.ui.family2, Color = col, Scale = 0.4})
+    add_toolbar_button("Icon_mobils", ResourceManager.ui.family2, false,
+    "Mobile families", on_click_functions.toggle_FamilyMobile_windows_visibility )
     Slab.SameLine()
     Slab.Text(tostring(mobils))
     Slab.SameLine()
@@ -716,9 +765,9 @@ local function status_bar(screen_w, screen_h)
 
     -- Cells info
     Slab.SameLine()
-    Slab.Image('Icon_cells ', {Image = ResourceManager.ui.cell, Color = col, Scale = 0.4})
-    -- add_toolbar_button("Cells", ResourceManager.ui.cell, false,
-    --     "Cell agents", function()end )
+    -- Slab.Image('Icon_cells ', {Image = ResourceManager.ui.cell, Color = col, Scale = 0.4})
+    add_toolbar_button("Cells", ResourceManager.ui.cell, false,
+        "Cell families", on_click_functions.toggle_FamilyCell_windows_visibility )
     Slab.SameLine()
     Slab.Text(tostring(cells))
     Slab.SameLine()
@@ -726,9 +775,9 @@ local function status_bar(screen_w, screen_h)
 
     -- Relationals info
     Slab.SameLine()
-    Slab.Image('Icon_relationals ', {Image = ResourceManager.ui.share2, Color = col, Scale = 0.4})
-    -- add_toolbar_button("Relationals", ResourceManager.ui.share, false,
-        -- "Relational agents", function()end )
+    -- Slab.Image('Icon_relationals ', {Image = ResourceManager.ui.share2, Color = col, Scale = 0.4})
+    add_toolbar_button("Relationals", ResourceManager.ui.share2, false,
+        "Relational families", on_click_functions.toggle_FamilyRel_windows_visibility )
     Slab.SameLine()
     Slab.Text(tostring(rels))
     Slab.SameLine()
@@ -785,8 +834,11 @@ local function params_window(title)
         -- Number input
         elseif v.type == "input" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            if Slab.InputNumberDrag(k .. "InputNumber", Interface.windows[title][k], nil, nil, {}) then
-                Interface.windows[title][k] = Slab.GetInputNumber()
+            -- if Slab.InputNumberDrag(k .. "InputNumber", Interface.windows[title][k], nil, nil, {}) then
+            --     Interface.windows[title][k] = Slab.GetInputNumber()
+            -- end
+            if Slab.Input(k .. "InputText", {Text = InputText, ReturnOnText = false}) then
+                Interface.windows[title][k] = Slab.GetInputText()
             end
         -- Radio buttons
         elseif v.type == "enum" then
@@ -804,6 +856,92 @@ local function params_window(title)
     Slab.EndLayout()
     Slab.EndWindow()
 end
+
+local function family_mobile_info_windows(title)
+    local window = Interface.family_mobile_windows[title]
+    family_mobile_visibility[title] = Slab.BeginWindow("ParamWindow" .. title, {
+        Title = title,
+        X = window.x,
+        Y = window.y,
+        W = window.width,
+        ContentW = window.width,
+        AutoSizeWindow = false,
+        AllowResize = true,
+        IsOpen = family_mobile_visibility[title],
+        NoSavedSettings = true
+    })
+    Slab.BeginLayout("Layout", {
+        ExpandW = true
+    })
+
+    window:update_family_info()
+
+    for _,param in next, window.order do
+        Slab.Text(param .. ': ' .. window.info[param])
+    end
+
+    Slab.EndLayout()
+    Slab.EndWindow()
+end
+
+
+local function family_cell_info_windows(title)
+    local window = Interface.family_cell_windows[title]
+    family_cell_visibility[title] = Slab.BeginWindow("ParamWindow" .. title, {
+        Title = title,
+        X = window.x,
+        Y = window.y,
+        W = window.width,
+        ContentW = window.width,
+        AutoSizeWindow = false,
+        AllowResize = true,
+        IsOpen = family_cell_visibility[title],
+        NoSavedSettings = true
+    })
+    Slab.BeginLayout("Layout", {
+        ExpandW = true
+    })
+
+
+    window:update_family_info()
+
+    for _,param in next, window.order do
+        Slab.Text(param .. ': ' .. window.info[param])
+    end
+
+    Slab.EndLayout()
+    Slab.EndWindow()
+end
+
+
+local function family_rel_info_windows(title)
+    local window = Interface.family_rel_windows[title]
+    family_rel_visibility[title] = Slab.BeginWindow("ParamWindow" .. title, {
+        Title = title,
+        X = window.x,
+        Y = window.y,
+        W = window.width,
+        ContentW = window.width,
+        AutoSizeWindow = false,
+        AllowResize = true,
+        IsOpen = family_rel_visibility[title],
+        NoSavedSettings = true
+    })
+    Slab.BeginLayout("Layout", {
+        ExpandW = true
+    })
+
+
+    window:update_family_info()
+
+    for _,param in next, window.order do
+        Slab.Text(param .. ': ' .. window.info[param])
+    end
+
+    Slab.EndLayout()
+    Slab.EndWindow()
+end
+
 
 function UI.update(dt)
     -- Re-draw UI in each step
@@ -854,6 +992,27 @@ function UI.update(dt)
             windows_visibility[k] = true
         end
         params_window(k)
+    end
+
+    for k, _ in pairs(Interface.family_mobile_windows) do
+        if family_mobile_visibility[k] == nil then
+            family_mobile_visibility[k] = false
+        end
+        family_mobile_info_windows(k)
+    end
+
+    for k, _ in pairs(Interface.family_cell_windows) do
+        if family_cell_visibility[k] == nil then
+            family_cell_visibility[k] = false
+        end
+        family_cell_info_windows(k)
+    end
+
+    for k, _ in pairs(Interface.family_rel_windows) do
+        if family_rel_visibility[k] == nil then
+            family_rel_visibility[k] = false
+        end
+        family_rel_info_windows(k)
     end
 
     -- Update graphs

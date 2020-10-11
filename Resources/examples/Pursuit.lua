@@ -1,5 +1,18 @@
+--[[
+    Pursuit model where some agents must follow one prefixed agent.
+
+    It uses customized methods for families and several standard methods
+    (die, clone) and agent properties (alive)
+]]
+
 -----------------
-Interface:create_slider('Num_pursuers', 0, 100, 1, 10)
+-- Interface 
+-----------------
+Interface:create_slider('Num_Pursuers', 0, 100, 1, 10)
+
+----------------------
+-- Auxiliary Functions
+----------------------
 
 -- pos_to_torus relocate the agents as they are living in a torus
 local function pos_to_torus(agent, size_x, size_y)
@@ -18,35 +31,39 @@ local function pos_to_torus(agent, size_x, size_y)
     end
 end
 
+-- Funtion to return a random float in an interval
 local function random_float(a,b)
     return a + (b-a) * math.random();
 end
 
+-----------------
+-- Setup Function
+-----------------
 
 SETUP = function()
 
-    -- clear('all')
+    -- Reset Simulation
     Simulation:reset()
 
     -- Test collection
-    declare_FamilyMobil('Checkpoints')
+    declare_FamilyMobile('Checkpoints')
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
     Checkpoints:new({ ['pos'] = { 100,0} })
     Checkpoints:new({ ['pos'] = { 100, 100} })
 
-    for _, ch in pairs(Checkpoints.agents) do
-        ch.shape = 'circle'
+    for _, ch in ordered(Checkpoints) do
+        ch.shape = 'square'
         ch.scale = 5
-        ch.color = {1,0,0,1}
+        ch.color = {1,0,0,0.5}
         ch.label = ch:xcor() .. ',' .. ch:ycor()
     end
 
-    -- Create a new collection
-    declare_FamilyMobil('Pursuers')
+    -- Create family of pursuers
+    declare_FamilyMobile('Pursuers')
 
     -- Populate the collection with Agents.
-    for i = 1,Interface:get_value("Num_pursuers") do
+    for i = 1,Interface:get_value("Num_Pursuers") do
         Pursuers:new({
             ['pos']     = {math.random(0,100),math.random(0,100)}
             ,['heading'] = math.random(__2pi)
@@ -56,8 +73,10 @@ SETUP = function()
         })
     end
 
-    declare_FamilyMobil('Pursueds')
+    -- Create family of pursueds
+    declare_FamilyMobile('Pursueds')
 
+    -- Create one pursued
     pursued = Pursueds:new({
         ['pos']     = {math.random(0,100),math.random(0,100)}
         ,['heading'] = math.random(__2pi)
@@ -68,18 +87,21 @@ SETUP = function()
 
 end
 
--- This function is executed until the stop condition is reached, 
--- or the button go/stop is stop
-STEP = function()
+-----------------
+-- Step Function
+-----------------
 
+STEP = function()
+    -- move the pursued in the torus
     pursued:lt(random_float(-0.6,0.6))
     pursued:fd(1)
     pos_to_torus(pursued,100,100)
 
-    for _,p in pairs(Pursuers.agents) do
-        p:face(pursued)
-        p:fd(p.speed)
-        pos_to_torus(p,100,100)
+    -- Move the pursuers trying to catch the pursued
+    for _,pursuer in shuffled(Pursuers) do
+        pursuer:face(pursued)
+        pursuer:fd(pursuer.speed)
+        pos_to_torus(pursuer,100,100)
     end
 
 end

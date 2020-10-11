@@ -8,10 +8,11 @@ local class  = require 'Thirdparty.pl.class'
 local Simulation = class.Simulation()
 
 ------------------
--- TODO
+-- This function is called to create a new instance. A new instance of this class is created everytime the system starts.
 -- @function _init
--- @param obj A table with some basic parameters of the Controller.
--- @return A Controller instance.
+-- @return A Simulation instance.
+-- @usage
+-- Simulation = Simulation()
 Simulation._init = function(self)
     self.seed           = os.time()
     self.is_running     = false
@@ -27,7 +28,7 @@ Simulation._init = function(self)
 end;
 
 ------------------
--- This function is used to erase a Family of the system.
+-- This function is used to erase a Family (or more than one) of the system.
 -- @function clear
 -- @param ... Variable number of string inputs, the names of the families we want to delete. If the string 'all' is passed as first parameter, all the families will be deleted.
 -- @return Nothing.
@@ -61,14 +62,14 @@ end
 -- @function __new_id
 -- @return Number, a unique id.
 -- @usage
--- -- TODO
+-- -- The use of this function is not recomended. The system uses it to generate the agents' id
 Simulation.__new_id = function(self)
     self.num_agents = self.num_agents + 1
     return self.num_agents
 end;
 
 ------------------
--- TODO
+-- This function set a new seed to be used when random methods are called.
 -- @function new_seed
 -- @return
 -- @usage
@@ -85,31 +86,33 @@ end
 --=========--
 
 ------------------
--- TODO
+-- A function to get the current used seed.
 -- @function get_seed
--- @return
+-- @return Number. The seed we are using
 -- @usage
--- -- TODO
+-- print(Simulation:get_seed())
+-- @see new_seed
+-- @see set_seed
 Simulation.get_seed = function(self)
     return self.seed
 end
 
 ------------------
--- TODO
+-- A function to know if the simulation is running
 -- @function get_is_running
--- @return
+-- @return Boolean.
 -- @usage
--- -- TODO
+-- if Simulation:get_is_running() then ...
 Simulation.get_is_running = function(self)
     return self.seed
 end
 
 ------------------
--- TODO
+-- A function to know the current time of the system
 -- @function get_time
--- @return
+-- @return Number
 -- @usage
--- -- TODO
+-- if Simulation:get_time() > 100 then ...
 Simulation.get_time = function(self)
     return self.time
 end
@@ -125,31 +128,33 @@ Simulation.get_delta_time = function(self)
 end
 
 ------------------
--- TODO
+-- A limit of time for the simulation
 -- @function get_max_time
--- @return
+-- @return Number. The maximum number of iterations. There will be no max if we set this value to 0.
 -- @usage
--- -- TODO
+-- if Simulation:get_time() > Simulation:get_max_time() then Simulation:stop() end
 Simulation.get_max_time = function(self)
     return self.max_time
 end
 
 ------------------
--- TODO
+-- A method to acces to the families of the simulation.
 -- @function get_families
--- @return
+-- @return Table. All the families created in the system.
 -- @usage
--- -- TODO
+-- for _,fam in pairs(Simulation:get_families()) do
+--     print(fam.count)
+-- end
 Simulation.get_families = function(self)
     return self.families
 end
 
 ------------------
--- TODO
+-- This function return the number of agents of the system.
 -- @function get_num_agents
--- @return
+-- @return Number. The agents in the system
 -- @usage
--- -- TODO
+-- print(Simulation:get_num_agents())
 Simulation.get_num_agents = function(self)
     return self.num_agents
 end
@@ -161,41 +166,43 @@ end
 ------------------
 -- This sets a seed to be used in random operations.
 -- @function set_seed
--- @param num Number, the seed we want to use
+-- @param num Number, the seed we want to use.
 -- @return Nothing.
 -- @usage
--- -- TODO
+-- Simulation:set_seed(123456789)
 Simulation.set_seed = function(self,num)
     self.seed = num
     math.randomseed = self.seed
 end;
 
 ------------------
--- TODO
+-- This function set the value of 'is_running' to false.
 -- @function stop
 -- @return Nothing.
 -- @usage
--- -- TODO
+-- if Simulation:get_num_agents() == 0 then
+--     Simulation:stop()
+-- end
 Simulation.stop = function(self)
     self.is_running = false
 end;
 
 ------------------
--- TODO
+-- This function set the value of 'is_running' to true.
 -- @function start
 -- @return Nothing.
 -- @usage
--- -- TODO
+-- Simulation:start()
 Simulation.start = function(self)
     self.is_running = true
 end;
 
 ------------------
--- TODO
+-- This function reset ALL the parameters (families included) to its original values
 -- @function reset
 -- @return Nothing.
 -- @usage
--- -- TODO
+-- Simulation:reset()
 Simulation.reset = function(self)
     self.is_running     = false
     self.time           = 0
@@ -206,11 +213,11 @@ Simulation.reset = function(self)
 end;
 
 ------------------
--- TODO
--- @function reset
--- @return Nothing.
+-- This function returns the number of agents by its family class
+-- @function number_of_agents
+-- @return Number, Number, Number. Cells, Mobils and Relational number of agents.
 -- @usage
--- -- TODO
+-- local N_cells, N_mobiles, N_rels = Simulation:number_of_agents()
 Simulation.number_of_agents = function(self)
     local cells,mobils,rels = 0,0,0
     for k,v in next, self.families do
