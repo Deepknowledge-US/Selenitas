@@ -23,11 +23,11 @@ end;
 --=========--
 
 ------------------
--- TODO.
+-- Sets the center of the camera in a concrete point.
 -- @function set_center
--- @return .
+-- @return Nothing.
 -- @usage
--- -- TODO
+-- Observer:set_center({1,1})
 Observer.set_center = function(self,vector)
     for i=1,#vector do
         self.center[i] = vector[i]
@@ -35,11 +35,11 @@ Observer.set_center = function(self,vector)
 end
 
 ------------------
--- TODO.
+-- Sets the zoom of the camera in a concrete value.
 -- @function set_zoom
--- @return .
+-- @return Nothing.
 -- @usage
--- -- TODO
+-- Observer:set_zoom(10)
 Observer.set_zoom = function(self,number)
     self.zoom = number
 end
@@ -51,21 +51,21 @@ end
 --=========--
 
 ------------------
--- TODO.
+-- A function to know the current center of the camera.
 -- @function get_center
--- @return .
+-- @return Table. A position vector.
 -- @usage
--- -- TODO
+-- local center = Observer:get_center()
 Observer.get_center = function(self)
     return self.center
 end
 
 ------------------
--- TODO.
+-- A function to know the current zoom of the camera.
 -- @function get_zoom
--- @return .
+-- @return Number. The value of the separation between two consecutive lines of the Interface grid.
 -- @usage
--- -- TODO
+-- local zoom = Observer:get_zoom()
 Observer.get_zoom = function(self)
     return self.zoom
 end

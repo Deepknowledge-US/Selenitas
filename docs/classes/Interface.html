@@ -35,9 +35,15 @@
 <h2>Methods</h2>
 <ul class="nowrap">
     <li><a href="#Interface:_init">Interface:_init (obj)</a></li>
-    <li><a href="#Interface:create_boolean">Interface:create_boolean (name, value)</a></li>
-    <li><a href="#Interface:create_slider">Interface:create_slider (name, min, max, step, value)</a></li>
-    <li><a href="#Interface:create_input">Interface:create_input (name, value)</a></li>
+    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table.)</a></li>
+    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table.)</a></li>
+    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table.)</a></li>
+    <li><a href="#Interface:create_window">Interface:create_window (wname, optional_table.)</a></li>
+    <li><a href="#Interface:get_value">Interface:get_value (window_name, param_name)</a></li>
+    <li><a href="#Interface:create_boolean">Interface:create_boolean (window_name, new_boolean_name, def_value)</a></li>
+    <li><a href="#Interface:create_slider">Interface:create_slider (window_name, slider_name, min, max, step, value)</a></li>
+    <li><a href="#Interface:create_input">Interface:create_input (window_name, input_name, value)</a></li>
+    <li><a href="#Interface:clear">Interface:clear ()</a></li>
 </ul>
 <h2>Classes</h2>
 <ul class="nowrap">
@@ -47,13 +53,17 @@
   <li><a href="../classes/Family.html">Family</a></li>
   <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
   <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyMobile.html">FamilyMobile</a></li>
   <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
   <li><strong>Interface</strong></li>
   <li><a href="../classes/Metacollection.html">Metacollection</a></li>
   <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Mobile.html">Mobile</a></li>
   <li><a href="../classes/Observer.html">Observer</a></li>
   <li><a href="../classes/Relational.html">Relational</a></li>
   <li><a href="../classes/Simulation.html">Simulation</a></li>
+  <li><a href="../classes/Window.html">Window</a></li>
+  <li><a href="../classes/WindowFamilyInfo.html">WindowFamilyInfo</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -67,6 +77,13 @@
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/Resources.examples.CompleteGraph.html">Resources.examples.CompleteGraph</a></li>
+  <li><a href="../modules/Resources.examples.GrowAndClone.html">Resources.examples.GrowAndClone</a></li>
+  <li><a href="../modules/Resources.examples.MobileMoveOnGraph.html">Resources.examples.MobileMoveOnGraph</a></li>
+  <li><a href="../modules/Resources.examples.Pursuit.html">Resources.examples.Pursuit</a></li>
+  <li><a href="../modules/Resources.examples.RandomGraph.html">Resources.examples.RandomGraph</a></li>
+  <li><a href="../modules/Resources.examples.ShuffledOrdered.html">Resources.examples.ShuffledOrdered</a></li>
+  <li><a href="../modules/Resources.examples.SpreadMessage_FamilyMethods.html">Resources.examples.SpreadMessage_FamilyMethods</a></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
@@ -98,8 +115,110 @@
 
 </dd>
     <dt>
+    <a name = "Interface:create_family_mobile_window"></a>
+    <strong>Interface:create_family_mobile_window (a_table.)</strong>
+    </dt>
+    <dd>
+    This function creates a new information window in the Interface instance for a FamilyMobile type Family.  It is used by internal methods to automatize the creation of the information windows.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Used by internal functions</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Interface:create_family_mobile_window"></a>
+    <strong>Interface:create_family_mobile_window (a_table.)</strong>
+    </dt>
+    <dd>
+    This function creates a new information window in the Interface instance for a FamilyCell type Family.  It is used by internal methods to automatize the creation of the information windows.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Used by internal functions</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Interface:create_family_mobile_window"></a>
+    <strong>Interface:create_family_mobile_window (a_table.)</strong>
+    </dt>
+    <dd>
+    This function creates a new information window in the Interface instance for a FamilyRelational type Family.  It is used by internal methods to automatize the creation of the information windows.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Used by internal functions</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Interface:create_window"></a>
+    <strong>Interface:create_window (wname, optional_table.)</strong>
+    </dt>
+    <dd>
+    This function creates a new window in the Interface instance
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Interface:create_window(<span class="string">'my_window'</span>)
+
+<span class="comment">-- And with the table:
+</span>Interface:create_window(<span class="string">'my_window'</span>, {
+   [<span class="string">'width'</span>] = <span class="number">130</span>,
+   [<span class="string">'height'</span>] = <span class="number">250</span>,
+   [<span class="string">'x'</span>] = <span class="number">100</span>,
+   [<span class="string">'y'</span>] = <span class="number">100</span>,
+})</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Interface:get_value"></a>
+    <strong>Interface:get_value (window_name, param_name)</strong>
+    </dt>
+    <dd>
+    Allows the user to get the value of a Interface parameter
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="comment">-- Default window option:
+</span>Interface:get_value(<span class="string">'param_name'</span>)
+
+<span class="comment">-- Custom window option:
+</span>Interface:get_value(<span class="string">'window_name'</span>, <span class="string">'param_name'</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "Interface:create_boolean"></a>
-    <strong>Interface:create_boolean (name, value)</strong>
+    <strong>Interface:create_boolean (window_name, new_boolean_name, def_value)</strong>
     </dt>
     <dd>
     Allows the user to create a new boolean field
@@ -111,13 +230,18 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="comment">-- Default window option:
+</span>Interface:create_boolean(<span class="string">'my boolean'</span>, <span class="keyword">true</span>)
+
+<span class="comment">-- Custom window option:
+</span>Interface:create_window(<span class="string">'window_name'</span>) <span class="comment">-- We need to create the window first
+</span>Interface:create_slider(<span class="string">'window_name'</span>, <span class="string">'my boolean'</span>, <span class="keyword">true</span>)</pre>
     </ul>
 
 </dd>
     <dt>
     <a name = "Interface:create_slider"></a>
-    <strong>Interface:create_slider (name, min, max, step, value)</strong>
+    <strong>Interface:create_slider (window_name, slider_name, min, max, step, value)</strong>
     </dt>
     <dd>
     Allows the user to create a new slider field
@@ -129,13 +253,17 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="comment">-- Default window option:
+</span>Interface:create_slider(<span class="string">'my slider'</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">1</span>, <span class="number">50</span>)
+<span class="comment">-- Custom window option:
+</span>Interface:create_window(<span class="string">'window_name'</span>)
+Interface:create_slider(<span class="string">'window_name'</span>, <span class="string">'my slider'</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">1</span>, <span class="number">50</span>)</pre>
     </ul>
 
 </dd>
     <dt>
     <a name = "Interface:create_input"></a>
-    <strong>Interface:create_input (name, value)</strong>
+    <strong>Interface:create_input (window_name, input_name, value)</strong>
     </dt>
     <dd>
     Allows the user to create a new input field
@@ -147,7 +275,34 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="comment">-- Default window option:
+</span>Interface:create_input(<span class="string">'my input'</span>, <span class="string">'a_text'</span>)
+
+<span class="comment">-- Custom window option:
+</span>Interface:create_window(<span class="string">'window_name'</span>)
+Interface:create_slider(<span class="string">'window_name'</span>, <span class="string">'my input'</span>, <span class="string">'a_text'</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Interface:clear"></a>
+    <strong>Interface:clear ()</strong>
+    </dt>
+    <dd>
+    This function resets the parameters of the interface to its default values.  It is used most of the time when we load a new model.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Simulation.html#Simulation:clear">Simulation.clear</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Interface:clear()</pre>
     </ul>
 
 </dd>
@@ -158,7 +313,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 11:22:49 </i>
+<i style="float:right;">Last updated 2020-10-12 11:23:21 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

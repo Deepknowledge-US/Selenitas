@@ -70,7 +70,7 @@ end
 -- A function to determine if a position is in the region of the Cell.
 -- @function region
 -- @param pos A vector of n dimensions.
--- @return true if pos is in the region of the cell. A square region of 1 unit side is considered by default.
+-- @return true if the position is in the region of the cell. A square region of 1 unit side is considered by default.
 -- @usage instance:region()
 Cell.region = function(self,pos)
     local x,y = pos[1],pos[2]

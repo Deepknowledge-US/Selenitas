@@ -34,23 +34,19 @@
 
 <h2>Methods</h2>
 <ul class="nowrap">
-    <li><a href="#Cell:_init">Cell:_init (p_table)</a></li>
-    <li><a href="#Cell:xcor">Cell:xcor ()</a></li>
-    <li><a href="#Cell:ycor">Cell:ycor ()</a></li>
-    <li><a href="#Cell:zcor">Cell:zcor ()</a></li>
-    <li><a href="#Cell:region">Cell:region (pos)</a></li>
-    <li><a href="#Cell:come_in">Cell:come_in (agent)</a></li>
-    <li><a href="#Cell:come_out">Cell:come_out (agent)</a></li>
+    <li><a href="#FamilyMobile:_init">FamilyMobile:_init ()</a></li>
+    <li><a href="#FamilyMobile:new">FamilyMobile:new (object)</a></li>
+    <li><a href="#FamilyMobile:create_n">FamilyMobile:create_n (num, funct)</a></li>
 </ul>
 <h2>Classes</h2>
 <ul class="nowrap">
   <li><a href="../classes/Agent.html">Agent</a></li>
-  <li><strong>Cell</strong></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
   <li><a href="../classes/Collection.html">Collection</a></li>
   <li><a href="../classes/Family.html">Family</a></li>
   <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
   <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
-  <li><a href="../classes/FamilyMobile.html">FamilyMobile</a></li>
+  <li><strong>FamilyMobile</strong></li>
   <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
   <li><a href="../classes/Interface.html">Interface</a></li>
   <li><a href="../classes/Metacollection.html">Metacollection</a></li>
@@ -88,9 +84,11 @@
 
 <div id="content">
 
-<h1>Class <code>Cell</code></h1>
-<p>Cells are agents used to represent the space.</p>
-<p> They are also known as tiles or patches in other systems.</p>
+<h1>Class <code>FamilyMobile</code></h1>
+<p>A Family to hold Mobile agents, new elements will be added to the collection as Mobile instances.</p>
+<p>
+
+</p>
 
 
 
@@ -98,12 +96,11 @@
 
     <dl class="function">
     <dt>
-    <a name = "Cell:_init"></a>
-    <strong>Cell:_init (p_table)</strong>
+    <a name = "FamilyMobile:_init"></a>
+    <strong>FamilyMobile:_init ()</strong>
     </dt>
     <dd>
-    Cell constructor.
- When a new Cell is created, some properties are given to it (If we do not have done it yet)
+    FamilyMobile constructor.  When a new Mobile Family is created, its father's init function is called. This allows the new instance to use all the methods of the Family class.
 
 
 
@@ -112,16 +109,16 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">new_instance = Cell( {} )</pre>
+        <pre class="example">New_Instance = FamilyMobile()</pre>
     </ul>
 
 </dd>
     <dt>
-    <a name = "Cell:xcor"></a>
-    <strong>Cell:xcor ()</strong>
+    <a name = "FamilyMobile:new"></a>
+    <strong>FamilyMobile:new (object)</strong>
     </dt>
     <dd>
-    It returns the x coordinate of the Cell
+    Insert a new Mobile in the family.
 
 
 
@@ -130,16 +127,19 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">instance:xcor()</pre>
+        <pre class="example"><span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
+    Basic_agents:new({})
+<span class="keyword">end</span>
+<span class="comment">-- This will result in 100 new instances of Mobile class in the Family Basic_agents</span></pre>
     </ul>
 
 </dd>
     <dt>
-    <a name = "Cell:ycor"></a>
-    <strong>Cell:ycor ()</strong>
+    <a name = "FamilyMobile:create_n"></a>
+    <strong>FamilyMobile:create_n (num, funct)</strong>
     </dt>
     <dd>
-    It returns the y coordinate of the Cell
+    Create n new Mobile agents in the family.
 
 
 
@@ -148,79 +148,12 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">instance:ycor()</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Cell:zcor"></a>
-    <strong>Cell:zcor ()</strong>
-    </dt>
-    <dd>
-    It returns the z coordinate of the Cell
-
-
-
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">instance:zcor()</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Cell:region"></a>
-    <strong>Cell:region (pos)</strong>
-    </dt>
-    <dd>
-    A function to determine if a position is in the region of the Cell.
-
-
-
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">instance:region()</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Cell:come_in"></a>
-    <strong>Cell:come_in (agent)</strong>
-    </dt>
-    <dd>
-    A function to update the Collection of agents in a Cell by adding an agent.
-
-
-
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">Cell:come_in(an_agent)</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "Cell:come_out"></a>
-    <strong>Cell:come_out (agent)</strong>
-    </dt>
-    <dd>
-    A function to update the Collection of agents in a Cell by removing an agent.
-
-
-
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">Cell:come_out(an_agent)</pre>
+        <pre class="example">Agents1:create_n( <span class="number">10</span>, <span class="keyword">function</span>()
+    <span class="keyword">return</span> {
+        [<span class="string">'heading'</span>] = <span class="global">math</span>.random(<span class="number">360</span>),
+    }
+<span class="keyword">end</span>)
+<span class="comment">-- This will result in 10 agents each one with a random value (between 1 and 360) for the parameter heading.</span></pre>
     </ul>
 
 </dd>

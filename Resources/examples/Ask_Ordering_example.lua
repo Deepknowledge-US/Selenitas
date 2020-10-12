@@ -1,11 +1,10 @@
 -----------------
 Interface:create_slider('N_agents', 0, 20, 1.0, 5)
 Interface:create_boolean('random_ordered', true)
-
+Interface:create_boolean('Reset', false)
 
 SETUP = function()
 
-    Simulation:reset()
 
     declare_FamilyMobile('Mobils')
 

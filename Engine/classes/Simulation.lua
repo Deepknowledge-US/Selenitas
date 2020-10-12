@@ -33,7 +33,7 @@ end;
 -- @param ... Variable number of string inputs, the names of the families we want to delete. If the string 'all' is passed as first parameter, all the families will be deleted.
 -- @return Nothing.
 -- @usage
--- Simulation.clear()
+-- Simulation:clear('fam1', ('fam2'))
 Simulation.clear = function(self, ...)
 
     local args = {...}
@@ -71,9 +71,10 @@ end;
 ------------------
 -- This function set a new seed to be used when random methods are called.
 -- @function new_seed
--- @return
+-- @return Number, the new seed.
 -- @usage
--- -- TODO
+-- local new_random_seed = Simulation:new_seed()
+-- @see set_seed
 Simulation.new_seed = function(self)
     self.seed = os.clock()
     math.randomseed(self.seed)
@@ -104,7 +105,7 @@ end
 -- @usage
 -- if Simulation:get_is_running() then ...
 Simulation.get_is_running = function(self)
-    return self.seed
+    return self.is_running
 end
 
 ------------------

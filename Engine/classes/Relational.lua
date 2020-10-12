@@ -54,6 +54,7 @@ end;
 -- @function ends
 -- @return A Collection of agents related by the link.
 -- @usage
+-- local extremes = a_relational:ends()
 Rel.ends = function(self)
     local res = Collection(self.target.family)
     res:add(self.target)

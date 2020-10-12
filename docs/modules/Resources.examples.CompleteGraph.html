@@ -34,8 +34,8 @@
 
 <h2>Functions</h2>
 <ul class="nowrap">
-    <li><a href="#setup">setup (funct)</a></li>
-    <li><a href="#STEP">STEP (funct)</a></li>
+    <li><a href="#SETUP">SETUP ()</a></li>
+    <li><a href="#STEP">STEP ()</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -45,11 +45,11 @@
   <li><a href="../modules/filters.html">filters</a></li>
   <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
-  <li><strong>main</strong></li>
+  <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
-  <li><a href="../modules/Resources.examples.CompleteGraph.html">Resources.examples.CompleteGraph</a></li>
+  <li><strong>Resources.examples.CompleteGraph</strong></li>
   <li><a href="../modules/Resources.examples.GrowAndClone.html">Resources.examples.GrowAndClone</a></li>
   <li><a href="../modules/Resources.examples.MobileMoveOnGraph.html">Resources.examples.MobileMoveOnGraph</a></li>
   <li><a href="../modules/Resources.examples.Pursuit.html">Resources.examples.Pursuit</a></li>
@@ -83,9 +83,11 @@
 
 <div id="content">
 
-<h1>Module <code>main</code></h1>
-<p>The main module.</p>
-<p> It offers some methods as global variables and the setup and run functions</p>
+<h1>Module <code>Resources.examples.CompleteGraph</code></h1>
+<p>Interface</p>
+<p>
+
+</p>
 
 
 
@@ -93,48 +95,31 @@
 
     <dl class="function">
     <dt>
-    <a name = "setup"></a>
-    <strong>setup (funct)</strong>
+    <a name = "SETUP"></a>
+    <strong>SETUP ()</strong>
     </dt>
     <dd>
-    Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
+    Setup Function
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">setup(<span class="keyword">function</span>()
-    Cells = create_patches(<span class="number">100</span>,<span class="number">100</span>)
-    Agents= FamilyMobile()
-    <span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">50</span> <span class="keyword">do</span>
-        Agents:add({
-            [<span class="string">'pos'</span>] = one_of(Cells).pos
-        })
-    <span class="keyword">end</span>
-<span class="keyword">end</span>)
-<span class="comment">-- This will result in a grid of 100x100, and 50 agents randomly positioned in the grid.</span></pre>
-    </ul>
 
 </dd>
     <dt>
     <a name = "STEP"></a>
-    <strong>STEP (funct)</strong>
+    <strong>STEP ()</strong>
     </dt>
     <dd>
-    This function is called until we reach a stop condition.  Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
+    Step Function
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">TODO</pre>
-    </ul>
 
 </dd>
 </dl>

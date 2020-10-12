@@ -38,9 +38,9 @@ Agent._init = function(self, p_table)
 end;
 
 ------------------
--- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
--- @function __delete_in_neighs
--- @return Nothing.
+-- Checks if an agent is in a family.
+-- @function is_in_in_neighs
+-- @return Boolean, true if the agent is in the family.
 Agent.is_in = function(self,fam)
     return fam:is_in(self)
 end;

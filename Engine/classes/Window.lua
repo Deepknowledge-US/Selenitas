@@ -10,8 +10,8 @@ local Window = class.Window()
 ------------------
 -- TODO
 -- @function _init
--- @param obj A table with some basic parameters of the Controller.
--- @return A Controller instance.
+-- @param obj. A table with some basic parameters of the Window (title, width, height, x, y).
+-- @return A Window instance.
 Window._init = function(self, a_table)
 
     self.title       = a_table.title
@@ -59,7 +59,8 @@ end
 -- @param value The default value of the new field
 -- @return Nothing
 -- @usage
--- -- TODO
+-- -- It is not recomended to use the methods of this class. You must use the Interface method to do this.
+-- @see Interface.create_boolean
 Window.create_boolean = function(self, name, value)
     self[name] = value
     self.ui_settings[name] = {type = "boolean"}

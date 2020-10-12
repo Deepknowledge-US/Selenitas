@@ -8,8 +8,9 @@ local class  = require 'Thirdparty.pl.class'
 local WFI = class.WindowFamilyInfo()
 
 ------------------
--- TODO
+-- This function is called when a new family is created, and it creates a new window with information related to this family.
 -- @function _init
+-- @param a_table. A table with values for the window.
 WFI._init = function(self, a_table)
 
     self.title          = a_table.title
@@ -25,7 +26,7 @@ WFI._init = function(self, a_table)
 end;
 
 ------------------
--- TODO
+-- This function updates the counter of items of the window
 -- @function __new_item
 WFI.__new_item = function(self, name)
     self.num_items = self.num_items + 1
@@ -33,8 +34,10 @@ WFI.__new_item = function(self, name)
 end
 
 ------------------
--- TODO
+-- This function populate the window with some info related to the family
 -- @function init_info
+-- @param family_name String. The name of the family
+-- @return Nothing
 WFI.init_info = function(self, family_name)
     table.insert(self.order, 'name')
     table.insert(self.order, 'count')
@@ -44,8 +47,9 @@ WFI.init_info = function(self, family_name)
 end
 
 ------------------
--- TODO
+-- This function is called to print the family info in the window
 -- @function update_family_info
+-- @return Nothing
 WFI.update_family_info = function(self)
     for i=1, #self.order do
         local attr = Simulation.families[self.title][self.order[i]]

@@ -237,7 +237,7 @@ local function build_window_show_tree()
     end
     Slab.Separator()
     for _, window in pairs(Interface.windows) do
-        for name,_ in window.ui_settings do
+        for name,_ in pairs(window.ui_settings) do
             if Slab.MenuItemChecked(name, windows_visibility[name]) then
                 local new_val = not windows_visibility[name]
                 windows_visibility[name] = new_val
