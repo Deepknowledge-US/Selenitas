@@ -1,5 +1,6 @@
 local Camera = require("Thirdparty.brady.camera")
 local Input = require("Visual.input")
+local Slab = require "Thirdparty.Slab.Slab"
 
 local View = {}
 
@@ -20,9 +21,11 @@ Input.add_mouse_moved_callback_func(
 
 Input.add_scroll_callback_func(
     function(dx, dy)
+      if Slab.IsVoidHovered() then
         local inc = 1 + dy / 25
         camera:scaleToPoint(inc)
         Observer:set_zoom( round(camera.scale,3) )
+      end      
     end
 )
 

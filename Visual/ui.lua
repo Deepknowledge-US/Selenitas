@@ -12,6 +12,8 @@ local Internal_Editor = {Title = "Selenitas Editor", AllowResize = false, AutoSi
 local Internal_Editor_FileDialog = false
 local Internal_Editor_FileName = ""
 local Internal_Editor_Contents = ""
+local editor_font_size = 16
+local editor_font = love.graphics.newFont(SLAB_FILE_PATH .. "Internal/Resources/Fonts/SourceCodePro-Regular.ttf",editor_font_size)
 
 local Selenitas_Syntax = require "Visual.SyntaxHighlight"
 
@@ -388,7 +390,7 @@ local function view_editor()
         "New File", function() end) -- TODO
   Slab.SameLine()
   
-  Slab.Rectangle({W=400, H=1, Color={0,0,0,0}})
+  Slab.Rectangle({W=490, H=1, Color={0,0,0,0}})
   Slab.SameLine()
   
   add_toolbar_button("Close_int_editor", ResourceManager.ui.close, false,
@@ -398,17 +400,21 @@ local function view_editor()
 
 	Slab.Separator()
 
+  Slab.SetScrollSpeed(20)
+  
+  Slab.PushFont(editor_font)
+  
 	if Slab.Input('Internal_Editor', {
 		MultiLine = true,
 		Text = Internal_Editor_Contents,
-		W = 600 ,
+		W = 700 ,
 		H = 500,
-    MultiLineW = 580,
+    MultiLineW = 680,
 		Highlight = Selenitas_Syntax
 	}) then
 		Internal_Editor_Contents = Slab.GetInputText()
 	end
-
+  Slab.PopFont()
 	Slab.EndWindow()
 
 --	if Internal_Editor_FileDialog then
