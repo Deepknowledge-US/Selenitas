@@ -19,7 +19,6 @@ local _time_acc = 0
 
 -- Drawing settings
 local draw_enabled = true
-local grid_enabled = false
 local families_visibility = {}
 local background_color_set = {0, 0, 0}
 
@@ -82,14 +81,6 @@ function GraphicEngine.is_draw_enabled()
     return draw_enabled
 end
 
-function GraphicEngine.set_grid_enabled(enabled)
-    grid_enabled = enabled
-end
-
-function GraphicEngine.is_grid_enabled()
-    return grid_enabled
-end
-
 -- Table with family_name:visibility (boolean)
 -- Used internally by UI module
 function GraphicEngine.set_families_visibility(table)
@@ -145,16 +136,6 @@ end
 -- Drawing function
 function love.draw()
     View.start()
-
-    -- Translate (0, 0) to center of the screen (local scope to avoid goto-jump issues)
-    do
-        local sw, sh, _ = love.window.getMode()
-        love.graphics.translate(sw / 2, sh / 2)
-    end
-
-    if grid_enabled then
-        Draw.draw_scalable_grid(2)
-    end
 
     if setup_executed and draw_enabled then
         -- Draw families in order

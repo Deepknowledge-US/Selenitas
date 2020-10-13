@@ -1,10 +1,13 @@
 local Camera = require("Thirdparty.hump.camera")
-local Input = require("Visual.input")
 local Slab = require "Thirdparty.Slab.Slab"
+local Grid = require "Thirdparty.editgrid.editgrid"
+local Input = require("Visual.input")
 
 local View = {}
 
 local camera = nil
+local grid = nil
+local grid_enabled = false
 
 -- Callbacks for Input
 Input.add_mouse_moved_callback_func(
@@ -33,25 +36,41 @@ Input.add_scroll_callback_func(
 )
 
 function View.init()
-    local w, h, _ = love.window.getMode()
-    camera = Camera(w / 2, h / 2)
+    camera = Camera(0, 0)
+    grid = Grid.grid(camera, {drawScale = false})
     Observer:set_center( { camera.x, camera.y } )
 end
 
 function View.reset()
-    local w, h, _ = love.window.getMode()
-    camera:lookAt(w / 2, h / 2)
+    camera:lookAt(0, 0)
     camera:zoomTo(1)
     Observer:set_center( { camera.x, camera.y } )
     Observer:set_zoom( camera.scale )
 end
 
 function View.start()
-    camera:attach()
+    if grid_enabled then
+        grid:draw()
+        grid:push()
+    else
+        camera:attach()
+    end
 end
 
 function View.finish()
-    camera:detach()
+    if grid_enabled then
+        love.graphics.pop()
+    else
+        camera:detach()
+    end
+end
+
+function View.set_grid_enabled(enabled)
+    grid_enabled = enabled
+end
+
+function View.is_grid_enabled()
+    return grid_enabled
 end
 
 return View

@@ -165,7 +165,7 @@ local on_click_functions = {
     end,
 
     toggle_grid_visibility = function()
-        GraphicEngine.set_grid_enabled(not GraphicEngine.is_grid_enabled())
+        View.set_grid_enabled(not View.is_grid_enabled())
     end,
 
     toggle_FamilyMobile_windows_visibility = function()
@@ -393,17 +393,17 @@ local function view_editor()
   Slab.Rectangle({W=490, H=1, Color={0,0,0,0}})
   Slab.SameLine()
   
-  add_toolbar_button("Close_int_editor", ResourceManager.ui.close, false,
-        "Close Editor", on_click_functions.close_editor)
-    
-  Slab.Text(" ")
+    add_toolbar_button("Close_int_editor", ResourceManager.ui.close, false,
+          "Close Editor", on_click_functions.close_editor)
+
+    Slab.Text(" ")
 
 	Slab.Separator()
 
-  Slab.SetScrollSpeed(20)
-  
-  Slab.PushFont(editor_font)
-  
+    Slab.SetScrollSpeed(20)
+
+    Slab.PushFont(editor_font)
+
 	if Slab.Input('Internal_Editor', {
 		MultiLine = true,
 		Text = Internal_Editor_Contents,
@@ -414,27 +414,8 @@ local function view_editor()
 	}) then
 		Internal_Editor_Contents = Slab.GetInputText()
 	end
-  Slab.PopFont()
-	Slab.EndWindow()
-
---	if Internal_Editor_FileDialog then
---		local Result = Slab.FileDialog({AllowMultiSelect = false, Type = 'openfile'})
-
---		if Result.Button ~= "" then
---			Internal_Editor_FileDialog = false
-
---			if Result.Button == "OK" then
---				Internal_Editor_FileName = Result.Files[1]
---				local Handle, Error = io.open(Internal_Editor_FileName, "r")
-
---				if Handle ~= nil then
---					Internal_Editor_Contents = Handle:read("*a")
---					Handle:close()
---				end
---			end
---		end
---	end
-
+    Slab.PopFont()
+    Slab.EndWindow()
 end
 
 
@@ -547,7 +528,7 @@ local function menu_bar()
                 Slab.EndMenu()
             end
 
-            if Slab.MenuItemChecked("Show grid", GraphicEngine.is_grid_enabled()) then
+            if Slab.MenuItemChecked("Show grid", View.is_grid_enabled()) then
                 on_click_functions.toggle_grid_visibility()
             end
 
@@ -668,7 +649,7 @@ local function toolbar(screen_w, screen_h)
         "View Families", on_click_functions.toggle_families_visibility)
     Slab.SameLine()
 
-    if GraphicEngine.is_grid_enabled() then
+    if View.is_grid_enabled() then
         add_toolbar_button("GridOff", ResourceManager.ui.gridoff, false,
             "Grid Off", on_click_functions.toggle_grid_visibility)
     else
