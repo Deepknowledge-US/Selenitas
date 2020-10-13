@@ -51,7 +51,7 @@ end;
 -- @param name String, the name of the paprameter
 -- @param value Anything. The new value of the paprameter could be a String, a number, a table ...
 -- @return Agent. The one who calls this method
-Agent.set_param = function(self,name,value)
+Agent.set_param = function(self,name,value)     --TODO CUIDADO CON LAS TABLAS !!!!!!!
     self[name] = value
     return self
 end
