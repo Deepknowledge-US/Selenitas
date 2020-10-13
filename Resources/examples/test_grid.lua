@@ -9,16 +9,16 @@
 -- Interface 
 -----------------
 Interface:create_window('Odd')
-Interface:create_slider('Odd', 'R', 0, 255, 1, 0)
-Interface:create_slider('Odd', 'G', 0, 255, 1, 0)
-Interface:create_slider('Odd', 'B', 0, 255, 1, 0)
-Interface:create_slider('Odd', 'A', 0, 255, 1, 0)
+Interface:create_slider('Odd', 'R', 0, 1.0001, .1, 0)
+Interface:create_slider('Odd', 'G', 0, 1.0001, .1, 0)
+Interface:create_slider('Odd', 'B', 0, 1.0001, .1, 0)
+Interface:create_slider('Odd', 'A', 0, 1.0001, .1, 1)
 
 Interface:create_window('Even')
-Interface:create_slider('Even', 'R', 0, 255, 1, 255)
-Interface:create_slider('Even', 'G', 0, 255, 1, 255)
-Interface:create_slider('Even', 'B', 0, 255, 1, 255)
-Interface:create_slider('Even', 'A', 0, 255, 1, 255)
+Interface:create_slider('Even', 'R', 0, 1.0001, .1, 1)
+Interface:create_slider('Even', 'G', 0, 1.0001, .1, 1)
+Interface:create_slider('Even', 'B', 0, 1.0001, .1, 1)
+Interface:create_slider('Even', 'A', 0, 1.0001, .1, 1)
 
 
 
@@ -35,8 +35,9 @@ SETUP = function()
     declare_FamilyCell('Cells')
 
     -- Create cells and give a grid structure to them
-    Cells:create_grid(100,100,-50,-50) -- width, height, offset x, offset y
+    Cells:create_grid(30,30,-15,-15) -- width, height, offset x, offset y
 
+	STEP()
 
 end
 

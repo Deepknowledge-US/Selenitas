@@ -4,7 +4,7 @@ local math = require "math"
 
 local Draw = {}
 
-local coord_scale = 16 -- 16 px = 1 unit
+local coord_scale = 10 -- 16 px = 1 unit
 
 function Draw.init()
     love.graphics.setNewFont(7) -- Default font for labels
@@ -25,7 +25,9 @@ function Draw.draw_agents_family(family)
             -- Handle agent shape, scale and rotation
             -- Base resources are 128x128 px, using 16x16 px as base scale (0.125 factor)
             local rot = -( a.heading - (math.pi/2) )
-            local scl = 0.125 * a.scale
+            --local scl = 0.125 * a.scale
+            -- scl = coord_scale / image_size * a.scale
+            local scl = 10/128 * a.scale
             local shift = 64 -- pixels to shift to center the figure
             local shape_img = ResourceManager.images.circle -- Default to circle
             if a.shape == "triangle" then

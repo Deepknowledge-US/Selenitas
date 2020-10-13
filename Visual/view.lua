@@ -9,6 +9,15 @@ local camera = nil
 local grid = nil
 local grid_enabled = false
 
+local visuals = {
+    size = 100,
+    subdivisions = 10,
+    drawScale = false,
+    fadeFactor = 0.2,
+    textFadeFactor = 0.5,
+    hideOrigin = false
+}
+
 -- Callbacks for Input
 Input.add_mouse_moved_callback_func(
     function(x, y, dx, dy)
@@ -37,7 +46,7 @@ Input.add_scroll_callback_func(
 
 function View.init()
     camera = Camera(0, 0)
-    grid = Grid.grid(camera, {drawScale = false})
+    grid = Grid.grid(camera, visuals)
     Observer:set_center( { camera.x, camera.y } )
 end
 

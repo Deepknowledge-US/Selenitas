@@ -154,7 +154,7 @@ end
 
 local function worldToCell(camera, visuals, x, y)
     local d = minorInterval(camera, visuals)
-    return math.floor(x / d), math.floor(y / d)
+    return math.floor(x / d), math.floor(-y / d)
 end
 
 local function screenToCell(camera, visuals, x, y)
@@ -319,7 +319,7 @@ local function draw(camera, visuals)
             end
             local ix, iy = intersect(x1, y1, cx, cy, vx, y, vx + vw, y)
             if ix then
-                drawLabel(camera, ix, iy, "y=" .. y)
+                drawLabel(camera, ix, iy, "y5=" .. y)
             end
         end
     end
