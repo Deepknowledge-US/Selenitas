@@ -54,22 +54,22 @@ end
 --      ACTIONS      --
 --===================--
 
-------------------
--- Create n new Agents in the family. The type of the agent depends on the family it will be created.
--- @function create_n
--- @param family The family where the agents will be created.
--- @param num The number of agents that will be added to the family.
--- @param funct An anonymous function that will be executed to create the Cell.
--- @return Nothing
--- @usage
--- create_n( A_family, 10, function()
---     return {
---         ['pos'] = {math.random[100],math.random[100]}
---     }
--- end)
-function utl_fam.create_n(family, num, funct)
-    family:create_n(num, funct)
-end
+-- ------------------
+-- -- Create n new Agents in the family. The type of the agent depends on the family it will be created.
+-- -- @function create_n
+-- -- @param family The family where the agents will be created.
+-- -- @param num The number of agents that will be added to the family.
+-- -- @param funct An anonymous function that will be executed to create the Cell.
+-- -- @return Nothing
+-- -- @usage
+-- -- create_n( A_family, 10, function()
+-- --     return {
+-- --         ['pos'] = {math.random[100],math.random[100]}
+-- --     }
+-- -- end)
+-- function utl_fam.create_n(family, num, funct)
+--     family:create_n(num, funct)
+-- end
 
 ------------------
 -- This function encapsulates a call to the function clone_n_act in the Family given as parameter.

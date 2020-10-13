@@ -75,7 +75,14 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
 
-    -- Create a Family of Mobil agents
+    -- Create a Family of Estructural Agents
+    declare_FamilyCell('Cells')
+
+    -- Create cells and give a grid structure to them
+    Cells:create_grid(100,100,-50,-50) -- width, height, offset x, offset y
+
+
+    -- Create a Family of Mobile agents
     declare_FamilyMobile('Agents')
 
     -- Add new methods to Agents
