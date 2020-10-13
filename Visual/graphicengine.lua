@@ -123,7 +123,6 @@ end
 -- Main update function
 function love.update(dt)
     UI.update(dt)
-    View.update()
 
     if not Simulation.is_running then
         do return end
