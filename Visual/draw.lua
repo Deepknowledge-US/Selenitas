@@ -80,6 +80,7 @@ function Draw.draw_links_family(family)
     end
 end
 
+---------
 function Draw.draw_cells_family(family)
     for _, c in pairs(family.agents) do
         if c.visible then
@@ -89,16 +90,9 @@ function Draw.draw_cells_family(family)
             local x = c:xcor() * coord_scale
             local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             if c.shape == "square" then
-                -- Squares are assumed to be 1x1
-                -- Each square is 4 lines
-                local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
-                local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
-                local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
-                local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
-                love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
-                love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
-                love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
-                love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
+                
+                love.graphics.rectangle('fill', x - (0.5 * coord_scale), y + (0.5 * coord_scale), 1*coord_scale, 1*coord_scale )
+
             elseif c.shape == "triangle" then
                 -- Each triangle is 3 lines
                 local top = {x, y - (0.5 * coord_scale)}
@@ -121,6 +115,48 @@ function Draw.draw_cells_family(family)
         end
     end
 end
+
+-- function Draw.draw_cells_family(family)
+--     for _, c in pairs(family.agents) do
+--         if c.visible then
+--             -- Handle cell color
+--             love.graphics.setColor(c.color)
+
+--             local x = c:xcor() * coord_scale
+--             local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+--             if c.shape == "square" then
+--                 -- Squares are assumed to be 1x1
+--                 -- Each square is 4 lines
+--                 local top_left = {x - (0.5 * coord_scale), y - (0.5 * coord_scale)}
+--                 local top_right = {x + (0.5 * coord_scale), y - (0.5 * coord_scale)}
+--                 local bottom_left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+--                 local bottom_right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+--                 love.graphics.line(top_left[1], top_left[2], top_right[1], top_right[2]) -- Top line
+--                 love.graphics.line(top_left[1], top_left[2], bottom_left[1], bottom_left[2]) -- Left line
+--                 love.graphics.line(bottom_left[1], bottom_left[2], bottom_right[1], bottom_right[2]) -- Bottom line
+--                 love.graphics.line(top_right[1], top_right[2], bottom_right[1], bottom_right[2]) -- Right line
+--             elseif c.shape == "triangle" then
+--                 -- Each triangle is 3 lines
+--                 local top = {x, y - (0.5 * coord_scale)}
+--                 local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+--                 local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
+--                 love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
+--                 love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
+--                 love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
+--             elseif c.shape == "circle" then
+--                 -- Circle of radius=0.5
+--                 love.graphics.circle("line", x, y, 0.5 * coord_scale)
+--             else
+--                 -- Shape is a generic polygon
+--                 love.graphics.polygon("line", c.shape)
+--             end
+
+--             -- Draw label
+--             love.graphics.setColor(c.label_color)
+--             love.graphics.printf(c.label, x - 45, y, 100, 'center')
+--         end
+--     end
+-- end
 
 local function draw_grid(grid_size, cell_size, alpha, line_width)
     local lines = grid_size / cell_size
