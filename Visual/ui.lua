@@ -668,19 +668,14 @@ local function toolbar(screen_w, screen_h)
         "View Families", on_click_functions.toggle_families_visibility)
     Slab.SameLine()
 
-if  GraphicEngine.is_grid_enabled() then
+    if GraphicEngine.is_grid_enabled() then
         add_toolbar_button("GridOff", ResourceManager.ui.gridoff, false,
-        "Grid Off", on_click_functions.toggle_grid_visibility)
-
+            "Grid Off", on_click_functions.toggle_grid_visibility)
     else
-    add_toolbar_button("GridOn", ResourceManager.ui.grid, false,
-        "Grid On", on_click_functions.toggle_grid_visibility)
+        add_toolbar_button("GridOn", ResourceManager.ui.grid, false,
+            "Grid On", on_click_functions.toggle_grid_visibility)
     end
     Slab.SameLine()
-
---    add_toolbar_button("GridShow", ResourceManager.ui.grid, false,
---        "Grid", on_click_functions.toggle_grid_visibility)
---    Slab.SameLine()
 
     toolbar_separator(15)
 
