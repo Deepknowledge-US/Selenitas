@@ -24,8 +24,7 @@ Input.add_mouse_moved_callback_func(
         if Input.is_mouse_button_pressed(2) then
             camera:move(-dx / camera.scale, -dy / camera.scale)
 
-            local worldX, worldY = camera:worldCoords( x,y )
-            Observer:set_center( { round(worldX - x, 3), round(worldY + y, 3) } )
+            Observer:set_center( { camera.x/Draw.get_coord_scale(), - camera.y/Draw.get_coord_scale() } )
         end
     end
 )
@@ -35,11 +34,13 @@ Input.add_scroll_callback_func(
       if Slab.IsVoidHovered() then
         local inc = 1 + dy / 25
         camera:zoom(inc)
-        Observer:set_zoom( round(camera.scale,3) )
         -- Zoom to mouse position
         local tx, ty = camera:position()
         local wx, wy = camera:mousePosition()
         camera:move((wx - tx) * (1 - 1 / inc), (wy - ty) * ( 1 - 1 / inc))
+
+        Observer:set_zoom( round(camera.scale,3) )
+        Observer:set_center( { camera.x/Draw.get_coord_scale(), - camera.y/Draw.get_coord_scale() } )
       end
     end
 )
@@ -47,14 +48,14 @@ Input.add_scroll_callback_func(
 function View.init()
     camera = Camera(0, 0)
     grid = Grid.grid(camera, visuals)
-    Observer:set_center( { camera.x, camera.y } )
+    Observer:set_center( { 0, 0 } )
 end
 
 function View.reset()
     camera:lookAt(0, 0)
     camera:zoomTo(1)
-    Observer:set_center( { camera.x, camera.y } )
-    Observer:set_zoom( camera.scale )
+    Observer:set_center( { 0, 0 } )
+    Observer:set_zoom( 1 )
 end
 
 function View.start()

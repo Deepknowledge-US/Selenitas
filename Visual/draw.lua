@@ -6,6 +6,10 @@ local Draw = {}
 
 local coord_scale = 10 -- 16 px = 1 unit
 
+function Draw.get_coord_scale()
+    return coord_scale
+end
+
 function Draw.init()
     love.graphics.setNewFont(7) -- Default font for labels
 end
