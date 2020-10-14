@@ -1,4 +1,4 @@
-name: CI
+name: CI 
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -9,37 +9,103 @@ on:
     branches: [ master ]
 
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  build-linux:
+    # Linux version built on Ubuntu 20.04
     runs-on: ubuntu-20.04
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Build steps
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a set of commands using the runners shell
+    # Install system dependencies
     - name: Install dependencies
-      run: sudo apt-get install --assume-yes wine-stable wine64 python3-pip
-      
-    - name: Checkout makelove tool
-      uses: actions/checkout@v2
-      with:
-        repository: pfirsich/makelove
-        path: makelove
-      
+      run: |
+        sudo apt-get update
+        sudo apt-get install --assume-yes python3-pip
+
+    # Install makelove
     - name: Install makelove tool
-      run: pip3 install ./makelove
+      run: pip3 install makelove
       
+    # Build for Linux (AppImage)
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE
-        python3 -m makelove
+        python3 -m makelove appimage 
     
+    # Upload built artifacts
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: selenitas-artifacts
+        name: selenitas-linux-artifacts
         path:
-          build      
+          build
+          
+  build-windows:
+    # Windows version built on Ubuntu 20.04
+    runs-on: ubuntu-20.04
+
+    # Build steps
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Install dependencies for Windows
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install --assume-yes wine-stable wine64 python3-pip
+
+    # Install makelove
+    - name: Install makelove tool
+      run: pip3 install makelove
+      
+    # Build for Windows x64 
+    - name: Build
+      run: |
+        cd $GITHUB_WORKSPACE
+        python3 -m makelove win64 
+    
+    # Upload built artifacts
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: selenitas-windows-artifacts
+        path:
+          build 
+
+  build-macos:
+    # Linux version built on MacOS 10.15
+    runs-on: macos-10.15
+
+    # Build steps
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Install dependencies
+    # XCode 11 is used
+    - name: Install dependencies
+      run: |
+        sudo xcode-select -switch /Applications/Xcode_11.3.app
+        brew install libtiff libjpeg webp little-cms2
+
+    # Install makelove including needed headers
+    - name: Install makelove tool
+      run: |
+        CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pip3.8 install makelove
+      
+    # Build for MacOS
+    - name: Build
+      run: |
+        cd $GITHUB_WORKSPACE
+        python3 -m makelove macos 
+    
+    # Upload built artifacts
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: selenitas-macos-artifacts
+        path:
+          build
