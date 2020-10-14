@@ -12,8 +12,9 @@ local Internal_Editor = {Title = "Selenitas Editor", AllowResize = false, AutoSi
 local Internal_Editor_FileDialog = false
 local Internal_Editor_FileName = ""
 local Internal_Editor_Contents = ""
-local editor_font_size = 16
-local editor_font = love.graphics.newFont(SLAB_FILE_PATH .. "Internal/Resources/Fonts/SourceCodePro-Regular.ttf",editor_font_size)
+local editor_font_size = 14
+--local editor_font = love.graphics.newFont(SLAB_FILE_PATH .. "Internal/Resources/Fonts/SourceCodePro-Regular.ttf",editor_font_size)
+local editor_font = love.graphics.newFont(SLAB_FILE_PATH .. "Internal/Resources/Fonts/JuliaMono-Regular.ttf",editor_font_size)
 
 local Selenitas_Syntax = require "Visual.SyntaxHighlight"
 
@@ -223,6 +224,16 @@ local on_click_functions = {
 				Handle:close()
 			end
       show_file_editor = not show_file_editor
+    end,
+    
+    restore_zoom = function()
+      View.set_zoom(1)
+      Observer:set_zoom(1)
+    end,
+    
+    restore_center = function()
+      View.reset_center()
+      Observer:set_center( { 0, 0 } )
     end
 }
 
@@ -694,7 +705,7 @@ local function status_bar(screen_w, screen_h)
     Slab.SameLine()
     -- Seed
     -- Slab.Text(" Seed : ", {})
-    Slab.Image('Icon_dice', {Image = ResourceManager.ui.dice, Color = col, Scale = 0.4})
+    Slab.Image('Icon_dice', {Image = ResourceManager.ui.shuffle, Color = col, Scale = 0.4})
     Slab.SameLine()
     Slab.Text(tostring(Simulation:get_seed()))
     Slab.SameLine()
@@ -719,16 +730,20 @@ local function status_bar(screen_w, screen_h)
 
     -- Center point in View
     Slab.SameLine()
-    Slab.Image('Icon_center', {Image = ResourceManager.ui.center3, Color = col, Scale = 0.4})
+--    Slab.Image('Icon_center', {Image = ResourceManager.ui.center3, Color = col, Scale = 0.4})
+    add_toolbar_button("Icon_center", ResourceManager.ui.center3, false,
+    "Restore center", on_click_functions.restore_center)
     Slab.SameLine()
     local center = Observer:get_center()
-    Slab.Text( ' (' .. tostring(center[1]) .. ' , ' .. tostring(center[2]) .. ')  ' )
+    Slab.Text( ' (' .. tostring(round(center[1],2)) .. ' , ' .. tostring(round(center[2],2)) .. ')  ' )
     Slab.SameLine()
     toolbar_separator(15)
 
     -- Zoom in View
     Slab.SameLine()
-    Slab.Image('Icon_zoom', {Image = ResourceManager.ui.zoom2, Color = col, Scale = 0.4})
+--    Slab.Image('Icon_zoom', {Image = ResourceManager.ui.zoom2, Color = col, Scale = 0.4})
+    add_toolbar_button("Icon_zoom", ResourceManager.ui.zoom2, false,
+    "Restore zoom", on_click_functions.restore_zoom)
     Slab.SameLine()
     Slab.Text( tostring(Observer:get_zoom()) )
     Slab.SameLine()
