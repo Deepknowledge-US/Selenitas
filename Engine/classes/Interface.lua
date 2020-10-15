@@ -115,7 +115,7 @@ end
 -- -- Custom window option:
 -- Interface:get_value('window_name', 'param_name')
 Interface.get_value = function(self, window_name, param_name)
-    local window = param_name and window_name or 'params'
+    local window = param_name and window_name or 'Parameters'
     local param = param_name or window_name
 
     return self.windows[window]:get_value(param)
@@ -138,12 +138,12 @@ end
 -- Interface:create_slider('window_name', 'my boolean', true)
 Interface.create_boolean = function(self, window_name, new_boolean_name, def_value)
     if next(self.windows) == nil then
-        self:create_window('params')
+        self:create_window('Parameters')
     end
     if def_value then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
         self.windows[window_name]:create_boolean(new_boolean_name, def_value)
     else
-        self.windows['params']:create_boolean(window_name, new_boolean_name)
+        self.windows['Parameters']:create_boolean(window_name, new_boolean_name)
     end
 end;
 
@@ -166,13 +166,13 @@ end;
 --
 Interface.create_slider = function(self, window_name, slider_name, min, max, step, value)
     if next(self.windows) == nil then -- If there is no windows, we use a default window
-        self:create_window('params')
+        self:create_window('Parameters')
     end
     if value then -- If we have received 6 params, the user has used a custom window name
         self.windows[window_name]:create_slider(slider_name, min, max, step, value)
     else
         local sl_name, mn, mx, stp, val = window_name, slider_name, min, max, step
-        self.windows['params']:create_slider(sl_name, mn, mx, stp, val)
+        self.windows['Parameters']:create_slider(sl_name, mn, mx, stp, val)
     end
 end;
 
@@ -192,12 +192,12 @@ end;
 -- Interface:create_slider('window_name', 'my input', 'a_text')
 Interface.create_input = function(self, window_name, input_name, value)
     if next(self.windows) == nil then
-        self:create_window('params')
+        self:create_window('Parameters')
     end
     if value then
         self.windows[window_name]:create_input(input_name, value)
     else
-        self.windows['params']:create_input(window_name, input_name)
+        self.windows['Parameters']:create_input(window_name, input_name)
     end
 end;
 
