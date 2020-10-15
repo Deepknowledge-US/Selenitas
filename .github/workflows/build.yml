@@ -52,10 +52,13 @@ jobs:
     - uses: actions/checkout@v2
 
     # Install dependencies for Windows
+    # Makelove is used for Windows build checking and .love generation,
+    # actual executable is a batch file created in this job using Love2D 11.3
+    # This is because Love2D builds in fused mode cause problems when accesing the Windows filesystem
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install --assume-yes wine-stable wine64 python3-pip
+        sudo apt-get install --assume-yes wine-stable wine64 python3-pip wget
 
     # Install makelove
     - name: Install makelove tool
@@ -65,8 +68,23 @@ jobs:
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE
-        python3 -m makelove win64 
-    
+        python3 -m makelove win64
+        cd build
+        mv win64 files
+        mkdir files/love2d
+        mv love/Selenitas.love files
+        rm -rf love
+        cd files
+        rm Selenitas-win64.zip
+        cd love2d
+        wget https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
+        unzip love-11.3-win64.zip
+        rm love-11.3-win64.zip
+        mv love-11.3-win64/* .
+        cd ../..
+        touch Selenitas.bat
+        echo "start files\love2d\love.exe files\Selenitas.love" > Selenitas.bat
+        
     # Upload built artifacts
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
