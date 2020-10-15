@@ -1,6 +1,6 @@
 -----------------
 Interface:create_slider('nodes', 0, 50, 1, 12)
-Interface:create_slider('speed', 0, 2, 0.01, 1)
+Interface:create_slider('speed', 0, 2.001, 0.01, 1)
 
 SETUP = function()
     -- clear('all')
@@ -18,10 +18,10 @@ SETUP = function()
 
     for i=1,Interface:get_value("nodes") do
         Nodes:new({
-            ['pos']     = {math.random(-20,20), math.random(-20,20)},
+            ['pos']     = {math.random(-100,100), math.random(-100,100)},
             ['shape']   = 'circle',
             ['color']   = {1,0,0,1},
-            ['scale']   = 3,
+            ['scale']   = 2,
         })
     end
 
@@ -42,10 +42,10 @@ SETUP = function()
     local node = one_of(Nodes)
     Wlkr = Walkers:new({
         ['pos']       = {node:xcor(), node:ycor()},
-        ['head']      = {0,nil},
+        --['head']      = {0,nil},
         ['curr_node'] = node,
         ['color']     = {0,0,1,1},
-        ['scale']     = 1.5,
+        ['scale']     = 3,
         ['shape']     = 'triangle_2',
         ['next_node'] = node
     })

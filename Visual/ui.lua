@@ -297,6 +297,7 @@ end
 
 function UI.init()
     Slab.Initialize({})
+    Slab.DisableDocks({'Left','Right','Bottom'})
 end
 
 function UI.reset()
@@ -719,7 +720,7 @@ local function status_bar(screen_w, screen_h)
     Slab.SameLine()
     Slab.Text("    Speed: ", {})
     Slab.SameLine()
-    if Slab.InputNumberSlider("tbs_slider", speed_slider_value, 0.0, 10.0, {step=1}) then
+    if Slab.InputNumberSlider("tbs_slider", speed_slider_value, 0.0, 10.0, {step=1, W=100}) then
         speed_slider_value = Slab.GetInputNumber()
         GraphicEngine.set_time_between_steps((math.log(11) - math.log (speed_slider_value + 1))/math.log(11))
     end
