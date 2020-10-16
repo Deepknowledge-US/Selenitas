@@ -1,3 +1,5 @@
+-- Converted from: https://www.rapidtables.com/web/color/RGB_Color.html
+
 local color = {
   maroon = { 0.502 , 0 , 0 , 1 },
   dark_red = { 0.545 , 0 , 0 , 1 },
