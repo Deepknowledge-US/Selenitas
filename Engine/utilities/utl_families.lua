@@ -7,15 +7,16 @@ local Cell = require "Engine.classes.Cell"
 
 local utl_fam = {}
 
-function utl_fam.declare_FamilyMobil(...)
+function utl_fam.declare_FamilyMobile(...)
     local args = {...}
 
     for i=1,#args do
         local name = args[i]
 
         if not _G[name] or not Simulation.families[name] then
-            _G[name] = FamilyMobil(name)
+            _G[name] = FamilyMobile(name)
             Simulation.families[name] = _G[name]
+            Interface:create_family_mobile_window( { ['title'] = name } )
         end
     end
 end
@@ -29,6 +30,7 @@ function utl_fam.declare_FamilyRel(...)
         if not _G[name] or not Simulation.families[name] then
             _G[name] = FamilyRelational(name)
             Simulation.families[name] = _G[name]
+            Interface:create_family_rel_window( { ['title'] = name } )
         end
     end
 end
@@ -42,6 +44,7 @@ function utl_fam.declare_FamilyCell(...)
         if not _G[name] or not Simulation.families[name] then
             _G[name] = FamilyCell(name)
             Simulation.families[name] = _G[name]
+            Interface:create_family_cell_window( { ['title'] = name } )
         end
     end
 end
@@ -51,22 +54,22 @@ end
 --      ACTIONS      --
 --===================--
 
-------------------
--- Create n new Agents in the family. The type of the agent depends on the family it will be created.
--- @function create_n
--- @param family The family where the agents will be created.
--- @param num The number of agents that will be added to the family.
--- @param funct An anonymous function that will be executed to create the Cell.
--- @return Nothing
--- @usage
--- create_n( A_family, 10, function()
---     return {
---         ['pos'] = {math.random[100],math.random[100]}
---     }
--- end)
-function utl_fam.create_n(family, num, funct)
-    family:create_n(num, funct)
-end
+-- ------------------
+-- -- Create n new Agents in the family. The type of the agent depends on the family it will be created.
+-- -- @function create_n
+-- -- @param family The family where the agents will be created.
+-- -- @param num The number of agents that will be added to the family.
+-- -- @param funct An anonymous function that will be executed to create the Cell.
+-- -- @return Nothing
+-- -- @usage
+-- -- create_n( A_family, 10, function()
+-- --     return {
+-- --         ['pos'] = {math.random[100],math.random[100]}
+-- --     }
+-- -- end)
+-- function utl_fam.create_n(family, num, funct)
+--     family:create_n(num, funct)
+-- end
 
 ------------------
 -- This function encapsulates a call to the function clone_n_act in the Family given as parameter.

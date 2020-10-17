@@ -35,8 +35,8 @@
 <h2>Methods</h2>
 <ul class="nowrap">
     <li><a href="#FamilyCell:_init">FamilyCell:_init ()</a></li>
+    <li><a href="#FamilyCell:create_grid">FamilyCell:create_grid (x_size, y_size, offset_x, offset_y, cell_width, cell_height)</a></li>
     <li><a href="#FamilyCell:new">FamilyCell:new (object)</a></li>
-    <li><a href="#FamilyCell:create_n">FamilyCell:create_n (num, funct)</a></li>
     <li><a href="#FamilyCell:diffuse">FamilyCell:diffuse (param, perc, num)</a></li>
     <li><a href="#FamilyCell:cell_of">FamilyCell:cell_of (table_)</a></li>
     <li><a href="#FamilyCell:cell_in_pos">FamilyCell:cell_in_pos (table_)</a></li>
@@ -49,13 +49,17 @@
   <li><a href="../classes/Family.html">Family</a></li>
   <li><strong>FamilyCell</strong></li>
   <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyMobile.html">FamilyMobile</a></li>
   <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
   <li><a href="../classes/Interface.html">Interface</a></li>
   <li><a href="../classes/Metacollection.html">Metacollection</a></li>
   <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Mobile.html">Mobile</a></li>
   <li><a href="../classes/Observer.html">Observer</a></li>
   <li><a href="../classes/Relational.html">Relational</a></li>
   <li><a href="../classes/Simulation.html">Simulation</a></li>
+  <li><a href="../classes/Window.html">Window</a></li>
+  <li><a href="../classes/WindowFamilyInfo.html">WindowFamilyInfo</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -69,6 +73,13 @@
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/Resources.examples.CompleteGraph.html">Resources.examples.CompleteGraph</a></li>
+  <li><a href="../modules/Resources.examples.GrowAndClone.html">Resources.examples.GrowAndClone</a></li>
+  <li><a href="../modules/Resources.examples.MobileMoveOnGraph.html">Resources.examples.MobileMoveOnGraph</a></li>
+  <li><a href="../modules/Resources.examples.Pursuit.html">Resources.examples.Pursuit</a></li>
+  <li><a href="../modules/Resources.examples.RandomGraph.html">Resources.examples.RandomGraph</a></li>
+  <li><a href="../modules/Resources.examples.ShuffledOrdered.html">Resources.examples.ShuffledOrdered</a></li>
+  <li><a href="../modules/Resources.examples.SpreadMessage_FamilyMethods.html">Resources.examples.SpreadMessage_FamilyMethods</a></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
@@ -106,6 +117,25 @@
 
 </dd>
     <dt>
+    <a name = "FamilyCell:create_grid"></a>
+    <strong>FamilyCell:create_grid (x_size, y_size, offset_x, offset_y, cell_width, cell_height)</strong>
+    </dt>
+    <dd>
+    A function to create a bidimensional grid of patches quickily
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">declare_FamilyCell(<span class="string">'Patches'</span>)
+Patches:create_patches(<span class="number">100</span>,<span class="number">100</span>,-<span class="number">50</span>,-<span class="number">50</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "FamilyCell:new"></a>
     <strong>FamilyCell:new (object)</strong>
     </dt>
@@ -123,37 +153,6 @@
     <span class="keyword">for</span> j=<span class="number">1</span>,<span class="number">100</span> <span class="keyword">do</span>
          Cells_family:new( {[<span class="string">'pos'</span>]={i,j}} )
     <span class="keyword">end</span>
-<span class="keyword">end</span></pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "FamilyCell:create_n"></a>
-    <strong>FamilyCell:create_n (num, funct)</strong>
-    </dt>
-    <dd>
-    Create n new Cells in the family.
-
-
-
-
-
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/families.html#create_n">families.create_n</a>
-    </ul>
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">Cells:create_n( <span class="number">10</span>, <span class="keyword">function</span>()
-    <span class="keyword">return</span> {
-        [<span class="string">'pos'</span>] = {<span class="global">math</span>.random[<span class="number">100</span>],<span class="global">math</span>.random[<span class="number">100</span>]}
-    }
-<span class="keyword">end</span>)
-
-<span class="comment">-- If you are not confortable with anonymous functions you can use a 'for' to add new agents to the family. This is equivalent to:
-</span><span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">10</span> <span class="keyword">do</span>
-    Cells:new({ [<span class="string">'pos'</span>] = {<span class="global">math</span>.random[<span class="number">100</span>],<span class="global">math</span>.random[<span class="number">100</span>]} })
 <span class="keyword">end</span></pre>
     </ul>
 
@@ -229,7 +228,7 @@ Cells:diffuse(<span class="string">'val'</span>, <span class="number">0.1</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 11:22:49 </i>
+<i style="float:right;">Last updated 2020-10-12 11:23:21 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

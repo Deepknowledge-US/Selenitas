@@ -25,7 +25,7 @@ function utl_numbers.round(x, n)
 end
 
 ------------------
--- It returns a random float namber in range [a,b)
+-- It returns a random float number in range [a,b)
 -- @function random_float
 -- @param a Number
 -- @param b Number

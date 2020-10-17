@@ -28,14 +28,14 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
 
-    declare_FamilyMobil('Nodes')
+    declare_FamilyMobile('Nodes')
 
-    Nodes:create_n( Interface.nodes, function()
-        return {
+    for i=1,Interface:get_value("nodes") do
+        Nodes:new({
             ['pos']     = {0,0}
-            ,['scale']   = 1.5
-        }
-    end)
+            ,['scale']  = 1.5
+        })
+    end
 
     layout_circle(Nodes, 10)
 
@@ -56,7 +56,7 @@ SETUP = function()
         end
     end
 
-    declare_FamilyMobil('Agents')
+    declare_FamilyMobile('Agents')
 
     -- Agents:new returns an agent, so, in global variable central we have the reference to the agent, becouse it has been asigned to a global variable, we can call this agent directly in step function.
     central = Agents:new({
@@ -72,7 +72,7 @@ end
 
 STEP = function()
 
-    if Interface.rt_lt then
+    if Interface:get_value("rt_lt") then
         central:rt(2*math.pi/Nodes.count)
     else
         central:lt(2*math.pi/Nodes.count)
@@ -80,7 +80,7 @@ STEP = function()
     central.heading = math.fmod(central.heading,__2pi)
     central.label   = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'
 
-    if Interface.pos_ang then
+    if Interface:get_value("pos_ang") then
         central.label = '(' .. round(central:xcor(),1) .. ' , ' .. round(central:ycor(),1) .. ')'
     else
         central.label = '(' .. round(central.heading,1) .. ' , ' .. round(math.deg(central.heading),1) .. ')'

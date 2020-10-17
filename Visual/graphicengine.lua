@@ -19,7 +19,7 @@ local _time_acc = 0
 
 -- Drawing settings
 local draw_enabled = true
-local grid_enabled = false
+local families_visibility = {}
 local background_color_set = {0, 0, 0}
 
 function GraphicEngine.init()
@@ -81,12 +81,10 @@ function GraphicEngine.is_draw_enabled()
     return draw_enabled
 end
 
-function GraphicEngine.set_grid_enabled(enabled)
-    grid_enabled = enabled
-end
-
-function GraphicEngine.is_grid_enabled()
-    return grid_enabled
+-- Table with family_name:visibility (boolean)
+-- Used internally by UI module
+function GraphicEngine.set_families_visibility(table)
+    families_visibility = table
 end
 
 ------------------
@@ -116,7 +114,6 @@ end
 -- Main update function
 function love.update(dt)
     UI.update(dt)
-    View.update()
 
     if not Simulation.is_running then
         do return end
@@ -129,7 +126,7 @@ function love.update(dt)
             local err = GraphicEngine.step_simulation()
             if err then
                 UI.show_error_message(err)
-                Simulation.stop()
+                Simulation:stop()
             end
         end
       _time_acc = 0
@@ -140,28 +137,19 @@ end
 function love.draw()
     View.start()
 
-    -- Translate (0, 0) to center of the screen (local scope to avoid goto-jump issues)
-    do
-        local sw, sh, _ = love.window.getMode()
-        love.graphics.translate(sw / 2, sh / 2)
-    end
-
-    if grid_enabled then
-        Draw.draw_grid()
-    end
-
     if setup_executed and draw_enabled then
         -- Draw families in order
-        for _,fam in sorted(Simulation.families, 'z_order')do
-            if fam:is_a(FamilyMobil) then
-                Draw.draw_agents_family(fam)
-            elseif fam:is_a(FamilyRelational) then
-                Draw.draw_links_family(fam)
-            else
-                Draw.draw_cells_family(fam)
+        for _, fam in sorted(Simulation.families, 'z_order') do
+            if families_visibility[fam.name] then
+                if fam:is_a(FamilyMobile) then
+                    Draw.draw_agents_family(fam)
+                elseif fam:is_a(FamilyRelational) then
+                    Draw.draw_links_family(fam)
+                else
+                    Draw.draw_cells_family(fam)
+                end
             end
         end
-
     end
 
     View.finish()

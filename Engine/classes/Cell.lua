@@ -18,7 +18,7 @@ local Cell = class.Cell(Agent)
 -- @usage new_instance = Cell( {} )
 Cell._init = function(self,p_table)
 
-    self:super()
+    self:super(p_table)
 
     for k,v in pairs(p_table) do
         self[k] = v
@@ -35,12 +35,6 @@ Cell._init = function(self,p_table)
     self.neighbors  = p_table.neighbors   or Collection()
     self.my_agents  = p_table.my_agents   or Collection()
     self.z_order    = p_table.z_order     or 0
-
-    if p_table.visible == nil then
-        self.visible = true
-    else
-        self.visible = p_table.visible
-    end
 
     return self
 end;
@@ -76,7 +70,7 @@ end
 -- A function to determine if a position is in the region of the Cell.
 -- @function region
 -- @param pos A vector of n dimensions.
--- @return true if pos is in the region of the cell. A square region of 1 unit side is considered by default.
+-- @return true if the position is in the region of the cell. A square region of 1 unit side is considered by default.
 -- @usage instance:region()
 Cell.region = function(self,pos)
     local x,y = pos[1],pos[2]

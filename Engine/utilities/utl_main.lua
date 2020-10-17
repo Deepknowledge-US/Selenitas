@@ -13,17 +13,21 @@ __2pi   = 2*math.pi
 
 Family              = require 'Engine.classes.Family'
 FamilyCell          = require 'Engine.classes.FamilyCell'
-FamilyMobil         = require 'Engine.classes.FamilyMobil'
+FamilyMobile        = require 'Engine.classes.FamilyMobile'
 FamilyRelational    = require 'Engine.classes.FamilyRelational'
 Collection          = require 'Engine.classes.Collection'
 
 Agent               = require 'Engine.classes.Agent'
 Cell                = require 'Engine.classes.Cell'
-Mobil               = require 'Engine.classes.Mobil'
+Mobile              = require 'Engine.classes.Mobile'
 Relational          = require 'Engine.classes.Relational'
 Observer            = require 'Engine.classes.Observer'
+Window              = require 'Engine.classes.Window'
+WindowFamilyInfo    = require 'Engine.classes.WindowFamilyInfo'
 Interface           = require 'Engine.classes.Interface'
 Simulation          = require 'Engine.classes.Simulation'
+
+Draw                = require 'Visual.draw'
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 list_copy           = __list_tables.list_copy
@@ -48,7 +52,7 @@ lines_from          = __str_fls.lines_from
 split               = __str_fls.split
 
 __fam               = require 'Engine.utilities.utl_families'
-declare_FamilyMobil = __fam.declare_FamilyMobil
+declare_FamilyMobile= __fam.declare_FamilyMobile
 declare_FamilyRel   = __fam.declare_FamilyRel
 declare_FamilyCell  = __fam.declare_FamilyCell
 create_grid         = __fam.create_grid
@@ -107,27 +111,6 @@ Observer    = Observer()
 -- FUNCTIONS --
 --===========--
 
--- ------------------
--- -- This function removes from the system all agents and all families
--- -- @function clear_simulation
--- -- @return Nothing
--- -- @usage
--- -- clear_simulation()
--- clear = function(str)
-
---     if string.lower(str) == 'all' then
---         for k,v in ipairs(Simulation.families)do
---             for _,ag in ordered(v)do
---                 ag = nil
---             end
---             v = nil
---         end
---         Simulation.families     = {}
---         Simulation.num_agents   = 0
-
---     end
--- end
-
 ------------------
 -- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
 -- @function setup
@@ -136,7 +119,7 @@ Observer    = Observer()
 -- @usage
 -- setup(function()
 --     Cells = create_patches(100,100)
---     Agents= FamilyMobil()
+--     Agents= FamilyMobile()
 --     for i=1,50 do
 --         Agents:add({
 --             ['pos'] = one_of(Cells).pos
@@ -172,4 +155,3 @@ STEP = function(funct)
         end
     end
 end
-

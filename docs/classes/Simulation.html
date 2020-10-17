@@ -34,7 +34,8 @@
 
 <h2>Methods</h2>
 <ul class="nowrap">
-    <li><a href="#Simulation:_init">Simulation:_init (obj)</a></li>
+    <li><a href="#Simulation:_init">Simulation:_init ()</a></li>
+    <li><a href="#Simulation:clear">Simulation:clear (...)</a></li>
     <li><a href="#Simulation:new_seed">Simulation:new_seed ()</a></li>
     <li><a href="#Simulation:get_seed">Simulation:get_seed ()</a></li>
     <li><a href="#Simulation:get_is_running">Simulation:get_is_running ()</a></li>
@@ -47,6 +48,7 @@
     <li><a href="#Simulation:stop">Simulation:stop ()</a></li>
     <li><a href="#Simulation:start">Simulation:start ()</a></li>
     <li><a href="#Simulation:reset">Simulation:reset ()</a></li>
+    <li><a href="#Simulation:number_of_agents">Simulation:number_of_agents ()</a></li>
 </ul>
 <h2>Metamethods</h2>
 <ul class="nowrap">
@@ -60,13 +62,17 @@
   <li><a href="../classes/Family.html">Family</a></li>
   <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
   <li><a href="../classes/FamilyMobil.html">FamilyMobil</a></li>
+  <li><a href="../classes/FamilyMobile.html">FamilyMobile</a></li>
   <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
   <li><a href="../classes/Interface.html">Interface</a></li>
   <li><a href="../classes/Metacollection.html">Metacollection</a></li>
   <li><a href="../classes/Mobil.html">Mobil</a></li>
+  <li><a href="../classes/Mobile.html">Mobile</a></li>
   <li><a href="../classes/Observer.html">Observer</a></li>
   <li><a href="../classes/Relational.html">Relational</a></li>
   <li><strong>Simulation</strong></li>
+  <li><a href="../classes/Window.html">Window</a></li>
+  <li><a href="../classes/WindowFamilyInfo.html">WindowFamilyInfo</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -80,6 +86,13 @@
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/Resources.examples.CompleteGraph.html">Resources.examples.CompleteGraph</a></li>
+  <li><a href="../modules/Resources.examples.GrowAndClone.html">Resources.examples.GrowAndClone</a></li>
+  <li><a href="../modules/Resources.examples.MobileMoveOnGraph.html">Resources.examples.MobileMoveOnGraph</a></li>
+  <li><a href="../modules/Resources.examples.Pursuit.html">Resources.examples.Pursuit</a></li>
+  <li><a href="../modules/Resources.examples.RandomGraph.html">Resources.examples.RandomGraph</a></li>
+  <li><a href="../modules/Resources.examples.ShuffledOrdered.html">Resources.examples.ShuffledOrdered</a></li>
+  <li><a href="../modules/Resources.examples.SpreadMessage_FamilyMethods.html">Resources.examples.SpreadMessage_FamilyMethods</a></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
 </ul>
 
@@ -100,24 +113,10 @@
     <dl class="function">
     <dt>
     <a name = "Simulation:_init"></a>
-    <strong>Simulation:_init (obj)</strong>
+    <strong>Simulation:_init ()</strong>
     </dt>
     <dd>
-    TODO
-
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Simulation:new_seed"></a>
-    <strong>Simulation:new_seed ()</strong>
-    </dt>
-    <dd>
-    TODO
+    This function is called to create a new instance.  A new instance of this class is created everytime the system starts.
 
 
 
@@ -126,7 +125,47 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example">Simulation = Simulation()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Simulation:clear"></a>
+    <strong>Simulation:clear (...)</strong>
+    </dt>
+    <dd>
+    This function is used to erase a Family (or more than one) of the system.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Simulation:clear(<span class="string">'fam1'</span>, (<span class="string">'fam2'</span>))</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Simulation:new_seed"></a>
+    <strong>Simulation:new_seed ()</strong>
+    </dt>
+    <dd>
+    This function set a new seed to be used when random methods are called.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/Simulation.html#Simulation:set_seed">set_seed</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> new_random_seed = Simulation:new_seed()</pre>
     </ul>
 
 </dd>
@@ -135,16 +174,21 @@
     <strong>Simulation:get_seed ()</strong>
     </dt>
     <dd>
-    TODO
+    A function to get the current used seed.
 
 
 
 
 
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../classes/Simulation.html#Simulation:new_seed">new_seed</a></li>
+         <li><a href="../classes/Simulation.html#Simulation:set_seed">set_seed</a></li>
+    </ul>
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="global">print</span>(Simulation:get_seed())</pre>
     </ul>
 
 </dd>
@@ -153,7 +197,7 @@
     <strong>Simulation:get_is_running ()</strong>
     </dt>
     <dd>
-    TODO
+    A function to know if the simulation is running
 
 
 
@@ -162,7 +206,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="keyword">if</span> Simulation:get_is_running() <span class="keyword">then</span> ...</pre>
     </ul>
 
 </dd>
@@ -171,7 +215,7 @@
     <strong>Simulation:get_time ()</strong>
     </dt>
     <dd>
-    TODO
+    A function to know the current time of the system
 
 
 
@@ -180,7 +224,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="keyword">if</span> Simulation:get_time() &gt; <span class="number">100</span> <span class="keyword">then</span> ...</pre>
     </ul>
 
 </dd>
@@ -207,7 +251,7 @@
     <strong>Simulation:get_max_time ()</strong>
     </dt>
     <dd>
-    TODO
+    A limit of time for the simulation
 
 
 
@@ -216,7 +260,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="keyword">if</span> Simulation:get_time() &gt; Simulation:get_max_time() <span class="keyword">then</span> Simulation:stop() <span class="keyword">end</span></pre>
     </ul>
 
 </dd>
@@ -225,7 +269,7 @@
     <strong>Simulation:get_families ()</strong>
     </dt>
     <dd>
-    TODO
+    A method to acces to the families of the simulation.
 
 
 
@@ -234,7 +278,9 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="keyword">for</span> _,fam <span class="keyword">in</span> <span class="global">pairs</span>(Simulation:get_families()) <span class="keyword">do</span>
+    <span class="global">print</span>(fam.count)
+<span class="keyword">end</span></pre>
     </ul>
 
 </dd>
@@ -243,7 +289,7 @@
     <strong>Simulation:get_num_agents ()</strong>
     </dt>
     <dd>
-    TODO
+    This function return the number of agents of the system.
 
 
 
@@ -252,7 +298,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="global">print</span>(Simulation:get_num_agents())</pre>
     </ul>
 
 </dd>
@@ -270,7 +316,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example">Simulation:set_seed(<span class="number">123456789</span>)</pre>
     </ul>
 
 </dd>
@@ -279,7 +325,7 @@
     <strong>Simulation:stop ()</strong>
     </dt>
     <dd>
-    TODO
+    This function set the value of 'is_running' to false.
 
 
 
@@ -288,7 +334,9 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="keyword">if</span> Simulation:get_num_agents() == <span class="number">0</span> <span class="keyword">then</span>
+    Simulation:stop()
+<span class="keyword">end</span></pre>
     </ul>
 
 </dd>
@@ -297,7 +345,7 @@
     <strong>Simulation:start ()</strong>
     </dt>
     <dd>
-    TODO
+    This function set the value of 'is_running' to true.
 
 
 
@@ -306,7 +354,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example">Simulation:start()</pre>
     </ul>
 
 </dd>
@@ -315,7 +363,7 @@
     <strong>Simulation:reset ()</strong>
     </dt>
     <dd>
-    TODO
+    This function reset ALL the parameters (families included) to its original values
 
 
 
@@ -324,7 +372,25 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example">Simulation:reset()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Simulation:number_of_agents"></a>
+    <strong>Simulation:number_of_agents ()</strong>
+    </dt>
+    <dd>
+    This function returns the number of agents by its family class
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> N_cells, N_mobiles, N_rels = Simulation:number_of_agents()</pre>
     </ul>
 
 </dd>
@@ -346,7 +412,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="comment">-- TODO</span></pre>
+        <pre class="example"><span class="comment">-- The use of this function is not recomended. The system uses it to generate the agents' id</span></pre>
     </ul>
 
 </dd>
@@ -357,7 +423,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-09-28 11:22:49 </i>
+<i style="float:right;">Last updated 2020-10-12 11:23:21 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

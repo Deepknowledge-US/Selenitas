@@ -13,7 +13,7 @@ local Agent = class.Agent()
 -- @function _init
 -- @return A new instance of Agent class.
 -- @usage agent_1 = Agent({})
-Agent._init = function(self)
+Agent._init = function(self, p_table)
 
     self.family     = nil
     self.alive      = true
@@ -22,13 +22,25 @@ Agent._init = function(self)
     self.in_neighs  = {}
     self.out_neighs = {}
 
+    if p_table and p_table.visible == nil then
+        self.visible = true
+    else
+        self.visible = p_table.visible
+    end
+
+    if p_table and p_table.show_label == nil then
+        self.show_label = false
+    else
+        self.show_label = p_table.show_label
+    end
+
     return self
 end;
 
 ------------------
--- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
--- @function __delete_in_neighs
--- @return Nothing.
+-- Checks if an agent is in a family.
+-- @function is_in_in_neighs
+-- @return Boolean, true if the agent is in the family.
 Agent.is_in = function(self,fam)
     return fam:is_in(self)
 end;
@@ -39,7 +51,7 @@ end;
 -- @param name String, the name of the paprameter
 -- @param value Anything. The new value of the paprameter could be a String, a number, a table ...
 -- @return Agent. The one who calls this method
-Agent.set_param = function(self,name,value)
+Agent.set_param = function(self,name,value)     --TODO CUIDADO CON LAS TABLAS !!!!!!!
     self[name] = value
     return self
 end

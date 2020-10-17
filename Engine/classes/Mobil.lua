@@ -18,7 +18,7 @@ local Mobil = class.Mobil(Agent)
 -- @usage new_instance = Mobil()
 Mobil._init = function(self,a_table)
 
-    self:super()
+    self:super(a_table)
 
     local p_table = a_table or {}
     for k,v in pairs(p_table) do
@@ -35,32 +35,38 @@ Mobil._init = function(self,a_table)
     self.label_color    = p_table.label_color   or {1,1,1,1}
     self.current_cells  = p_table.current_cells or {}
 
-    if p_table.visible == nil then
-        self.visible = true
-    else
-        self.visible = p_table.visible
-    end
+    -- if p_table.visible == nil then
+    --     self.visible = true
+    -- else
+    --     self.visible = p_table.visible
+    -- end
+
+    -- if p_table.show_label == nil then
+    --     self.show_label = false
+    -- else
+    --     self.show_label = p_table.show_label
+    -- end
 
     return self
 end
 
-------------------
--- This function applies to the agent a series of functions consecutively. The number of functions gived as parameters is not predetermined. Caution! we are assuming functions with one ore less parameters as inputs.
--- @function does
--- @param ...
--- A list of functions that will be executed with the agent as first parameter
--- @return The agent that has executed the functions
--- @usage
--- local wander = function(x) x:rt(180) x:fd(2) end
--- local talk   = function(x) x.message = true end
--- one_of(Agents):does(wander,talk)
-Mobil.does = function(self, ...)
-    for i = 1,select('#', ...)do
-        local funct = select( i, ... )
-        funct(self)
-    end
-    return self
-end
+-- ------------------
+-- -- This function applies to the agent a series of functions consecutively. The number of functions gived as parameters is not predetermined. Caution! we are assuming functions with one ore less parameters as inputs.
+-- -- @function does
+-- -- @param ...
+-- -- A list of functions that will be executed with the agent as first parameter
+-- -- @return The agent that has executed the functions
+-- -- @usage
+-- -- local wander = function(x) x:rt(180) x:fd(2) end
+-- -- local talk   = function(x) x.message = true end
+-- -- one_of(Agents):does(wander,talk)
+-- Mobil.does = function(self, ...)
+--     for i = 1,select('#', ...)do
+--         local funct = select( i, ... )
+--         funct(self)
+--     end
+--     return self
+-- end
 
 
 

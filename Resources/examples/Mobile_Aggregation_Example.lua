@@ -1,5 +1,4 @@
 -- Interface
-
 Interface:create_slider('Num_mobiles', 0, 500, 1, 10)
 Interface:create_slider('Attraction_radius', 0, 3, 1, 1)
 
@@ -48,7 +47,7 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
     -- Test collection
-    declare_FamilyMobil('Checkpoints')
+    declare_FamilyMobile('Checkpoints')
     Checkpoints:new({ ['pos'] = {0, 100} })
     Checkpoints:new({ ['pos'] = {0,0} })
     Checkpoints:new({ ['pos'] = { 100,0} })
@@ -62,12 +61,12 @@ SETUP = function()
     end
 
     -- Create a new collection
-    declare_FamilyMobil('Mobiles')
+    declare_FamilyMobile('Mobiles')
     declare_FamilyRel('Links')
 
     -- Populate the collection with Agents.
-    Mobiles:create_n( Interface.Num_mobiles, function()
-        return {
+    for i = 1,Interface:get_value("Num_mobiles") do
+        Mobiles:new({
             ['pos']          = {math.random(0,100),math.random(0,100)}
             ,['heading']     = math.random(__2pi)
             ,['shape']       = "circle"
@@ -75,8 +74,8 @@ SETUP = function()
             ,['color']       = {0,0,1,1}
             ,['speed']       = math.random()
             ,['turn_amount'] = 0
-        }
-    end)
+        })
+    end
 
     for _ , ag in pairs(Mobiles.agents) do
         ag.leader = ag
@@ -111,7 +110,7 @@ STEP = function()
 
     for _,ag in pairs(Mobiles.agents) do
         local candidates = Mobiles:with(function(other)
-            return (ag:dist_euc_to(other) < Interface.Attraction_radius) and (ag.leader ~= other.leader)
+            return (ag:dist_euc_to(other) < Interface:get_value("Attraction_radius")) and (ag.leader ~= other.leader)
         end)
         if candidates.count > 0 then
             for _,ag2 in ordered(candidates) do

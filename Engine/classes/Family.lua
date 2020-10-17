@@ -69,6 +69,7 @@ Family.clone_table = function(tab) -- deep-copy a table
     setmetatable(target, meta)
     return target
 end
+
 ------------------
 -- This function adds a property to the agents of the Family.
 -- @function add_method
@@ -93,9 +94,6 @@ Family.add_properties = function(self, tab)
     -- end
 
 end
-
-
-
 
 ------------------
 -- Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.

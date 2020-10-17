@@ -228,7 +228,7 @@ end
 ------------------
 -- Returns a List of families of a concrete type.
 -- @function find_families
--- @param fam_type A Family type: FamilyCell, FamilyMobil, or FamilyRelational.
+-- @param fam_type A Family type: FamilyCell, FamilyMobile, or FamilyRelational.
 -- @usage 
 -- cell_fams = find_families(FamilyCell)
 function utl_filters.find_families (fam_type)

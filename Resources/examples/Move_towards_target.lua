@@ -10,7 +10,7 @@ Interface:create_slider('people', 10, 1000, 1, 25)
 -- equals to "degrees" variable and increment the value of "degrees" with "step".
 local function layout_circle(collection, radius)
 
-    local step  = __2pi / collection.count
+    local step  = 2*math.pi / collection.count
     local angle = 0
 
     for _,ag in pairs(collection.agents) do
@@ -25,28 +25,29 @@ SETUP = function()
 
     -- clear('all')
     Simulation:reset()
-    declare_FamilyMobil('Houses')
-    Houses:create_n( Interface.houses, function()
-        --local tree_or_house = math.random(100)<=50 and "house" or "tree"
+    declare_FamilyMobile('Houses')
+
+    for i=1,Interface:get_value("houses") do
         local tree_or_house = one_of {"house", "tree"}
-        return {
-              ['pos']     = {0,0}
-            , ['shape']   = tree_or_house
-            , ['color']   = tree_or_house == "house" and {0,0,1,1} or {0,1,0,1}
-            , ['scale']   = 3
-        }
-    end)
+        Houses:new({
+            ['pos']     = {0,0}
+          , ['shape']   = tree_or_house
+          , ['color']   = tree_or_house == "house" and {0,0,1,1} or {0,1,0,1}
+          , ['scale']   = 3
+      })
+    end
 
     layout_circle(Houses, radius)
 
-    declare_FamilyMobil('People')
-    People:create_n(Interface.people, function()
-        return {
+    declare_FamilyMobile('People')
+    for i=1,Interface:get_value("people") do
+        People:new({
             ['pos']     = {math.random(-radius,radius),math.random(-radius,radius)}
             , ['shape']   = "person"
             , ['speed']   = math.random()
-        }
-    end)
+        })
+    end
+
     for _, pers in pairs(People.agents) do
         local house = one_of(Houses)
         pers:face(house)
