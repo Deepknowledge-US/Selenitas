@@ -371,6 +371,7 @@ local function grid(camera, visuals)
 end
 
 return {
+    getGridInterval = getGridInterval,
     toWorld = toWorld,
     toScreen = toScreen,
     convertCoords = convertCoords,

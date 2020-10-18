@@ -39,7 +39,12 @@ Input.add_scroll_callback_func(
         local wx, wy = camera:mousePosition()
         camera:move((wx - tx) * (1 - 1 / inc), (wy - ty) * ( 1 - 1 / inc))
 
-        Observer:set_zoom( round(camera.scale,3) )
+        -- Observer:set_zoom( round(camera.scale,3) )
+        -- local val = Grid.majorInterval(camera)
+        -- Observer:set_zoom( math.log(val) / math.log(2) )
+        local exponent = math.log10(Grid.getGridInterval(visuals,camera.scale)) - 1
+        Observer:set_zoom( '1:10^(' .. exponent .. ')' )
+
         Observer:set_center( { camera.x/Draw.get_coord_scale(), - camera.y/Draw.get_coord_scale() } )
       end
     end
@@ -55,7 +60,9 @@ function View.reset()
     camera:lookAt(0, 0)
     camera:zoomTo(1)
     Observer:set_center( { 0, 0 } )
-    Observer:set_zoom( 1 )
+    -- Observer:set_zoom( 1 )
+    local exponent = math.log10(Grid.getGridInterval(visuals,camera.scale)) - 1
+    Observer:set_zoom( '1:10^(' .. exponent .. ')' )
 end
 
 function View.set_zoom(z)
