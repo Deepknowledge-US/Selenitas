@@ -3,7 +3,9 @@
 -- @classmod
 -- Observer
 
-local class  = require 'Thirdparty.pl.class'
+local class = require 'Thirdparty.pl.class'
+local utf8  = require "Thirdparty.utf8.init"
+utf8:init()
 
 local Observer = class.Observer()
 
@@ -70,6 +72,31 @@ Observer.get_zoom = function(self)
     return self.zoom
 end
 
+local codes = {
+    ['-'] = utf8.char(8315),
+    ['0'] = utf8.char(8304),
+    ['1'] = utf8.char(185),
+    ['2'] = utf8.char(178),
+    ['3'] = utf8.char(179),
+    ['4'] = utf8.char(8308),
+    ['5'] = utf8.char(8309),
+    ['6'] = utf8.char(8310),
+    ['7'] = utf8.char(8311),
+    ['8'] = utf8.char(8312),
+    ['9'] = utf8.char(8313)
+}
+
+Observer.get_zoom_string = function(self)
+    local res = self.zoom >= 0 and '' or '' .. utf8.char(8315)
+    local num = self.zoom >= 0 and self.zoom or self.zoom * -1
+    local str_num = tostring(num)
+    for i = 1, #str_num do
+        local c = str_num:sub(i,i)
+        res = res .. codes[c]
+    end
+
+    return '1:10' .. res
+end
 
 
 return Observer

@@ -43,7 +43,7 @@ Input.add_scroll_callback_func(
         -- local val = Grid.majorInterval(camera)
         -- Observer:set_zoom( math.log(val) / math.log(2) )
         local exponent = math.log10(Grid.getGridInterval(visuals,camera.scale)) - 1
-        Observer:set_zoom( '1:10^(' .. exponent .. ')' )
+        Observer:set_zoom( exponent )
 
         Observer:set_center( { camera.x/Draw.get_coord_scale(), - camera.y/Draw.get_coord_scale() } )
       end
@@ -54,20 +54,23 @@ function View.init()
     camera = Camera(0, 0)
     grid = Grid.grid(camera, visuals)
     Observer:set_center( { 0, 0 } )
+    Observer:set_zoom( 1 )
 end
 
 function View.reset()
     camera:lookAt(0, 0)
     camera:zoomTo(1)
     Observer:set_center( { 0, 0 } )
-    -- Observer:set_zoom( 1 )
+
     local exponent = math.log10(Grid.getGridInterval(visuals,camera.scale)) - 1
-    Observer:set_zoom( '1:10^(' .. exponent .. ')' )
+    Observer:set_zoom( exponent )
 end
 
 function View.set_zoom(z)
     camera:zoomTo( z )
-    Observer:set_zoom( z )
+
+    local exponent = math.log10(Grid.getGridInterval(visuals,camera.scale)) - 1
+    Observer:set_zoom( exponent )
 end
 
 function View.reset_center()
@@ -98,6 +101,6 @@ end
 
 function View.is_grid_enabled()
     return grid_enabled
-end  
-  
+end
+
 return View

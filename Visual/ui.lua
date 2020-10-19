@@ -746,7 +746,7 @@ local function status_bar(screen_w, screen_h)
     add_toolbar_button("Icon_zoom", ResourceManager.ui.zoom2, false,
     "Restore zoom", on_click_functions.restore_zoom)
     Slab.SameLine()
-    Slab.Text( tostring(Observer:get_zoom()) )
+    Slab.Text( tostring(Observer:get_zoom_string()) )
     Slab.SameLine()
     toolbar_separator(15)
 
