@@ -3,12 +3,12 @@
 -- @module
 -- graphicengine
 
+local GraphicEngine = {}
+
 require 'Engine.utilities.utl_main'
 local UI = require 'Visual.ui'
 local View = require 'Visual.view'
 local Draw = require 'Visual.draw'
-
-local GraphicEngine = {}
 
 -- Simulation info
 local setup_executed = false
@@ -22,6 +22,10 @@ local draw_enabled = true
 local families_visibility = {}
 local background_color_set = {0, 0, 0}
 
+
+------------------
+-- Inits the graphic engine. Called on program startup.
+-- @function init
 function GraphicEngine.init()
     -- TODO: read user settings
     love.window.setMode(900,600, {resizable=true, minwidth=400, minheight=300})
@@ -29,6 +33,9 @@ function GraphicEngine.init()
     View.init()
 end
 
+------------------
+-- Resets the simulation. Calls Simulation:reset and resets UI-specific parameters
+-- @function reset_simulation
 function GraphicEngine.reset_simulation()
     -- Simulation info
     Simulation:reset()
@@ -39,6 +46,10 @@ function GraphicEngine.reset_simulation()
     UI.reset()
 end
 
+------------------
+-- Setups the simulation. Calls Simulation:setup catching any possible errors when running it
+-- @function setup_simulation
+-- @return ret_err Returns error string. If no error happened, nil is returned.
 function GraphicEngine.setup_simulation()
     local ret_err = nil -- return error if any
     if SETUP then
@@ -53,6 +64,10 @@ function GraphicEngine.setup_simulation()
     return ret_err
 end
 
+------------------
+-- Runs a step of the simulation. Calls step function catching any possible errors when running it
+-- @function step_simulation
+-- @return ret_err Returns error string. If no error happened, nil is returned.
 function GraphicEngine.step_simulation()
     local ret_err = nil -- return error if any
     if STEP then
@@ -66,6 +81,11 @@ function GraphicEngine.step_simulation()
     return ret_err
 end
 
+------------------
+-- Enables drawing. If set to false, only a black screen will be rendered. Useful for running simulations
+-- where the drawing is not essential.
+-- @function set_draw_enabled
+-- @param enabled Whether the drawing is enabled.
 function GraphicEngine.set_draw_enabled(enabled)
     draw_enabled = enabled
     if not draw_enabled then
@@ -81,8 +101,10 @@ function GraphicEngine.is_draw_enabled()
     return draw_enabled
 end
 
--- Table with family_name:visibility (boolean)
--- Used internally by UI module
+------------------
+-- Sets visibility for families in the simulation. Used internally by UI module.
+-- @function set_families_visibility
+-- @param table Table with family names as keys and visibility (boolean) as values.
 function GraphicEngine.set_families_visibility(table)
     families_visibility = table
 end
@@ -113,8 +135,10 @@ end
 
 -- Main update function
 function love.update(dt)
+    -- Update UI widgets
     UI.update(dt)
 
+    -- If simulation is not running, skip further processing
     if not Simulation.is_running then
         do return end
     end
@@ -122,24 +146,28 @@ function love.update(dt)
     -- Skips until time between steps is covered
     _time_acc = _time_acc + dt
     if _time_acc >= time_between_steps then
+        -- Steps the simulation if it is running
         if Simulation.is_running then
             local err = GraphicEngine.step_simulation()
             if err then
+                -- Show error if any and stop the simulation
                 UI.show_error_message(err)
                 Simulation:stop()
             end
         end
-      _time_acc = 0
+        _time_acc = 0
     end
 end
 
 -- Drawing function
 function love.draw()
+    -- Attach camera
     View.start()
 
+    -- If draw enabled, draw families in z-orders
     if setup_executed and draw_enabled then
-        -- Draw families in order
         for _, fam in sorted(Simulation.families, 'z_order') do
+            -- Only draw family if it is visible
             if families_visibility[fam.name] then
                 if fam:is_a(FamilyMobile) then
                     Draw.draw_agents_family(fam)
@@ -152,7 +180,9 @@ function love.draw()
         end
     end
 
+    -- Detach camera
     View.finish()
+    -- Draw UI widgets on top of everything
     UI.draw()
 end
 
