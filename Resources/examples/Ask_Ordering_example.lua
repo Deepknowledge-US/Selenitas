@@ -8,7 +8,7 @@ SETUP = function()
 
     declare_FamilyMobile('Mobils')
 
-    for i=1,Interface:get_value('params', "N_agents") do
+    for i=1,Interface:get_value("N_agents") do
         Mobils:new({
             ['pos']      = {0,0}
             ,['scale']   = 1.5

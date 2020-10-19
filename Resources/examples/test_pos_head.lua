@@ -1,4 +1,5 @@
 -----------------
+Interface:create_slider('radius', 10, 100, 1.0, 30)
 Interface:create_slider('nodes', 0, 100, 1.0, 12)
 Interface:create_boolean('rt_lt', true)
 Interface:create_boolean('pos_ang', true)
@@ -30,14 +31,14 @@ SETUP = function()
 
     declare_FamilyMobile('Nodes')
 
-    for i=1,Interface:get_value("nodes") do
+    for i=1, Interface:get_value("nodes") do
         Nodes:new({
             ['pos']     = {0,0}
             ,['scale']  = 1.5
         })
     end
 
-    layout_circle(Nodes, 10)
+    layout_circle(Nodes, Interface:get_value("radius") )
 
     for _,ag in pairs(Nodes.agents) do
         ag.label = '(' .. round(ag:xcor(),1) .. ' , ' .. round(ag:ycor(),1) .. ')'
