@@ -8,7 +8,7 @@ local class  = require 'Thirdparty.pl.class'
 local Window = class.Window()
 
 ------------------
--- TODO
+-- This function is used to create a new parameters window to be used in the interface.
 -- @function _init
 -- @param obj. A table with some basic parameters of the Window (title, width, height, x, y).
 -- @return A Window instance.
@@ -33,7 +33,7 @@ end;
 -- Getters --
 --=========--
 ------------------
--- TODO
+-- This function is used to obtain the value of a parameter.
 -- @function get_value
 -- @param name String, the name of an Interface parameter.
 -- @return The current value of the parameter.
@@ -41,6 +41,7 @@ end;
 -- Interface:create_slider('Num_nodes', 0, 50, 1, 10)
 -- -- After the slider is created, we can get its value:
 -- local a_number = Interface:get_value('num_nodes')
+-- @see Interface.get_value
 Window.get_value = function(self,name)
     return self[name]
 end
@@ -77,7 +78,7 @@ end;
 -- @param value The default value of the new field
 -- @return Nothing
 -- @usage
--- -- TODO
+-- Interface:create_slider('Num_nodes', 0, 50, 1, 10)
 Window.create_slider = function(self, name, min, max, step, value)
     self[name]             = value
     self.ui_settings[name] = { type = "slider", min = min, max = max, step = step}
@@ -91,7 +92,9 @@ end;
 -- @param value The default value of the new field
 -- @return Nothing
 -- @usage
--- -- TODO
+-- Interface:create_input('text', 'hello')
+-- print( Interface:get_value('text') )
+-- --> hello
 Window.create_input = function(self, name, value)
     self[name] = value
     self.ui_settings[name] = { type = "input" }

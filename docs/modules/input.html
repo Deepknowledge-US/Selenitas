@@ -34,8 +34,11 @@
 
 <h2>Functions</h2>
 <ul class="nowrap">
-    <li><a href="#setup">setup (funct)</a></li>
-    <li><a href="#STEP">STEP (funct)</a></li>
+    <li><a href="#is_key_pressed">is_key_pressed (key)</a></li>
+    <li><a href="#is_mouse_button_pressed">is_mouse_button_pressed (key_id)</a></li>
+    <li><a href="#get_mouse_position">get_mouse_position ()</a></li>
+    <li><a href="#add_scroll_callback_func">add_scroll_callback_func (f)</a></li>
+    <li><a href="#add_mouse_moved_callback_func">add_mouse_moved_callback_func (f)</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -45,14 +48,14 @@
   <li><a href="../modules/filters.html">filters</a></li>
   <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
-  <li><strong>main</strong></li>
+  <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
   <li><a href="../modules/draw.html">draw</a></li>
   <li><a href="../modules/fileutils.html">fileutils</a></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
-  <li><a href="../modules/input.html">input</a></li>
+  <li><strong>input</strong></li>
   <li><a href="../modules/view.html">view</a></li>
 </ul>
 <h2>Classes</h2>
@@ -78,9 +81,11 @@
 
 <div id="content">
 
-<h1>Module <code>main</code></h1>
-<p>The main module.</p>
-<p> It offers some methods as global variables and the setup and run functions</p>
+<h1>Module <code>input</code></h1>
+<p>Class for handling input events and callbacks.</p>
+<p>
+
+</p>
 
 
 
@@ -88,48 +93,74 @@
 
     <dl class="function">
     <dt>
-    <a name = "setup"></a>
-    <strong>setup (funct)</strong>
+    <a name = "is_key_pressed"></a>
+    <strong>is_key_pressed (key)</strong>
     </dt>
     <dd>
-    Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
+    Gets pressed state for the specified key
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">setup(<span class="keyword">function</span>()
-    Cells = create_patches(<span class="number">100</span>,<span class="number">100</span>)
-    Agents= FamilyMobile()
-    <span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">50</span> <span class="keyword">do</span>
-        Agents:add({
-            [<span class="string">'pos'</span>] = one_of(Cells).pos
-        })
-    <span class="keyword">end</span>
-<span class="keyword">end</span>)
-<span class="comment">-- This will result in a grid of 100x100, and 50 agents randomly positioned in the grid.</span></pre>
-    </ul>
 
 </dd>
     <dt>
-    <a name = "STEP"></a>
-    <strong>STEP (funct)</strong>
+    <a name = "is_mouse_button_pressed"></a>
+    <strong>is_mouse_button_pressed (key_id)</strong>
     </dt>
     <dd>
-    This function is called until we reach a stop condition.  Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
+    Gets pressed state for the specified mouse button
+ and 3 is the middle button. Further buttons are mouse dependant.
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">TODO</pre>
-    </ul>
+
+</dd>
+    <dt>
+    <a name = "get_mouse_position"></a>
+    <strong>get_mouse_position ()</strong>
+    </dt>
+    <dd>
+    Gets mouse position
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add_scroll_callback_func"></a>
+    <strong>add_scroll_callback_func (f)</strong>
+    </dt>
+    <dd>
+    Add callback function for mouse scroll event
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add_mouse_moved_callback_func"></a>
+    <strong>add_mouse_moved_callback_func (f)</strong>
+    </dt>
+    <dd>
+    Add callback function for mouse movement event
+
+
+
+
+
+
 
 </dd>
 </dl>

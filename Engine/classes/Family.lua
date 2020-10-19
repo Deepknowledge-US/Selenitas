@@ -83,15 +83,9 @@ Family.add_properties = function(self, tab)
 
     for _,v in next, self.agents do
         for prop_name,def_val in next, self.properties do
-            -- local aux = type(def_val) ~= "table" and def_val or self.clone(def_val)
-            -- print(aux)
             v[prop_name] = Family.clone_table(def_val)
         end
     end
-
-    -- for _,v in next,self.agents do
-    --     v[name] = self.functions[name]
-    -- end
 
 end
 

@@ -67,19 +67,6 @@ FM.new = function(self,object)
 
     end
 
-    -- getmetatable(new_agent).__index = function(_table,key)
-    --     if rawget(_table, key) then
-    --         return rawget(_table, key)
-    --     else
-    --         -- return _table['family']['functions'][key]
-    --         -- return _table.family.functions[key]
-    --         return _table.family[key]
-    --         -- return self.functions[key]
-    --         -- return self[key]
-    --     end
-    -- end
-
-
     return self.agents[key]
 end
 

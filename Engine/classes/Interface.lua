@@ -9,7 +9,7 @@ local Interface = class.Simulation()
 
 
 ------------------
--- TODO
+-- This function creates a new instance of the class Interface. This class is used to interactuate with elements in the graphic interface.
 -- @function _init
 -- @param obj A table with some basic parameters of the Controller.
 -- @return A Controller instance.
@@ -25,7 +25,6 @@ Interface._init = function(self)
 
     return self
 end;
-
 
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyMobile type Family. It is used by internal methods to automatize the creation of the information windows.
@@ -73,8 +72,6 @@ Interface.create_family_rel_window = function(self, a_table)
     end
 end
 
-
-
 ------------------
 -- This function creates a new window in the Interface instance
 -- @function create_window
@@ -83,7 +80,7 @@ end
 -- @return Nothing
 -- @usage
 -- Interface:create_window('my_window')
--- 
+--
 -- -- And with the table:
 -- Interface:create_window('my_window', {
 --    ['width'] = 130,
@@ -100,7 +97,6 @@ Interface.create_window = function(self, name, optional_table)
     self.windows[name] = new_window
     self.num_windows = self.num_windows + 1
 end
-
 
 ------------------
 -- Allows the user to get the value of a Interface parameter
@@ -120,7 +116,6 @@ Interface.get_value = function(self, window_name, param_name)
 
     return self.windows[window]:get_value(param)
 end
-
 
 ------------------
 -- Allows the user to create a new boolean field
@@ -200,9 +195,6 @@ Interface.create_input = function(self, window_name, input_name, value)
         self.windows['Parameters']:create_input(window_name, input_name)
     end
 end;
-
-
-
 
 ------------------
 -- This function resets the parameters of the interface to its default values. It is used most of the time when we load a new model.

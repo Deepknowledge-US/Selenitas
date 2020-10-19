@@ -17,6 +17,7 @@ FC._init = function(self,name)
     self.z_order = 1
     return self
 end
+
 ------------------
 -- A function to create a bidimensional grid of patches quickily
 -- @function create_grid

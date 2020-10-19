@@ -10,10 +10,9 @@ utf8:init()
 local Observer = class.Observer()
 
 ------------------
--- TODO
+-- This function creates a new instance of an Observer object. This is automatically used when init Selenitas.
 -- @function _init
--- @param obj A table with some basic parameters of the Controller.
--- @return A Controller instance.
+-- @return Observer. A new instance of the class.
 Observer._init = function(self)
     self.center = {0,0}
     self.zoom   = 1
@@ -86,6 +85,12 @@ local codes = {
     ['9'] = utf8.char(8313)
 }
 
+------------------
+-- This function returns a string representation of the current zoom of the camera.
+-- @function get_zoom_string
+-- @return String. The value of the separation between two consecutive lines of the Interface grid in a scale format: 1:10^x.
+-- @usage
+-- local my_string = Observer:get_zoom_string()
 Observer.get_zoom_string = function(self)
     local res, num = '', self.zoom
     local str_num = tostring(num)

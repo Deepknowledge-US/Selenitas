@@ -34,8 +34,12 @@
 
 <h2>Functions</h2>
 <ul class="nowrap">
-    <li><a href="#setup">setup (funct)</a></li>
-    <li><a href="#STEP">STEP (funct)</a></li>
+    <li><a href="#exists">exists (path)</a></li>
+    <li><a href="#copy">copy (srcpath, dstpath)</a></li>
+    <li><a href="#copy">copy (src, dst, dstpath, err)</a></li>
+    <li><a href="#open_in_editor">open_in_editor (path)</a></li>
+    <li><a href="#open_in_editor">open_in_editor (path)</a></li>
+    <li><a href="#load_model_file">load_model_file (file_path)</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -45,12 +49,12 @@
   <li><a href="../modules/filters.html">filters</a></li>
   <li><a href="../modules/iterators.html">iterators</a></li>
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
-  <li><strong>main</strong></li>
+  <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
   <li><a href="../modules/draw.html">draw</a></li>
-  <li><a href="../modules/fileutils.html">fileutils</a></li>
+  <li><strong>fileutils</strong></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
   <li><a href="../modules/input.html">input</a></li>
   <li><a href="../modules/view.html">view</a></li>
@@ -78,9 +82,11 @@
 
 <div id="content">
 
-<h1>Module <code>main</code></h1>
-<p>The main module.</p>
-<p> It offers some methods as global variables and the setup and run functions</p>
+<h1>Module <code>fileutils</code></h1>
+<p>Class for file handling functions</p>
+<p>
+
+</p>
 
 
 
@@ -88,48 +94,87 @@
 
     <dl class="function">
     <dt>
-    <a name = "setup"></a>
-    <strong>setup (funct)</strong>
+    <a name = "exists"></a>
+    <strong>exists (path)</strong>
     </dt>
     <dd>
-    Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
+    Checks whether the specified file or directory exists
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">setup(<span class="keyword">function</span>()
-    Cells = create_patches(<span class="number">100</span>,<span class="number">100</span>)
-    Agents= FamilyMobile()
-    <span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">50</span> <span class="keyword">do</span>
-        Agents:add({
-            [<span class="string">'pos'</span>] = one_of(Cells).pos
-        })
-    <span class="keyword">end</span>
-<span class="keyword">end</span>)
-<span class="comment">-- This will result in a grid of 100x100, and 50 agents randomly positioned in the grid.</span></pre>
-    </ul>
 
 </dd>
     <dt>
-    <a name = "STEP"></a>
-    <strong>STEP (funct)</strong>
+    <a name = "copy"></a>
+    <strong>copy (srcpath, dstpath)</strong>
     </dt>
     <dd>
-    This function is called until we reach a stop condition.  Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
+    Copies file.
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">TODO</pre>
-    </ul>
+
+</dd>
+    <dt>
+    <a name = "copy"></a>
+    <strong>copy (src, dst, dstpath, err)</strong>
+    </dt>
+    <dd>
+    Copies file to Love2D save directory.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "open_in_editor"></a>
+    <strong>open_in_editor (path)</strong>
+    </dt>
+    <dd>
+    Opens file in system's default text editor
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "open_in_editor"></a>
+    <strong>open_in_editor (path)</strong>
+    </dt>
+    <dd>
+    Gets the filename of an specified path: path/to/my/file.lua -> file.lua
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "load_model_file"></a>
+    <strong>load_model_file (file_path)</strong>
+    </dt>
+    <dd>
+    Loads model file
+
+
+
+
+
+
 
 </dd>
 </dl>

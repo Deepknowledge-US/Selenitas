@@ -8,7 +8,6 @@ local class = require 'Thirdparty.pl.class'
 local Cell = class.Cell(Agent)
 
 
-
 ------------------
 -- Cell constructor.
 -- When a new Cell is created, some properties are given to it (If we do not have done it yet)

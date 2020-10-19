@@ -24,6 +24,7 @@ function utl_filters.one_of(fam_or_list)
         return fam_or_list[ math.random(#fam_or_list) ]
     end
 end
+
 ------------------
 -- Select n random elements in a Family, a Collection or a Table.
 -- @function n_of

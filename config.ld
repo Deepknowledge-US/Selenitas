@@ -10,7 +10,8 @@ file = {
         exclude = {
                 'conf.lua',
                 'Thirdparty/',
-                'Examples_without_graphical_engine'
+                'Examples_without_graphical_engine/',
+                'Resources/examples'
                 }
        }
 

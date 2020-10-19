@@ -62,7 +62,7 @@ end
 -- @function __new_id
 -- @return Number, a unique id.
 -- @usage
--- -- The use of this function is not recomended. The system uses it to generate the agents' id
+-- -- The use of this function is NOT RECOMENDED. The system uses it to generate the ids of the agents.
 Simulation.__new_id = function(self)
     self.num_agents = self.num_agents + 1
     return self.num_agents
@@ -119,7 +119,7 @@ Simulation.get_time = function(self)
 end
 
 ------------------
--- TODO
+-- TODO Not implemented
 -- @function get_delta_time
 -- @return
 -- @usage

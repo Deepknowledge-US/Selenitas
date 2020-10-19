@@ -39,13 +39,6 @@ Rel._init = function(self,p_table)
     self.shape      = p_table.shape       or 'line'
     self.z_order    = p_table.z_order     or 0
 
-
-    -- if p_table.visible == nil then
-    --     self.visible = true
-    -- else
-    --     self.visible = p_table.visible
-    -- end
-
     return self
 end;
 
@@ -63,7 +56,7 @@ Rel.ends = function(self)
 end
 
 ------------------
--- This function returns the destiny agent of the link.
+-- As same as edges in a graph, Relationals have a source and a target. This function returns the target Agent of the Relational.
 -- @function target
 -- @return Agent, the target param of the link.
 -- @usage
@@ -74,7 +67,7 @@ end
 
 
 ------------------
--- This function returns the origin agent of the link.
+-- As same as edges in a graph, Relationals have a source and a target. This function returns the source Agent of the Relational.
 -- @function source
 -- @return Agent, the source param of the link.
 -- @usage
