@@ -1,19 +1,34 @@
-local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
-local View = require "Visual.view"
-local math = require "math"
+------------------
+-- Class for handling drawing
+-- @module
+-- draw
 
 local Draw = {}
 
-local coord_scale = 10 -- 16 px = 1 unit
+local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
+local math = require "math"
 
+local coord_scale = 10 -- 10 px = 1 unit
+
+------------------
+-- Get coordinate scale factor
+-- @function get_coord_scale
+-- @return coord_scale Returns coordinate scale of the drawing system. 1 unit = `coord_scale` pixels
 function Draw.get_coord_scale()
     return coord_scale
 end
 
+------------------
+-- Init draw module
+-- @function init
 function Draw.init()
     love.graphics.setNewFont(7) -- Default font for labels
 end
 
+------------------
+-- Draws agent family
+-- @function draw_agents_family
+-- @param family agent family to be drawn.
 function Draw.draw_agents_family(family)
     for _, a in pairs(family.agents) do
 
@@ -57,6 +72,10 @@ function Draw.draw_agents_family(family)
     end
 end
 
+------------------
+-- Draws link family
+-- @function draw_links_family
+-- @param family link family to be drawn.
 function Draw.draw_links_family(family)
     for _, l in pairs(family.agents) do
         -- Handle link visibility
@@ -84,19 +103,19 @@ function Draw.draw_links_family(family)
     end
 end
 
----------
+------------------
+-- Draws cells family
+-- @function draw_cells_family
+-- @param family cell family to be drawn.
 function Draw.draw_cells_family(family)
     for _, c in pairs(family.agents) do
         if c.visible then
             -- Handle cell color
             love.graphics.setColor(c.color)
-
             local x = c:xcor() * coord_scale
             local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             if c.shape == "square" then
-                
                 love.graphics.rectangle('fill', x - (0.5 * coord_scale), y + (0.5 * coord_scale), 1*coord_scale, 1*coord_scale )
-
             elseif c.shape == "triangle" then
                 -- Each triangle is 3 lines
                 local top = {x, y - (0.5 * coord_scale)}

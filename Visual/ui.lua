@@ -57,6 +57,7 @@ local function load_model(path)
     end
 end
 
+-- Functions to be called when UI buttons are clicked
 local on_click_functions = {
     setup = function()
         local err = GraphicEngine.setup_simulation()
@@ -225,12 +226,12 @@ local on_click_functions = {
 			end
       show_file_editor = not show_file_editor
     end,
-    
+
     restore_zoom = function()
       View.set_zoom(1)
       Observer:set_zoom(1)
     end,
-    
+
     restore_center = function()
       View.reset_center()
       Observer:set_center( { 0, 0 } )
@@ -333,7 +334,6 @@ end
 local function toolbar_separator(w)
     Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})
     Slab.SameLine()
---    Slab.Rectangle({W=6, H=25, Color=toolbar_buttons_params.base_color})
     Slab.Rectangle({W=3, H=28, Color={1,1,1,.3}})
     Slab.SameLine()
     Slab.Rectangle({W=w/2, H=1, Color={0,0,0,0}})
@@ -343,18 +343,18 @@ end
 local function file_picker()
     local result = Slab.FileDialog({Type = 'openfile', AllowMultiSelect = false})
     if result.Button ~= "" then
-      show_file_picker = false
-      if result.Button == "OK" then
-          -- Load selected file
-          GraphicEngine.reset_simulation()
-          load_model(result.Files[1])
-          if next(Interface.windows) ~= nil then
-            -- Loaded simulation has params, show params windows
-            for k, _ in pairs(windows_visibility) do
-                windows_visibility[k] = true
+        show_file_picker = false
+        if result.Button == "OK" then
+            -- Load selected file
+            GraphicEngine.reset_simulation()
+            load_model(result.Files[1])
+            if next(Interface.windows) ~= nil then
+                -- Loaded simulation has params, show params windows
+                for k, _ in pairs(windows_visibility) do
+                    windows_visibility[k] = true
+                end
             end
-          end
-      end
+        end
     end
 end
 
@@ -380,33 +380,28 @@ end
 local function view_editor()
 	Slab.BeginWindow('Internal_Editor', Internal_Editor)
 
-  local model_name = string.gsub(FileUtils.get_filename_from_path(file_loaded_path), ".lua", "")
-	Internal_Editor.Title = ("File: " .. model_name)
-  
---	Slab.SameLine()
-  
---	if Slab.Button("Load") then
---		Internal_Editor_FileDialog = true
---	end
-  add_toolbar_button("Open_int_editor", ResourceManager.ui.open, false,
-        "Open File", function() end) -- TODO
-  Slab.SameLine()
-	
-  add_toolbar_button("Save", ResourceManager.ui.save, file_loaded_path == nil,
+    local model_name = string.gsub(FileUtils.get_filename_from_path(file_loaded_path), ".lua", "")
+	    Internal_Editor.Title = ("File: " .. model_name)
+
+    add_toolbar_button("Open_int_editor", ResourceManager.ui.open, false,
+            "Open File", function() end) -- TODO
+    Slab.SameLine()
+
+    add_toolbar_button("Save", ResourceManager.ui.save, file_loaded_path == nil,
         "Save File", on_click_functions.save_file)
-  Slab.SameLine()
+    Slab.SameLine()
 
-  add_toolbar_button("Reload_int_editor", ResourceManager.ui.refresh, file_loaded_path == nil,
+    add_toolbar_button("Reload_int_editor", ResourceManager.ui.refresh, file_loaded_path == nil,
         "Reload Model", on_click_functions.reload)
-  Slab.SameLine()
+    Slab.SameLine()
 
-  add_toolbar_button("New_int_editor", ResourceManager.ui.newfile, false,
+    add_toolbar_button("New_int_editor", ResourceManager.ui.newfile, false,
         "New File", function() end) -- TODO
-  Slab.SameLine()
-  
-  Slab.Rectangle({W=490, H=1, Color={0,0,0,0}})
-  Slab.SameLine()
-  
+    Slab.SameLine()
+
+    Slab.Rectangle({W=490, H=1, Color={0,0,0,0}})
+    Slab.SameLine()
+
     add_toolbar_button("Close_int_editor", ResourceManager.ui.close, false,
           "Close Editor", on_click_functions.close_editor)
 
@@ -733,7 +728,6 @@ local function status_bar(screen_w, screen_h)
 
     -- Center point in View
     Slab.SameLine()
---    Slab.Image('Icon_center', {Image = ResourceManager.ui.center3, Color = col, Scale = 0.4})
     add_toolbar_button("Icon_center", ResourceManager.ui.center3, false,
     "Restore center", on_click_functions.restore_center)
     Slab.SameLine()
@@ -744,7 +738,6 @@ local function status_bar(screen_w, screen_h)
 
     -- Zoom in View
     Slab.SameLine()
---    Slab.Image('Icon_zoom', {Image = ResourceManager.ui.zoom2, Color = col, Scale = 0.4})
     add_toolbar_button("Icon_zoom", ResourceManager.ui.zoom2, false,
     "Restore zoom", on_click_functions.restore_zoom)
     Slab.SameLine()
@@ -755,7 +748,6 @@ local function status_bar(screen_w, screen_h)
     -- Mobils info
     local cells,mobils,rels = Simulation:number_of_agents()
     Slab.SameLine()
-    -- Slab.Image('Icon_mobils ', {Image = ResourceManager.ui.family2, Color = col, Scale = 0.4})
     add_toolbar_button("Icon_mobils", ResourceManager.ui.family2, false,
     "Mobile families", on_click_functions.toggle_FamilyMobile_windows_visibility )
     Slab.SameLine()
@@ -765,7 +757,6 @@ local function status_bar(screen_w, screen_h)
 
     -- Cells info
     Slab.SameLine()
-    -- Slab.Image('Icon_cells ', {Image = ResourceManager.ui.cell, Color = col, Scale = 0.4})
     add_toolbar_button("Cells", ResourceManager.ui.cell, false,
         "Cell families", on_click_functions.toggle_FamilyCell_windows_visibility )
     Slab.SameLine()
@@ -775,7 +766,6 @@ local function status_bar(screen_w, screen_h)
 
     -- Relationals info
     Slab.SameLine()
-    -- Slab.Image('Icon_relationals ', {Image = ResourceManager.ui.share2, Color = col, Scale = 0.4})
     add_toolbar_button("Relationals", ResourceManager.ui.share2, false,
         "Relational families", on_click_functions.toggle_FamilyRel_windows_visibility )
     Slab.SameLine()
@@ -793,7 +783,7 @@ local function params_window(title)
 
     local window = Interface.windows[title]
 
-  -- Create panel for simulation params
+    -- Create panel for simulation params
     windows_visibility[title] = Slab.BeginWindow("ParamWindow" .. title, {
         Title = title,
         X = window.x,
@@ -813,13 +803,14 @@ local function params_window(title)
     })
 
 
-    for pos=1,window.num_items do
+    for pos = 1, window.num_items do
 
         Slab.Rectangle({W=window.width - 4, H=2, Color={0,0,0,0}})
 
         local k = window.order[pos]
         local v = window.ui_settings[k]
-                -- Checkbox
+
+        -- Checkbox
         if v.type == "boolean" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
             if Slab.CheckBox(Interface.windows[title][k], "Enabled") then
@@ -834,9 +825,6 @@ local function params_window(title)
         -- Number input
         elseif v.type == "input" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
-            -- if Slab.InputNumberDrag(k .. "InputNumber", Interface.windows[title][k], nil, nil, {}) then
-            --     Interface.windows[title][k] = Slab.GetInputNumber()
-            -- end
             if Slab.Input(k .. "InputText", {Text = InputText, ReturnOnText = false}) then
                 Interface.windows[title][k] = Slab.GetInputText()
             end
@@ -876,7 +864,7 @@ local function family_mobile_info_windows(title)
 
     window:update_family_info()
 
-    for _,param in next, window.order do
+    for _, param in next, window.order do
         Slab.Text(param .. ': ' .. window.info[param])
     end
 
@@ -966,7 +954,7 @@ function UI.update(dt)
     if show_about_dialog then
       about_dialog()
     end
-    
+
     -- Show File Editor
     if show_file_editor then
       view_editor()
@@ -980,7 +968,7 @@ function UI.update(dt)
         end
     end
 
-      -- Get screen size
+    -- Get screen size
     local screen_w, screen_h, _ = love.window.getMode()
 
     toolbar(screen_w, screen_h)
