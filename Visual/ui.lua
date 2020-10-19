@@ -298,6 +298,8 @@ end
 function UI.init()
     Slab.Initialize({})
     Slab.DisableDocks({'Left','Right','Bottom'})
+--    Slab.PushFont(love.graphics.newFont(SLAB_FILE_PATH .. "Internal/Resources/Fonts/JuliaMono-Regular.ttf",14))
+    Slab.PushFont(love.graphics.newFont(SLAB_FILE_PATH .. "Internal/Resources/Fonts/JuliaMono-Regular.ttf",14))
 end
 
 function UI.reset()
