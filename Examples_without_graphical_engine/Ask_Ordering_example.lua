@@ -52,10 +52,11 @@ end
 SETUP(function()
 
     -- Create a grid of patches with the specified dimensions
-    Patches = create_grid(xsize,ysize)
+    declare_FamilyCell('Patches')
+    Patches:create_grid(xsize,ysize)
 
     -- Create a new collection of agents
-    Mobils = FamilyMobil()
+    declare_FamilyMobile('Mobils')
 
     -- Populate the collection with Agents. Each agent will be randomly positioned.
 
