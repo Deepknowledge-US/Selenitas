@@ -87,8 +87,7 @@ local codes = {
 }
 
 Observer.get_zoom_string = function(self)
-    local res = self.zoom >= 0 and '' or '' .. utf8.char(8315)
-    local num = self.zoom >= 0 and self.zoom or self.zoom * -1
+    local res, num = '', self.zoom
     local str_num = tostring(num)
     for i = 1, #str_num do
         local c = str_num:sub(i,i)
