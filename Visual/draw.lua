@@ -48,9 +48,9 @@ function Draw.draw_agents_family(family)
             -- scl = coord_scale / image_size * a.scale
             local scl = 10/128 * a.scale
             local shift = 64 -- pixels to shift to center the figure
-            local shape_img = ResourceManager.images.circle -- Default to circle
-            if a.shape == "triangle" then
-                shape_img = ResourceManager.images.triangle
+            local shape_img = ResourceManager.images.triangle -- Default to triangle
+            if a.shape == "circle" then
+                shape_img = ResourceManager.images.circle
             elseif a.shape == "triangle_2" then
                 shape_img = ResourceManager.images.triangle_hole
             elseif a.shape == "square" then

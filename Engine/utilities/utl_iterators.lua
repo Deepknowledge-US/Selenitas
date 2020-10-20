@@ -135,7 +135,8 @@ function utl_iterators.ordered(fam_or_list)
 end
 
 ------------------
--- Iterator. First, this function sort the elements of a family or list and then it iterates over this list.
+-- Iterator. First, this function checks if the users wants to order the elements by a parameter, if do not, we use the default order of the table to iterate over the items,
+-- otherwise, this function sort the elements of a family or list and then it iterates over this sorted list.
 -- @function sorted
 -- @param fam_or_list A family or a List to be sorted and iterated
 -- @param param String The name of a parameter of the agent
@@ -149,32 +150,37 @@ end
 -- @see shuffled
 -- @see ordered
 function utl_iterators.sorted(fam_or_list, param, reverse, funct)
-
-    local max_or_min, comparator, list
-
-    if reverse == true then
-        max_or_min    = -math.huge           
-        comparator    = utl_iterators.__comparator_reverse
-    else
-        max_or_min    = math.huge
-        comparator    = utl_iterators.__comparator
-    end
-
-    -- Check if we recive a family or a list or table
-    if pcall(function() return fam_or_list:is_a(Family) end) then
-        list = fam_to_list(fam_or_list)
-    else
-        list = list_copy(fam_or_list)
-    end
-
-    -- Check if we are working with agents or with numbers
     if param then
-        utl_iterators.merge_sort_agents( list,1,#list,comparator,max_or_min, param, funct)
-    else
-        utl_iterators.merge_sort_numbers(list,1,#list,comparator,max_or_min)
-    end
 
-    return next, list
+        local max_or_min, comparator, list
+
+        if reverse == true then
+            max_or_min    = -math.huge           
+            comparator    = utl_iterators.__comparator_reverse
+        else
+            max_or_min    = math.huge
+            comparator    = utl_iterators.__comparator
+        end
+
+        -- Check if we recive a family or a list or table
+        if pcall(function() return fam_or_list:is_a(Family) end) then
+            list = fam_to_list(fam_or_list)
+        else
+            list = list_copy(fam_or_list)
+        end
+
+        -- Check if we are working with agents or with numbers
+        if param then
+            utl_iterators.merge_sort_agents( list,1,#list,comparator,max_or_min, param, funct)
+        else
+            utl_iterators.merge_sort_numbers(list,1,#list,comparator,max_or_min)
+        end
+
+        return next, list
+
+    else
+        return utl_iterators.ordered(fam_or_list)
+    end
 end
 
 function utl_iterators.merge_sort_agents(A, p, r, comparator, max_or_min, param, funct)
