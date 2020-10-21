@@ -426,70 +426,9 @@ WindowFamilyInfo.init_info = function(self, family_name)
 
 WindowFamilyInfo.update_family_info = function(self)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-----------------
+-- COMENTARIOS --
+-----------------
+
+La propiedad .alive es demasiado accesible.... debería cambiarse por __alive
 

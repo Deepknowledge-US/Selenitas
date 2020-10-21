@@ -23,8 +23,8 @@ function Agents_methods()
     -- a purge is performed. 
     -- 'purge_agents()'  at the end of the 'step' block will delete them from the world.
     Agents:add_method('grow_old', function(agent)
-        agent.age = agent.age + 1
-        agent.scale = agent.age / 10
+        agent.age   = agent.age + 1
+        agent.scale = agent.age / 20
 
         if agent.age > Interface:get_value("Max_age") then
             die(agent)
@@ -55,10 +55,11 @@ function Agents_methods()
     -- Agents have a chance to clone itself in each iteration
     Agents:add_method('reproduce', function(agent)
         if agent.alive then
-            if same_rgb(agent, {1,0,0,1}) and math.random(100) <= Interface:get_value("Clone_probability") then
+            local cp = Interface:get_value("Clone_probability")
+            if same_rgb(agent, {1,0,0,1}) and math.random(100) <= cp then
 
                 Agents:clone_n(1, agent, function(x)
-                    x.color = math.random(10) > 1 and {0,0,1,1} or {1,0,0,1} -- If math.random(10) > 1 then {0,0,1,1} else {1,0,0,1} 
+                    x.color = math.random(10) > 1 and {0,0,1,1} or {1,0,0,1}
                     x.age   = 0
                 end)
             end
@@ -79,7 +80,11 @@ SETUP = function()
     declare_FamilyCell('Cells')
 
     -- Create cells and give a grid structure to them
-    Cells:create_grid(100,100,-50,-50) -- width, height, offset x, offset y
+    Cells:create_grid(50,50,-25,-25) -- width, height, offset x, offset y
+    for _,c in ordered(Cells) do
+        local m = math.random(2) / 10
+        c.color = {m,m,m,.5}
+    end
 
 
     -- Create a Family of Mobile agents
@@ -93,10 +98,10 @@ SETUP = function()
 
     for i=1,Interface:get_value("N_agents") do
         Agents:new({
-            ['pos']     = {math.random(-50,50),math.random(-50,50)}
-            ,['head']    = math.random(2*math.pi)
-            ,['age']     = 0
-            ,['color']   = {1,0,0,1}
+              pos       = one_of(Cells).pos --{math.random(-25,25),math.random(-25,25)}
+            , heading   = random_float(0, 2*math.pi)
+            , age       = 0
+            , color     = {1,0,0,1}
         })
     end
 end
@@ -112,12 +117,13 @@ STEP = function()
         Simulation:stop()
     end
 
+    -- Iterate Agents shuffled to move them, grow and reproduce
     for _,agent in shuffled(Agents) do
         agent
-        :lt(math.random(-0.5,0.5))
-        :fd(0.8)
+        :lt(random_float(-0.5,0.5))
+        :fd(1)
         
-        if Interface:get_value('Torus') then agent:pos_to_torus(-50,50,-50,50) end
+        if Interface:get_value('Torus') then agent:pos_to_torus(-25,25,-25,25) end
         
         agent
         :grow_old()
