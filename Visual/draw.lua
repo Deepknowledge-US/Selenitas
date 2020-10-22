@@ -115,7 +115,7 @@ function Draw.draw_cells_family(family)
             local x = c:xcor() * coord_scale
             local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             if c.shape == "square" then
-                love.graphics.rectangle('fill', x - (0.5 * coord_scale), y + (0.5 * coord_scale), 1*coord_scale, 1*coord_scale )
+                love.graphics.rectangle('fill', x - (0.5 * coord_scale), y - (0.5 * coord_scale), 1*coord_scale, 1*coord_scale )
             elseif c.shape == "triangle" then
                 -- Each triangle is 3 lines
                 local top = {x, y - (0.5 * coord_scale)}

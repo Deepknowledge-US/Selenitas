@@ -31,6 +31,52 @@ end
 -- @usage
 -- declare_FamilyCell('Patches')
 -- Patches:create_patches(100,100,-50,-50)
+--FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, cell_height)
+--    local x      = x_size or 0
+--    local y      = y_size or 0
+--    local w      = cell_width or 1
+--    local h      = cell_height or 1
+--    local half_w = w / 2
+--    local half_h = h / 2
+
+--    local step_x = offset_x or 0
+--    local step_y = offset_y or 0
+
+--    self["cell_width"]  = w
+--    self["cell_height"] = h
+--    self["offset_x"]    = step_x
+--    self["offset_y"]    = step_y
+
+--    for i = 0 + step_x, x + step_x - 1 do
+--        for j = 0 + step_y, x + step_y - 1 do
+--            self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+--        end
+--    end
+
+--    local grid_neighs = {
+--        {-w, h}, {0, h}, {w, h},
+--        {-w, 0},         {w, 0},
+--        {-w,-h}, {0,-h}, {w,-h}
+--    }
+
+--    for _, cell in ordered(self) do
+--        local c_x, c_y = cell:xcor(), cell:ycor()
+
+--        for i = 1, 8 do
+--            local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+--            if
+--                neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
+--                    neigh_pos[2] <= y + step_y
+--             then
+----                cell.neighbors:add(self:cell_in_pos(neigh_pos))
+--            end
+--        end
+--    end
+
+--    return self
+--end
+
+
 FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, cell_height)
     local x      = x_size or 0
     local y      = y_size or 0
@@ -47,9 +93,11 @@ FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, 
     self["offset_x"]    = step_x
     self["offset_y"]    = step_y
 
+    local tabla = {}
     for i = 0 + step_x, x + step_x - 1 do
+        tabla[i + half_w] = {}
         for j = 0 + step_y, x + step_y - 1 do
-            self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+            tabla[i + half_w][j + half_h] = self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
         end
     end
 
@@ -61,7 +109,6 @@ FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, 
 
     for _, cell in ordered(self) do
         local c_x, c_y = cell:xcor(), cell:ycor()
-        local neighs = {}
 
         for i = 1, 8 do
             local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
@@ -69,7 +116,8 @@ FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, 
                 neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
                     neigh_pos[2] <= y + step_y
              then
-                cell.neighbors:add(self:cell_in_pos(neigh_pos))
+--                cell.neighbors:add(self:cell_in_pos(neigh_pos))
+                cell.neighbors:add(tabla[neigh_pos[1]][neigh_pos[2]])
             end
         end
     end

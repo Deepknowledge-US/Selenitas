@@ -1,7 +1,6 @@
 -- Interface
-Interface:create_slider('Num_mobiles', 0, 500, 1, 10)
+Interface:create_slider('Num_Particles', 0, 3000, 1, 100)
 Interface:create_slider('Attraction_radius', 0, 3, 1, 1)
-
 
 -- pos_to_torus relocate the agents as they are living in a torus
 local function pos_to_torus(agent, size_x, size_y)
@@ -20,107 +19,77 @@ local function pos_to_torus(agent, size_x, size_y)
     end
 end
 
-local function random_float(a,b)
-    return a + (b-a) * math.random();
-end
-
-local function merge(ag,lead)
-    ag.leader = lead
-    ag.heading = lead.heading
-    ag.color = {0,0,1,1}
-
-    local e0 = ag:link_neighbors(Links)
-    local extend = e0:with(
-        function(other)
-            return other.leader ~= lead
-        end)
-
-    if extend.count > 0 then
-        for _,ag2 in pairs(extend.agents) do
-            merge(ag2,lead)
-        end
-    end
-end
-
 SETUP = function()
 
-    -- clear('all')
     Simulation:reset()
-    -- Test collection
-    declare_FamilyMobile('Checkpoints')
-    Checkpoints:new({ ['pos'] = {0, 100} })
-    Checkpoints:new({ ['pos'] = {0,0} })
-    Checkpoints:new({ ['pos'] = { 100,0} })
-    Checkpoints:new({ ['pos'] = { 100, 100} })
-
-    for _, ch in pairs(Checkpoints.agents) do
-        ch.shape = 'circle'
-        ch.scale = 5
-        ch.color = {1,0,0,1}
-        ch.label = ch:xcor() .. ',' .. ch:ycor()
-    end
 
     -- Create a new collection
-    declare_FamilyMobile('Mobiles')
-    declare_FamilyRel('Links')
+    declare_FamilyMobile('Particles')
 
     -- Populate the collection with Agents.
-    for i = 1,Interface:get_value("Num_mobiles") do
-        Mobiles:new({
-            ['pos']          = {math.random(0,100),math.random(0,100)}
-            ,['heading']     = math.random(__2pi)
-            ,['shape']       = "circle"
-            ,['scale']       = 1
-            ,['color']       = {0,0,1,1}
-            ,['speed']       = math.random()
-            ,['turn_amount'] = 0
+    for i = 1,Interface:get_value("Num_Particles") do
+        Particles:new({
+              pos         = {math.random(0,100),math.random(0,100)}
+            , heading     = random_float(0,__2pi)
+            , shape       = "circle"
+            , scale       = 1
+            , color       = {random_float(0,1),random_float(0,1),random_float(0,1),1}
+            , turn        = 0
+            , leader      = true -- True if a particle is acting as a group leader
         })
     end
 
-    for _ , ag in pairs(Mobiles.agents) do
-        ag.leader = ag
-        -- Links:new({
-        --     ['source']  = ag
-        --     ,['target'] = ag
-        --     ,['color']  = {1,0,0,1}
-        --     --,['visible'] = false
-        --     })
+    -- Initially, each particle's leader is itself
+    for _,ag in ordered(Particles) do
+        ag.myleader = ag
     end
-
-    Simulation.is_running = true
 
 end
 
--- This function is executed until the stop condition is reached, 
--- or the button go/stop is stop
+---------------
+--  STEP
+---------------
 STEP = function()
 
-    local alone = Mobiles:with(function(ag)
-        return ag.leader == ag
-    end)
-    for _,ag in pairs(alone.agents) do
-        ag.turn_amount = math.random(-0.2,0.2)
+    -- Compute Leaders and Followers
+    local leaders   = Particles:with(function(ag) return ag.leader == true end)
+    local followers = Particles:with(function(ag) return ag.leader == false end)
+
+    -- Leaders turn randomly
+    for _,ag in ordered(leaders) do
+        ag:rt(random_float(-0.5,0.5))
     end
 
-    for _,ag in pairs(Mobiles.agents) do
-        ag:rt(ag.leader.turn_amount)
-        ag:fd(0.5)
+    -- Followers face the same direction of their leaders
+    for _,ag in ordered(followers) do
+        ag.heading = ag.myleader.heading
+    end
+
+    -- Everybody move
+    for _,ag in ordered(Particles) do
+        ag:fd(1)
         pos_to_torus(ag,100,100)
     end
 
-    for _,ag in pairs(Mobiles.agents) do
-        local candidates = Mobiles:with(function(other)
-            return (ag:dist_euc_to(other) < Interface:get_value("Attraction_radius")) and (ag.leader ~= other.leader)
+    -- Only on access to interface
+    local at = Interface:get_value("Attraction_radius")
+
+    -- Every particle look for collision
+    for _,ag in ordered(Particles) do
+        local ag_collided = Particles:with(function(other)
+            return (other:dist_euc_to(ag) < at) and (ag.myleader ~= other.myleader)
         end)
-        if candidates.count > 0 then
-            for _,ag2 in ordered(candidates) do
-                Links:new({
-                    ['source']  = ag
-                    ,['target'] = ag2
-                    ,['color']  = {1,0,0,1}
-                    ,['visible'] = false
-                    })
-                merge(ag2,ag.leader)
+        -- if it collides...
+        if ag_collided.count > 0 then
+            for _,ag2 in ordered(ag_collided) do
+                -- Take the group of every collision
+                local group_of_ag2 = Particles:with(function(other) return ag2.myleader == other.myleader end)
+                -- and change the leaders of all the particles in the group (also the color)
+                for _,ag3 in ordered(group_of_ag2) do
+                    ag3.myleader = ag.myleader
+                    ag3.leader   = false
+                    ag3.color    = ag.color
+                end
             end
         end
     end
