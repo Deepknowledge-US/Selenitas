@@ -67,7 +67,7 @@ STEP = function()
 
     -- Everybody move
     for _,ag in ordered(Particles) do
-        ag:fd(1)
+        ag:fd(.5)
         pos_to_torus(ag,100,100)
     end
 

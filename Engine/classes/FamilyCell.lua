@@ -221,6 +221,49 @@ FC.diffuse = function(self,param,perc,num)
 end
 
 ------------------
+-- Produces the diffusion of a several cell parameters simultaneously.
+-- @function multi_diffuse
+-- @param param list of pairs {Name, perc} of Agent's parameter want to diffuse.
+-- @param num Number. Optional parameter with 1 by default. The number of diffusion iterations we want to do.
+-- @usage
+-- Cells = create_grid(3, 3)
+-- ask_ordered(Cells, function(x)
+--     x.val1 = 1
+--     x.val2 = 2
+-- end)
+-- Cells:multi_diffuse({{'val', 0.1}, {'val2', 0.5}}, 50)
+
+FC.multi_diffuse = function(self,param,num)
+    local param_table = {}
+    for i=1,#param do
+      param_table[i]={}
+    end
+    local n = num or 1
+
+    for i=1,n do
+        for _,cell in ordered(self.agents) do
+            for i,p in ipairs(param) do
+              param_table[i][cell.id] = cell[p[1]] * (1-p[2])
+              cell[p[1]] = cell[p[1]] * p[2] / cell.neighbors.count            
+            end
+        end
+
+        for _,cell in ordered(self.agents) do
+          for i,p in ipairs(param) do
+            for _,neigh in ordered(cell.neighbors) do
+                param_table[i][neigh.id] = param_table[i][neigh.id] + cell[p[1]]
+            end
+          end
+        end
+        for _,cell in ordered(self.agents) do
+          for i,p in ipairs(param) do
+            cell[p[1]] = param_table[i][cell.id]
+          end
+        end
+
+    end
+end
+------------------
 -- Given a vector position or an agent, it returns the Cell of the family to which the position belongs.
 -- @function cell_of
 -- @param table_ Agent or position vector
