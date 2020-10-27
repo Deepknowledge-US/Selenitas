@@ -432,3 +432,10 @@ WindowFamilyInfo.update_family_info = function(self)
 
 La propiedad .alive es demasiado accesible.... debería cambiarse por __alive
 
+Necesitamos funciones para manipular colecciones: merge, difference, is_empty?, is?(ag, col), 
+
+Añadir una ventana de debug donde se pueda imprimir lo que uno quiera
+
+one_of no parece ser uniforme (ver Communication_M_C)
+
+La existencia de cells parece retrasar todo el cálculo (cada cierto número de pasos se bloquea todo)

@@ -76,17 +76,6 @@ SETUP = function()
     -- clear('all')
     Simulation:reset()
 
-    -- Create a Family of Estructural Agents
-    declare_FamilyCell('Cells')
-
-    -- Create cells and give a grid structure to them
-    Cells:create_grid(50,50,-25,-25) -- width, height, offset x, offset y
-    for _,c in ordered(Cells) do
-        local m = math.random(2) / 10
-        c.color = {m,m,m,.5}
-    end
-
-
     -- Create a Family of Mobile agents
     declare_FamilyMobile('Agents')
 
@@ -98,7 +87,7 @@ SETUP = function()
 
     for i=1,Interface:get_value("N_agents") do
         Agents:new({
-              pos       = one_of(Cells).pos --{math.random(-25,25),math.random(-25,25)}
+              pos       = {math.random(-25,25),math.random(-25,25)}
             , heading   = random_float(0, 2*math.pi)
             , age       = 0
             , color     = {1,0,0,1}
@@ -112,7 +101,7 @@ end
 
 STEP = function()
 
-    -- A stop condition. We stop when the number of ticks is reached or when there are no agents alive
+    -- A stop condition. We stop when there are no agents alive
     if Agents.count == 0 then
         Simulation:stop()
     end

@@ -57,7 +57,7 @@ STEP = function()
 
     -- Leaders turn randomly
     for _,ag in ordered(leaders) do
-        ag:rt(random_float(-0.5,0.5))
+        ag:rt(random_float(-0.1,0.1))
     end
 
     -- Followers face the same direction of their leaders
@@ -67,7 +67,7 @@ STEP = function()
 
     -- Everybody move
     for _,ag in ordered(Particles) do
-        ag:fd(.5)
+        ag:fd(.1)
         pos_to_torus(ag,100,100)
     end
 
@@ -76,9 +76,7 @@ STEP = function()
 
     -- Every particle look for collision
     for _,ag in ordered(Particles) do
-        local ag_collided = Particles:with(function(other)
-            return (other:dist_euc_to(ag) < at) and (ag.myleader ~= other.myleader)
-        end)
+        local ag_collided = Particles:with(function(o) return  (ag.myleader ~= o.myleader) and (o:dist_euc_to(ag) < at) end)
         -- if it collides...
         if ag_collided.count > 0 then
             for _,ag2 in ordered(ag_collided) do

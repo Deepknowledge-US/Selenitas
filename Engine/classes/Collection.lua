@@ -34,7 +34,7 @@ Collection.add = function(self,object)
         self.agents[not_new_id] = old_agent
         self.count = self.count + 1
     else
-        print('Warning: Collection.add: Attemp to insert an already existing agent')
+        --print('Warning: Collection.add: Attemp to insert an already existing agent')
     end
 end
 
@@ -50,7 +50,7 @@ Collection.remove = function(self, agent)
         self.agents[agent.id] = nil
         self.count = self.count - 1
     else
-        print('Error in Collection.remove: There is no agent in the collection with id:',agent.id )
+        --print('Error in Collection.remove: There is no agent in the collection with id:',agent.id )
     end
 end
 

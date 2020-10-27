@@ -638,11 +638,11 @@ local function toolbar(screen_w, screen_h)
 
     ------- View options -------
     if GraphicEngine.is_draw_enabled() then
-        add_toolbar_button("DisableDraw", ResourceManager.ui.eye_on2, false,
-            "Refresh Off", on_click_functions.toggle_draw_enabled)
+        add_toolbar_button("DisableDraw", ResourceManager.ui.eye_off2, false,
+            "View Off", on_click_functions.toggle_draw_enabled)
     else
-        add_toolbar_button("EnableDraw", ResourceManager.ui.eye_off2, false,
-            "Refresh On", on_click_functions.toggle_draw_enabled)
+        add_toolbar_button("EnableDraw", ResourceManager.ui.eye_on2, false,
+            "View On", on_click_functions.toggle_draw_enabled)
     end
     Slab.SameLine()
 
@@ -820,6 +820,7 @@ local function params_window(title)
         elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
             if Slab.InputNumberSlider(k .. "Slider", Interface.windows[title][k], v.min, v.max, {Step = v.step}) then
+--            if Slab.InputNumberDrag(k .. "Slider", Interface.windows[title][k], v.min, v.max, v.step) then
                 Interface.windows[title][k] = Slab.GetInputNumber()
             end
         -- Number input
