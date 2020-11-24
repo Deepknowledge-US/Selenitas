@@ -272,13 +272,16 @@ end
 -- local lower_agents = Agents:with( function(ag) return ag:ycor() < 2 end )
 -- @see filters.with
 Family.with = function(self, pred)
-    local res = Collection(self)
+    local yes = Collection(self)
+    local no  = Collection(self)
     for _, v in pairs(self.agents) do
         if pred(v) then
-            res:add(v)
+            yes:add(v)
+        else
+            no:add(v)
         end
     end
-    return res
+    return yes, no
 end
 
 ------------------
