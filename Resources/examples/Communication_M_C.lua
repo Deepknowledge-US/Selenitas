@@ -52,6 +52,11 @@ STEP = function()
     for _,ag in ordered(Agents) do
         -- Every agent move to one neighbors cell
         c = Cells:cell_of(ag)
+        -- print('------>', c:xcor(), c:ycor())
+        -- for _,n in ordered(c.neighbors) do
+        --     print(n:xcor(), n:ycor())
+        -- end
+        
         ag:move_to((c.neighbors):one_of())
         -- consume some food there
         c = Cells:cell_of(ag)

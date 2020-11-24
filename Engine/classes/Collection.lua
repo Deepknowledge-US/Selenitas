@@ -5,7 +5,7 @@
 
 local class  = require 'Thirdparty.pl.class'
 
-local Collection = class.Collection(Family)
+local Collection = class.Collection(AgentSet)
 
 ------------------
 -- Collection constructor. It is usually called by some Family methods. A Collection is a set of agents from a Family.

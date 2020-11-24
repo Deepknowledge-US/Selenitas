@@ -11,6 +11,7 @@ __2pi   = 2*math.pi
 
 -- Global variables
 
+AgentSet            = require 'Engine.classes.AgentSet'
 Family              = require 'Engine.classes.Family'
 FamilyCell          = require 'Engine.classes.FamilyCell'
 FamilyMobile        = require 'Engine.classes.FamilyMobile'
