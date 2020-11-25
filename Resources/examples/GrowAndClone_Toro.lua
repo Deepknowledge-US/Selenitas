@@ -19,7 +19,7 @@ Interface:create_boolean('Torus', true)
 
 function Agents_methods()
     -- Customized Method: The agent get older, and dies when it reachs the max 
-    -- age. Died agents have a 'alive = false', but they still remain in the world until 
+    -- age. Died agents have a '__alive = false', but they still remain in the world until 
     -- a purge is performed. 
     -- 'purge_agents()'  at the end of the 'step' block will delete them from the world.
     Agents:add_method('grow_old', function(agent)
@@ -54,7 +54,7 @@ function Agents_methods()
 
     -- Agents have a chance to clone itself in each iteration
     Agents:add_method('reproduce', function(agent)
-        if agent.alive then
+        if agent.__alive then
             local cp = Interface:get_value("Clone_probability")
             if same_rgb(agent, {1,0,0,1}) and math.random(100) <= cp then
 

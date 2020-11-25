@@ -16,7 +16,7 @@ local Agent = class.Agent()
 Agent._init = function(self, p_table)
 
     self.family     = nil
-    self.alive      = true
+    self.__alive    = true
     self.in_links   = {}
     self.out_links  = {}
     self.in_neighs  = {}

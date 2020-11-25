@@ -1,0 +1,732 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Selenitas</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Functions</h2>
+<ul class="nowrap">
+    <li><a href="#Instance:clone_n">Instance:clone_n (num, agent, funct)</a></li>
+    <li><a href="#Instance:exists">Instance:exists (pred)</a></li>
+    <li><a href="#Instance:all">Instance:all (pred)</a></li>
+    <li><a href="#Instance:is_in">Instance:is_in (agent)</a></li>
+    <li><a href="#Instance:others">Instance:others (agent)</a></li>
+    <li><a href="#Instance:one_of_others">Instance:one_of_others (agent)</a></li>
+    <li><a href="#Instance:with">Instance:with (pred)</a></li>
+    <li><a href="#Instance:one_of">Instance:one_of ()</a></li>
+    <li><a href="#Instance:n_of">Instance:n_of (n)</a></li>
+    <li><a href="#Instance:up_to_n_of">Instance:up_to_n_of (n)</a></li>
+    <li><a href="#Instance:max_one_of">Instance:max_one_of (funct)</a></li>
+    <li><a href="#Instance:max_n_of">Instance:max_n_of (num, funct)</a></li>
+    <li><a href="#Instance:min_n_of">Instance:min_n_of (num, funct)</a></li>
+    <li><a href="#Instance:min_one_of">Instance:min_one_of (funct)</a></li>
+    <li><a href="#Instance:with_max">Instance:with_max (funct)</a></li>
+    <li><a href="#Instance:with_min">Instance:with_min (funct)</a></li>
+    <li><a href="#Instance:count_all">Instance:count_all ()</a></li>
+    <li><a href="#Instance:count_all">Instance:count_all ()</a></li>
+    <li><a href="#Instance:keys">Instance:keys ()</a></li>
+    <li><a href="#Instance:clone">Instance:clone (agent)</a></li>
+    <li><a href="#A_family:alives_list">A_family:alives_list ()</a></li>
+</ul>
+<h2>Methods</h2>
+<ul class="nowrap">
+    <li><a href="#AgentSet:_init">AgentSet:_init ()</a></li>
+    <li><a href="#AgentSet:add_method">AgentSet:add_method ()</a></li>
+    <li><a href="#AgentSet:add_method">AgentSet:add_method ()</a></li>
+    <li><a href="#AgentSet:kill">AgentSet:kill ()</a></li>
+    <li><a href="#AgentSet:kill_and_purge">AgentSet:kill_and_purge ()</a></li>
+</ul>
+<h2>Metamethods</h2>
+<ul class="nowrap">
+    <li><a href="#AgentSet:__purge_agents">AgentSet:__purge_agents ()</a></li>
+    <li><a href="#AgentSet:__tostring">AgentSet:__tostring ()</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Agent.html">Agent</a></li>
+  <li><strong>AgentSet</strong></li>
+  <li><a href="../classes/Cell.html">Cell</a></li>
+  <li><a href="../classes/Collection.html">Collection</a></li>
+  <li><a href="../classes/Family.html">Family</a></li>
+  <li><a href="../classes/FamilyCell.html">FamilyCell</a></li>
+  <li><a href="../classes/FamilyMobile.html">FamilyMobile</a></li>
+  <li><a href="../classes/FamilyRelational.html">FamilyRelational</a></li>
+  <li><a href="../classes/Interface.html">Interface</a></li>
+  <li><a href="../classes/Metacollection.html">Metacollection</a></li>
+  <li><a href="../classes/Mobile.html">Mobile</a></li>
+  <li><a href="../classes/Observer.html">Observer</a></li>
+  <li><a href="../classes/Relational.html">Relational</a></li>
+  <li><a href="../classes/Simulation.html">Simulation</a></li>
+  <li><a href="../classes/Window.html">Window</a></li>
+  <li><a href="../classes/WindowFamilyInfo.html">WindowFamilyInfo</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/actions.html">actions</a></li>
+  <li><a href="../modules/checks.html">checks</a></li>
+  <li><a href="../modules/families.html">families</a></li>
+  <li><a href="../modules/filters.html">filters</a></li>
+  <li><a href="../modules/iterators.html">iterators</a></li>
+  <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
+  <li><a href="../modules/main.html">main</a></li>
+  <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
+  <li><a href="../modules/draw.html">draw</a></li>
+  <li><a href="../modules/fileutils.html">fileutils</a></li>
+  <li><a href="../modules/graphicengine.html">graphicengine</a></li>
+  <li><a href="../modules/input.html">input</a></li>
+  <li><a href="../modules/view.html">view</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>AgentSet</code></h1>
+<p>Family Class is the basis class from which we build the families of agents.</p>
+<p> Families are the main structures of the system. It consists in a table of Agents, a list of ids and some methods to manipulate the agents.
+ self.agents is a table 'object_id: object' and we use it to find an element quickily.</p>
+
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Instance:clone_n"></a>
+    <strong>Instance:clone_n (num, agent, funct)</strong>
+    </dt>
+    <dd>
+    This function creates a number of clones of an agent and, if a function is gived as parameter, it applies a function to them.  It uses the auxiliar function "clone" to obtain the clones and the auxiliar function "search<em>free</em>id" to give a new id to the clones.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Agents1:clone_n(<span class="number">1</span>, agent, <span class="keyword">function</span>(x)
+    x.color = <span class="string">'red'</span>
+<span class="keyword">end</span>)
+<span class="comment">-- If we just want to create same agents, we can call this function without the last parameter:
+</span>Agents1:clone_n(<span class="number">3</span>, agent)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:exists"></a>
+    <strong>Instance:exists (pred)</strong>
+    </dt>
+    <dd>
+    Returns true if any agent in the family validates a predicate.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/checks.html#exists">checks.exists</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> response = A_family:exists( <span class="keyword">function</span>(x) x.label ~= <span class="string">''</span> <span class="keyword">end</span> )</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:all"></a>
+    <strong>Instance:all (pred)</strong>
+    </dt>
+    <dd>
+    Checks if all agents in a family validates a condition.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/checks.html#all">checks.all</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">A_family:all(<span class="keyword">function</span>(ag) ag.label == <span class="string">''</span> <span class="keyword">end</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:is_in"></a>
+    <strong>Instance:is_in (agent)</strong>
+    </dt>
+    <dd>
+    Checks if an agent is member of the AgentSet.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/checks.html#is_in">checks.is_in</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">A_family:is_in(agent)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:others"></a>
+    <strong>Instance:others (agent)</strong>
+    </dt>
+    <dd>
+    Given an agent, it returns all the other agents in the AgentSet.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#others">filters.others</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Instance:others(agent)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:one_of_others"></a>
+    <strong>Instance:one_of_others (agent)</strong>
+    </dt>
+    <dd>
+    Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#one_of_others">filters.one_of_others</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Instance:one_of_others(agent)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:with"></a>
+    <strong>Instance:with (pred)</strong>
+    </dt>
+    <dd>
+    Filter function.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#with">filters.with</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> lower_agents = Agents:with( <span class="keyword">function</span>(ag) <span class="keyword">return</span> ag:ycor() &lt; <span class="number">2</span> <span class="keyword">end</span> )</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:one_of"></a>
+    <strong>Instance:one_of ()</strong>
+    </dt>
+    <dd>
+    Selects and returns a random alive agent of the AgentSet.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#one_of">filters.one_of</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> random_alive_agent = A_family:one_of()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:n_of"></a>
+    <strong>Instance:n_of (n)</strong>
+    </dt>
+    <dd>
+    Selects and returns n random alive agents of the AgentSet.  If the number of agents of the family is minor that n this function returns an error message.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../classes/AgentSet.html#Instance:up_to_n_of">AgentSet.up_to_n_of</a></li>
+         <li><a href="../modules/filters.html#n_of">filters.n_of</a></li>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> three_agents = A_family:n_of(<span class="number">3</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:up_to_n_of"></a>
+    <strong>Instance:up_to_n_of (n)</strong>
+    </dt>
+    <dd>
+    This function selects n random agents of a AgentSet.  When there are fewer than n agents in the family, this function returns all agents in the AgentSet.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#up_to_n_of">filters.up_to_n_of</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> ten_or_less_nodes = Nodes:up_to_n_of(<span class="number">10</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:max_one_of"></a>
+    <strong>Instance:max_one_of (funct)</strong>
+    </dt>
+    <dd>
+    Returns the agent with the minimum value for a gived function
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#max_one_of">filters.max_one_of</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> olderer_agent = A_family:max_one_of( <span class="keyword">function</span>(agent) <span class="keyword">return</span> agent.age <span class="keyword">end</span> )
+<span class="comment">-- Assuming that all agents in "A_family" have a parameter "age"</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:max_n_of"></a>
+    <strong>Instance:max_n_of (num, funct)</strong>
+    </dt>
+    <dd>
+    Returns the n elements producing the maximum values for a gived function
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#max_n_of">filters.max_n_of</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> older_5_agents = A_family:max_n_of(<span class="number">5</span>, <span class="keyword">function</span>(ag) <span class="keyword">return</span> ag.age <span class="keyword">end</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:min_n_of"></a>
+    <strong>Instance:min_n_of (num, funct)</strong>
+    </dt>
+    <dd>
+    Returns the n elements producing the minimum values for a gived function
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#min_n_of">filters.min_n_of</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> younger_5_agents = A_family:min_n_of(<span class="number">5</span>, <span class="keyword">function</span>(ag) <span class="keyword">return</span> ag.age <span class="keyword">end</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:min_one_of"></a>
+    <strong>Instance:min_one_of (funct)</strong>
+    </dt>
+    <dd>
+    Returns the agent with the minimum value for a gived function
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#min_one_of">filters.min_one_of</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> younger_agent = A_family:min_one_of( <span class="keyword">function</span>(agent) <span class="keyword">return</span> agent.age <span class="keyword">end</span> )
+<span class="comment">-- Assuming that all agents in "A_family" have a parameter "age"</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:with_max"></a>
+    <strong>Instance:with_max (funct)</strong>
+    </dt>
+    <dd>
+    Returns a Collection of agents with the min value for a gived function.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#with_max">filters.with_max</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> agents_in_the_right = A_family:with_max( <span class="keyword">function</span>(agent) <span class="keyword">return</span> agent:xcor() <span class="keyword">end</span> )</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:with_min"></a>
+    <strong>Instance:with_min (funct)</strong>
+    </dt>
+    <dd>
+    Returns a Collection of agents with the min value for a gived function.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/filters.html#with_min">filters.with_min</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> agents_in_the_left = A_family:with_min( <span class="keyword">function</span>(agent) <span class="keyword">return</span> agent:xcor() <span class="keyword">end</span> )</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:count_all"></a>
+    <strong>Instance:count_all ()</strong>
+    </dt>
+    <dd>
+    Returns the total number of agents in the family (alives and killed agents that have not been purged yet).  If you want the number of agets with live you can use the parameter "count" of families (AgentSet.count)
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> number = My_family:count_all()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:count_all"></a>
+    <strong>Instance:count_all ()</strong>
+    </dt>
+    <dd>
+    Returns the total number of agents in the family (alives and killed agents that have not been purged yet).  If you want the number of agets with live you can use the parameter "count" of families (AgentSet.count)
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> number = My_family:count_all()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:keys"></a>
+    <strong>Instance:keys ()</strong>
+    </dt>
+    <dd>
+    Returns the list of keys in the AgentSet.  It returns keys of not purgued agents, so, it is possible to have keys of dead agents in this list.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../classes/AgentSet.html#A_family:alives_list">AgentSet.alives_list</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> all_keys = Family:keys()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Instance:clone"></a>
+    <strong>Instance:clone (agent)</strong>
+    </dt>
+    <dd>
+    This function returns a clone of the table gived as parameter.  Is an auxiliar function used by 'clone<em>n</em>act' to obtain an object that is added to the Family later.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "A_family:alives_list"></a>
+    <strong>A_family:alives_list ()</strong>
+    </dt>
+    <dd>
+    Returns the list of alive agents in the Family
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> current_agents = A_family:alives_list()</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "AgentSet:_init"></a>
+    <strong>AgentSet:_init ()</strong>
+    </dt>
+    <dd>
+    Family constructor.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">New_Instance = Family()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "AgentSet:add_method"></a>
+    <strong>AgentSet:add_method ()</strong>
+    </dt>
+    <dd>
+    This function adds a method in the Family, the added method can be used for every agent of the AgentSet.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Nodes:add_method(<span class="string">'method_name'</span>, <span class="keyword">function</span>(node, an_agent)
+    <span class="keyword">return</span> dist_euc_to(an_agent)
+<span class="keyword">end</span> )
+
+a_node:method_name(an_agent)
+<span class="comment">-- The euclidean distance from a_node to an_agent is returned</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "AgentSet:add_method"></a>
+    <strong>AgentSet:add_method ()</strong>
+    </dt>
+    <dd>
+    This function adds a property to the agents of the AgentSet.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">TODO</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "AgentSet:kill"></a>
+    <strong>AgentSet:kill ()</strong>
+    </dt>
+    <dd>
+    Killing an agent consist in include its id in a list of agents to purge and its parameter 'alive' will be set to false.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/actions.html#die">actions.die</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Nodes:kill(a_node)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "AgentSet:kill_and_purge"></a>
+    <strong>AgentSet:kill_and_purge ()</strong>
+    </dt>
+    <dd>
+    This function kills and agent and removes it from the simulation.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/actions.html#kill_and_purge">actions.kill_and_purge</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">Nodes:kill_and_purge(an_agent)</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Metamethods"></a>Metamethods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "AgentSet:__purge_agents"></a>
+    <strong>AgentSet:__purge_agents ()</strong>
+    </dt>
+    <dd>
+    To purge an agent consist in delete the agent of the family (A value of nil in the agents table) and delete all its links with other agents.
+
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/families.html#purge_agents">families.purge_agents</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="comment">-- This function is called by the method purge_agents(), so, to do a purge of died agents call 'purge_agents()' instead:
+</span>__purge_agents()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "AgentSet:__tostring"></a>
+    <strong>AgentSet:__tostring ()</strong>
+    </dt>
+    <dd>
+    A function to print the AgentSet.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="global">print</span>(Instance)</pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-11-25 12:13:21 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

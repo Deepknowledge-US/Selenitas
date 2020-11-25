@@ -15,7 +15,7 @@ local utl_filters = {}
 -- function utl_filters.one_of(family)
 --     local candidates = family:keys()
 --     local chosen = math.random(#candidates)
---     return family.agents[ candidates[chosen] ]
+--     return AgentSet.agents[ candidates[chosen] ]
 -- end
 function utl_filters.one_of(fam_or_list)
     if pcall( function() return fam_or_list:is_a(Family) end ) then
@@ -41,7 +41,7 @@ function utl_filters.n_of(n,family)
 end
 
 ------------------
--- Select n (or less if not enough agents) random elements in a Family.
+-- Select n (or less if not enough agents) random elements in a AgentSet.
 -- @function up_to_n_of
 -- @param n Number, the number of agents we want.
 -- @return f_c_t A Family, a Collection or a Table from where we will pick the agents.
@@ -95,13 +95,13 @@ function utl_filters.last_n(n,list)
 end
 
 ------------------
--- Given a family and an agent, it returns all the other agents in the family.
+-- Given a family and an agent, it returns all the other agents in the AgentSet.
 -- @function others
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param agent An Agent instance.
 -- @return A Collection containing all Agents of the Family except the agent gived as parameter.
 -- @usage others(A_family, agent)
--- @see Family.others
+-- @see AgentSet.others
 function utl_filters.others (family, agent)
     return family:others(agent)
 end
@@ -109,12 +109,12 @@ end
 ------------------
 -- Filter function.
 -- @function with
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param pred Anonymous function (boolean predicate)
 -- @return Collection of agents in the family satisfying the predicate.
 -- @usage
 -- local lower_agents = with(Agents, function(ag) return ag:ycor() < 2 end )
--- @see Family.with
+-- @see AgentSet.with
 function utl_filters.with(family, pred)
     return family:with(pred)
 end
@@ -122,11 +122,11 @@ end
 ------------------
 -- Given an agent, it returns,randomly, one of the other agents in the family, or nil if there is no other agent.
 -- @function one_of_others
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param agent is an Agent instance.
 -- @return An Agent instance of the Family distinct of the agent gived as parameter.
 -- @usage one_of_others(A_family, agent)
--- @see Family.one_of_others
+-- @see AgentSet.one_of_others
 function utl_filters.one_of_others(family, agent)
     return family:one_of_others(agent)
 end
@@ -134,13 +134,13 @@ end
 ------------------
 -- Returns the agent with the minimum value for a gived function 
 -- @function max_one_of
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param funct An anonimous function that will be applied to the agents to searching for the maximum.
 -- @return Agent.
 -- @usage
 -- local olderer_agent = max_one_of(A_family, function(agent) return agent.age end )
 -- -- Assuming that all agents in "A_family" have a parameter "age"
--- @see Family.max_one_of
+-- @see AgentSet.max_one_of
 function utl_filters.max_one_of(family, funct)
     return family:max_one_of(funct)
 end
@@ -148,13 +148,13 @@ end
 ------------------
 -- Returns the n elements producing the maximum values for a gived function
 -- @function max_n_of
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param num Number of agents we want
 -- @param funct An anonimous function that will be applied to agents to compute the value
 -- @return Collection.
 -- @usage
 -- local older_5_agents = max_n_of(A_family, 5, function(ag) return ag.age end)
--- @see Family.max_n_of
+-- @see AgentSet.max_n_of
 function utl_filters.max_n_of(family, num, funct)
     return family:max_n_of(num,funct)
 end
@@ -162,13 +162,13 @@ end
 ------------------
 -- Returns the n elements producing the minimum values for a gived function
 -- @function min_n_of
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param num Number of agents we want
 -- @param funct An anonimous function that will be applied to agents to compute the value
 -- @return Collection of agents
 -- @usage
 -- local younger_5_agents = min_n_of(A_family, 5, function(ag) return ag.age end)
--- @see Family.min_n_of
+-- @see AgentSet.min_n_of
 function utl_filters.min_n_of(family, num,funct)
     return family:min_n_of(num,funct)
 end
@@ -176,13 +176,13 @@ end
 ------------------
 -- Returns the agent with the minimum value for a gived function 
 -- @function min_one_of
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param funct An anonimous function that will be applied to the agents to searching for the minimum.
 -- @return An Agent. The type of agent depends on the type of family that has called the method.
 -- @usage
 -- local younger_agent = min_one_of(A_family, function(agent) return agent.age end )
 -- -- Assuming that all agents in "A_family" have a parameter "age"
--- @see Family.min_one_of
+-- @see AgentSet.min_one_of
 function utl_filters.min_one_of(family, funct)
     return family:min_one_of(funct)
 end
@@ -190,12 +190,12 @@ end
 ------------------
 -- Returns a Collection of agents with the min value for a gived function.
 -- @function with_max
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param funct An anonymous function to calculate the value for each agent
 -- @return Collection
 -- @usage
 -- local agents_in_the_right = with_max(A_family, function(agent) return agent:xcor() end )
--- @see Family.with_max
+-- @see AgentSet.with_max
 function utl_filters.with_max(family,funct)
     return family:with_max(funct)
 end
@@ -203,12 +203,12 @@ end
 ------------------
 -- Returns a Collection of agents with the min value for a gived function.
 -- @function with_min
--- @param family the target family.
+-- @param family the target AgentSet.
 -- @param funct An anonymous function to calculate the value for each agent
 -- @return Collection
 -- @usage
 -- local agents_in_the_left = with_min(A_family, function(agent) return agent:xcor() end )
--- @see Family.with_min
+-- @see AgentSet.with_min
 function utl_filters.with_min(family,funct)
     return family:with_min(funct)
 end

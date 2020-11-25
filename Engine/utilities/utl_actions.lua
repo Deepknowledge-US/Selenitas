@@ -70,14 +70,14 @@ end
 -- @param family The family the agent belongs to. Optional param, if not gived
 -- @return Nothing
 -- @usage
--- ask(Nodes, function(node)
+-- for _, node in sorted(Nodes)
 --     if node.color == {1,1,1,1} then
 --         die(node, Nodes)
 -- --      Nodes:kill(node) -- This is equivalent.
 -- --      die(node)        -- This is also possible, and the agent will be searched and killed (but not purged) in every Family.
 --     end
--- end)
--- @see Family.kill
+-- end
+-- @see AgentSet.kill
 function utl_actions.die(agent, family)
     if family ~= nil then
         family:kill(agent)

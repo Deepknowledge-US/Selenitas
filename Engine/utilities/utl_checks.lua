@@ -83,7 +83,7 @@ end
 -- if response then
 --     print('There is almost an agent with a non empty label')
 -- end
--- @see Family.exists
+-- @see AgentSet.exists
 function utl_checks.exists(family,pred)
     return family:exists(pred)
 end
@@ -96,20 +96,20 @@ end
 -- @return Boolean. True if all agents in the family validate the condition.
 -- @usage
 -- all(A_family, function(ag) ag.label == '' end)
--- @see Family.all
+-- @see AgentSet.all
 function utl_checks.all(family,pred)
     return family:all(pred)
 end
 
 ------------------
--- Checks if an agent is member of the family.
+-- Checks if an agent is member of the AgentSet.
 -- @function is_in
 -- @param family A family to check.
 -- @param agent The Agent instance we want to check.
 -- @return Boolean. True if the agent is in the family
 -- @usage
 -- local my_boolean = is_in(A_family, agent)
--- @see Family.is_in
+-- @see AgentSet.is_in
 function utl_checks.is_in(family, agent)
     return family:is_in(agent)
 end

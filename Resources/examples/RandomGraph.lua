@@ -2,7 +2,7 @@
     An example of growing and cloning of agents.
 
     It uses customized methods for families and several standard methods
-    (die, clone) and agent properties (alive)
+    (die, clone) and agent properties (__alive)
 ]]
 
 -----------------

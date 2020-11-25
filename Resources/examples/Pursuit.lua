@@ -2,7 +2,7 @@
     Pursuit model where some agents must follow one prefixed agent.
 
     It uses customized methods for families and several standard methods
-    (die, clone) and agent properties (alive)
+    (die, clone) and agent properties (__alive)
 ]]
 
 -----------------

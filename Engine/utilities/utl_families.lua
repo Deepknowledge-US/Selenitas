@@ -67,13 +67,13 @@ end
 -- clone_n(3, ag1, ag1_family, function(clone)
 --     clone:gtrn()
 -- end)
--- @see Family.clone_n
+-- @see AgentSet.clone_n
 function utl_fam.clone_n(family, n, agent, funct)
     return family:clone_n(n, agent, funct)
 end
 
 ------------------
--- This function delete from the system all agents marked as not alive (a value of false in its parameter 'alive'), it will also delete all the relational agents that involve a not-alive agent.
+-- This function delete from the system all agents marked as not alive (a value of false in its parameter '__alive'), it will also delete all the relational agents that involve a not-alive agent.
 -- @function purge_agents
 -- @param ... Undefined number of Families from where we want to purge agents. If no Family is passed, it purge all families in the system.
 -- @return Nothing

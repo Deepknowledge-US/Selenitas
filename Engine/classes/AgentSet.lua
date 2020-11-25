@@ -4,11 +4,11 @@
 -- self.agents is a table 'object_id: object' and we use it to find an element quickily.
 --
 -- @classmod
--- Family
+-- AgentSet
 
 local class = require "Thirdparty.pl.class"
 
-local Family = class.Family()
+local AgentSet = class.AgentSet()
 
 
 
@@ -19,9 +19,9 @@ local Family = class.Family()
 ------------------
 -- Family constructor.
 -- @function _init
--- @return Family. A new instance of Family class.
+-- @return AgentSet. A new instance of Family class.
 -- @usage New_Instance = Family()
-Family._init = function(self,name)
+AgentSet._init = function(self,name)
     self.name       = name or 'Collection'
     self.__to_purge = {}
     self.properties = {}
@@ -33,7 +33,7 @@ Family._init = function(self,name)
 end
 
 ------------------
--- This function adds a method in the Family, the added method can be used for every agent of the family.
+-- This function adds a method in the Family, the added method can be used for every agent of the AgentSet.
 -- @function add_method
 -- @return Nothing.
 -- @usage 
@@ -43,7 +43,7 @@ end
 --
 -- a_node:method_name(an_agent)
 -- -- The euclidean distance from a_node to an_agent is returned
-Family.add_method = function(self, name, funct)
+AgentSet.add_method = function(self, name, funct)
 
     self.functions[name] = funct
     for _,v in next,self.agents do
@@ -53,7 +53,7 @@ Family.add_method = function(self, name, funct)
 end
 
 
-Family.clone_table = function(tab) -- deep-copy a table
+AgentSet.clone_table = function(tab) -- deep-copy a table
     if type(tab) ~= "table" then
         return tab
     end
@@ -63,7 +63,7 @@ Family.clone_table = function(tab) -- deep-copy a table
         if type(v) ~= "table" or is_instance(v,Agent) or is_instance(v,Family) then
             target[k] = v
         else
-            target[k] = Family.clone_table(v)
+            target[k] = AgentSet.clone_table(v)
         end
     end
     setmetatable(target, meta)
@@ -71,19 +71,19 @@ Family.clone_table = function(tab) -- deep-copy a table
 end
 
 ------------------
--- This function adds a property to the agents of the Family.
+-- This function adds a property to the agents of the AgentSet.
 -- @function add_method
 -- @return Nothing.
 -- @usage TODO
-Family.add_properties = function(self, tab)
+AgentSet.add_properties = function(self, tab)
 
     for prop_name, def_val in next, tab do
-        self.properties[prop_name] = Family.clone_table(def_val)
+        self.properties[prop_name] = AgentSet.clone_table(def_val)
     end
 
     for _,v in next, self.agents do
         for prop_name,def_val in next, self.properties do
-            v[prop_name] = Family.clone_table(def_val)
+            v[prop_name] = AgentSet.clone_table(def_val)
         end
     end
 
@@ -95,9 +95,9 @@ end
 -- @return Nothing.
 -- @usage Nodes:kill(a_node)
 -- @see actions.die
-Family.kill = function(self, agent)
-    if agent ~= nil and agent.alive then
-        self.agents[agent.__id].alive = false
+AgentSet.kill = function(self, agent)
+    if agent ~= nil and agent.__alive then
+        self.agents[agent.__id].__alive = false
         table.insert(self.__to_purge, agent)
         self.count = self.count - 1
         if agent.current_cells then
@@ -116,7 +116,7 @@ end
 -- -- This function is called by the method purge_agents(), so, to do a purge of died agents call 'purge_agents()' instead:
 -- __purge_agents()
 -- @see families.purge_agents
-Family.__purge_agents = function(self)
+AgentSet.__purge_agents = function(self)
     for _, v in pairs(self.__to_purge) do
         v:__purge()
     end
@@ -130,7 +130,7 @@ end
 -- @usage
 -- Nodes:kill_and_purge(an_agent)
 -- @see actions.kill_and_purge
-Family.kill_and_purge = function(self,agent)
+AgentSet.kill_and_purge = function(self,agent)
     self:kill(agent)
     agent:__purge()
 end
@@ -148,7 +148,7 @@ end
 --  end)
 --  -- If we just want to create same agents, we can call this function without the last parameter:
 --  Agents1:clone_n(3, agent)
-Family.clone_n = function(self, num, agent, funct)
+AgentSet.clone_n = function(self, num, agent, funct)
     local res = {}
 
     for i = 1, num do
@@ -178,7 +178,7 @@ end
 -- @usage
 -- local response = A_family:exists( function(x) x.label ~= '' end )
 -- @see checks.exists
-Family.exists = function(self, pred)
+AgentSet.exists = function(self, pred)
     for _, v in pairs(self.agents) do
         if pred(v) then
             return true, v
@@ -195,7 +195,7 @@ end
 -- @usage
 -- A_family:all(function(ag) ag.label == '' end)
 -- @see checks.all
-Family.all = function(self, pred)
+AgentSet.all = function(self, pred)
     for _, v in pairs(self.agents) do
         if not pred(v) then
             return false
@@ -205,14 +205,14 @@ Family.all = function(self, pred)
 end
 
 ------------------
--- Checks if an agent is member of the family.
+-- Checks if an agent is member of the AgentSet.
 -- @function Instance:is_in
 -- @param agent The Agent instance we want to check.
 -- @return Boolean. True if the agent is in the family
 -- @usage
 -- A_family:is_in(agent)
 -- @see checks.is_in
-Family.is_in = function(self,agent)
+AgentSet.is_in = function(self,agent)
     if self.agents[agent.__id] then
         return true
     else
@@ -228,13 +228,13 @@ end
 --===========================--
 
 ------------------
--- Given an agent, it returns all the other agents in the family.
+-- Given an agent, it returns all the other agents in the AgentSet.
 -- @function Instance:others
 -- @param agent An Agent instance.
 -- @return A Collection containing all Agents of the Family except the agent gived as parameter.
 -- @usage Instance:others(agent)
 -- @see filters.others
-Family.others = function(self, agent)
+AgentSet.others = function(self, agent)
     return self:with(
         function(x)
             return x ~= agent
@@ -249,7 +249,7 @@ end
 -- @return An Agent instance of the Family distinct of the agent gived as parameter.
 -- @usage Instance:one_of_others(agent)
 -- @see filters.one_of_others
-Family.one_of_others = function(self, agent)
+AgentSet.one_of_others = function(self, agent)
     local candidates = self:alives_list()
 
     if #candidates < 2 then return nil end
@@ -271,7 +271,7 @@ end
 -- @usage
 -- local lower_agents = Agents:with( function(ag) return ag:ycor() < 2 end )
 -- @see filters.with
-Family.with = function(self, pred)
+AgentSet.with = function(self, pred)
     local yes = Collection(self)
     local no  = Collection(self)
     for _, v in pairs(self.agents) do
@@ -285,13 +285,13 @@ Family.with = function(self, pred)
 end
 
 ------------------
--- Selects and returns a random alive agent of the family.
+-- Selects and returns a random alive agent of the AgentSet.
 -- @function Instance:one_of
 -- @return Agent. The type of agent depends on the type of family the agent belongs to.
 -- @usage
 -- local random_alive_agent = A_family:one_of()
 -- @see filters.one_of
-Family.one_of = function(self)
+AgentSet.one_of = function(self)
     local list_copy = self:alives_list()
     local target = self.count>0 and list_copy[math.random(self.count)] or nil
     -- local target = list_copy[math.random(#list_copy)]
@@ -299,15 +299,15 @@ Family.one_of = function(self)
 end
 
 ------------------
--- Selects and returns n random alive agents of the family. If the number of agents of the family is minor that n this function returns an error message.
+-- Selects and returns n random alive agents of the AgentSet. If the number of agents of the family is minor that n this function returns an error message.
 -- @function Instance:n_of
 -- @param n Number of agents we want.
 -- @return Collection with n random selected agents of the family, or error if not enough agents.
--- @see Family.up_to_n_of
+-- @see AgentSet.up_to_n_of
 -- @usage
 -- local three_agents = A_family:n_of(3)
 -- @see filters.n_of
-Family.n_of = function(self, n)
+AgentSet.n_of = function(self, n)
     local res        = Collection(self)
     local list_copy  = self:alives_list()
     local num_agents = self.count
@@ -324,14 +324,14 @@ Family.n_of = function(self, n)
 end
 
 ------------------
--- This function selects n random agents of a family. When there are fewer than n agents in the family, this function returns all agents in the family.
+-- This function selects n random agents of a AgentSet. When there are fewer than n agents in the family, this function returns all agents in the AgentSet.
 -- @function Instance:up_to_n_of
 -- @param n Number. Number of agents we want.
 -- @return Collection
 -- @usage
 -- local ten_or_less_nodes = Nodes:up_to_n_of(10)
 -- @see filters.up_to_n_of
-Family.up_to_n_of = function(self, n)
+AgentSet.up_to_n_of = function(self, n)
     local res       = Collection(self)
     local list_copy = self:alives_list()
     local num_agents= self.count
@@ -355,7 +355,7 @@ end
 -- local olderer_agent = A_family:max_one_of( function(agent) return agent.age end )
 -- -- Assuming that all agents in "A_family" have a parameter "age"
 -- @see filters.max_one_of
-Family.max_one_of = function(self, f)
+AgentSet.max_one_of = function(self, f)
     local res, max_value = nil, nil
 
     for _, v in pairs(self.agents) do
@@ -378,7 +378,7 @@ end
 -- @usage
 -- local older_5_agents = A_family:max_n_of(5, function(ag) return ag.age end)
 -- @see filters.max_n_of
-Family.max_n_of = function(self, n, f)
+AgentSet.max_n_of = function(self, n, f)
     local copy = self:alives_list()
     table.sort(
         copy,
@@ -403,7 +403,7 @@ end
 -- @usage
 -- local younger_5_agents = A_family:min_n_of(5, function(ag) return ag.age end)
 -- @see filters.min_n_of
-Family.min_n_of = function(self, num,funct)
+AgentSet.min_n_of = function(self, num,funct)
     local copy = self:alives_list()
     table.sort(
         copy,
@@ -428,7 +428,7 @@ end
 -- local younger_agent = A_family:min_one_of( function(agent) return agent.age end )
 -- -- Assuming that all agents in "A_family" have a parameter "age"
 -- @see filters.min_one_of
-Family.min_one_of = function(self, funct)
+AgentSet.min_one_of = function(self, funct)
     local res, max_value = nil, nil
 
     for _, v in pairs(self.agents) do
@@ -450,7 +450,7 @@ end
 -- @usage
 -- local agents_in_the_right = A_family:with_max( function(agent) return agent:xcor() end )
 -- @see filters.with_max
-Family.with_max = function(self,funct)
+AgentSet.with_max = function(self,funct)
     local res     = Collection(self)
     local ordered = self:alives_list()
     table.sort(ordered, function(x,y) return funct(x)>funct(y) end)
@@ -475,7 +475,7 @@ end
 -- @usage
 -- local agents_in_the_left = A_family:with_min( function(agent) return agent:xcor() end )
 -- @see filters.with_min
-Family.with_min = function(self,funct)
+AgentSet.with_min = function(self,funct)
     local res     = Collection(self)
     local ordered = self:alives_list()
     table.sort(ordered, function(x,y) return funct(x)<funct(y) end)
@@ -499,30 +499,30 @@ end
 --===========================--
 
 ------------------
--- Returns the total number of agents in the family (alives and killed agents that have not been purged yet). If you want the number of agets with live you can use the parameter "count" of families (Family.count)
+-- Returns the total number of agents in the family (alives and killed agents that have not been purged yet). If you want the number of agets with live you can use the parameter "count" of families (AgentSet.count)
 -- @function Instance:count_all
 -- @return Number.
 -- @usage local number = My_family:count_all()
-Family.get = function(self, agent_id)
+AgentSet.get = function(self, agent_id)
     return self.agents[agent_id]
 end
 
 ------------------
--- Returns the total number of agents in the family (alives and killed agents that have not been purged yet). If you want the number of agets with live you can use the parameter "count" of families (Family.count)
+-- Returns the total number of agents in the family (alives and killed agents that have not been purged yet). If you want the number of agets with live you can use the parameter "count" of families (AgentSet.count)
 -- @function Instance:count_all
 -- @return Number.
 -- @usage local number = My_family:count_all()
-Family.count_all = function(self)
+AgentSet.count_all = function(self)
     return self.count + #self.__to_purge()
 end
 
 ------------------
--- Returns the list of keys in the Family. It returns keys of not purgued agents, so, it is possible to have keys of dead agents in this list.
+-- Returns the list of keys in the AgentSet. It returns keys of not purgued agents, so, it is possible to have keys of dead agents in this list.
 -- @function Instance:keys
 -- @return List of numbers (the keys)
 -- @usage local all_keys = Family:keys()
--- @see Family.alives_list
-Family.keys = function(self)
+-- @see AgentSet.alives_list
+AgentSet.keys = function(self)
     local res = {}
     for k, _ in pairs(self.agents) do
         table.insert(res, k)
@@ -535,7 +535,7 @@ end
 -- @function Instance:clone
 -- @param agent is an Agent instance.
 -- @return A new object, clone of the one gived as parameter. The only difference will be the id, unique for any agent or clone.
-Family.clone = function(self, agent) -- deep-copy a table
+AgentSet.clone = function(self, agent) -- deep-copy a table
     if type(agent) ~= "table" then
         return agent
     end
@@ -558,10 +558,10 @@ end
 -- @return List of agents
 -- @usage
 -- local current_agents = A_family:alives_list()
-Family.alives_list = function(self)
+AgentSet.alives_list = function(self)
     local res = {}
     for _, v in next, self.agents do
-        if v.alive then
+        if v.__alive then
             table.insert(res, v)
         end
     end
@@ -569,11 +569,11 @@ Family.alives_list = function(self)
 end
 
 ------------------
--- A function to print the Family.
+-- A function to print the AgentSet.
 -- @function __tostring
 -- @return A string representation of the Family
 -- @usage print(Instance)
-Family.__tostring = function(self)
+AgentSet.__tostring = function(self)
     local res = "{\n"
     for k, v in pairs(self.agents) do
         if type(v) == "table" then
@@ -593,4 +593,4 @@ end
 
 
 
-return Family
+return AgentSet
