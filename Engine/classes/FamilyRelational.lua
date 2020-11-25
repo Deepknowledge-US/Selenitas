@@ -35,8 +35,8 @@ FR.new = function(self,object)
     -- A new Link is created using the input table. If this table does not have a source and a target an error is returned.
     if pcall( function() return object.source and object.target end ) then
 
-        local obj1,id1 = object.source, object.source.id
-        local obj2,id2 = object.target, object.target.id
+        local obj1,id1 = object.source, object.source.__id
+        local obj2,id2 = object.target, object.target.__id
 
         local new_id   = Simulation:__new_id()
         local new_rel  = {}
@@ -44,7 +44,7 @@ FR.new = function(self,object)
         for k,v in pairs(object) do
             new_rel[k] = v
         end
-        new_rel.id      = new_id
+        new_rel.__id      = new_id
         new_rel.family  = self
         new_rel.z_order = self.z_order
 

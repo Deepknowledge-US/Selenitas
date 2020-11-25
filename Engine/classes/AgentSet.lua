@@ -97,7 +97,7 @@ end
 -- @see actions.die
 Family.kill = function(self, agent)
     if agent ~= nil and agent.alive then
-        self.agents[agent.id].alive = false
+        self.agents[agent.__id].alive = false
         table.insert(self.__to_purge, agent)
         self.count = self.count - 1
         if agent.current_cells then
@@ -213,7 +213,7 @@ end
 -- A_family:is_in(agent)
 -- @see checks.is_in
 Family.is_in = function(self,agent)
-    if self.agents[agent.id] then
+    if self.agents[agent.__id] then
         return true
     else
         return false

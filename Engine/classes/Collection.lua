@@ -28,7 +28,7 @@ end
 -- @usage Coll_instance:add(existing_agent)
 Collection.add = function(self,object)
     local old_agent = object
-    local not_new_id= old_agent.id
+    local not_new_id= old_agent.__id
 
     if not self.agents[not_new_id] then
         self.agents[not_new_id] = old_agent
@@ -46,11 +46,11 @@ end
 -- @usage
 -- A_collection:remove(agent)
 Collection.remove = function(self, agent)
-    if self.agents[agent.id] then
-        self.agents[agent.id] = nil
+    if self.agents[agent.__id] then
+        self.agents[agent.__id] = nil
         self.count = self.count - 1
     else
-        --print('Error in Collection.remove: There is no agent in the collection with id:',agent.id )
+        --print('Error in Collection.remove: There is no agent in the collection with id:',agent.__id )
     end
 end
 

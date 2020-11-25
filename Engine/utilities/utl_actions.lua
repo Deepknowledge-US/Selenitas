@@ -83,7 +83,7 @@ function utl_actions.die(agent, family)
         family:kill(agent)
     else
         for _,fam in next, Simulation.families do
-            if agent == fam.agents[agent.id]  then
+            if agent == fam.agents[agent.__id]  then
                 fam:kill(agent)
             end
         end

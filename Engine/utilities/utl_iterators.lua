@@ -97,7 +97,7 @@ end
 -- @return An element of the list
 -- @usage
 -- for _,agent in shuffled(Agents)do
---     print(agent.id)
+--     print(agent.__id)
 -- end
 -- @see ordered
 -- @see sorted
@@ -119,7 +119,7 @@ end
 -- @return An element of the list
 -- @usage
 -- for _,agent in ordered(Agents)do
---     print(agent.id)
+--     print(agent.__id)
 -- end
 -- @see shuffled
 -- @see sorted
@@ -145,7 +145,7 @@ end
 -- @return An element of the list
 -- @usage
 -- for _,agent in sorted(Agents,'id',true)do
---     print(agent.id)
+--     print(agent.__id)
 -- end
 -- @see shuffled
 -- @see ordered

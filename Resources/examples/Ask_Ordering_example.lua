@@ -23,7 +23,7 @@ SETUP = function()
 
     for k,ag1 in iter(Mobils) do
         ag1:move_to({x,0})
-        ag1.label = ag1.id
+        ag1.label = ag1.__id
         x = x + 2
     end
 

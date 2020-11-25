@@ -144,7 +144,7 @@ Agent.__delete_in_neighs = function(self)
             i = i+1
         end
         if target ~= nil then
-            target.out_neighs[self.id] = nil -- Delete references to the agent
+            target.out_neighs[self.__id] = nil -- Delete references to the agent
         else
             print('ERROR while trying to delete_in_neighs. Target: ' .. k)
         end
@@ -164,7 +164,7 @@ Agent.__delete_out_neighs = function(self)
             i = i+1
         end
         if target ~= nil then
-            target.in_neighs[self.id] = nil -- Delete references to the agent
+            target.in_neighs[self.__id] = nil -- Delete references to the agent
         else
             print('ERROR while trying to delete_out_neighs. Target: ' .. k)
         end
@@ -195,7 +195,7 @@ Agent.__purge = function(self)
     self:__delete_links(self.out_links)
 
     -- Step 3: Delete myself
-    self.family.agents[self.id] = nil
+    self.family.agents[self.__id] = nil
 end
 
 ------------------

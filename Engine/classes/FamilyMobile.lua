@@ -40,7 +40,7 @@ FM.new = function(self,object)
         new_agent = Mobile(object)
     end
 
-    new_agent.id      = key
+    new_agent.__id      = key
     new_agent.family  = self
     new_agent.z_order = self.z_order
 

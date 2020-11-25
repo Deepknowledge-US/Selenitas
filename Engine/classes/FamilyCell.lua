@@ -147,7 +147,7 @@ FC.new = function(self,object)
         new_agent = Cell(object)
     end
 
-    new_agent.id      = k
+    new_agent.__id      = k
     new_agent.family  = self
     new_agent.z_order = self.z_order
 
@@ -191,30 +191,30 @@ FC.diffuse = function(self,param,perc,num)
 
     for i=1,n do
         -- self:ask_ordered(function(cell)
-        --     param_table[cell.id] = cell[param] * (1-perc)
+        --     param_table[cell.__id] = cell[param] * (1-perc)
         --     cell[param] = cell[param] * perc / cell.neighbors.count
         -- end)
         -- self:ask_ordered( function(cell)
         --     ask_ordered(cell.neighbors, function(neigh)
-        --         param_table[neigh.id] = param_table[neigh.id] + cell[param]
+        --         param_table[neigh.__id] = param_table[neigh.__id] + cell[param]
         --     end)
         -- end)
         -- self:ask_ordered(function(cell)
-        --     cell[param] = param_table[cell.id]
+        --     cell[param] = param_table[cell.__id]
         -- end)
 
         for _,cell in ordered(self.agents) do
-            param_table[cell.id] = cell[param] * (1-perc)
+            param_table[cell.__id] = cell[param] * (1-perc)
             cell[param] = cell[param] * perc / cell.neighbors.count            
         end
 
         for _,cell in ordered(self.agents) do
             for _,neigh in ordered(cell.neighbors) do
-                param_table[neigh.id] = param_table[neigh.id] + cell[param]
+                param_table[neigh.__id] = param_table[neigh.__id] + cell[param]
             end
         end
         for _,cell in ordered(self.agents) do
-            cell[param] = param_table[cell.id]
+            cell[param] = param_table[cell.__id]
         end
 
     end
@@ -243,7 +243,7 @@ FC.multi_diffuse = function(self,param,num)
     for i=1,n do
         for _,cell in ordered(self.agents) do
             for i,p in ipairs(param) do
-              param_table[i][cell.id] = cell[p[1]] * (1-p[2])
+              param_table[i][cell.__id] = cell[p[1]] * (1-p[2])
               cell[p[1]] = cell[p[1]] * p[2] / cell.neighbors.count            
             end
         end
@@ -251,13 +251,13 @@ FC.multi_diffuse = function(self,param,num)
         for _,cell in ordered(self.agents) do
           for i,p in ipairs(param) do
             for _,neigh in ordered(cell.neighbors) do
-                param_table[i][neigh.id] = param_table[i][neigh.id] + cell[p[1]]
+                param_table[i][neigh.__id] = param_table[i][neigh.__id] + cell[p[1]]
             end
           end
         end
         for _,cell in ordered(self.agents) do
           for i,p in ipairs(param) do
-            cell[p[1]] = param_table[i][cell.id]
+            cell[p[1]] = param_table[i][cell.__id]
           end
         end
 
