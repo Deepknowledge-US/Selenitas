@@ -34,7 +34,7 @@ SETUP = function()
     for i = 1, Interface:get_value('N_Mobiles') do
         Agents:new({
             shape = "circle"
-            ,pos  = one_of(Cells).pos
+            ,pos  = copy(one_of(Cells).pos)
             ,color = {0,0,1,1}
             ,scale = 1
         })
@@ -48,16 +48,11 @@ end
 
 STEP = function()
 
-
     for _,ag in ordered(Agents) do
         -- Every agent move to one neighbors cell
-        c = Cells:cell_of(ag)
-        -- print('------>', c:xcor(), c:ycor())
-        -- for _,n in ordered(c.neighbors) do
-        --     print(n:xcor(), n:ycor())
-        -- end
-        
+        local c = Cells:cell_of(ag)
         ag:move_to((c.neighbors):one_of())
+
         -- consume some food there
         c = Cells:cell_of(ag)
         c.food = c.food - .2
