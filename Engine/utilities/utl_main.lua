@@ -32,6 +32,7 @@ Draw                = require 'Visual.draw'
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 copy                = __list_tables.list_copy
+list_copy                = __list_tables.list_copy
 list_remove         = __list_tables.list_remove
 list_remove_index   = __list_tables.list_remove_index
 fam_to_list         = __list_tables.fam_to_list
