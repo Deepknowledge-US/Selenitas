@@ -34,24 +34,24 @@ SETUP = function()
             ['scale']      = scale
             ,['color']      = {1,0,0,1}    -- red
             ,['heading']    = math.pi / 2  -- looking north
-            ,['label']      = i            -- label = id
+            ,['label']      = i
             ,['show_label'] = true         -- show label (false, by default)
         })
 
         Squares:new({
             ['scale']       = scale
-            ,['color']      = {0,1,0,1}    -- red
+            ,['color']      = {0,1,0,1}    -- green
             ,['heading']    = math.pi / 2  -- looking north
-            ,['label']      = i            -- label = id
+            ,['label']      = i
             ,['show_label'] = true         -- show label (false, by default)
             ,['shape']      = 'square'
         })
 
         Circles:new({
             ['scale']      = scale
-            ,['color']      = {0,0,1,1}    -- red
+            ,['color']      = {0,0,1,1}    -- blue
             ,['heading']    = math.pi / 2  -- looking north
-            ,['label']      = i            -- label = id
+            ,['label']      = i
             ,['show_label'] = true         -- show label (false, by default)
             ,['shape']      = 'circle'
         })
@@ -87,5 +87,64 @@ end
 
 
 STEP = function()
+    print("\n\n ====================")
+    local t_s = union(Triangles, Squares)
+    print('union -> T: '..Triangles.count, 'S: '..Squares.count, 'T+S: '..t_s.count)
+
+    local t_c = union(Triangles, Circles)
+    print('union -> T: '.. Triangles.count, 'C: '..Circles.count, 'T+C: '..t_c.count)
+
+    local tsc = union(Triangles, union(Squares, Circles))
+    print('union -> T: '.. Triangles.count, 'S: '..Squares.count, 'C: '..Circles.count, 'T+S+C: '..tsc.count)
+
+
+    print('\n')
+
+    local int_ts = intersection(Triangles, Squares)
+    print('inter -> T: '..Triangles.count, 'S: '..Squares.count, 'T/S: '..int_ts.count )
+
+    local int_ts = intersection(t_s, t_c)
+    print('inter -> T+S: '..Triangles.count, 'T+C: '..Squares.count, 'T+S/T+C: '..int_ts.count )
+
+    local int_ts = intersection(Triangles, tsc)
+    print('inter -> T: '..Triangles.count, 'T+S+C: '..tsc.count, 'T/T+S+C: '..int_ts.count )
+
+    local int_ts = intersection(tsc, Circles)
+    print('inter -> T+S+C: '..tsc.count, 'C: '..Circles.count, 'T+S+C/C: '..int_ts.count )
+
+    local int_ts = intersection(tsc, Squares)
+    print('inter -> T+S+C: '..tsc.count, 'S: '..Squares.count, 'T+S+C/S: '..int_ts.count )
+
+    print('\n')
+
+    local dif_ts = difference(Triangles, Squares)
+    print('difer -> T: '..Triangles.count, 'S: '..Squares.count, 'T-S: '..dif_ts.count )
+
+    local dif_ts = difference(t_s, Squares)
+    print('difer -> T+S: '..t_s.count, 'S: '..Squares.count, 'T+S-S: '..dif_ts.count )
+
+    print('\n The following methods modify the Collection "new_col"')
+
+    local new_col = union(Triangles, union(Squares, Circles) )
+    print('new_col = T+S+C ->', new_col.count )
+
+    new_col:difference(Triangles)
+    print('new_col - T ->', new_col.count )
+
+    new_col:difference(Squares)
+    print('new_col - S ->', new_col.count )
+
+    new_col:difference(Circles)
+    print('new_col - C ->', new_col.count )
+
+
+
+    new_col:union(Circles):union(Squares)
+    print('new_col + C + S ->', new_col.count )
+
+    new_col:intersection(Circles)
+    print('new_col / C ->', new_col.count )
+
+
 
 end
