@@ -62,22 +62,31 @@ end
 -- @function link_neighbors
 -- @param fam Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @return Collection of neighbors of the agent.
-Agent.link_neighbors = function(self,fam)
+Agent.link_neighbors = function(self,fam1, fam2)
     local res = Collection()
-    if fam then
+    if fam1 then
+        local pred_in,pred_out
+        if fam2 then
+            pred_in  = function(index) return self.in_links[index].family == fam2 and self.in_links[index].source.family == fam1 end
+            pred_out = function(index) return self.out_links[index].family == fam2 and self.out_links[index].target.family == fam1 end
+        else
+            pred_in  = function(index) return self.in_links[index].source.family == fam1 end
+            pred_out = function(index) return self.out_links[index].target.family == fam1 end
+        end
+
         for i=1,#self.in_links do
-            if self.in_links[i].family == fam then
-                res:add(self.in_links[i].target)
+            if pred_in(i) then
+                res:add(self.in_links[i].source)
             end
         end
         for i=1,#self.out_links do
-            if self.out_links[i].family == fam then
+            if pred_out(i) then
                 res:add(self.out_links[i].target)
             end
         end
     else
         for i=1,#self.in_links do
-            res:add(self.in_links[i].target)
+            res:add(self.in_links[i].source)
         end
         for i=1,#self.out_links do
             res:add(self.out_links[i].target)
@@ -92,21 +101,50 @@ end
 -- @function in_link_neighbors
 -- @param fam Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
 -- @return Collection of links of the agent.
-Agent.in_link_neighbors  = function(self,fam)
+Agent.in_link_neighbors  = function(self,fam1, fam2)
     local res = Collection()
-    if fam then
+    if fam1 then
+        local pred_in
+        if fam2 then
+            pred_in  = function(index) return self.in_links[index].family == fam2 and self.in_links[index].source.family == fam1 end
+        else
+            pred_in  = function(index) return self.in_links[index].source.family == fam1 end
+        end
         for i=1,#self.in_links do
-            if self.in_links[i].family == fam then
-                res:add(self.in_links[i].target)
+            if pred_in(i) then
+                res:add(self.in_links[i].source)
             end
         end
     else
         for i=1,#self.in_links do
-            res:add(self.in_links[i].target)
+            res:add(self.in_links[i].source)
         end
     end
     return res
 end
+
+
+-- ------------------
+-- -- It returns the links that points to the agent.
+-- -- @function in_link_neighbors
+-- -- @param fam Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
+-- -- @return Collection of links of the agent.
+-- Agent.in_link_neighbors  = function(self,fam)
+--     local res = Collection()
+--     if fam then
+--         for i=1,#self.in_links do
+--             if self.in_links[i].family == fam then
+--                 res:add(self.in_links[i].target)
+--             end
+--         end
+--     else
+--         for i=1,#self.in_links do
+--             res:add(self.in_links[i].target)
+--         end
+--     end
+--     return res
+-- end
+
 
 
 ------------------
@@ -114,11 +152,17 @@ end
 -- @function out_link_neighbors
 -- @param fam Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
 -- @return Collection of links of the agent.
-Agent.out_link_neighbors = function(self,fam)
+Agent.out_link_neighbors = function(self,fam1,fam2)
     local res = Collection()
-    if fam then
+    if fam1 then
+        local pred_out
+        if fam2 then
+            pred_out = function(index) return self.out_links[index].family == fam2 and self.out_links[index].target.family == fam1 end
+        else
+            pred_out = function(index) return self.out_links[index].target.family == fam1 end
+        end
         for i=1,#self.out_links do
-            if self.out_links[i].family == fam then
+            if pred_out(i) then
                 res:add(self.out_links[i].target)
             end
         end
@@ -130,6 +174,28 @@ Agent.out_link_neighbors = function(self,fam)
     end
     return res
 end
+
+-- ------------------
+-- -- It returns the links the agent as origin.
+-- -- @function out_link_neighbors
+-- -- @param fam Optional parameter, if the name of a family is given, only the links who are members of this family are returned.
+-- -- @return Collection of links of the agent.
+-- Agent.out_link_neighbors = function(self,fam)
+--     local res = Collection()
+--     if fam then
+--         for i=1,#self.out_links do
+--             if self.out_links[i].family == fam then
+--                 res:add(self.out_links[i].target)
+--             end
+--         end
+--     else
+--         for i=1,#self.out_links do
+--             local link = self.out_links[i]
+--             res:add(link.target)
+--         end
+--     end
+--     return res
+-- end
 
 ------------------
 -- Auxiliar function used by families to purge agents, it is not recommended to use it directly to manipulate agents, use 'purge_agents()' instead.
