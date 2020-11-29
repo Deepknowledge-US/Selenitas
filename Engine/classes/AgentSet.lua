@@ -517,7 +517,7 @@ AgentSet.count_all = function(self)
 end
 
 ------------------
--- Returns the list of keys in the AgentSet. It returns keys of not purgued agents, so, it is possible to have keys of dead agents in this list.
+-- Returns the list of keys in the AgentSet. It returns keys of not purged agents, so, it is possible to have keys of dead agents in this list.
 -- @function Instance:keys
 -- @return List of numbers (the keys)
 -- @usage local all_keys = Family:keys()

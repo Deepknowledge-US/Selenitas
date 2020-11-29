@@ -32,7 +32,7 @@ Draw                = require 'Visual.draw'
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 copy                = __list_tables.list_copy
-list_copy                = __list_tables.list_copy
+list_copy           = __list_tables.list_copy
 list_remove         = __list_tables.list_remove
 list_remove_index   = __list_tables.list_remove_index
 fam_to_list         = __list_tables.fam_to_list
@@ -63,8 +63,6 @@ clone_n             = __fam.clone_n
 ask_ordered         = __fam.ask_ordered
 ask_n               = __fam.ask_n
 ask                 = __fam.ask
--- __producer          = __fam.__producer
--- __consumer          = __fam.__consumer
 
 __fltr              = require 'Engine.utilities.utl_filters'
 first_n             = __fltr.first_n
@@ -94,6 +92,13 @@ fd_grid             = __act.fd_grid
 gtrn                = __act.gtrn
 rt                  = __act.rt
 lt                  = __act.lt
+
+
+__agset             = require 'Engine.utilities.utl_agent_set'
+union               = __agset.union
+difference          = __agset.difference
+intersection        = __agset.intersection
+
 
 -- Utils from Penlight
 tablex  = require 'pl.tablex'

@@ -34,7 +34,7 @@ Collection.add = function(self,object)
         self.agents[not_new_id] = old_agent
         self.count = self.count + 1
     else
-        --print('Warning: Collection.add: Attemp to insert an already existing agent')
+        -- print('Warning! Collection.add: Attemp to insert an already existing agent:', agent.__id, 'pos', agent:xcor(), agent:ycor())
     end
 end
 
@@ -50,8 +50,72 @@ Collection.remove = function(self, agent)
         self.agents[agent.__id] = nil
         self.count = self.count - 1
     else
-        --print('Error in Collection.remove: There is no agent in the collection with id:',agent.__id )
+        -- print('Warning! Collection.remove: There is no agent in the collection with id:',agent.__id, 'pos', agent:xcor(), agent:ycor() )
     end
+end
+
+
+--===========================--
+--       SETS FUNCTIONS      --
+--===========================--
+
+
+------------------
+-- A function to do a Set union.
+-- @function union
+-- @return The AgentSet that has called the method
+-- @usage Nodes_1:union(Nodes_2)
+Collection.union = function(self, agent_set)
+
+    for _,ag in next, agent_set.agents do
+        if self.agents[ag.__id] == nil then
+            self.agents[ag.__id] = ag
+            if ag.__alive then
+                self.count = self.count + 1
+            else
+                self:kill(self.agents[ag.__id])
+            end
+        end
+    end
+
+    return self
+end
+
+
+Collection.intersection = function(self, agent_set)
+
+    for _,ag in next, self.agents do
+        if agent_set.agents[ag.__id] == nil then
+            self:remove(ag)
+        end
+    end
+
+    return self
+end
+
+
+
+------------------
+-- A function to do a Set difference.
+-- @function difference
+-- @return A collection with the difference of both AgentSets.
+-- @usage new_collection = Nodes_1:difference(Nodes_2)
+Collection.difference = function(self, agent_set)
+
+    if self.count < agent_set.count then
+        for _,ag in next, self.agents do
+            if agent_set.agents[ag.__id] ~= nil then
+                res:remove(ag)
+            end
+        end
+    else
+        for _,ag in next, agent_set.agents do
+            self:remove(ag)
+        end
+    end
+
+    return self
+
 end
 
 
