@@ -34,14 +34,14 @@
 
 <h2>Functions</h2>
 <ul class="nowrap">
-    <li><a href="#file_exists">file_exists (file)</a></li>
-    <li><a href="#lines_from">lines_from (file)</a></li>
-    <li><a href="#split">split (pString, pPattern)</a></li>
+    <li><a href="#difference">difference ()</a></li>
+    <li><a href="#union">union ()</a></li>
+    <li><a href="#intersection">intersection ()</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
   <li><a href="../modules/actions.html">actions</a></li>
-  <li><a href="../modules/agentset.html">agentset</a></li>
+  <li><strong>agentset</strong></li>
   <li><a href="../modules/checks.html">checks</a></li>
   <li><a href="../modules/families.html">families</a></li>
   <li><a href="../modules/filters.html">filters</a></li>
@@ -49,7 +49,7 @@
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
-  <li><strong>strings_and_files</strong></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
   <li><a href="../modules/Resources.tests.test_grid.html">Resources.tests.test_grid</a></li>
   <li><a href="../modules/Resources.tests.test_neighs.html">Resources.tests.test_neighs</a></li>
@@ -84,8 +84,8 @@
 
 <div id="content">
 
-<h1>Module <code>strings_and_files</code></h1>
-<p>Some functions to read files and operate with strings.</p>
+<h1>Module <code>agentset</code></h1>
+<p>Some methods to operate over families.</p>
 <p>
 
 </p>
@@ -96,11 +96,11 @@
 
     <dl class="function">
     <dt>
-    <a name = "file_exists"></a>
-    <strong>file_exists (file)</strong>
+    <a name = "difference"></a>
+    <strong>difference ()</strong>
     </dt>
     <dd>
-    This function checks if a file exists
+    A function to do a Set difference.
 
 
 
@@ -109,16 +109,16 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">file_exists(a_file_path)</pre>
+        <pre class="example">new_collection = Nodes_1:difference(Nodes_2)</pre>
     </ul>
 
 </dd>
     <dt>
-    <a name = "lines_from"></a>
-    <strong>lines_from (file)</strong>
+    <a name = "union"></a>
+    <strong>union ()</strong>
     </dt>
     <dd>
-    Each line in a file will be added to a table, this function returns the table with all lines in a file.
+    A function to do a Set union.
 
 
 
@@ -127,16 +127,16 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">my_table = lines_from(path_to_file)</pre>
+        <pre class="example">Nodes_1:union(Nodes_2)</pre>
     </ul>
 
 </dd>
     <dt>
-    <a name = "split"></a>
-    <strong>split (pString, pPattern)</strong>
+    <a name = "intersection"></a>
+    <strong>intersection ()</strong>
     </dt>
     <dd>
-    Split a string ("pString") using "pPattern" as splitter.  eg: split("hello,world!", ",") -> {"hello" , "world!"}
+    A function to do a Set intersection.
 
 
 
@@ -145,9 +145,7 @@
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">my_table = split(<span class="string">'hello, world!'</span>, <span class="string">','</span>)
-<span class="global">print</span>(my_table)
-{<span class="string">"hello"</span>,<span class="string">"world!"</span>}</pre>
+        <pre class="example">new_collection = Nodes_1:intersection(Nodes_2)</pre>
     </ul>
 
 </dd>

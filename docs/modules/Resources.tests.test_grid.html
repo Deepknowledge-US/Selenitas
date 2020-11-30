@@ -34,9 +34,8 @@
 
 <h2>Functions</h2>
 <ul class="nowrap">
-    <li><a href="#file_exists">file_exists (file)</a></li>
-    <li><a href="#lines_from">lines_from (file)</a></li>
-    <li><a href="#split">split (pString, pPattern)</a></li>
+    <li><a href="#SETUP">SETUP ()</a></li>
+    <li><a href="#STEP">STEP ()</a></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -49,9 +48,9 @@
   <li><a href="../modules/list_and_tables.html">list_and_tables</a></li>
   <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
-  <li><strong>strings_and_files</strong></li>
+  <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
-  <li><a href="../modules/Resources.tests.test_grid.html">Resources.tests.test_grid</a></li>
+  <li><strong>Resources.tests.test_grid</strong></li>
   <li><a href="../modules/Resources.tests.test_neighs.html">Resources.tests.test_neighs</a></li>
   <li><a href="../modules/Resources.tests.test_scales.html">Resources.tests.test_scales</a></li>
   <li><a href="../modules/draw.html">draw</a></li>
@@ -84,8 +83,8 @@
 
 <div id="content">
 
-<h1>Module <code>strings_and_files</code></h1>
-<p>Some functions to read files and operate with strings.</p>
+<h1>Module <code>Resources.tests.test_grid</code></h1>
+<p>Interface</p>
 <p>
 
 </p>
@@ -96,59 +95,31 @@
 
     <dl class="function">
     <dt>
-    <a name = "file_exists"></a>
-    <strong>file_exists (file)</strong>
+    <a name = "SETUP"></a>
+    <strong>SETUP ()</strong>
     </dt>
     <dd>
-    This function checks if a file exists
+    Setup Function
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">file_exists(a_file_path)</pre>
-    </ul>
 
 </dd>
     <dt>
-    <a name = "lines_from"></a>
-    <strong>lines_from (file)</strong>
+    <a name = "STEP"></a>
+    <strong>STEP ()</strong>
     </dt>
     <dd>
-    Each line in a file will be added to a table, this function returns the table with all lines in a file.
+    Step Function
 
 
 
 
 
 
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">my_table = lines_from(path_to_file)</pre>
-    </ul>
-
-</dd>
-    <dt>
-    <a name = "split"></a>
-    <strong>split (pString, pPattern)</strong>
-    </dt>
-    <dd>
-    Split a string ("pString") using "pPattern" as splitter.  eg: split("hello,world!", ",") -> {"hello" , "world!"}
-
-
-
-
-
-
-    <h3>Usage:</h3>
-    <ul>
-        <pre class="example">my_table = split(<span class="string">'hello, world!'</span>, <span class="string">','</span>)
-<span class="global">print</span>(my_table)
-{<span class="string">"hello"</span>,<span class="string">"world!"</span>}</pre>
-    </ul>
 
 </dd>
 </dl>
