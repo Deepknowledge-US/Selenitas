@@ -112,103 +112,204 @@ end
 STEP = function()
     print("\n\n ====================")
 
-    print("\n ID's:\n Triangles")
+    print("\n Families of Relationals:\nTC: out links Tri->Circ\nTS: out links Tri->Squ\nTSC: in links Squ->Tri and Circ->Tri \n\n ID's:")
+
+    local str = "\n Triangles:"
     for _,t in sorted(Triangles)do
-        print(t.__id)
+        str = str .. " " .. tostring(t.__id)
     end
-    print('\n Squares')
+    str = str .. "\n Squares:"
     for _,s in sorted(Squares)do
-        print(s.__id)
+        str = str .. " " .. tostring(s.__id)
     end
-    print('\n Circles')
+    str = str .. "\n Circles:"
     for _,c in sorted(Circles)do
-        print(c.__id)
+        str = str .. " " .. tostring(c.__id)
     end
+    print(str)
 
 
     local only_s, only_c, s_and_c
 
-    print('\n Filter by family of neighbor')
     local choosen_t = one_of(Triangles)
 
     s_and_c = choosen_t:link_neighbors()
-    print('\n link_neighbors()')
+    print('\n1. link_neighbors()')
+    str = ""
     for _,ag in sorted(s_and_c)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
 
     only_s  = choosen_t:link_neighbors(Squares)
-    print('\n link_neighbors(Squares)')
+    print('\n2. link_neighbors(Squares)')
+    str = ""
     for _,ag in sorted(only_s)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
 
     only_c  = choosen_t:link_neighbors(Circles)
-    print('\n link_neighbors(Circles)')
+    print('\n3. link_neighbors(Circles)')
+    str = ""
     for _,ag in sorted(only_c)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
 
     local aux_col = choosen_t:link_neighbors(Squares,TS)
-    print('\n link_neighbors(Squares,TS) --> TS = FamilyRel with links beetween Triangles and Squares')
+    print('\n4. link_neighbors(Squares,TS)')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
 
     aux_col = choosen_t:link_neighbors(Squares,TSC)
-    print('\n link_neighbors(Squares,TSC) ')
+    print('\n5. link_neighbors(Squares,TSC) ')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
     aux_col = choosen_t:link_neighbors(Squares,TC)
-    print('\n link_neighbors(Squares,TC) -> empty Set')
+    print('\n6. link_neighbors(Squares,TC) -> empty Set')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
 
     print('\n\nTest in_link_neighbors.')
 
     local aux_col = choosen_t:in_link_neighbors(Squares,TS)
-    print('\n1. in_link_neighbors(Squares,TS) --> TS = FamilyRel with links beetween Triangles and Squares  \n --> empty Set')
+    print('\n7. in_link_neighbors(Squares,TS) --> empty set')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
     aux_col = choosen_t:in_link_neighbors(Squares,TSC)
-    print('\n2. in_link_neighbors(Squares,TSC) ')
+    print('\n8. in_link_neighbors(Squares,TSC) ')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
     aux_col = choosen_t:in_link_neighbors(Squares,TC)
-    print('\n3. in_link_neighbors(Squares,TC) \n-> empty Set')
+    print('\n9. in_link_neighbors(Squares,TC) \n-> empty Set')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
 
 
     print('\n\nTest out_link_neighbors.')
 
     local aux_col = choosen_t:out_link_neighbors(Squares,TS)
-    print('\n4. out_link_neighbors(Squares,TS) --> TS = FamilyRel with links beetween Triangles and Squares')
+    print('\n10. out_link_neighbors(Squares,TS)')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
     aux_col = choosen_t:out_link_neighbors(Squares,TSC)
-    print('\n5. out_link_neighbors(Squares,TSC) \n-> empty Set')
+    print('\n11. out_link_neighbors(Squares,TSC) \n-> empty Set')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
 
     aux_col = choosen_t:out_link_neighbors(Squares,TC)
-    print('\n6. out_link_neighbors(Squares,TC) \n-> empty Set')
+    print('\n12. out_link_neighbors(Squares,TC) \n-> empty Set')
+    str = ""
     for _,ag in sorted(aux_col)do
-        print(ag.__id)
+        str = str .. " " .. tostring(ag.__id)
     end
+    print(str)
+
+
+
+
+    print('\n\nTest my_links.')
+
+    aux_col = choosen_t:my_links()
+    print('\n13. my_links()')
+    str = ""
+    for _,ag in sorted(aux_col) do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+    aux_col = choosen_t:my_in_links()
+    print('\n14. my_in_links()')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+    aux_col = choosen_t:my_out_links()
+    print('\n15. my_out_links()')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+    aux_col = choosen_t:my_links(TC,Squares)
+    print('\n16. my_links(TC,Squares) \n-> empty Set')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+
+    aux_col = choosen_t:my_links(TSC)
+    print('\n17. my_links(TSC) ')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+
+    aux_col = choosen_t:my_links(TSC,Squares)
+    print('\n18. my_links(TSC,Squares) ')
+    for _,ag in sorted(aux_col)do
+        print(ag.__id, '-> ', tostring(ag.family == TSC) , tostring(ag.source.family == Squares or ag.target.family == Squares) )
+    end
+
+
+    aux_col = choosen_t:my_links(TSC,Circles)
+    print('\n19. my_links(TSC,Circles) ')
+    for _,ag in sorted(aux_col)do
+        print(ag.__id, '-> ', tostring(ag.family == TSC) , tostring(ag.source.family == Circles or ag.target.family == Circles) )
+    end
+
+
+
 
     print('\nEnd\n')
 end
