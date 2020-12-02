@@ -65,7 +65,7 @@ end
 -- @usage
 --      declare_FamilyMobile('Triangles')
 --      declare_FamilyMobile('Squares')
---      
+--
 --      for i=1,5 do
 --          Triangles:new({
 --          })

@@ -788,6 +788,7 @@ local function params_window(title)
         Title = title,
         X = window.x,
         Y = window.y,
+        H = window.height,
         W = window.width,
         ContentW = window.width,
         AutoSizeWindow = false,

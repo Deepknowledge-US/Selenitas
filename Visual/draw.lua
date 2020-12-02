@@ -126,7 +126,9 @@ function Draw.draw_cells_family(family)
                 love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
             elseif c.shape == "circle" then
                 -- Circle of radius=0.5
-                love.graphics.circle("line", x, y, 0.5 * coord_scale)
+                local fill = c.fill == true and 'fill' or 'line'
+                love.graphics.circle(fill, x, y, c.radius * coord_scale)
+                -- love.graphics.circle("line", x, y, 0.5 * coord_scale)
             else
                 -- Shape is a generic polygon
                 love.graphics.polygon("line", c.shape)
