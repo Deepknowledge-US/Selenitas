@@ -28,7 +28,6 @@ WindowFamilyInfo    = require 'Engine.classes.WindowFamilyInfo'
 Interface           = require 'Engine.classes.Interface'
 Simulation          = require 'Engine.classes.Simulation'
 
-Draw                = require 'Visual.draw'
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 copy                = __list_tables.list_copy
