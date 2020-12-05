@@ -37,6 +37,17 @@ function utl_numbers.random_float(a,b)
 end
 
 ------------------
+-- It returns a value of a random gaussian distribution
+-- @function gaussian
+-- @param mean Number. The center value
+-- @param variance Number. The max deviation value
+-- @return Float number
+function utl_numbers.gaussian (mean, variance)
+    return  math.sqrt(-2 * variance * math.log(math.random())) *
+            math.cos(2 * math.pi * math.random()) + mean
+end
+
+------------------
 -- It returns the euclidean distance beetween two points or agents
 -- @function dist_euc_to
 -- @param a Agent or vector

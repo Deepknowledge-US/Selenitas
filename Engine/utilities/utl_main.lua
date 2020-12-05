@@ -46,6 +46,7 @@ sorted              = __iterators.sorted
 __numbers           = require 'Engine.utilities.utl_numbers_and_dist'
 round               = __numbers.round
 random_float        = __numbers.random_float
+gaussian            = __numbers.gaussian
 dist_euc_to         = __numbers.dist_euc_to
 
 __str_fls           = require 'Engine.utilities.utl_strings_and_files'
@@ -99,9 +100,12 @@ difference          = __agset.difference
 intersection        = __agset.intersection
 
 
+-- Utils from fuzzy
+fuzzy   = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'
+
 -- Utils from Penlight
-tablex  = require 'pl.tablex'
-pretty  = require 'pl.pretty'
+tablex  = require 'Thirdparty.pl.tablex'
+pretty  = require 'Thirdparty.pl.pretty'
 pd      = pretty.dump
 
 
