@@ -12,7 +12,7 @@ cs.create_scenario = function(id_map)
     -- First line of csv files contains the names of the attributes
     for i=2, #nodes do
         local v = split( nodes[i], ',' )
-        Nodes:new({
+        local new_node = Nodes:new({
             shape           = 'circle',
             fill            = true,
             color           = {0,0,1,1},
@@ -39,7 +39,10 @@ cs.create_scenario = function(id_map)
             residents       = 0,
             density         = 0,
             lock            = 0,
-            nearest_danger  = nil
+            nearest_danger  = nil,
+            label           = tonumber(v[1]),
+            label_color     = {1,1,1,1},
+            show_label      = true
         })
     end
 
@@ -86,6 +89,8 @@ cs.create_scenario = function(id_map)
             })
         end
         if trans > 0 then
+            n1.neighbors:add(n2)
+            n2.neighbors:add(n1)
             Transits:new({
                 source      = n1,
                 target      = n2,

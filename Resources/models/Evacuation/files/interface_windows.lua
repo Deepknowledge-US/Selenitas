@@ -21,7 +21,7 @@ ci.create_interface = function()
     Interface:create_slider('World','visib mod', 0.0, 1.0, 0.01, 1.0)
     Interface:create_slider('World','sound mod', 0.0, 1.0, 0.01, 1.0)
 
-    Interface:create_slider('peacefuls','num peacefuls', 0, 5000, 1, 20)
+    Interface:create_slider('peacefuls','num peacefuls', 1, 500, 1, 1)
     Interface:create_slider('peacefuls','leaders percentage',  0.0, 1.0, 0.01, 0.25)
     Interface:create_slider('peacefuls','app percentage', 0.0, 1.0, 0.01, 0.5)
     Interface:create_slider('peacefuls','defense probability', 0.0, 1.0, 0.01, 0.1)
@@ -37,7 +37,7 @@ ci.create_interface = function()
     Interface:create_slider('violents','succes rate', 0.0, 1.0, 0.01, 0.5)
     Interface:create_slider('violents','attacker speed', 0.0, 1.0, 0.01, 0.5)
 
-    -- Create some functions to acces the current values of sliders
+    -- Create some functions to acces the current values of inputs
     local getters = {
         app_info        = function() return Interface:get_value('app', 'app info?')         end,
         app_mode        = function() return Interface:get_value('App', 'app mode')          end,
