@@ -5,7 +5,7 @@
 
 local class  = require 'Thirdparty.pl.class'
 
-local Interface = class.Simulation()
+local Interface = class.Interface()
 
 
 ------------------
