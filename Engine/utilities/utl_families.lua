@@ -86,8 +86,8 @@ function utl_fam.purge_agents(...)
             family:__purge_agents()
         end
     else
-        for i = 1, #Config.__all_families do
-            local family = Config.__all_families[i]
+        for i = 1, #Simulation.families do
+            local family = Simulation.families[i]
             family:__purge_agents()
         end
     end
