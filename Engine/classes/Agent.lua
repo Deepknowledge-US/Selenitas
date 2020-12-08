@@ -42,7 +42,14 @@ end;
 -- @function is_in_in_neighs
 -- @return Boolean, true if the agent is in the family.
 Agent.is_in = function(self,fam)
-    return fam:is_in(self)
+    if fam.count then
+        return fam:is_in(self)
+    else
+        for _,ag in next, fam do
+            if self == ag then return true end
+        end
+        return false
+    end
 end;
 
 ------------------
