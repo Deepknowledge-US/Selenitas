@@ -52,7 +52,7 @@ function utl_list.list_remove(list,element)
 end
 
 ------------------
--- It removes from the list the element of a determined position, and permute this element with the last of the list.
+-- It removes from the list the element of a determined position, and permute this element with the last of the list, otherwise it returns 0.
 -- @function list_remove_index
 -- @param list The list from where remove the index
 -- @return List
@@ -60,6 +60,22 @@ end
 function utl_list.list_remove_index(list,index)
     list[index] = nil
     list[index], list[#list] = list[#list],list[#index]
+end
+
+------------------
+-- It search for the index of an element in a list. If found it, it returns the index otherwise it returns -1.
+-- @function list_index_of
+-- @param list The list where we search for the element
+-- @param element The element we are searching for.
+-- @return Number
+-- @usage
+function utl_list.list_index_of(list,element)
+    for i=1,#list do
+        if list[i] == element then
+            return i
+        end
+    end
+    return -1
 end
 
 return utl_list
