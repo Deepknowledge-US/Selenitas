@@ -69,6 +69,20 @@ Window.create_boolean = function(self, name, value)
 end;
 
 ------------------
+-- Allows the user to create a new monitor field
+-- @function create_monitor
+-- @param name The name of the field
+-- @param var The name of the var to be monitored
+-- @return Nothing
+-- @usage
+-- -- It is not recomended to use the methods of this class. You must use the Interface method to do this.
+-- @see Interface.create_boolean
+Window.create_monitor = function(self, name)
+    self.ui_settings[name] = {type = "monitor"}
+    self:__new_item(name)
+end;
+
+------------------
 -- Allows the user to create a new slider field
 -- @function create_slider
 -- @param name The name of the new field

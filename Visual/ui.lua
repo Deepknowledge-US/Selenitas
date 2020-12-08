@@ -817,6 +817,9 @@ local function params_window(title)
             if Slab.CheckBox(Interface.windows[title][k], "Enabled") then
                 Interface.windows[title][k] = not Interface.windows[title][k]
             end
+        -- Monitor
+        elseif v.type == "monitor" then
+            Slab.Text(k .. ': ' .. tostring( global_vars[k] ) )
         -- Slider
         elseif v.type == "slider" then
             Slab.Text(k, {Color = {0.258, 0.529, 0.956}})
