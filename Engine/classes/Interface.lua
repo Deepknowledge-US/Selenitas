@@ -135,7 +135,7 @@ Interface.create_boolean = function(self, window_name, new_boolean_name, def_val
     if next(self.windows) == nil then
         self:create_window('Parameters')
     end
-    if def_value then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
+    if def_value ~= nil then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
         self.windows[window_name]:create_boolean(new_boolean_name, def_value)
     else
         self.windows['Parameters']:create_boolean(window_name, new_boolean_name)
@@ -159,7 +159,7 @@ Interface.create_monitor = function(self, window_name, var_name)
     if next(self.windows) == nil then
         self:create_window('Parameters')
     end
-    if var_name then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
+    if var_name ~= nil then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
         self.windows[window_name]:create_monitor( var_name)
     else
         self.windows['Parameters']:create_monitor(window_name )
@@ -187,7 +187,7 @@ Interface.create_slider = function(self, window_name, slider_name, min, max, ste
     if next(self.windows) == nil then -- If there is no windows, we use a default window
         self:create_window('Parameters')
     end
-    if value then -- If we have received 6 params, the user has used a custom window name
+    if value ~= nil then -- If we have received 6 params, the user has used a custom window name
         self.windows[window_name]:create_slider(slider_name, min, max, step, value)
     else
         local sl_name, mn, mx, stp, val = window_name, slider_name, min, max, step
@@ -213,7 +213,7 @@ Interface.create_input = function(self, window_name, input_name, value)
     if next(self.windows) == nil then
         self:create_window('Parameters')
     end
-    if value then
+    if value ~= nil then
         self.windows[window_name]:create_input(input_name, value)
     else
         self.windows['Parameters']:create_input(window_name, input_name)
