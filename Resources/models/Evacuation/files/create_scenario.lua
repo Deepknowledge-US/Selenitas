@@ -1,6 +1,6 @@
 local cs = {}
 
--- This function will create the scenario
+-- This function will create the scenario when called
 cs.create_scenario = function(id_map)
 
     local nodes_file = 'Resources/models/Evacuation/csv/nodesP.csv'
@@ -30,6 +30,7 @@ cs.create_scenario = function(id_map)
             attacker_s      = 0,
             bomb_v          = 0,
             bomb_s          = 0,
+            num_violents    = 0,
             scream          = 0,
             running_people  = 0,
             corpses         = 0,
@@ -37,12 +38,12 @@ cs.create_scenario = function(id_map)
             police          = 0,
             hidden_people   = 0,
             residents       = 0,
-            density         = 0,
-            lock            = 0,
-            nearest_danger  = nil,
-            label           = tonumber(v[1]),
-            label_color     = {1,1,1,1},
-            show_label      = true
+            -- density         = 0,
+            lock            = false,
+            nearest_danger  = 30,
+            -- label           = tonumber(v[1]),
+            -- label_color     = {1,1,1,1},
+            -- show_label      = true
         })
     end
 
@@ -55,6 +56,16 @@ cs.create_scenario = function(id_map)
     Nodes.find_by_id = function(self, id)
         return self:get(id_map[id])
     end
+
+    Nodes:add_method('density',function(self)
+        return self.residents / self.capacity
+    end)
+
+    Nodes:add_method('all_my_signals',function(self)
+        return  self.attacker_s     + self.attacker_v   + self.fire_s
+                + self.fire_v       + self.bomb_s		+ self.bomb_v
+                + self.scream		+ self.corpses      + self.running_people
+    end)
 
     -- Three relational families are created and populated, one for every possible kind of link (visibility, sound or transitability), this will simplify accesses to this agents.
     for i=2, #edges do
@@ -99,7 +110,7 @@ cs.create_scenario = function(id_map)
                 lockable    = lockab,
                 locked      = false,
                 flow        = flo,
-                flow_counter= 0
+                flow_counter= flo
             })
         end
     end

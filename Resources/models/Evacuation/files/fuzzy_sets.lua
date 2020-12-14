@@ -17,10 +17,10 @@ dens:addlingvar( 'low', gaussmf, { 30., 0. } )
 dens:addlingvar( 'med', gaussmf, { 15., 50. } )
 dens:addlingvar( 'high',gaussmf, { 10., 100. } )
 
-local speed = acc_prob:addinp( 'speed', 0. , 100. )
-speed:addlingvar( 'low', gaussmf, { 30., 0. } )
-speed:addlingvar( 'med', gaussmf, { 10., 50. } )
-speed:addlingvar( 'high',gaussmf, { 5., 100. } )
+local sp = acc_prob:addinp( 'speed', 0. , 100. )
+sp:addlingvar( 'low', gaussmf, { 30., 0. } )
+sp:addlingvar( 'med', gaussmf, { 10., 50. } )
+sp:addlingvar( 'high',gaussmf, { 5., 100. } )
 
 -----------
 -- Output
@@ -174,9 +174,9 @@ r34:addimplic( false, 'panic',      'med' )
 
 
 return {
-    accident    = function(a,b) return acc_prob:solve(a,b)    end,
-    panic       = function(a,b) return panic_proba:solve(a,b) end,
-    danger      = function(a,b) return danger_prob:solve(a,b) end
+    accident    = function(density, speed) return acc_prob:solve(density, speed)    end,
+    panic       = function(fear, sensibility) return panic_prob:solve(fear, sensibility) end,
+    danger      = function(risk, distance) return danger_prob:solve(risk, distance) end
 }
 
 
