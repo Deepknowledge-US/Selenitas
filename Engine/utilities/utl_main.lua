@@ -94,27 +94,27 @@ gtrn                = __act.gtrn
 rt                  = __act.rt
 lt                  = __act.lt
 
-
 __agset             = require 'Engine.utilities.utl_agent_set'
 union               = __agset.union
 difference          = __agset.difference
 intersection        = __agset.intersection
 
+-- Utils for graphs
+graph               = require 'Thirdparty.luagraphs.data.graph'
+dijkstra            = require 'luagraphs.shortest_paths.Dijkstra'
 
--- Utils from fuzzy
-fuzzy   = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'
+-- Utils for fuzzy
+fuzzy               = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'
 
--- Utils from Penlight
-tablex  = require 'Thirdparty.pl.tablex'
-pretty  = require 'Thirdparty.pl.pretty'
-pd      = pretty.dump
-
+-- Utils for Classes
+tablex              = require 'Thirdparty.pl.tablex'
+pretty              = require 'Thirdparty.pl.pretty'
+pd                  = pretty.dump
 
 -- Init Params
-
-Simulation  = Simulation()
-Interface   = Interface()
-Observer    = Observer()
+Simulation          = Simulation()
+Interface           = Interface()
+Observer            = Observer()
 
 
 
