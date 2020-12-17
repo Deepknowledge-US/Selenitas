@@ -101,7 +101,18 @@ intersection        = __agset.intersection
 
 -- Utils for graphs
 graph               = require 'Thirdparty.luagraphs.data.graph'
-dijkstra            = require 'luagraphs.shortest_paths.Dijkstra'
+dijkstra            = require 'Thirdparty.luagraphs.shortest_paths.Dijkstra'
+dfs                 = require 'Thirdparty.luagraphs.search.DepthFirstSearch'
+bfs                 = require 'Thirdparty.luagraphs.search.BreadthFirstSearch'
+con_comp            = require 'Thirdparty.luagraphs.connectivity.ConnectedComponents'
+strong_con_comp     = require 'Thirdparty.luagraphs.connectivity.StronglyConnectedComponents'
+topological_sort    = require 'Thirdparty.luagraphs.sort.TopologicalSort'
+kruskal_mst         = require 'Thirdparty.luagraphs.mst.KruskalMST'
+prim_mst            = require 'Thirdparty.luagraphs.mst.PrimMST'
+eager_prime_mst     = require 'Thirdparty.luagraphs.mst.EagerPrimMST'
+min_cut_max_flow    = require 'Thirdparty.luagraphs.flow.FordFulkerson'
+
+
 
 -- Utils for fuzzy
 fuzzy               = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'
