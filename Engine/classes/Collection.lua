@@ -105,7 +105,7 @@ Collection.difference = function(self, agent_set)
     if self.count < agent_set.count then
         for _,ag in next, self.agents do
             if agent_set.agents[ag.__id] ~= nil then
-                res:remove(ag)
+                self:remove(ag)
             end
         end
     else
