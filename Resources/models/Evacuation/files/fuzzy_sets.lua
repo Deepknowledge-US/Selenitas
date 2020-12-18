@@ -174,9 +174,17 @@ r34:addimplic( false, 'panic',      'med' )
 
 
 return {
-    accident    = function(density, speed) return acc_prob:solve(density, speed)    end,
-    panic       = function(fear, sensibility) return panic_prob:solve(fear, sensibility) end,
-    danger      = function(risk, distance) return danger_prob:solve(risk, distance) end
+    accident    = function(density, speed)
+        return acc_prob:solve(density, speed)
+    end,
+
+    panic       = function(fear, sensibility)
+        return panic_prob:solve(fear, sensibility)
+    end,
+
+    danger      = function(risk, distance)
+        return danger_prob:solve(risk, distance)
+    end
 }
 
 

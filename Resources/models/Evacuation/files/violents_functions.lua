@@ -41,7 +41,6 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'be_aggressive', function(self)
-        -- print('BE AGGRESSIVE')
         self.label = 'BA'
 
         local v_p = self:visible_peacefuls()
@@ -77,7 +76,6 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'shoot', function(self, agent)
-        -- print('SHOOT')
         self.detected   = 1
         self.color      = {1,0,0,1}
         local loc       = self.location
@@ -93,7 +91,6 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'melee', function(self,agent)
-        -- print('MELEE')
         self.detected   = 1
         self.color      = {1,0,0,1}
         self.location.habitable   = 0
@@ -119,13 +116,21 @@ local add_methods = function()
             end
         end
 
-        old_node:come_out(self)
+        old_node.num_violents = old_node.num_violents - 1
         self.location = new_node
-        new_node:come_in(self)
+        new_node.num_violents = new_node.num_violents + 1
 
         if not self.location:is_in(self.last_locations) then
-            local ll = self.last_locations
-            ll[4],ll[3],ll[2],ll[1] = ll[3],ll[2],ll[1],self.location
+            local ll = self.last_locations -- The Violent will remember the last 8 visited nodes
+            ll[8],ll[7],ll[6],ll[5],ll[4],ll[3],ll[2],ll[1] =
+            ll[7],ll[6],ll[5],ll[4],ll[3],ll[2],ll[1],self.location
+        else
+            local ll = {}
+            table.insert(ll,self.location)
+            for i=1,#self.last_locations do
+                if self.last_locations[i] ~= self.location then table.insert(ll,self.last_locations[i]) end
+            end
+            self.last_locations = ll
         end
 
         for id, list_of_links in pairs(new_node.out_neighs) do
@@ -144,7 +149,6 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'advance', function(self)
-        -- print('ADVANCE')
         local dist_next = self:dist_euc_to(self.next_location)
         local speed     = self.speed < dist_next and self.speed or dist_next
 
@@ -176,7 +180,6 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'follow_route', function(self)
-        -- print('FOLLOW ROUTE', #self.route, self.route[1].__id)
         local route = self.route
         if route[#route] == self.location or not self.location:is_in(route) then
             self.route = {}
@@ -192,7 +195,6 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'find_next_location', function(self)
-        -- print('FIND_NEXT')
         local destinations = self.location.neighbors
         local not_visited  = destinations:with( function(x) return not x:is_in(self.last_locations) end )
         local with_people  = destinations:with( function(x) return x.my_agents.count > 0 end )
@@ -210,7 +212,7 @@ local add_methods = function()
         end
     end)
 
-    --[[
+    --[[ NetLogo
         to find-target
             set label "ft"
             let loc-aux location

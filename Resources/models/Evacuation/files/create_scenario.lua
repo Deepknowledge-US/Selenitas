@@ -61,6 +61,10 @@ cs.create_scenario = function(id_map)
         return self.residents / self.capacity
     end)
 
+    Nodes:add_method('visible_neighs',function(self)
+        return self:out_link_neighbors(Nodes,Visibs)
+    end)
+
     Nodes:add_method('all_my_signals',function(self)
         return  self.attacker_s     + self.attacker_v   + self.fire_s
                 + self.fire_v       + self.bomb_s		+ self.bomb_v
