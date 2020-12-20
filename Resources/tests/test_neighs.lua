@@ -133,49 +133,40 @@ STEP = function()
 
     local choosen_t = one_of(Triangles)
 
-    s_and_c = choosen_t:link_neighbors()
-    print('\n1. link_neighbors()')
+    s_and_c = choosen_t:get_neighs()
+    print('\n1. get_neighs()')
     str = ""
     for _,ag in sorted(s_and_c)do
         str = str .. " " .. tostring(ag.__id)
     end
     print(str)
 
-    only_s  = choosen_t:link_neighbors(Squares)
-    print('\n2. link_neighbors(Squares)')
+    only_s  = choosen_t:get_neighs(Squares)
+    print('\n2. get_neighs(Squares)')
     str = ""
     for _,ag in sorted(only_s)do
         str = str .. " " .. tostring(ag.__id)
     end
     print(str)
 
-    only_c  = choosen_t:link_neighbors(Circles)
-    print('\n3. link_neighbors(Circles)')
+    only_c  = choosen_t:get_neighs(Circles)
+    print('\n3. get_neighs(Circles)')
     str = ""
     for _,ag in sorted(only_c)do
         str = str .. " " .. tostring(ag.__id)
     end
     print(str)
 
-    local aux_col = choosen_t:link_neighbors(Squares,TS)
-    print('\n4. link_neighbors(Squares,TS)')
+    local aux_col = choosen_t:get_neighs(Squares,TS)
+    print('\n4. get_neighs(Squares,TS)')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
     end
     print(str)
 
-    aux_col = choosen_t:link_neighbors(Squares,TSC)
-    print('\n5. link_neighbors(Squares,TSC) ')
-    str = ""
-    for _,ag in sorted(aux_col)do
-        str = str .. " " .. tostring(ag.__id)
-    end
-    print(str)
-
-
-    aux_col = choosen_t:link_neighbors(Squares,TC)
-    print('\n6. link_neighbors(Squares,TC) -> empty Set')
+    aux_col = choosen_t:get_neighs(Squares,TSC)
+    print('\n5. get_neighs(Squares,TSC) ')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -183,29 +174,8 @@ STEP = function()
     print(str)
 
 
-
-    print('\n\nTest in_link_neighbors.')
-
-    local aux_col = choosen_t:in_link_neighbors(Squares,TS)
-    print('\n7. in_link_neighbors(Squares,TS) --> empty set')
-    str = ""
-    for _,ag in sorted(aux_col)do
-        str = str .. " " .. tostring(ag.__id)
-    end
-    print(str)
-
-
-    aux_col = choosen_t:in_link_neighbors(Squares,TSC)
-    print('\n8. in_link_neighbors(Squares,TSC) ')
-    str = ""
-    for _,ag in sorted(aux_col)do
-        str = str .. " " .. tostring(ag.__id)
-    end
-    print(str)
-
-
-    aux_col = choosen_t:in_link_neighbors(Squares,TC)
-    print('\n9. in_link_neighbors(Squares,TC) \n-> empty Set')
+    aux_col = choosen_t:get_neighs(Squares,TC)
+    print('\n6. get_neighs(Squares,TC) -> empty Set')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -214,11 +184,10 @@ STEP = function()
 
 
 
+    print('\n\nTest get_in_neighs.')
 
-    print('\n\nTest out_link_neighbors.')
-
-    local aux_col = choosen_t:out_link_neighbors(Squares,TS)
-    print('\n10. out_link_neighbors(Squares,TS)')
+    local aux_col = choosen_t:get_in_neighs(Squares,TS)
+    print('\n7. get_in_neighs(Squares,TS) --> empty set')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -226,8 +195,8 @@ STEP = function()
     print(str)
 
 
-    aux_col = choosen_t:out_link_neighbors(Squares,TSC)
-    print('\n11. out_link_neighbors(Squares,TSC) \n-> empty Set')
+    aux_col = choosen_t:get_in_neighs(Squares,TSC)
+    print('\n8. get_in_neighs(Squares,TSC) ')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -235,8 +204,8 @@ STEP = function()
     print(str)
 
 
-    aux_col = choosen_t:out_link_neighbors(Squares,TC)
-    print('\n12. out_link_neighbors(Squares,TC) \n-> empty Set')
+    aux_col = choosen_t:get_in_neighs(Squares,TC)
+    print('\n9. get_in_neighs(Squares,TC) \n-> empty Set')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -246,10 +215,41 @@ STEP = function()
 
 
 
-    print('\n\nTest my_links.')
+    print('\n\nTest get_out_neighs.')
 
-    aux_col = choosen_t:my_links()
-    print('\n13. my_links()')
+    local aux_col = choosen_t:get_out_neighs(Squares,TS)
+    print('\n10. get_out_neighs(Squares,TS)')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+    aux_col = choosen_t:get_out_neighs(Squares,TSC)
+    print('\n11. get_out_neighs(Squares,TSC) \n-> empty Set')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+    aux_col = choosen_t:get_out_neighs(Squares,TC)
+    print('\n12. get_out_neighs(Squares,TC) \n-> empty Set')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+
+
+    print('\n\nTest get_links.')
+
+    aux_col = choosen_t:get_links()
+    print('\n13. get_links()')
     str = ""
     for _,ag in sorted(aux_col) do
         str = str .. " " .. tostring(ag.__id)
@@ -257,8 +257,8 @@ STEP = function()
     print(str)
 
 
-    aux_col = choosen_t:my_in_links()
-    print('\n14. my_in_links()')
+    aux_col = choosen_t:get_in_links()
+    print('\n14. get_in_links()')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -266,8 +266,8 @@ STEP = function()
     print(str)
 
 
-    aux_col = choosen_t:my_out_links()
-    print('\n15. my_out_links()')
+    aux_col = choosen_t:get_out_links()
+    print('\n15. get_out_links()')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -275,18 +275,8 @@ STEP = function()
     print(str)
 
 
-    aux_col = choosen_t:my_links(TC,Squares)
-    print('\n16. my_links(TC,Squares) \n-> empty Set')
-    str = ""
-    for _,ag in sorted(aux_col)do
-        str = str .. " " .. tostring(ag.__id)
-    end
-    print(str)
-
-
-
-    aux_col = choosen_t:my_links(TSC)
-    print('\n17. my_links(TSC) ')
+    aux_col = choosen_t:get_links(TC,Squares)
+    print('\n16. get_links(TC,Squares) \n-> empty Set')
     str = ""
     for _,ag in sorted(aux_col)do
         str = str .. " " .. tostring(ag.__id)
@@ -295,15 +285,25 @@ STEP = function()
 
 
 
-    aux_col = choosen_t:my_links(TSC,Squares)
-    print('\n18. my_links(TSC,Squares) ')
+    aux_col = choosen_t:get_links(TSC)
+    print('\n17. get_links(TSC) ')
+    str = ""
+    for _,ag in sorted(aux_col)do
+        str = str .. " " .. tostring(ag.__id)
+    end
+    print(str)
+
+
+
+    aux_col = choosen_t:get_links(TSC,Squares)
+    print('\n18. get_links(TSC,Squares) ')
     for _,ag in sorted(aux_col)do
         print(ag.__id, '-> ', tostring(ag.family == TSC) , tostring(ag.source.family == Squares or ag.target.family == Squares) )
     end
 
 
-    aux_col = choosen_t:my_links(TSC,Circles)
-    print('\n19. my_links(TSC,Circles) ')
+    aux_col = choosen_t:get_links(TSC,Circles)
+    print('\n19. get_links(TSC,Circles) ')
     for _,ag in sorted(aux_col)do
         print(ag.__id, '-> ', tostring(ag.family == TSC) , tostring(ag.source.family == Circles or ag.target.family == Circles) )
     end

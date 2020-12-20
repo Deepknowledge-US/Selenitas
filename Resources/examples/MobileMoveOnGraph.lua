@@ -65,7 +65,7 @@ SETUP = function()
     -- New method for Walkers: from current node take next node
     -- to move (the next one in the cycle)
     Walkers:add_method('search_next_node',function(self)
-        local nn = one_of(self.curr_node:out_link_neighbors()) -- take the next node
+        local nn = one_of(self.curr_node:get_out_neighs()) -- take the next node
         self:face(nn)                                          -- face to it
         self.next_node = nn                                    -- store the goal
     end)

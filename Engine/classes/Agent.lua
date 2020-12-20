@@ -65,7 +65,7 @@ end
 
 ------------------
 -- It returns the neighbors of the agent.
--- @function link_neighbors
+-- @function get_neighs
 -- @param fam1 Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the neighbors member of fam1 related with caller by some link of this family are returned.
 -- @return Collection of neighbors of the agent.
@@ -88,8 +88,8 @@ end
 --          end
 --      end
 --
---      my_neighs = an_agent:link_neighbors(Squares,TS)
-Agent.link_neighbors = function(self,fam1, fam2)
+--      my_neighs = an_agent:get_neighs(Squares,TS)
+Agent.get_neighs = function(self,fam1, fam2)
     local res = Collection()
     if fam1 then
         for id_neigh,list_of_links in next,self.in_neighs do
@@ -140,11 +140,11 @@ end
 
 ------------------
 -- It returns the agents related with caller by a link that points to the agent.
--- @function in_link_neighbors
+-- @function get_in_neighs
 -- @param fam1 Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the neighbors member of fam1 related with caller by some link of this family are returned.
 -- @return Collection of links of the agent.
-Agent.in_link_neighbors  = function(self,fam1, fam2)
+Agent.get_in_neighs  = function(self,fam1, fam2)
 
     local res = Collection()
     if fam1 then
@@ -176,11 +176,11 @@ end
 
 ------------------
 -- It returns the other side of the out links with the caller as origin.
--- @function out_link_neighbors
+-- @function get_out_neighs
 -- @param fam1 Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the neighbors member of fam1 related with caller by some link of this family are returned.
 -- @return Collection of neighs of the agent.
-Agent.out_link_neighbors  = function(self,fam1, fam2)
+Agent.get_out_neighs  = function(self,fam1, fam2)
 
     local res = Collection()
     if fam1 then
@@ -212,11 +212,11 @@ end
 
 ------------------
 -- It returns the links of caller.
--- @function my_links
+-- @function get_links
 -- @param fam1 Optional parameter, if the name of a family is given, only the links member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the links member of fam1 with a member of fam2 in the other end of the link are returned.
 -- @return Collection of neighbors of the agent.
-Agent.my_links = function(self,fam1, fam2)
+Agent.get_links = function(self,fam1, fam2)
     local res = Collection()
     if fam1 then
         local pred_in,pred_out
@@ -251,11 +251,11 @@ end
 
 ------------------
 -- It returns the links that points to caller.
--- @function my_in_links
+-- @function get_in_links
 -- @param fam1 Optional parameter, if the name of a family is given, only the links member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the links member of fam1 with a member of fam2 in the other end of the link are returned.
 -- @return Collection of links of the agent.
-Agent.my_in_links  = function(self,fam1, fam2)
+Agent.get_in_links  = function(self,fam1, fam2)
     local res = Collection()
     if fam1 then
         local pred_in
@@ -279,11 +279,11 @@ end
 
 ------------------
 -- It returns the links with caller as origin.
--- @function my_out_links
+-- @function get_out_links
 -- @param fam1 Optional parameter, if the name of a family is given, only the links member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the links member of fam1 with a member of fam2 in the other end of the link are returned.
 -- @return Collection of links of the agent.
-Agent.my_out_links = function(self,fam1,fam2)
+Agent.get_out_links = function(self,fam1,fam2)
     local res = Collection()
     if fam1 then
         local pred_out
