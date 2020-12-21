@@ -1,4 +1,4 @@
-
+local scream_intensity = 0.3
 local add_methods = function()
 
     Violents:add_method( 'belive', function(self)
@@ -27,7 +27,8 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'visible_peacefuls', function(self)
-        local visibles = self.location:link_neighbors(Nodes,Visibs)
+        local visibles = self.location:get_out_neighs(Nodes,Visibs)
+        visibles:add(self.location)
 
         local visible_ags = Collection()
         for _,node in sorted(visibles)do
@@ -43,9 +44,8 @@ local add_methods = function()
     Violents:add_method( 'be_aggressive', function(self)
         self.label = 'BA'
 
-        local v_p = self:visible_peacefuls()
-
         if Interface:get_value('violents', 'shooting?') then
+            local v_p = self:visible_peacefuls()
             if v_p.count > 0 then
                 local choosen = one_of(v_p)
                 self:shoot(choosen)
@@ -53,7 +53,10 @@ local add_methods = function()
                 self:advance()
             end
         else
-            local choosen = one_of(self.location.my_agents)
+            local choosen = one_of(self.location.my_agents:with(
+                    function(x) return x.__alive and x.family == Peacefuls and not x.hidden end
+                )
+            )
 
             if choosen then
                 self:melee(choosen)
@@ -70,21 +73,31 @@ local add_methods = function()
         else
             global_vars.not_app_killed = global_vars.not_app_killed + 1
         end
-        agent.location.corpses = agent.location.corpses + 1
+        agent.location:new_corpse()
         agent.location:come_out(agent)
         agent.family:kill(agent)
     end)
 
     Violents:add_method( 'shoot', function(self, agent)
+        local scream_intensity = 0.3
         self.detected   = 1
         self.color      = {1,0,0,1}
         local loc       = self.location
         loc.habitable   = 0
         loc.attacker_s  = loc.attacker_s + Interface:get_value('violents','shoot noise')
-        for _,out_sound_link in sorted(loc:my_out_links(Sounds) )do
+        for _,out_sound_link in sorted(loc:get_out_links(Sounds) )do
             local neighbor = out_sound_link.target
             neighbor.attacker_sound = get.shoot_noise() * out_sound_link.value
         end
+
+        -- The agent will scream if is attacked.
+        agent.location.scream = agent.location.scream + scream_intensity
+        for _,link in sorted(agent.location:get_out_links(Sounds)) do
+            local neigh              = link.target
+            local sound_transmission = link.value * link.mod
+            neigh.scream = neigh.scream + (sound_transmission * scream_intensity)
+        end
+
         if math.random() < Interface:get_value('violents','success rate') then
             self:kill(agent)
         end
@@ -95,6 +108,13 @@ local add_methods = function()
         self.color      = {1,0,0,1}
         self.location.habitable   = 0
 
+        -- The agent will scream if is attacked.
+        agent.location.scream = agent.location.scream + scream_intensity
+        for _,link in sorted(agent.location:get_out_links(Sounds)) do
+            local neigh              = link.target
+            local sound_transmission = link.value * link.mod
+            neigh.scream = neigh.scream + (sound_transmission * scream_intensity)
+        end
         if math.random() < Interface:get_value('violents','success rate') then
             self:kill(agent)
         end
@@ -212,33 +232,6 @@ local add_methods = function()
         end
     end)
 
-    --[[ NetLogo
-        to find-target
-            set label "ft"
-            let loc-aux location
-
-            ; The attacker will search for the target agent first
-            ifelse target-agent >= 0 and person t-agent != nobody [
-                ifelse loc-aux = [location] of person t-agent [
-                ifelse shooting? [shoot (list location) ][attack]
-                set route []
-                ][
-                if empty? route [ set route (path_to ([location] of person t-agent)) ]
-                follow-route2
-                ]
-            ][
-                if target-node >= 0[
-                ifelse [who] of location = target-node [
-                    ifelse shooting? [shoot [visibles] of location][attack]
-                    if [residents] of location = 1 [set target-node -1]
-                ][
-                    if empty? route [ set route ( path_to node target-node ) ]
-                    follow-route2
-                ]
-                ]
-            ]
-        end
-    ]]
     Violents:add_method( 'find_target', function(self)
         -- TODO
         -- print('FIND TARGET')
