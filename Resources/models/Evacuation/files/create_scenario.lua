@@ -37,7 +37,7 @@ cs.create_scenario = function(id_map)
             leaders         = 0,
             police          = 0,
             hidden_people   = 0,
-            residents       = 0,
+            -- residents       = 0,
             -- density         = 0,
             lock            = false,
             nearest_danger  = 30,
@@ -58,17 +58,27 @@ cs.create_scenario = function(id_map)
     end
 
     Nodes:add_method('density',function(self)
-        return self.residents / self.capacity
+        return self.my_agents.count / self.capacity
     end)
 
     Nodes:add_method('visible_neighs',function(self)
-        return self:out_link_neighbors(Nodes,Visibs)
+        return self:get_out_neighs(Nodes,Visibs)
     end)
 
     Nodes:add_method('all_my_signals',function(self)
         return  self.attacker_s     + self.attacker_v   + self.fire_s
                 + self.fire_v       + self.bomb_s		+ self.bomb_v
                 + self.scream		+ self.corpses      + self.running_people
+    end)
+
+    Nodes:add_method('new_corpse', function(self)
+        -- When a agent dies, the corpse will lie in the node and it will be sighted from neighbors nodes.
+        self.corpses = self.corpses + 1
+        for _,link in sorted(self:get_out_links(Visibs))do
+            local neigh = link.target
+            local visual_transmission = link.value * link.mod
+            neigh.corpses = neigh.corpses + visual_transmission
+        end
     end)
 
     -- Three relational families are created and populated, one for every possible kind of link (visibility, sound or transitability), this will simplify accesses to this agents.
@@ -104,8 +114,7 @@ cs.create_scenario = function(id_map)
             })
         end
         if trans > 0 then
-            n1.neighbors:add(n2)
-            n2.neighbors:add(n1)
+            n1.neighbors:add(n2) -- Reacheables neighbors
             Transits:new({
                 source      = n1,
                 target      = n2,
