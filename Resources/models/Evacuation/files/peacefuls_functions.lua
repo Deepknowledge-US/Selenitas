@@ -42,7 +42,7 @@ local add_methods = function()
 
 	-- True if the agent has the app installed and the app is active and it has been triggered
 	Peacefuls:add_method('app_pack', function(self)
-		return self.app and get.app_info() and global_vars.app_is_triggered
+		return self.app and get.app_info() and global_vars.app_is_triggered > 0
 	end)
 
 	-- True if there is a visible agent and some places to hide in the node.
@@ -57,14 +57,15 @@ local add_methods = function()
 	-- True if there is some violent in the node and at least 10 peacefuls for each violent
 	Peacefuls:add_method('must_I_fight', function(self)
 		local num_agents = self.location.my_agents.count
-		local num_violents = Violents:with(function(x) return x.location == self.location end ).count
+		-- local num_violents = Violents:with(function(x) return x.__alive and x.location == self.location end ).count
+		local num_violents = self.location.num_violents
 		return num_violents > 0 and num_agents > 10*num_violents
 	end)
 
 	-- True if residents are at least 90% of node's capacity
 	Peacefuls:add_method('is_path_congested', function(self)
 		local loc, next_loc = self.location, self.next_location
-		return loc ~= next_loc and next_loc.my_agents.count * 1.1 > next_loc.capacity
+		return loc ~= next_loc and next_loc:density() > 0.8
 	end)
 
 	-- True if there is a visible violent
@@ -83,7 +84,7 @@ local add_methods = function()
 	-- True if there is a violent in the node
 	Peacefuls:add_method('any_violents_in_my_room', function(self)
 		for _, v in sorted(Violents)do
-			if v.location == self.location then return true end
+			if v.__alive and math.floor(v.location.id) == math.floor(self.location.id) then return true end
 		end
 		return false
 	end)
@@ -140,12 +141,13 @@ local add_methods = function()
 
 		-- This will update signals in nodes with a visual of the agent
 		for _,link in sorted(loc:get_in_links(Visibs)) do
-			local signal_intensity = loc.running_people * link.value * link.mod * Interface:get_value('World', 'visib mod')
+			local signal_intensity = running_people_signal_intensity * link.value * link.mod * Interface:get_value('World', 'visib mod')
 			link.source.running_people = link.source.running_people + signal_intensity
 		end
 	end)
 
 	Peacefuls:add_method( 'update_position', function(self)
+		-- print('update_position')
 		local old_node, new_node = self.location, self.next_location
 
         old_node:come_out(self)
@@ -214,7 +216,7 @@ local add_methods = function()
 			local current_link = links_with_next_loc[#links_with_next_loc]
 
 			if current_link.flow_counter > 0 then
-				if current_link.flow_counter > 0 and self.location:density() < 0.9 then
+				if current_link.flow_counter > 0 and self.next_location:density() < 0.8 then
 					current_link.flow_counter = current_link.flow_counter - 1
 					self:fd(self.speed)
 					if self.state ~= 'not_alerted' then
@@ -228,20 +230,25 @@ local add_methods = function()
 	Peacefuls:add_method('casualty_risk', function(self)
 		local acc_prob = fs.accident(self.location:density(), self.speed)
 
-		-- print('Casualty.\n\tdens: ' .. round(self.location:density(),2), 'speed: '.. round(self.speed,2), 'acc: '..round(acc_prob,2))
+		local rand = math.random()
+		local letal_acc, non_letal_acc = rand*10000, rand*1000
 
-		if acc_prob > 60 and math.random() * 1000 < acc_prob then
-			if self.app then
-				global_vars.app_accident = global_vars.app_accident +1
-			else
-				global_vars.not_app_accident = global_vars.not_app_accident +1
+		if acc_prob > 60 and letal_acc < acc_prob then
+			if letal_acc < acc_prob then
+
+				if self.app then
+					global_vars.app_accident = global_vars.app_accident +1
+				else
+					global_vars.not_app_accident = global_vars.not_app_accident +1
+				end
+				-- Update corpses signals
+				self.location:new_corpse()
+				self.location:come_out(self)
+				self.family:kill(self)
+
+			elseif non_letal_acc < acc_prob then
+				self.base_speed = self.base_speed * 0.8
 			end
-			-- Update corpses signals
-			self.location:new_corpse()
-
-			-- Update agents in node
-			self.location:come_out(self)
-			self.family:kill(self)
 		end
 	end)
 
@@ -257,7 +264,6 @@ local add_methods = function()
 
 	-- Our function to convert the list of edges given by luagraph in a list of nodes (including current node).
 	Peacefuls:add_method( 'path_to', function(self, gr,orig,dest)
-		-- print('PATH',self.__id,orig,dest)
 		path = {}
 		djk:run(gr,orig)
 		if djk:hasPathTo(dest)then
@@ -304,40 +310,46 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('avoid_violent', function(self)
-		-- print('avoid_violent')
+
+		-- If the agent is hidden, it remains hidden
 		if self.hidden then return end
 
-		local visib_exits = self:visible_exits()
-		if visib_exits.count > 0 then
-			local nearest_exit = visib_exits:min_one_of(function(x) return self:dist_euc_to(x) end)
-		end
-		if self:any_violent_near() then -- It is possible that the violent is dead (killed by other agents)
+		-- If it is not hidden, the agent will look for a route to avoid the attacker (a route to an exit, or to a place where the attacker cannot see it)
+		if self:secure_exit() then
+			-- The method 'secure_exit' searchs for a 'secure to reach' exit,
+			-- if found it, this method gives to the agent a secure route to the exit,
+			-- so, there is nothing else to do inside this if statement.
+		elseif self:any_violent_near() then -- It is possible that the violent is dead (killed by other agents)
+			local alive_violents = Violents:with(function(x) return x.__alive end)
 
-			local violent = Violents:min_one_of( function(x) self:dist_euc_to(x) end )
-			local percived_risk = self.percived_risk < 100 and self.percived_risk or 100
-			local distance 		= self:dist_euc_to( violent ) < 100 and self:dist_euc_to( violent ) or 100
-			self.speed = self.base_speed + fs.danger( percived_risk, distance )/100
-			-- print('Speed:',self.speed)
+			if alive_violents.count > 0 then
+				local violent = alive_violents:min_one_of( function(x) self:dist_euc_to(x) end )
 
-			if violent.location == self.location then
-				self.route = {self.location, one_of(self.location.neighbors)}
-			else
-				if next(self.route) == nil or not self:secure_route(self.route) then
-					local visib_nodes = self.location:get_out_neighs(Nodes, Visibs)
-					local bad_nodes   = violent.location:get_out_neighs(Nodes, Visibs)
-					local candidates  = visib_nodes:difference(bad_nodes)
+				local percived_risk = self.percived_risk < 100 and self.percived_risk or 100
+				local distance 		= self:dist_euc_to( violent ) < 100 and self:dist_euc_to( violent ) or 100
+				self.speed = self.base_speed + fs.danger( percived_risk, distance )/100
+				self.speed = round(self.speed,2)
 
-					local node 		  = candidates:max_one_of(function(x) return violent:dist_euc_to(x) end)
+				if violent.location == self.location then
+					self.route = {self.location, one_of(self.location.neighbors)}
+				else
+					if next(self.route) == nil or not self:secure_route(self.route) then
+						local visib_nodes = self.location:get_out_neighs(Nodes, Visibs)
+						local bad_nodes   = violent.location:get_out_neighs(Nodes, Visibs)
+						local candidates  = visib_nodes:difference(bad_nodes)
 
-					self.route = self:path_to(g, self.location.__id, node.__id)
+						local node 		  = candidates:max_one_of(function(x) return violent:dist_euc_to(x) end)
+
+						self.route = self:path_to(g, self.location.__id, node.__id)
+					end
 				end
 			end
 		end
+		-- Finally, the agent will follow the route
 		self:follow_route()
 	end)
 
 	Peacefuls:add_method('ask_app', function(self)
-		-- print('ask_app')
 		if get.app_mode == 0 then -- The app is warning about a danger, but is not giving any path to the agent
 			-- self.route = {}
 			if self.location.has_lock and not self:any_violents_in_my_room() then
@@ -389,7 +401,6 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('go_to_exit', function(self)
-		-- print('go_to_exit')
 		if next(self.route) == nil or not (self.route[#self.route].id % 1 <= 0.099) then
 			local visible_exits = self.location:get_out_neighs(Nodes,Visibs):with(function(x) return x.id - math.floor(x.id) <= 0.099 end )
 			if visible_exits.count > 0 then
@@ -406,14 +417,21 @@ local add_methods = function()
 	Peacefuls:add_method('fight', function(self)
 		self:stop_hidden()
 		if math.random() < get.defense_prob() then
-			local target_violent = one_of(Violents:with(function(x) return x.location == self.location end) )
+			local target_violent = one_of(Violents:with(function(x) return x.__alive and x.location == self.location end) )
+			self:kill_violent(target_violent)
+		end
+	end)
+
+	Peacefuls:add_method('kill_violent', function(self, violent)
+		if violent then
 			global_vars.violents_killed = global_vars.violents_killed + 1
-			Violents:kill(target_violent)
+			violent.location.num_violents = violent.location.num_violents - 1
+			violent.location:come_out(violent)
+			Violents:kill_and_purge(violent)
 		end
 	end)
 
 	Peacefuls:add_method('follow_leader', function(self)
-		-- print('follow_leader')
 		if leader_sighted ~= nil then
 			if self.route ~= leader_sighted.route then self.route = leader_sighted.route end
 			self:follow_route()
@@ -451,6 +469,38 @@ local add_methods = function()
 		self:advance()
 	end)
 
+	Peacefuls:add_method('run_away', function(self)
+		self:stop_hidden()
+		if self.leadership > 0 then
+			if next(self.route) == nil or not self.location:is_in(self.route) then
+				self.route = self:path_to(g,self.location.__id, one_of(Nodes:with(function(x) return x.id%1 < 0.099 end)).__id )
+			end
+			self.state = 'following_route'
+			self:follow_route()
+		else
+			if self.location == self.next_location then
+				self:search_new_node()
+			end
+			self:advance()
+		end
+	end)
+
+	Peacefuls:add_method('search_new_node',function(self)
+		local not_visited = self.location.neighbors:with(function(x) return not x:is_in(self.last_locations) end)
+
+		if not_visited.count > 0 then
+			self.next_location = one_of(not_visited)
+			self:face(self.next_location)
+		else
+			for i = #self.last_locations, 1, -1 do
+				if self.last_locations[i]:is_in(self.location.neighbors) then
+					self.next_location = self.last_locations[i]
+					self:face(self.next_location)
+					break
+				end
+			end
+		end
+	end)
 
 
 end

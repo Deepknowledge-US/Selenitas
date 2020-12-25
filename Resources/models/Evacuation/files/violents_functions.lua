@@ -45,8 +45,9 @@ local add_methods = function()
         self.label = 'BA'
 
         if Interface:get_value('violents', 'shooting?') then
+
             local v_p = self:visible_peacefuls()
-            if v_p.count > 0 then
+            if math.random() < get.attack_prob() and v_p.count > 0 then
                 local choosen = one_of(v_p)
                 self:shoot(choosen)
             else
@@ -58,13 +59,12 @@ local add_methods = function()
                 )
             )
 
-            if choosen then
+            if math.random() < get.attack_prob() and choosen then
                 self:melee(choosen)
             else
                 self:advance()
             end
         end
-
     end)
 
     Violents:add_method( 'kill', function(self, agent)
@@ -79,9 +79,14 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'shoot', function(self, agent)
-        local scream_intensity = 0.3
-        self.detected   = 1
-        self.color      = {1,0,0,1}
+        if not self.detected then
+            self.detected   = true
+            self.location.num_violents = self.location.num_violents + 1
+            self.location.attacker_v   = self.location.attacker_v + self.efectivity
+            for _,link in sorted(self.location:get_in_links(Visibs)) do
+                link.source.attacker_v = link.source.attacker_v + link.value*self.efectivity
+            end
+        end
         local loc       = self.location
         loc.habitable   = 0
         loc.attacker_s  = loc.attacker_s + Interface:get_value('violents','shoot noise')
@@ -104,7 +109,15 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'melee', function(self,agent)
-        self.detected   = 1
+        if not self.detected then
+            self.detected   = true
+            self.location.num_violents = self.location.num_violents + 1
+            self.location.attacker_v   = self.location.attacker_v + self.efectivity
+            for _,link in sorted(self.location:get_in_links(Visibs)) do
+                link.source.attacker_v = link.source.attacker_v + link.value*self.efectivity
+            end
+        end
+        self.detected   = true
         self.color      = {1,0,0,1}
         self.location.habitable   = 0
 
@@ -121,24 +134,8 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'update_position', function(self, old_node, new_node)
-        old_node.attacker_v  = old_node.attacker_v - self.efectivity
 
-        self.location.num_violents = self.location.num_violents - 1
-
-        for id, list_of_links in pairs(old_node.out_neighs) do
-            for _, link in pairs(list_of_links)do
-				if link.family == Visibs then
-					local node, dist = Nodes:get(id), 30
-					node.nearest_danger = dist
-                    node.attacker_v = node.attacker_v - self.efectivity * link.value
-                    if node.attacker_v < 0 then node.attacker_v = 0 end
-                end
-            end
-        end
-
-        old_node.num_violents = old_node.num_violents - 1
         self.location = new_node
-        new_node.num_violents = new_node.num_violents + 1
 
         if not self.location:is_in(self.last_locations) then
             local ll = self.last_locations -- The Violent will remember the last 8 visited nodes
@@ -153,18 +150,32 @@ local add_methods = function()
             self.last_locations = ll
         end
 
-        for id, list_of_links in pairs(new_node.out_neighs) do
-            for _, link in pairs(list_of_links)do
-				if link.family == Visibs then
-					local node, dist = Nodes:get(id), self:dist_euc_to(Nodes:get(id))
-					node.nearest_danger = dist < node.nearest_danger and dist or node.nearest_danger
-                    node.attacker_v = node.attacker_v + self.efectivity * link.value
-                    if node.attacker_v > 1 then node.attacker_v = 1 end
+        if self.detected then
+            old_node.attacker_v  = old_node.attacker_v - self.efectivity
+            old_node.num_violents = old_node.num_violents - 1
+            new_node.num_violents = new_node.num_violents + 1
+
+            for id, list_of_links in pairs(old_node.out_neighs) do
+                for _, link in pairs(list_of_links)do
+                    if link.family == Visibs then
+                        local node, dist = Nodes:get(id), 30
+                        node.nearest_danger = dist
+                        node.attacker_v = node.attacker_v - self.efectivity * link.value
+                        if node.attacker_v < 0 then node.attacker_v = 0 end
+                    end
+                end
+            end
+            for id, list_of_links in pairs(new_node.out_neighs) do
+                for _, link in pairs(list_of_links)do
+                    if link.family == Visibs then
+                        local node, dist = Nodes:get(id), self:dist_euc_to(Nodes:get(id))
+                        node.nearest_danger = dist < node.nearest_danger and dist or node.nearest_danger
+                        node.attacker_v = node.attacker_v + self.efectivity * link.value
+                        if node.attacker_v > 1 then node.attacker_v = 1 end
+                    end
                 end
             end
         end
-
-        new_node.num_violents = new_node.num_violents + 1
 
     end)
 
@@ -179,12 +190,7 @@ local add_methods = function()
             else
                 self:fd(speed)
                 self:update_position(self.location, self.next_location)
-
-                local not_recent_neighs = self.next_location.neighbors:with( function(x) return not x:is_in(self.last_locations) end )
-                local choosen = not_recent_neighs.count > 0 and one_of(not_recent_neighs) or one_of(self.next_location.neighbors)
-
-                self.next_location = choosen
-                self:face(self.next_location)
+                self:find_next_location()
             end
         else
             -- out_neighs is a table "id_of_out_neigh -> list of links". So, we have a direct access to links beetween location and next_location
@@ -217,27 +223,31 @@ local add_methods = function()
     Violents:add_method( 'find_next_location', function(self)
         local destinations = self.location.neighbors
         local not_visited  = destinations:with( function(x) return not x:is_in(self.last_locations) end )
-        local with_people  = destinations:with( function(x) return x.my_agents.count > 0 end )
+        local with_people  = destinations:with( function(x) return x.my_agents.count - x.hidden_people > 0 end )
         local ll           = self.last_locations
         if with_people.count > 0 then
             self.next_location = one_of(with_people)
         elseif not_visited.count > 0 then
             self.next_location = one_of(not_visited)
         else
-            for i=#last_locations, 1 do
-                if last_locations[i]:is_in(destinations) then
-                    self.next_location = last_locations[i]
+            for i=#self.last_locations, 1, -1 do
+                if self.last_locations[i]:is_in(destinations) then
+                    self.next_location = self.last_locations[i]
+                    break
                 end
             end
         end
+        self:face(self.next_location)
     end)
 
     Violents:add_method( 'find_target', function(self)
+        print('V: find_target')
         -- TODO
         -- print('FIND TARGET')
     end)
 
     Violents:add_method( 'avoid_police', function(self)
+        print('V: avoid_police')
         --TODO
         self.label = 'AP'
     end)

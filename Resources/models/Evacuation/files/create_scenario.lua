@@ -37,13 +37,8 @@ cs.create_scenario = function(id_map)
             leaders         = 0,
             police          = 0,
             hidden_people   = 0,
-            -- residents       = 0,
-            -- density         = 0,
             lock            = false,
-            nearest_danger  = 30,
-            -- label           = tonumber(v[1]),
-            -- label_color     = {1,1,1,1},
-            -- show_label      = true
+            nearest_danger  = 50
         })
     end
 
@@ -58,7 +53,8 @@ cs.create_scenario = function(id_map)
     end
 
     Nodes:add_method('density',function(self)
-        return self.my_agents.count / self.capacity
+        local density = self.my_agents.count / self.capacity
+        return density < 1 and density or 1
     end)
 
     Nodes:add_method('visible_neighs',function(self)
@@ -74,8 +70,8 @@ cs.create_scenario = function(id_map)
     Nodes:add_method('new_corpse', function(self)
         -- When a agent dies, the corpse will lie in the node and it will be sighted from neighbors nodes.
         self.corpses = self.corpses + 1
-        for _,link in sorted(self:get_out_links(Visibs))do
-            local neigh = link.target
+        for _,link in sorted(self:get_in_links(Visibs))do
+            local neigh = link.source
             local visual_transmission = link.value * link.mod
             neigh.corpses = neigh.corpses + visual_transmission
         end

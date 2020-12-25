@@ -47,6 +47,7 @@ ci.create_interface = function()
     Interface:create_monitor('Monitor', 'not_app_accident')
     Interface:create_monitor('Monitor', 'app_secure_room')
     Interface:create_monitor('Monitor', 'not_app_secure_room')
+    Interface:create_monitor('Monitor', 'violents_killed')
 
     -- Create some functions to acces the current values of inputs
     local getters = {

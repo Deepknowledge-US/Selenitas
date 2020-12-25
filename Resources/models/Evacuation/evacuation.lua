@@ -25,8 +25,8 @@ global_vars = {
     total_killed        = 0,
     total_rescued       = 0,
     total_secure_room   = 0,
-	app_is_triggered    = 0,
-	violents_killed		= 0
+	violents_killed		= 0,
+	app_is_triggered    = false
 }
 
 -- Global variables to search routes
@@ -54,10 +54,13 @@ id_map = {}
 
 SETUP = function()
 
+	print('\n\n\n\n NEW')
+
     -- Reset the simulation and the global_vars of our model
 	Simulation:reset()
 	reset_global_vars()
 
+	-- Families must be declared after the "Simulation:reset()" command
     declare_FamilyCell('Nodes')
     declare_FamilyRel('Visibs')
     declare_FamilyRel('Transits')
@@ -78,45 +81,7 @@ SETUP = function()
 		g:addEdge(l.source.__id, l.target.__id, l.dist)
 	end
 
-
-	Peacefuls:add_method('run_away', function(self)
-		self:stop_hidden()
-		if self.leadership > 0 then
-			if next(self.route) == nil or not self.location:is_in(self.route) then
-				self.route = self:path_to(g,self.location.__id, one_of({1,74}) )
-			end
-			self.state = 'following_route'
-			self:follow_route()
-		else
-			if self.location == self.next_location then
-				self:search_new_node()
-			end
-			self:advance()
-		end
-	end)
-
-	Peacefuls:add_method('search_new_node',function(self)
-		-- print('Search_new_node')
-		local not_visited = self.location.neighbors:with(function(x) return not x:is_in(self.last_locations) end)
-
-		if not_visited.count > 0 then
-			self.next_location = one_of(not_visited)
-			self:face(self.next_location)
-		else
-			for i = #self.last_locations, 1, -1 do
-				if self.last_locations[i]:is_in(self.location.neighbors) then
-					self.next_location = self.last_locations[i]
-					self:face(self.next_location)
-					break
-				end
-			end
-		end
-	end)
-
-
-
 	Peacefuls:add_method('belive', function(self)
-		print('Belive.\n\t1. panic: '..self.panic_level, 'risk: '..self.percived_risk)
 		local signals = 0
 		if self:app_pack() then
 			signals = 1
@@ -129,8 +94,6 @@ SETUP = function()
 		end
 
 		if signals > 0 then
-			print('AS'.. self.attacker_sighted, 'AH'.. self.attacker_heard, 'SH'.. self.scream_heard
-			,'CS'.. self.corpse_sighted, 'RP'.. self.running_people)
 
 			if self.speed == get.n_a_speed() then
 				self.speed = self.base_speed
@@ -142,12 +105,10 @@ SETUP = function()
 			self.panic_level   = round(fs.panic(self.fear, self.sensibility), 2)
 			self.percived_risk = round(fs.danger(signals,distance), 2)
 		end
-		print('\t2. panic: '..self.panic_level, 'risk: '..self.percived_risk)
 
 	end)
 
 	Peacefuls:add_method('desire', function(self)
-		print('Desire.\n\tstate: '..self.state)
 		if self.percived_risk > 0.2 then
 			if self.panic_level > 95 then
 				self.state = "in_panic"
@@ -172,7 +133,6 @@ SETUP = function()
 	end)
 
 	Peacefuls:add_method('intention', function(self)
-		print('Intention.\n\tstate: '..self.state)
 		local state = self.state
 		if state == "avoiding_violent" then
 			self:avoid_violent()
@@ -256,14 +216,16 @@ SETUP = function()
 
 		})
 		new_peaceful.location:come_in(new_peaceful)
+		-- new_peaceful.label = new_peaceful.__id
+		-- new_peaceful.show_label = true
 		if new_peaceful.sensibility > 100 then new_peaceful.sensibility = 100 end
-
+		-- print(new_peaceful.__id)
     end
 
 
     for i=1, get.num_violents() do
         -- local a_node = one_of(Nodes:with( function(x) return x.capacity > x.residents end ) )
-        local a_node = Nodes.agents[1]
+        local a_node = Nodes.agents[6]
 
         local new_violent = Violents:new({
             pos             = copy(a_node.pos ),
@@ -275,14 +237,12 @@ SETUP = function()
             color           = {1,0,0,1},
             efectivity      = get.success_rate(),
             speed           = get.attacker_speed(),
-            detected        = 0,
+            detected        = false,
             police_sighted  = 0,
             route           = { Nodes.agents[17],Nodes.agents[16],Nodes.agents[4],Nodes.agents[3],Nodes.agents[2],Nodes.agents[1] },
             last_locations  = {a_node}
 
 		})
-
-        new_violent.location.num_violents = new_violent.location.num_violents + 1
 
     end
 
@@ -300,10 +260,11 @@ end
 STEP = function()
 
     local sum = 0
+    -- print('\n\n----------', Simulation.time)
 
-    print('\n\n----------', Simulation.time)
-
+	---------------
     -- WORLD
+	---------------
 
 	-- Update links flow
     for _,link in sorted(Transits)do
@@ -323,29 +284,50 @@ STEP = function()
         node.running_people = 0
         node.leaders        = 0
 		node.police         = 0
-		node.nearest_danger	= 30
+		node.nearest_danger	= 50
     end
 
     -- Update signals produced by violents
     for _,violent in sorted(Violents)do
-        local loc       = violent.location
-		loc.attacker_v  = violent.efectivity
-		loc.nearest_danger = violent:dist_euc_to(loc)
+		if violent.detected then
+			local loc       = violent.location
+			loc.attacker_v  = violent.efectivity
+			loc.nearest_danger = violent:dist_euc_to(loc)
 
-        for id, list_of_links in pairs(loc.out_neighs) do
-            for _, link in pairs(list_of_links)do
-				if link.family == Visibs then
-					local node, dist = Nodes:get(id), violent:dist_euc_to(Nodes:get(id))
-					node.nearest_danger = dist < node.nearest_danger and dist or node.nearest_danger
-                    node.attacker_v = node.attacker_v + violent.efectivity * link.value
-                    if node.attacker_v > 1 then node.attacker_v = 1 end
-                end
-            end
-        end
-    end
+			for id, list_of_links in pairs(loc.out_neighs) do
+				for _, link in pairs(list_of_links)do
+					if link.family == Visibs then
+						local node, dist = Nodes:get(id), violent:dist_euc_to(Nodes:get(id))
+						node.nearest_danger = dist < node.nearest_danger and dist or node.nearest_danger
+						node.attacker_v = node.attacker_v + violent.efectivity * link.value
+						if node.attacker_v > 1 then node.attacker_v = 1 end
+					end
+				end
+			end
+		end
+	end
 
 
+
+	---------------
+	-- APP
+	---------------
+
+	-- The app will trigger with first blood, when a crowd is running away, or both.
+	if global_vars.app_is_triggered == 0 and get.app_info() then
+		if get.first_blood() and global_vars.app_killed + global_vars.not_app_killed > 0 then
+			global_vars.app_is_triggered = 1
+		end
+		if get.crowd_running() and Peacefuls:with(function(x) return x.speed ~= get.n_a_speed() end).count > get.crowd_number() then
+			global_vars.app_is_triggered = 1
+		end
+	end
+
+
+
+	---------------
     -- VIOLENTS
+	---------------
 
 	for _,v in shuffled(Violents)do
         v:belive()
@@ -354,37 +336,39 @@ STEP = function()
     end
 
 
+
+	---------------
 	-- PEACEFULS
+	---------------
 
 	for _,p in shuffled(Peacefuls)do
-		-- print('\nAgent: '.. p.__id, 'Node: '.. p.location.__id)
+		if p.__alive then
 
-		if p.state ~= 'not_alerted' and p:in_exit() then p:rescue() end
+			if p.state ~= 'not_alerted' and p:in_exit() then p:rescue()	end
 
-		p.leader_sighted = p:any_leader()
-		if p.leadership == 0 and p.leader_sighted then
-			p.percived_risk = p.leader_sighted.percived_risk
-			if p.leader_sighted.location == p.location then
-				p.route = copy(p.leader_sighted.route) 		-- Leaders will share the route with agents who are in the same node
+			p.leader_sighted = p:any_leader()
+			if p.leadership == 0 and p.leader_sighted then
+				p.percived_risk = p.leader_sighted.percived_risk
+				if p.leader_sighted.location == p.location then
+					p.route = copy(p.leader_sighted.route) 		-- Leaders will share the route with agents who are in the same node
+				else
+					p.route = p:path_to(g,p.location.__id, p.leader_sighted.location.__id) -- A route to the leader
+				end
+				p.state = 'with_leader'
 			else
-				p.route = p:path_to(g,p.location.__id, p.leader_sighted.location.__id) -- A route to the leader
+				p:belive()
+				p:desire()
 			end
-			p.state = 'with_leader'
-		else
-			p:belive()
-			p:desire()
+			p:intention()
+
+			p:casualty_risk()
+
+			if p.fear >= 1 then p.fear = p.fear - 1 end
 		end
-		p:intention()
-
-		p:casualty_risk()
-
-		if p.fear >= 1 then p.fear = p.fear - 1 end
-		print('------------------')
     end
 
 
 	purge_agents(Peacefuls)
-
 
 
     if Peacefuls.count < 1 then Simulation:stop() end
