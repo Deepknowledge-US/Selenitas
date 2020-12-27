@@ -49,11 +49,11 @@ FR.new = function(self,object)
         new_rel.z_order = self.z_order
 
         for prop, def_val in next, self.properties do
-            new_agent[prop] = def_val
+            new_rel[prop] = def_val
         end
 
         for name, funct in next, self.functions do
-            new_agent[name] = funct
+            new_rel[name] = funct
         end
 
         -- New link added to family. Update agents table and size.
