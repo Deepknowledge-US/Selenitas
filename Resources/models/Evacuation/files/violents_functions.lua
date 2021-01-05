@@ -1,6 +1,12 @@
 local scream_intensity = 0.3
 local add_methods = function()
 
+
+
+	-------------------------------------
+	----------  BDI Functions  ----------
+    -------------------------------------
+
     Violents:add_method( 'belive', function(self)
         self.police_sighted = self.police_sighted + self.location.police
     end)
@@ -26,8 +32,15 @@ local add_methods = function()
         end
     end)
 
+
+
+
+	-------------------------------------
+	--------  Action Functions  ---------
+	-------------------------------------
+
     Violents:add_method( 'visible_peacefuls', function(self)
-        local visibles = self.location:get_out_neighs(Nodes,Visibs)
+        local visibles = self.location:get_out_neighs(Nodes,Visibs):with(function(x) return not x.locked_room end)
         visibles:add(self.location)
 
         local visible_ags = Collection()
@@ -45,7 +58,6 @@ local add_methods = function()
         self.label = 'BA'
 
         if Interface:get_value('violents', 'shooting?') then
-
             local v_p = self:visible_peacefuls()
             if math.random() < get.attack_prob() and v_p.count > 0 then
                 local choosen = one_of(v_p)
@@ -134,9 +146,7 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'update_position', function(self, old_node, new_node)
-
         self.location = new_node
-
         if not self.location:is_in(self.last_locations) then
             local ll = self.last_locations -- The Violent will remember the last 8 visited nodes
             ll[8],ll[7],ll[6],ll[5],ll[4],ll[3],ll[2],ll[1] =
@@ -180,6 +190,10 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'advance', function(self)
+        if self.next_location.locked_room then
+            self.next_location = self.location
+            self:face(self.next_location)
+        end
         local dist_next = self:dist_euc_to(self.next_location)
         local speed     = self.speed < dist_next and self.speed or dist_next
 
@@ -207,7 +221,9 @@ local add_methods = function()
 
     Violents:add_method( 'follow_route', function(self)
         local route = self.route
-        if route[#route] == self.location or not self.location:is_in(route) then
+        if route[#route] == self.location
+        or self.next_location.locked_room
+        or not self.location:is_in(route) then
             self.route = {}
             self.state = 'be_aggressive'
         else
@@ -221,7 +237,7 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'find_next_location', function(self)
-        local destinations = self.location.neighbors
+        local destinations = self.location.neighbors:with(function(x) return not x.locked_room end)
         local not_visited  = destinations:with( function(x) return not x:is_in(self.last_locations) end )
         local with_people  = destinations:with( function(x) return x.my_agents.count - x.hidden_people > 0 end )
         local ll           = self.last_locations
@@ -241,13 +257,11 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'find_target', function(self)
-        print('V: find_target')
         -- TODO
-        -- print('FIND TARGET')
+        self.label = 'FT'
     end)
 
     Violents:add_method( 'avoid_police', function(self)
-        print('V: avoid_police')
         --TODO
         self.label = 'AP'
     end)
