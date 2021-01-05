@@ -5,7 +5,7 @@ local ci = {}
 
 ci.create_interface = function()
 
-    -- Create some parameters windows. They will be shown in the same order they have been created.
+    -- Create some windows. They will be shown in the same order they have been created.
     Interface:create_window('peacefuls',{height=550})
     Interface:create_window('violents', {height=300})
     Interface:create_window('App',      {height=250})
@@ -13,8 +13,8 @@ ci.create_interface = function()
     Interface:create_window('Monitor',  {height=250, width=200, x=170, y=425})
 
     -- Create some inputs inside the windows
-    Interface:create_boolean('App', 'app info?', false)
-    Interface:create_slider( 'App', 'app mode', 0, 2, 1, 2)
+    Interface:create_boolean('App', 'app info?', true)
+    Interface:create_slider( 'App', 'app mode', 0, 2, 1, 1)
     Interface:create_boolean('App', 'crowd running?', true)
     Interface:create_slider( 'App', 'what is a crowd?', 0, 20, 1, 20)
     Interface:create_boolean('App', 'first blood?', true)
@@ -22,7 +22,7 @@ ci.create_interface = function()
     Interface:create_slider('World','visib mod', 0.0, 1.0, 0.01, 1.0)
     Interface:create_slider('World','sound mod', 0.0, 1.0, 0.01, 1.0)
 
-    Interface:create_slider('peacefuls','num peacefuls', 1, 500, 1, 5)
+    Interface:create_slider('peacefuls','num peacefuls', 1, 500, 1, 100)
     Interface:create_slider('peacefuls','leaders percentage',  0.0, 1.000001, 0.005, 0.25)
     Interface:create_slider('peacefuls','app percentage', 0.0, 1.000001, 0.005, 0.5)
     Interface:create_slider('peacefuls','defense probability', 0.0, 1.000001, 0.01, 0.1)
