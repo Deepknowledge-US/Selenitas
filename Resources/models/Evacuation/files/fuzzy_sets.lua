@@ -44,30 +44,6 @@ local r12 = acc_prob:addrule( 1, 'ormethod' )
 r12:addpremise(false, 'density','low' )
 r12:addimplic( false, 'acc',    'low' )
 
--- local r13 = acc_prob:addrule( 1, 'andmethod' )
--- r13:addpremise(false, 'density','med' )
--- r13:addpremise(false, 'speed',  'low' )
--- r13:addimplic( false, 'acc',    'low' )
-
--- local r14 = acc_prob:addrule( 1, 'andmethod' )
--- r14:addpremise(false, 'density','med' )
--- r14:addpremise(false, 'speed',  'high' )
--- r14:addimplic( false, 'acc',    'med' )
-
--- local r15 = acc_prob:addrule( 1, 'andmethod' )
--- r15:addpremise(false, 'density','high')
--- r15:addpremise(false, 'speed',  'med' )
--- r15:addimplic( false, 'acc',    'med' )
-
-
-
--- -- Test some values
--- for i=0,1,0.1 do
---     for j=0,3, 0.1 do
---         print('dens.: '..i,'speed: '..j, acc_prob:solve(i,j) )
---     end
--- end
-
 
 
 ---------------------------------
@@ -123,12 +99,6 @@ r23:addpremise(false, 'risk',     'low' )
 r23:addpremise(false, 'distance', 'high' )
 r23:addimplic( false, 'danger',   'low' )
 
--- -- Test some values
--- for i=0,100,10 do
---     for j=0,100,10 do
---         print('risk: '..i,'dist.: '..j, danger_prob:solve(i,j) )
---     end
--- end
 
 
 ---------------------------------
@@ -179,13 +149,6 @@ local r37 = panic_prob:addrule( 1, 'andmethod' )
 r37:addpremise(false, 'fear',       'high' )
 r37:addpremise(false, 'sensibility','high' )
 r37:addimplic( false, 'panic',      'high' )
-
--- -- Test some values
--- for i=0,100,10 do
---     for j=0,100,10 do
---         print('fear: '..i,'sens.: '..j, panic_prob:solve(i,j) )
---     end
--- end
 
 
 
