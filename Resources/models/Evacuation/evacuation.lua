@@ -54,8 +54,6 @@ id_map = {}
 
 SETUP = function()
 
-	print('\n\n\n\n NEW')
-
     -- Reset the simulation and the global_vars of our model
 	Simulation:reset()
 	reset_global_vars()
@@ -81,106 +79,16 @@ SETUP = function()
 		g:addEdge(l.source.__id, l.target.__id, l.dist)
 	end
 
-	Peacefuls:add_method('belive', function(self)
-		local signals = 0
-		if self:app_pack() then
-			signals = 1
-		else
-			self:update_signals()
-			signals = self.attacker_sighted + self.fire_sighted   + self.bomb_sighted
-					+ self.attacker_heard   + self.fire_heard     + self.bomb_heard
-					+ self.scream_heard     + self.corpse_sighted + self.running_people
-			if signals > 1 then signals = 1 end
-		end
-
-		if signals > 0 then
-
-			if self.speed == get.n_a_speed() then
-				self.speed = self.base_speed
-			end
-			local aux = self.fear + signals
-			self.fear = aux < 100 and round(aux,2) or 100
-
-			local distance = self.location.attacker_v > 0 and self.location.nearest_danger or 30
-			self.panic_level   = round(fs.panic(self.fear, self.sensibility), 2)
-			self.percived_risk = round(fs.danger(signals,distance), 2)
-		end
-
-	end)
-
-	Peacefuls:add_method('desire', function(self)
-		if self.percived_risk > 0.2 then
-			if self.panic_level > 95 then
-				self.state = "in_panic"
-			elseif self:must_I_fight() then
-				self.state = "fighting"
-			elseif self:is_path_congested() then
-				self.state = "avoiding_crowd"
-			elseif self:secure_exit() then
-				self.state = "reaching_exit"
-			elseif self:must_I_hide() then
-				self.state = "hidden"
-			elseif self:any_violent_near() then
-				self.state = "avoiding_violent"
-			elseif self:app_pack() then
-				self.state = "asking_app"
-			elseif #self.route > 0 then
-				self.state = "following_route"
-			else
-				self.state = "running_away"
-			end
-		end
-	end)
-
-	Peacefuls:add_method('intention', function(self)
-		local state = self.state
-		if state == "avoiding_violent" then
-			self:avoid_violent()
-			self.color = {0.647,0.176,0.176,1}
-		elseif state =="avoiding_crowd"  then
-			self:avoid_crowd()
-			self.color = {0.098,0.709,0.99,1}
-		elseif state == "reaching_exit" then
-			self:go_to_exit()
-			self.color = {0.5,1,0.5,1}
-		elseif state == "in_panic" then
-			self:irrational_behaviour()
-			self.color = {0.588,0.157,0.106,1}
-		elseif state == "not_alerted" then
-			self:keep_working()
-			self.color = {1,1,1,1}
-		elseif state == "with_leader" then
-			self:follow_leader()
-			self.color = {1,1,0.5,1}
-		elseif state == "running_away" then
-			self:run_away()
-			self.color = {0,1,0,1}
-		elseif state == "hidden" then
-			self:hide()
-			self.color = {0.5,0.5,1,1}
-		elseif state == "fighting" then
-			self:fight()
-			self.color = {0,0,0,1}
-		elseif state == "asking_app" then
-			self:ask_app()
-			self.color = {1,1,1,1}
-		elseif state == "following_route" then
-			self:follow_route()
-			self.color = {0.9,0.9,0.8,1}
-		end
-	end)
 
 
 
-
+	-- local nodes = {3,4,5}
 
     for i=1,get.num_peace() do
 
         local lead = math.random() < get.leaders_perc()
         local a_node = one_of(Nodes:with( function(x) return x.capacity > x.my_agents.count end ) )
-		-- local a_node = Nodes:get(4)
 
-        -- a_node.residents = a_node.residents + 1
         local new_peaceful = Peacefuls:new({
             attacker_heard      = 0,
             attacker_sighted    = 0,
@@ -191,7 +99,8 @@ SETUP = function()
             scream_heard        = 0,
             corpse_sighted      = 0,
             police_sighted      = 0,
-            leader_sighted      = nil,
+			leader_sighted      = nil,
+			bad_area 			= nil,
             running_people      = 0,
             percived_risk       = 0,
             p_timer             = 0,
@@ -211,21 +120,16 @@ SETUP = function()
             base_speed          = gaussian(get.med_speed(), get.med_speed_dev()) / 2,
             speed               = get.n_a_speed(),
             state               = 'not_alerted',
-            in_a_secure_room    = false,
             nearest_danger      = 100
 
 		})
 		new_peaceful.location:come_in(new_peaceful)
-		-- new_peaceful.label = new_peaceful.__id
-		-- new_peaceful.show_label = true
 		if new_peaceful.sensibility > 100 then new_peaceful.sensibility = 100 end
-		-- print(new_peaceful.__id)
     end
 
 
     for i=1, get.num_violents() do
-        -- local a_node = one_of(Nodes:with( function(x) return x.capacity > x.residents end ) )
-        local a_node = Nodes.agents[6]
+        local a_node = one_of(Nodes:with( function(x) return x.capacity > x.my_agents.count end ) )
 
         local new_violent = Violents:new({
             pos             = copy(a_node.pos ),
@@ -237,19 +141,20 @@ SETUP = function()
             color           = {1,0,0,1},
             efectivity      = get.success_rate(),
             speed           = get.attacker_speed(),
-            detected        = false,
+            detected        = true,
             police_sighted  = 0,
             route           = { Nodes.agents[17],Nodes.agents[16],Nodes.agents[4],Nodes.agents[3],Nodes.agents[2],Nodes.agents[1] },
             last_locations  = {a_node}
 
 		})
+		if new_violent.detected then
+			new_violent.location.num_violents = new_violent.location.num_violents + 1
+		end
 
     end
 
 
 end
-
-
 
 
 
@@ -260,7 +165,6 @@ end
 STEP = function()
 
     local sum = 0
-    -- print('\n\n----------', Simulation.time)
 
 	---------------
     -- WORLD
@@ -299,7 +203,7 @@ STEP = function()
 					if link.family == Visibs then
 						local node, dist = Nodes:get(id), violent:dist_euc_to(Nodes:get(id))
 						node.nearest_danger = dist < node.nearest_danger and dist or node.nearest_danger
-						node.attacker_v = node.attacker_v + violent.efectivity * link.value
+						node.attacker_v = node.attacker_v + violent.efectivity * link:current_value()
 						if node.attacker_v > 1 then node.attacker_v = 1 end
 					end
 				end
@@ -336,14 +240,12 @@ STEP = function()
     end
 
 
-
 	---------------
 	-- PEACEFULS
 	---------------
 
 	for _,p in shuffled(Peacefuls)do
-		if p.__alive then
-
+		if p.__alive and p.state ~= 'at_save' then
 			if p.state ~= 'not_alerted' and p:in_exit() then p:rescue()	end
 
 			p.leader_sighted = p:any_leader()
@@ -365,7 +267,7 @@ STEP = function()
 
 			if p.fear >= 1 then p.fear = p.fear - 1 end
 		end
-    end
+	end
 
 
 	purge_agents(Peacefuls)
