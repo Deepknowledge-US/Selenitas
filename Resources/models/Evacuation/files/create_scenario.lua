@@ -37,7 +37,7 @@ cs.create_scenario = function(id_map)
             leaders         = 0,
             police          = 0,
             hidden_people   = 0,
-            lock            = false,
+            locked_room     = false,
             nearest_danger  = 50
         })
     end
@@ -72,9 +72,20 @@ cs.create_scenario = function(id_map)
         self.corpses = self.corpses + 1
         for _,link in sorted(self:get_in_links(Visibs))do
             local neigh = link.source
-            local visual_transmission = link.value * link.mod
-            neigh.corpses = neigh.corpses + visual_transmission
+            neigh.corpses = neigh.corpses + link:current_value()
         end
+    end)
+
+    Sounds:add_method('current_value', function(self)
+        return self.value * self.mod * Interface:get_value('World', 'sound mod')
+    end)
+
+    Visibs:add_method('current_value', function(self)
+        return self.value * self.mod * Interface:get_value('World', 'sound mod')
+    end)
+
+    Transits:add_method('current_value', function(self)
+        return self.transit * self.mod
     end)
 
     -- Three relational families are created and populated, one for every possible kind of link (visibility, sound or transitability), this will simplify accesses to this agents.
@@ -95,7 +106,7 @@ cs.create_scenario = function(id_map)
             Sounds:new({
                 source = n1,
                 target = n2,
-                value  = soun * Interface:get_value('World', 'sound mod'),
+                value  = soun,
                 mod    = 1,
                 visible=false
             })
@@ -104,7 +115,7 @@ cs.create_scenario = function(id_map)
             Visibs:new({
                 source = n1,
                 target = n2,
-                value  = visi * Interface:get_value('World', 'visib mod'),
+                value  = visi,
                 mod    = 1,
                 visible=false
             })
@@ -116,6 +127,7 @@ cs.create_scenario = function(id_map)
                 target      = n2,
                 dist        = dis,
                 transit     = trans,
+                mod         = 1,
                 lockable    = lockab,
                 locked      = false,
                 flow        = flo,
