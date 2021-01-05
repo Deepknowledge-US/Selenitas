@@ -44,7 +44,7 @@ end
 -- @usage
 -- list_remove({20,21,11,23,31}, 23) -- => {20,21,11,31}
 function utl_list.list_remove(list,element)
-    for i=#list,1 do
+    for i=#list,1, -1 do
         if list[i] == element then
             list[i],list[#list] = list[#list], list[i]
         end
