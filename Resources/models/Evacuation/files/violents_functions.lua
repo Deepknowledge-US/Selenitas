@@ -209,12 +209,14 @@ local add_methods = function()
         else
             -- out_neighs is a table "id_of_out_neigh -> list of links". So, we have a direct access to links beetween location and next_location
             local links_with_next_loc = self.location.out_neighs[self.next_location.__id]
-            -- As we have created transitable links at last, the last position of the list will contain the link we are looking for.
-            local current_link = links_with_next_loc[#links_with_next_loc]
+            if links_with_next_loc then
+                -- As we have created transitable links at last, the last position of the list will contain the link we are looking for.
+                local current_link = links_with_next_loc[#links_with_next_loc]
 
-            if current_link.flow_counter > 0 then
-                current_link.flow_counter = current_link.flow_counter - 1
-                self:fd(speed)
+                if current_link.flow_counter > 0 then
+                    current_link.flow_counter = current_link.flow_counter - 1
+                    self:fd(speed)
+                end
             end
         end
     end)
