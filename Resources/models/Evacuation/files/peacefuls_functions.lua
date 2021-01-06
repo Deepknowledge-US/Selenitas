@@ -436,10 +436,10 @@ local add_methods = function()
 			self:avoid_violent()
 
 		elseif not self.hidden and self.bad_area and self:any_better_location() then
-			self:stop_hidden()
 			self:advance()
 		else
 			self.p_timer = self.p_timer - 1
+			if self.p_timer <= 0 then self:stop_hidden() end
 		end
 	end)
 
@@ -453,7 +453,6 @@ local add_methods = function()
 					-- TODO -> wait_to_lock
 				else
 					self.state = 'running_away'
-					self:run_away()
 				end
 			elseif get.app_mode() == 1 then -- The app gives a path to a secure room
 				local candidates = Nodes:with(function(x) return x.has_lock > 0 and not x.locked_room and x:density() < 0.75 end)
@@ -463,7 +462,6 @@ local add_methods = function()
 					self.route = self:path_to(g,self.location.__id, destination.__id)
 				else
 					self.state = 'running_away'
-					self:run_away()
 				end
 			elseif get.app_mode() == 2 then -- The app gives a path to an exit
 				local candidates = Nodes:with(function(x) return x.id - math.floor(x.id) < 0.099 end)
