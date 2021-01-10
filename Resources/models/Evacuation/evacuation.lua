@@ -2,6 +2,8 @@ require 'Engine.utilities.utl_main'
 local cs 	= require 'Resources.models.Evacuation.files.create_scenario'
 local fs 	= require 'Resources.models.Evacuation.files.fuzzy_sets'
 local iw 	= require 'Resources.models.Evacuation.files.interface_windows'
+get 		= iw.create_interface() -- by doing this at this point, we can use 'get' in peacefuls' and violents' files
+
 local add_peacefuls_functions 	= require 'Resources.models.Evacuation.files.peacefuls_functions'
 local add_violents_functions  	= require 'Resources.models.Evacuation.files.violents_functions'
 
@@ -30,7 +32,7 @@ global_vars = {
 }
 
 -- Global variables to search routes
-g 	= graph.create(0,true) -- Initial number of nodes = 0. true means the graph is directed
+g 	= graph.create(0,true) -- Initial number of nodes = 0. 'true' means the graph is directed
 djk	= dijkstra.create()
 
 
@@ -40,12 +42,9 @@ local reset_global_vars = function()
 	end
 end
 
--- This method will create the interface params (See ./files/interface_window.lua).
-get = iw.create_interface()
 
 -- A map "id -> internal_id". It will be populated by the "create_scenario function"
 id_map = {}
-
 
 
 -------------------------------------
@@ -73,6 +72,10 @@ SETUP = function()
 
     -- Populates "id_map" and Nodes family
 	cs.create_scenario(id_map)
+	for _,node in sorted(Nodes) do
+		node.label 		= node.__id
+		node.show_label = true
+	end
 
 	-- Create graph in luagraph
 	for _,l in sorted(Transits)do
@@ -164,7 +167,6 @@ end
 
 STEP = function()
 
-    local sum = 0
 
 	---------------
     -- WORLD
@@ -248,8 +250,8 @@ STEP = function()
 		if p.__alive and p.state ~= 'at_save' then
 			if p.state ~= 'not_alerted' and p:in_exit() then p:rescue()	end
 
-			p.leader_sighted = p:any_leader()
-			if p.leadership == 0 and p.leader_sighted then
+			-- p.leader_sighted = p:any_leader()
+			if p.leadership == 0 and not p.hidden and p:any_leader() then
 				p.percived_risk = p.leader_sighted.percived_risk
 				if p.leader_sighted.location == p.location then
 					p.route = copy(p.leader_sighted.route) 		-- Leaders will share the route with agents who are in the same node
@@ -263,16 +265,27 @@ STEP = function()
 			end
 			p:intention()
 
+			if p.fear >= 1 then p.fear = p.fear - 1 end
+
 			p:casualty_risk()
 
-			if p.fear >= 1 then p.fear = p.fear - 1 end
 		end
 	end
-
 
 	purge_agents(Peacefuls)
 
 
-    if Peacefuls.count < 1 then Simulation:stop() end
+	local total = global_vars.app_accident
+				+ global_vars.app_killed
+				+ global_vars.app_rescued
+				+ global_vars.app_secure_room
+				+ global_vars.not_app_accident
+				+ global_vars.not_app_killed
+				+ global_vars.not_app_rescued
+				+ global_vars.not_app_secure_room
+
+	if get.num_peace() - total < 1 then
+		Simulation:stop()
+	end
 end
 
