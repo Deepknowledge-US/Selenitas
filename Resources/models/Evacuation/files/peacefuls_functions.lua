@@ -1,8 +1,9 @@
 require 'Engine.utilities.utl_main'
 local fs 	= require 'Resources.models.Evacuation.files.fuzzy_sets'
 
-local wait_time_mean, wait_time_dev	  = 5,1
-local running_people_signal_intensity = 0.1
+local wait_time_mean				  = get.wait_mean()
+local wait_time_dev	  				  = get.wait_dev()
+local running_people_signal_intensity = get.runners_signal()
 
 local add_methods = function()
 
@@ -42,29 +43,23 @@ local add_methods = function()
 
 	Peacefuls:add_method('desire', function(self)
 		if self.percived_risk > 0.2 then
-			if self:secure_exit() then
-				self:stop_hidden()
+			if self.p_timer > 0 then
+				self.state = "waiting"
+			elseif self:secure_exit() then
 				self.state = "reaching_exit"
 			elseif self:am_I_in_locked_room() then
 				self.state = "at_save"
 			elseif self.panic_level > 95 then
-				self:stop_hidden()
 				self.state = "in_panic"
-			elseif self.p_timer > 0 then
-				self.state = "waiting"
 			elseif self:is_path_congested() then
-				self:stop_hidden()
 				self.state = "avoiding_crowd"
 			elseif self:any_violent_near() then
 				self.state = "avoiding_violent"
-			elseif self:app_pack() then
-				self:stop_hidden()
-				self.state = "asking_app"
 			elseif #self.route > 0 then
-				self:stop_hidden()
 				self.state = "following_route"
+			elseif self:app_pack() then
+				self.state = "asking_app"
 			else
-				self:stop_hidden()
 				self.state = "running_away"
 			end
 		end
@@ -87,9 +82,6 @@ local add_methods = function()
 		elseif state == "in_panic" then
 			self:irrational_behaviour()
 			self.color = {0.588,0.157,0.106,1}
-		elseif state == "not_alerted" then
-			self:keep_working()
-			self.color = {1,1,1,1}
 		elseif state == "with_leader" then
 			self:follow_leader()
 			self.color = {1,1,0.5,1}
@@ -110,6 +102,9 @@ local add_methods = function()
 			self.color = {0.5,0.5,0.5,1}
 		elseif state == "at_save" then
 			self:to_stay()
+			self.color = {1,1,1,1}
+		elseif state == "not_alerted" then
+			self:keep_working()
 			self.color = {1,1,1,1}
 		end
 	end)
@@ -166,12 +161,6 @@ local add_methods = function()
 				self:face(self.next_location)
 				return true
 			else
-				neighs_to_hide = better_neighs:with(function(x) return x.hidden_places > x.hidden_people end )
-				if neighs_to_hide.count > 0 then
-					self.next_location = one_of(neighs_to_hide)
-					self:face(self.next_location)
-					return true
-				end
 				far_neighs = better_neighs:with(function(x) return x:dist_euc_to(bad) > self:dist_euc_to(bad) end)
 				if far_neighs.count > 0 then
 					self.next_location = one_of(far_neighs)
@@ -183,19 +172,20 @@ local add_methods = function()
 		return false
 	end)
 
-
 	Peacefuls:add_method('any_leader', function(self)
 		if self.location.leaders > 0 then
-			return one_of(self.location.my_agents:with(function(x) return x.leadership > 0 and x.state ~= 'not_alerted' end) )
+			self.leader_sighted = one_of(self.location.my_agents:with(function(x) return x.leadership > 0 end) )
+			return true
 		else
 			local nodes_with_leader = self.location:get_out_neighs(Nodes,Visibs):with(function(x) return x.leaders > 0 end)
 			if nodes_with_leader.count > 0 then
 				local node = one_of(nodes_with_leader)
-				local leader = one_of( node:my_agents():with(function(x) return x.leadership > 0 and x.state ~= 'not_alerted' end) )
-				return leader
+				local leader = one_of( node.my_agents:with(function(x) return x.leadership > 0 end) )
+				self.leader_sighted = leader
+				return true
 			end
 		end
-		return nil
+		return false
 	end)
 
 	-- True if the agent has a route and there is no violents in the route
@@ -229,15 +219,14 @@ local add_methods = function()
 	-- True if there is some violent in the node and at least 10 peacefuls for each violent
 	Peacefuls:add_method('must_I_fight', function(self)
 		local num_agents = self.location.my_agents.count
-		-- local num_violents = Violents:with(function(x) return x.__alive and x.location == self.location end ).count
 		local num_violents = self.location.num_violents
 		return num_violents > 0 and num_agents > 10*num_violents
 	end)
 
-	-- True if residents are at least 90% of node's capacity
+	-- True if residents are at least 70% of node's capacity
 	Peacefuls:add_method('is_path_congested', function(self)
 		local loc, next_loc = self.location, self.next_location
-		return loc ~= next_loc and next_loc:density() > 0.8
+		return loc ~= next_loc and next_loc:density() > 0.7
 	end)
 
 	Peacefuls:add_method('am_I_in_locked_room', function(self)
@@ -310,6 +299,12 @@ local add_methods = function()
 	Peacefuls:add_method( 'update_position', function(self)
 		local old_node, new_node = self.location, self.next_location
 
+		if self.leadership > 0 then
+			new_node.leaders = new_node.leaders + 1
+			old_node.leaders = old_node.leaders - 1
+			if old_node.leaders < 0 then old_node.leaders = 0 end
+		end
+
         old_node:come_out(self)
         self.location = new_node
         new_node:come_in(self)
@@ -374,47 +369,44 @@ local add_methods = function()
 
 		self.bad_area 		= violent.location
 		local ba 			= self.bad_area
+
 		local percived_risk = self.percived_risk < 100 and self.percived_risk or 100
 		local distance 		= self:dist_euc_to( violent ) < 100 and self:dist_euc_to( violent ) or 100
 		self.speed 			= self.base_speed + fs.danger( percived_risk, distance )/100
 		self.speed 			= round(self.speed, 2)
 
 		if self:secure_route(self.route) then
-			self:stop_hidden()
+			self:follow_route()
+		elseif self.leadership > 0 then -- to avoid violents, leaders can take another route
+			self:find_better_route()
 			self:follow_route()
 		elseif self:must_I_hide()	then
 			self:hide()
 		elseif self:must_I_fight() 	then
-			self:stop_hidden()
 			self:fight()
 		elseif loc.num_violents > 0 then
-			self:stop_hidden()
 			self.route = {self.location, one_of(self.location.neighbors)}
 			self:follow_route()
 		elseif n_l.num_violents > 0 then
-			self:stop_hidden()
-			-- self.bad_area = n_l
 			self.next_location = loc
 			self:face(self.next_location)
 		elseif self:same_area(self.bad_area) then
-			self:stop_hidden()
-			local candidate = one_of(vis_nodes:with(function(x) return not self:same_area(x,ba) end))
+			local candidate = one_of(vis_nodes:with(function(x) return not x.locked_room and not self:same_area(x,ba) end))
 			if candidate then
 				self.route = self:path_to(g, loc.__id, candidate.__id)
 				self:follow_route()
 			else
-				self.next_location = loc.neighbors:max_one_of(function(x) x:dist_euc_to(ba) end)
+				self.next_location = loc.neighbors:min_one_of(function(x) return x.attacker_v end)
 				self:face(self.next_location)
 				self.route = {self.location, self.next_location}
 				self:follow_route()
 			end
 		else
-			self:stop_hidden()
 			local candidates = loc.neighbors:with(function(x) return self:same_area(x) end)
 			if candidates.count > 0 then
 				self.next_location = candidates:max_one_of( function(x) x:dist_euc_to(ba) end )
 				self:face(self.next_location)
-				self.route = {self.location, self.location}
+				self.route = {self.location, self.next_location}
 				self:follow_route()
 			else
 				self.p_timer = gaussian(wait_time_mean,wait_time_dev)
@@ -423,18 +415,40 @@ local add_methods = function()
 
 	end)
 
+	-- This function is used only by leaders, who know the configuration of the building.
+	Peacefuls:add_method('find_better_route', function(self)
+		local sec_rooms = Nodes:with(function(x) return x.has_lock and not x.locked_room end)
+		local sec_exits	= Nodes:with(function(x) return x.id - math.floor(x.id) < 0.099 end)
+		local nodes 	= sec_rooms:union(sec_exits)
+		for _,n in sorted(nodes)do
+			n.dist_to_me = self:dist_euc_to(n)
+		end
+		for _,n in sorted(nodes, 'dist_to_me', true) do
+			local route = self:path_to(g, self.location.__id, n.__id)
+			if self:secure_route(route) then
+				self.route = route
+				return
+			end
+		end
+		-- In this point, the leader has not find a route to an exit or a secure room
+		local node = self.location:get_out_neighs(Nodes, Visibs):min_one_of(function(x) return x.attacker_v end)
+		self.route = self:path_to(g,self.location.__id, node.__id)
+	end)
+
 	Peacefuls:add_method('to_wait', function(self)
 
 		if self:am_I_in_lockable_room() then
-			self:wait_to_lock()
-		elseif self.location.hidden_places > self.location.hidden_people then
-			self:hide()
-			self.p_timer = self.p_timer - 1
-		elseif self:am_I_visible() and self:any_violent_near() then
 			self:stop_hidden()
 			self.p_timer = 0
-			self:avoid_violent()
-
+			self:wait_to_lock()
+		elseif self:any_violent_near() then
+			if self.location.hidden_places > self.location.hidden_people and not self.hidden then
+				self:hide()
+			else
+				self:stop_hidden()
+				self.p_timer = 0
+				self:avoid_violent()
+			end
 		elseif not self.hidden and self.bad_area and self:any_better_location() then
 			self:advance()
 		else
@@ -445,7 +459,7 @@ local add_methods = function()
 
 	Peacefuls:add_method('ask_app', function(self)
 		self.color = {0,1,0,1}
-		if next(self.route) ~= nil and self:secure_route(self.route) and not self.route[#self.route].locked_room then
+		if next(self.route) ~= nil and self:secure_route(self.route) then
 			self:follow_route()
 		else
 			if get.app_mode() == 0 then -- The app is warning about a danger, but is not giving any path to the agent
@@ -461,6 +475,7 @@ local add_methods = function()
 					local destination = one_of(candidates)
 					self.route = self:path_to(g,self.location.__id, destination.__id)
 				else
+					self.route = {}
 					self.state = 'running_away'
 				end
 			elseif get.app_mode() == 2 then -- The app gives a path to an exit
@@ -470,6 +485,7 @@ local add_methods = function()
 					local destination = one_of(candidates)
 					self.route = self:path_to(g,self.location.__id, destination.__id)
 				else
+					self.route = {}
 					self.state = 'running_away'
 				end
 			end
@@ -507,7 +523,6 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('wait_to_lock', function(self)
-		self:stop_hidden()
 		local loc = self.location
 		if loc.num_violents > 0 then -- An attacker has reached the node of the agent
 			self.state = 'avoiding_violent'
@@ -527,9 +542,9 @@ local add_methods = function()
 				self:advance()
 			end
 		else
-			if self:dist_euc_to(self.location) > 0.5 then
+			if self:dist_euc_to(self.location) >= 0.5 then
 				self:face(self.location)
-				self:fd(0.5)
+				self:fd(0.3)
 			end
 		end
 	end)
@@ -547,8 +562,9 @@ local add_methods = function()
 	Peacefuls:add_method( 'advance_not_alerted', function(self)
 		local dist_loc  = self:dist_euc_to(self.location)
 		local dist_next = self:dist_euc_to(self.next_location)
+		local speed 	= self.speed <= dist_next and self.speed or dist_next
 
-		if dist_next <= dist_loc * 0.8 then self:update_position() end
+		-- if dist_next <= dist_loc * 0.8 then self:update_position() end
 
 		if self.location ~= self.next_location then
 			-- out_neighs is a table "id_of_out_neigh -> list of links". So, we have a direct access to links beetween location and next_location
@@ -559,7 +575,8 @@ local add_methods = function()
 			if current_link.flow_counter > 0 then
 				if current_link.flow_counter > 0 and self.next_location:density() < 0.8 then
 					current_link.flow_counter = current_link.flow_counter - 1
-					self:fd(self.speed)
+					self:fd(speed)
+					if dist_next <= dist_loc * 0.8 then self:update_position() end
 					if self.state ~= 'not_alerted' then
 						self.location.running_people = self.location.running_people + 1
 					end
@@ -583,7 +600,11 @@ local add_methods = function()
 				else
 					global_vars.not_app_accident = global_vars.not_app_accident +1
 				end
+				if self.leadership > 0 then
+					self.location.leaders = self.location.leaders - 1
+				end
 				-- Update corpses signals
+				self:stop_hidden()
 				self.location:new_corpse()
 				self.location:come_out(self)
 				self.family:kill(self)
@@ -599,6 +620,9 @@ local add_methods = function()
 			global_vars.app_rescued = global_vars.app_rescued + 1
 		else
 			global_vars.not_app_rescued = global_vars.not_app_rescued + 1
+		end
+		if self.leadership > 0 then
+			self.location.leaders = self.location.leaders - 1
 		end
 		self.location:come_out(self)
 		self.family:kill(self)
@@ -636,13 +660,18 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('follow_route', function(self)
+		if self.next_location.locked_room then
+			self.route = {}
+			return
+		end
 
 		if self.location == self.next_location then
+
 			if self.location == self.route[#self.route] then
 				-- The agent has reach its destiny.
 				self.route   = {}
 				self.p_timer = gaussian(wait_time_mean,wait_time_dev)
-			elseif next(self.route)~=nil and not self.location:is_in(self.route) or not self.next_location:is_in(self.route) then
+			elseif next(self.route) ~= nil and ( not self.location:is_in(self.route) or not self.next_location:is_in(self.route) ) then
 				-- A congestion in the path or the vision of an attacker will force the agent to temporaly stop following the route, but it is near of that route and it could start following again.
 				self.route = self:path_to(g,self.location.__id, self.route[#self.route].__id)
 			else
@@ -660,7 +689,6 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('irrational_behaviour', function(self)
-		self:stop_hidden()
 		if self.route then
 			self:follow_route()
 		else
@@ -694,7 +722,6 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('fight', function(self)
-		self:stop_hidden()
 		if math.random() < get.defense_prob() then
 			local target_violent = one_of(Violents:with(function(x) return x.__alive and x.location == self.location end) )
 			self:kill_violent(target_violent)
@@ -702,11 +729,13 @@ local add_methods = function()
 	end)
 
 	Peacefuls:add_method('follow_leader', function(self)
-		if leader_sighted ~= nil then
-			if self.route ~= leader_sighted.route then self.route = leader_sighted.route end
-			self:follow_route()
+		if self.leader_sighted.location == self.location then
+			if self.route ~= self.leader_sighted.route and next(self.leader_sighted.route) ~= nil then
+				self.route = copy(self.leader_sighted.route)
+				self:follow_route()
+			end
 		else
-			if self.route ~= {} then -- Maybe the leader is dead, but, if she have shared the route with others, this agents will follow this route
+			if self.route ~= {} then -- Maybe the leader is dead, but if she have shared the route with others, this agents will follow this route
 				self:follow_route()
 			else
 				self.state = 'running_away'
@@ -717,18 +746,23 @@ local add_methods = function()
 
 	Peacefuls:add_method('avoid_crowd', function(self)
 		self.route = {}
-		self.next_location = self.location.neighbors
+		local candidate = self.location.neighbors
 							:with(function(x) return not x.locked_room end) -- Look around for not locked areas
 							:min_one_of(function(x) return x:density() end) -- Choose the less populated one
+		if candidate and candidate ~= self.next_location then
+			self.next_location = candidate
+		else
+			self.next_location = self.location
+		end
 		self:face(self.next_location)
 		self:advance()
 	end)
 
 	Peacefuls:add_method('run_away', function(self)
-		self:stop_hidden()
 		if self.leadership > 0 then
 			if next(self.route) == nil or not self.location:is_in(self.route) then
-				self.route = self:path_to(g,self.location.__id, one_of(Nodes:with(function(x) return x.id%1 < 0.099 end)).__id )
+				local candidate = one_of(Nodes:with(function(x) return x.id - math.floor(x.id) < 0.099 end))
+				self.route = self:path_to(g, self.location.__id, candidate.__id )
 			end
 			self.state = 'following_route'
 			self:follow_route()
