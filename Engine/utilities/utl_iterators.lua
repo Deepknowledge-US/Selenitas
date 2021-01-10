@@ -155,7 +155,7 @@ function utl_iterators.sorted(fam_or_list, param, reverse, funct)
         local max_or_min, comparator, list
 
         if reverse == true then
-            max_or_min    = -math.huge           
+            max_or_min    = -math.huge
             comparator    = utl_iterators.__comparator_reverse
         else
             max_or_min    = math.huge
