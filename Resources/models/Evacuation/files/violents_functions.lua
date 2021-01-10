@@ -1,4 +1,4 @@
-local scream_intensity = 0.3
+local scream_intensity = Interface:get_value('peacefuls', 'scream intensity')
 local add_methods = function()
 
 
@@ -31,7 +31,6 @@ local add_methods = function()
             self:be_aggressive()
         end
     end)
-
 
 
 
@@ -84,6 +83,9 @@ local add_methods = function()
             global_vars.app_killed = global_vars.app_killed + 1
         else
             global_vars.not_app_killed = global_vars.not_app_killed + 1
+        end
+        if agent.leadership > 0 then
+            agent.location.leaders = agent.location.leaders - 1
         end
         agent.location:new_corpse()
         agent.location:come_out(agent)
@@ -191,13 +193,13 @@ local add_methods = function()
 
     Violents:add_method( 'advance', function(self)
         if self.next_location.locked_room then
-            self.next_location = self.location
-            self:face(self.next_location)
+            self:find_next_location()
         end
+        local dist_loc  = self:dist_euc_to(self.location)
         local dist_next = self:dist_euc_to(self.next_location)
         local speed     = self.speed < dist_next and self.speed or dist_next
 
-        if dist_next <= speed then
+        if dist_next <= 0.8*dist_loc then
             if self.state == 'following_route' then
                 self:fd(speed)
                 self:update_position(self.location, self.next_location)
