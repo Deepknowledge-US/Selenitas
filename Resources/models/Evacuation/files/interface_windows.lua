@@ -5,8 +5,8 @@ local ci = {}
 
 ci.create_interface = function()
 
-    -- Create some windows. They will be shown in the same order they have been created.
-    Interface:create_window('peacefuls',{height=550})
+    -- Create some windows. They will be shown in the same order they have been created. But we have control over their position or size.
+    Interface:create_window('peacefuls',{height=650})
     Interface:create_window('violents', {height=300})
     Interface:create_window('App',      {height=250})
     Interface:create_window('World',    {height=100})
@@ -19,25 +19,30 @@ ci.create_interface = function()
     Interface:create_slider( 'App', 'what is a crowd?', 0, 20, 1, 20)
     Interface:create_boolean('App', 'first blood?', true)
 
-    Interface:create_slider('World','visib mod', 0.0, 1.0, 0.01, 1.0)
-    Interface:create_slider('World','sound mod', 0.0, 1.0, 0.01, 1.0)
+    -- Inputs in a slider: Window name, Param name, min value, max value, step, default value.
+    Interface:create_slider('World', 'visib mod', 0.0, 1.0, 0.01, 1.0)
+    Interface:create_slider('World', 'sound mod', 0.0, 1.0, 0.01, 1.0)
 
-    Interface:create_slider('peacefuls','num peacefuls', 1, 500, 1, 100)
-    Interface:create_slider('peacefuls','leaders percentage',  0.0, 1.000001, 0.005, 0.25)
-    Interface:create_slider('peacefuls','app percentage', 0.0, 1.000001, 0.005, 0.5)
-    Interface:create_slider('peacefuls','defense probability', 0.0, 1.000001, 0.01, 0.1)
-    Interface:create_slider('peacefuls','not alerted speed', 0.0, 1.000001, 0.01, 0.5)
-    Interface:create_slider('peacefuls','mean speed', 0.0, 3.000001, 0.1, 2.0)
-    Interface:create_slider('peacefuls','max speed deviation', 0.0, 1.000001, 0.01, 0.15)
-    Interface:create_slider('peacefuls','sensibility med', 0.0, 1.000001, 0.01, 0.7)
-    Interface:create_slider('peacefuls','sensibility deviation', 0.0, 0.3, 0.005, 0.015)
+    Interface:create_slider('peacefuls', 'num peacefuls',        1,   500,       1,      100)
+    Interface:create_slider('peacefuls', 'leaders percentage',   0.0, 1.000001,  0.005,  0.25)
+    Interface:create_slider('peacefuls', 'app percentage',       0.0, 1.000001,  0.005,  0.5)
+    Interface:create_slider('peacefuls', 'defense probability',  0.0, 1.000001,  0.01,   0.1)
+    Interface:create_slider('peacefuls', 'not alerted speed',    0.0, 1.000001,  0.01,   0.5)
+    Interface:create_slider('peacefuls', 'mean speed',           0.0, 3.000001,  0.1,    2.0)
+    Interface:create_slider('peacefuls', 'max speed deviation',  0.0, 1.000001,  0.01,   0.15)
+    Interface:create_slider('peacefuls', 'sensibility mean',     0.0, 1.000001,  0.01,   0.7)
+    Interface:create_slider('peacefuls', 'sensibility dev',      0.0, 0.3,       0.005,  0.015)
+    Interface:create_slider('peacefuls', 'wait time mean',       0.0, 20.0001,   0.1,    10.001)
+    Interface:create_slider('peacefuls', 'wait time dev',        0.0, 2,         0.01,   1.0001)
+    Interface:create_slider('peacefuls', 'scream intensity',     0.0, 1.00001,   0.01,   0.3)
+    Interface:create_slider('peacefuls', 'runners signals',      0.0, 1.00001,   0.01,   0.1)
 
-    Interface:create_slider( 'violents','num violents', 0, 10, 1, 1)
+    Interface:create_slider( 'violents', 'num violents',    0,   10,       1,    1)
     Interface:create_boolean('violents', 'shooting?',  false)
-    Interface:create_slider( 'violents','shoot noise', 0.0, 1.000001, 0.01, 0.5)
-    Interface:create_slider( 'violents','attack prob', 0.0, 1.000001, 0.01, 0.8)
-    Interface:create_slider( 'violents','success rate', 0.0, 1.000001, 0.01, 0.5)
-    Interface:create_slider( 'violents','attacker speed', 0.0, 3.5, 0.01, 0.75)
+    Interface:create_slider( 'violents', 'shoot noise',     0.0, 1.000001, 0.01, 0.5)
+    Interface:create_slider( 'violents', 'attack prob',     0.0, 1.000001, 0.01, 0.8)
+    Interface:create_slider( 'violents', 'success rate',    0.0, 1.000001, 0.01, 0.5)
+    Interface:create_slider( 'violents', 'attacker speed',  0.0, 3.5,      0.01, 0.75)
 
     Interface:create_monitor('Monitor', 'app_rescued')
     Interface:create_monitor('Monitor', 'not_app_rescued')
@@ -67,8 +72,13 @@ ci.create_interface = function()
         n_a_speed       = function() return Interface:get_value('peacefuls', 'not alerted speed')    end,
         med_speed       = function() return Interface:get_value('peacefuls', 'mean speed')           end,
         med_speed_dev   = function() return Interface:get_value('peacefuls', 'max speed deviation')  end,
-        sensib_med      = function() return Interface:get_value('peacefuls', 'sensibility med')      end,
-        sensib_dev      = function() return Interface:get_value('peacefuls', 'sensibility deviation')end,
+        sensib_med      = function() return Interface:get_value('peacefuls', 'sensibility mean')      end,
+        sensib_dev      = function() return Interface:get_value('peacefuls', 'sensibility dev')end,
+        wait_mean       = function() return Interface:get_value('peacefuls', 'wait time mean') end,
+        wait_dev        = function() return Interface:get_value('peacefuls', 'wait time dev') end,
+        scream_sound    = function() return Interface:get_value('peacefuls', 'scream intensity') end,
+        runners_signal  = function() return Interface:get_value('peacefuls', 'runners signals') end,
+
 
         num_violents    = function() return Interface:get_value('violents', 'num violents')   end,
         shooting        = function() return Interface:get_value('violents', 'shooting?')      end,
