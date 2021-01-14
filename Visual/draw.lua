@@ -6,9 +6,8 @@
 local Draw = {}
 
 local ResourceManager = require("Thirdparty.cargo.cargo").init("Resources")
-local math = require "math"
-
-local coord_scale = 10 -- 10 px = 1 unit
+local math            = require "math"
+local coord_scale     = 10 -- 10 px = 1 unit
 
 ------------------
 -- Get coordinate scale factor
@@ -43,24 +42,22 @@ function Draw.draw_agents_family(family)
 
             -- Handle agent shape, scale and rotation
             -- Base resources are 128x128 px, using 16x16 px as base scale (0.125 factor)
-            local rot = -( a.heading - (math.pi/2) )
-            --local scl = 0.125 * a.scale
-            -- scl = coord_scale / image_size * a.scale
-            local scl = 10/128 * a.scale
-            local shift = 64 -- pixels to shift to center the figure
-            local shape_img = ResourceManager.images.triangle -- Default to triangle
-            if a.shape == "circle" then
-                shape_img = ResourceManager.images.circle
-            elseif a.shape == "triangle_2" then
-                shape_img = ResourceManager.images.triangle_hole
-            elseif a.shape == "square" then
-                shape_img = ResourceManager.images.rectangle
-            elseif a.shape == "house" then
-                shape_img = ResourceManager.images.house
-            elseif a.shape == "person" then
-                shape_img = ResourceManager.images.person
-            elseif a.shape == "tree" then
-                shape_img = ResourceManager.images.tree
+            local   rot       = -( a.heading - (math.pi/2) )
+            local   scl       = 10/128 * a.scale
+            local   shift     = 64 -- pixels to shift to center the figure
+            local   shape_img = ResourceManager.images.triangle -- Default to triangle
+            if      a.shape == "circle" then
+                    shape_img = ResourceManager.images.circle
+            elseif  a.shape == "triangle_2" then
+                    shape_img = ResourceManager.images.triangle_hole
+            elseif  a.shape == "square" then
+                    shape_img = ResourceManager.images.rectangle
+            elseif  a.shape == "house" then
+                    shape_img = ResourceManager.images.house
+            elseif  a.shape == "person" then
+                    shape_img = ResourceManager.images.person
+            elseif  a.shape == "tree" then
+                    shape_img = ResourceManager.images.tree
             end
 
             love.graphics.draw(shape_img, x, y, rot, scl, scl, shift, shift)
@@ -86,10 +83,10 @@ function Draw.draw_links_family(family)
             love.graphics.setLineWidth(l.thickness)
             -- Agent coordinate is scaled and shifted in its x coordinate
             -- to account for UI column
-            local sx = l.source:xcor() * coord_scale
-            local sy = - l.source:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
-            local tx = l.target:xcor() * coord_scale
-            local ty = - l.target:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+            local sx =  l.source:xcor() * coord_scale
+            local sy = -l.source:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+            local tx =  l.target:xcor() * coord_scale
+            local ty = -l.target:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
             -- Draw line
             love.graphics.line(sx, sy, tx, ty)
             -- Draw label
@@ -112,23 +109,21 @@ function Draw.draw_cells_family(family)
         if c.visible then
             -- Handle cell color
             love.graphics.setColor(c.color)
-            local x = c:xcor() * coord_scale
-            local y = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
-            if c.shape == "square" then
+            local x         = c:xcor() * coord_scale
+            local y         = - c:ycor() * coord_scale -- Invert Y-axis to have its positive side point up
+            if    c.shape == "square" then
                 love.graphics.rectangle('fill', x - (0.5 * coord_scale), y - (0.5 * coord_scale), 1*coord_scale, 1*coord_scale )
             elseif c.shape == "triangle" then
                 -- Each triangle is 3 lines
-                local top = {x, y - (0.5 * coord_scale)}
-                local left = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
+                local top   = {x, y - (0.5 * coord_scale)}
+                local left  = {x - (0.5 * coord_scale), y + (0.5 * coord_scale)}
                 local right = {x + (0.5 * coord_scale), y + (0.5 * coord_scale)}
                 love.graphics.line(top[1], top[2], left[1], left[2]) -- Left line
                 love.graphics.line(top[1], top[2], right[1], right[2]) -- Right line
                 love.graphics.line(left[1], left[2], right[1], right[2]) -- Bottom line
             elseif c.shape == "circle" then
-                -- Circle of radius=0.5
                 local fill = c.fill == true and 'fill' or 'line'
                 love.graphics.circle(fill, x, y, c.radius * coord_scale)
-                -- love.graphics.circle("line", x, y, 0.5 * coord_scale)
             else
                 -- Shape is a generic polygon
                 love.graphics.polygon("line", c.shape)
