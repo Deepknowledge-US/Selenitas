@@ -160,21 +160,21 @@ w.create_functions = function(ui)
             end
             ui.params_window(k)
         end
-    
+
         for k, _ in pairs(Interface.family_mobile_windows) do
             if ui.family_mobile_visibility[k] == nil then
                 ui.family_mobile_visibility[k] = false
             end
             ui.family_mobile_info_windows(k)
         end
-    
+
         for k, _ in pairs(Interface.family_cell_windows) do
             if ui.family_cell_visibility[k] == nil then
                 ui.family_cell_visibility[k] = false
             end
             ui.family_cell_info_windows(k)
         end
-    
+
         for k, _ in pairs(Interface.family_rel_windows) do
             if ui.family_rel_visibility[k] == nil then
                 ui.family_rel_visibility[k] = false
