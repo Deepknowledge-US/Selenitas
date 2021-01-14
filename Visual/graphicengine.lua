@@ -6,7 +6,7 @@
 local GraphicEngine = {}
 
 require 'Engine.utilities.utl_main'
-local UI = require 'Visual.ui'
+local UI   = require 'Visual.ui'
 local View = require 'Visual.view'
 local Draw = require 'Visual.draw'
 
@@ -15,11 +15,11 @@ local setup_executed = false
 
 -- Time handling
 local time_between_steps = 0
-local _time_acc = 0
+local _time_acc          = 0
 
 -- Drawing settings
-local draw_enabled = true
-local families_visibility = {}
+local draw_enabled         = true
+local families_visibility  = {}
 local background_color_set = {0, 0, 0}
 
 
@@ -34,11 +34,11 @@ function GraphicEngine.init()
 end
 
 ------------------
--- Resets the simulation. Calls Simulation:reset and resets UI-specific parameters
+-- Resets the simulation. Calls Simulation: reset and resets UI-specific parameters
 -- @function reset_simulation
 function GraphicEngine.reset_simulation()
     -- Simulation info
-    Simulation:reset()
+    Simulation: reset()
     setup_executed = false
     love.window.setTitle("Selenitas")
     GraphicEngine.set_background_color(0, 0, 0)
@@ -47,7 +47,7 @@ function GraphicEngine.reset_simulation()
 end
 
 ------------------
--- Setups the simulation. Calls Simulation:setup catching any possible errors when running it
+-- Setups the simulation. Calls Simulation: setup catching any possible errors when running it
 -- @function setup_simulation
 -- @return ret_err Returns error string. If no error happened, nil is returned.
 function GraphicEngine.setup_simulation()
@@ -59,7 +59,7 @@ function GraphicEngine.setup_simulation()
             return ret_err
         end
         setup_executed = true
-        Simulation:stop() -- Reset 'go' in case Setup button is pressed more than once
+        Simulation: stop() -- Reset 'go' in case Setup button is pressed more than once
     end
     return ret_err
 end
@@ -144,7 +144,7 @@ function love.update(dt)
     end
 
     -- Skips until time between steps is covered
-    _time_acc = _time_acc + dt
+    _time_acc   = _time_acc + dt
     if _time_acc >= time_between_steps then
         -- Steps the simulation if it is running
         if Simulation.is_running then
@@ -152,7 +152,7 @@ function love.update(dt)
             if err then
                 -- Show error if any and stop the simulation
                 UI.show_error_message(err)
-                Simulation:stop()
+                Simulation: stop()
             end
         end
         _time_acc = 0
@@ -169,9 +169,9 @@ function love.draw()
         for _, fam in sorted(Simulation.families, 'z_order') do
             -- Only draw family if it is visible
             if families_visibility[fam.name] then
-                if fam:is_a(FamilyMobile) then
+                if fam: is_a(FamilyMobile) then
                     Draw.draw_agents_family(fam)
-                elseif fam:is_a(FamilyRelational) then
+                elseif fam: is_a(FamilyRelational) then
                     Draw.draw_links_family(fam)
                 else
                     Draw.draw_cells_family(fam)
