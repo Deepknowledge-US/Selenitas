@@ -3,6 +3,9 @@
 -- @module
 -- main
 
+-- Add Thirdparty folder to the libraries path
+package.path = package.path .. ";./Thirdparty/?.lua"
+
 -- Math constants
 __pi    = math.pi
 __2pi   = 2*math.pi
