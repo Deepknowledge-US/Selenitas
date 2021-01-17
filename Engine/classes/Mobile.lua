@@ -109,20 +109,32 @@ end
 -- @return the Agent who has update its cells.
 -- @usage
 -- agent:fd(4):update_cell()
-Mobile.update_cell = function(self)
-    for i=1,#self.current_cells do
+Mobile.update_cell = function(self,family)
+    local cell      = self.current_cells[family.name]
+    local new_cell  = family:cell_of(self.pos)
+    self.current_cells[family.name] = new_cell
 
-        local cell      = self.current_cells[i]
-        local new_cell  = cell.family:cell_of(self.pos)
-        self.current_cells[i] = new_cell
-
-        if new_cell and new_cell ~= cell then
-            cell:come_out(self)
-            new_cell:come_in(self)
-        end
+    if new_cell and new_cell ~= cell then
+        -- cell could be a nil value (first time updating cells, for example)
+        if cell then cell:come_out(self) end
+        new_cell:come_in(self)
     end
     return self
 end
+-- Mobile.update_cell = function(self,family)
+--     for i=1,#self.current_cells do
+
+--         local cell      = self.current_cells[i]
+--         local new_cell  = cell.family:cell_of(self.pos)
+--         self.current_cells[i] = new_cell
+
+--         if new_cell and new_cell ~= cell then
+--             cell:come_out(self)
+--             new_cell:come_in(self)
+--         end
+--     end
+--     return self
+-- end
 
 ------------------
 -- It produces a right turn in the agent
