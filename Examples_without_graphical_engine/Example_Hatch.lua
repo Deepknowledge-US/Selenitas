@@ -4,7 +4,7 @@ require 'Engine.utilities.utl_main'
 local pr = require 'pl.pretty'
 
 local xsize,ysize = 15,15
-local max_age     = 10
+local max_age     = 20
 local stride      = 1
 
 local function print_current_config()
@@ -32,26 +32,31 @@ local histogram = {}
 SETUP(function()
 
     -- "create_patches" encapsulates the creation of the patches collection
-    Patches = create_grid(xsize, ysize)
+    declare_FamilyCell('Patches')
+    Patches:create_grid(xsize, ysize)
+
     -- Create a collection of agents
-    Agents = FamilyMobil()
+    declare_FamilyMobile('Agents')
     -- Populate the collection with 3 agents. Each agent will have the parameters
     -- specified in the table (and the parameters obteined just for be an Agent instance)
-    Agents:create_n( 3, function()
-        return {
+
+    for i=1,3 do
+        Agents:new({
             ['pos']     = {math.random(xsize-1),math.random(ysize-1)},
             ['heading'] = math.random(360),
             ['age']     = 0,
             ['color']   = {0.5,0.5,0.5,1}
-        }
-    end)
+        })
+    end
+
+
     -- This function applies to an agent a random turn in clock direction,
     -- then the agent advance a number of units equals to stride
     Agents:add_method('wander', function(agent)
         agent
             :rt( math.random(2*math.pi))
             :fd(stride)
-            :update_cell()
+            :update_cell(Patches)
         return agent
     end)
 
@@ -64,7 +69,7 @@ SETUP(function()
     end)
 
     Agents:add_method('reproduce', function(agent)
-        if agent.alive then
+        if agent.__alive then
             if same_rgb(agent, {0.5,0.5,0.5,1}) and math.random(5) == 1 then
                 clone_n(Agents, 1, agent, function(x)
                     x.color = math.random(10) > 1 and {0,0,1,1} or {0.5,0.5,0.5,1}
@@ -99,7 +104,7 @@ SETUP(function()
         agent
         :fd(stride)
         :update_position(0,15)
-        :update_cell()
+        :update_cell(Patches)
     end
 
 end)
@@ -123,7 +128,7 @@ STEP(function()
         :rt(math.random(2*math.pi))
         :fd(stride)
         :update_position(0,15)
-        :update_cell()
+        :update_cell(Patches)
         :grow_old()
         :reproduce()
     end

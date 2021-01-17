@@ -1,7 +1,6 @@
 -----------------
 require "Engine.utilities.utl_main"
 
-local pl = require "pl"
 
 
 --[[
@@ -60,18 +59,15 @@ end
 SETUP(
     function()
         -- Create a new collection
-        Agents = FamilyMobil()
+        declare_FamilyMobile('Agents')
 
         -- Populate the collection with Agents and move them to the center of the grid
-        Agents:create_n(
-            1000,
-            function()
-                return {
-                    ["pos"]     = {math.floor(xsize / 2), math.floor(ysize / 2)},
-                    ["heading"] = math.random(__2pi)
-                }
-            end
-        )
+        for i=1,1000 do
+            Agents:new({
+                ["pos"]     = {math.floor(xsize / 2), math.floor(ysize / 2)},
+                ["heading"] = math.random(__2pi)
+            })
+        end
 
 
         Agents:add_method('update_position', function(agent, min_x, max_x, minim_y, maxim_y)
@@ -102,7 +98,7 @@ SETUP(
 STEP(
     function()
         for _,x in ordered(Agents)do
-            x:lt(math.random(__2pi)):fd(1):update_position(0,xsize):update_cell()
+            x:lt(math.random(__2pi)):fd(1):update_position(0,xsize)
         end
 
         print_current_config()

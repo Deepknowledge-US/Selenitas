@@ -8,15 +8,15 @@ require 'Engine.utilities.utl_main'
 ]]--
 
 local xsize,ysize = 16,16
+local num_houses  = 20
 
-Interface:create_slider('houses', 5, 500, 1, 20)
 -- A function to represent the space in a non graphical environment
 local function print_current_config()
     -- This function prints a 0 in the grid position of a node.
     -- A representation of the world in a non graphical environment.
     for _,p  in ordered(Patches)do p.label = '_' end
-    for _,ag in ordered(Houses) do ag.current_cells[1].label = 'O' end
-    for _,ag in ordered(People) do ag.current_cells[1].label = 'I' end
+    for _,ag in ordered(Houses) do ag.current_cells[Patches.name].label = 'O' end
+    for _,ag in ordered(People) do ag.current_cells[Patches.name].label = 'I' end
 
 
     print('\n\n========== tick '.. Simulation.time .. ' ===========')
@@ -47,7 +47,7 @@ local function layout_circle(family, radius)
     for k,v in ordered(family)do
         rt(v, radians)
         fd(v, radius)
-        v:update_cell()
+        v:update_cell(Patches)
 
         radians = radians + step
     end
@@ -61,10 +61,11 @@ end
 
 SETUP(function()
 
-    Patches = create_grid(xsize, ysize)
+    declare_FamilyCell('Patches')
+    Patches:create_grid(xsize, ysize)
 
-    Houses = FamilyMobil()
-    Houses:create_n( Interface.houses, function()
+    declare_FamilyMobile('Houses')
+    Houses:create_n( num_houses, function()
         return {
             ['pos']     = {size,size},
             ['heading'] = 0
@@ -72,7 +73,7 @@ SETUP(function()
     end)
     layout_circle(Houses, size-1 )
 
-    People = FamilyMobil()
+    declare_FamilyMobile('People')
     People:create_n(1, function()
         return {
             ['pos'] = {0,0},
@@ -83,7 +84,7 @@ SETUP(function()
         local house = one_of(Houses)
         pers:face(house)
         pers.next_house = house
-        pers:update_cell()
+        pers:update_cell(Patches)
     end
 
 end)
@@ -102,7 +103,7 @@ STEP(function()
             pers.next_house = one_of(Houses:others(pers.current_house))
             pers:face(pers.next_house)
         end
-        pers:fd(1):update_cell()
+        pers:fd(1):update_cell(Patches)
     end
 
     print_current_config()

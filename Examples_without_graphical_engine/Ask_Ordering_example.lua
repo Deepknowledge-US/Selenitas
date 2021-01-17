@@ -113,6 +113,10 @@ STEP(function()
 
     print_current_config()
 
+    if Simulation.time > 8 then
+        Simulation:stop()
+    end
+
 end)
 
 

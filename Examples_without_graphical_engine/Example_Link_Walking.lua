@@ -36,10 +36,13 @@ end
 
 
 SETUP(function()
-    Cells  = create_grid(xsize, ysize)
-    Nodes  = FamilyMobil()
-    Edges  = FamilyRelational()
-    Walkers= FamilyMobil()
+    declare_FamilyCell('Cells')
+    Cells:create_grid(xsize, ysize)
+
+    declare_FamilyMobile('Nodes')
+    declare_FamilyRel('Edges')
+
+    declare_FamilyMobile('Walkers')
 
     local n_cells = fam_to_list(n_of(10,Cells))
 
@@ -104,11 +107,11 @@ STEP(function()
         Wlkr:search_next_node()
     end
     Wlkr:fd(1)
-    Wlkr:update_cell()
+    Wlkr:update_cell(Cells)
 
     Simulation.time = Simulation.time+1
-    if Simulation.time <= Simulation.max_time then
-        Simulation.is_running = false
+    if Simulation.time > 25 then
+        Simulation:stop()
     end
 
     print_current_config()
