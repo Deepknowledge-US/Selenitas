@@ -104,6 +104,9 @@ union               = __agset.union
 difference          = __agset.difference
 intersection        = __agset.intersection
 
+__web               = require "Engine.utilities.utl_web"
+open_url            = __web.open_url
+
 -- Utils for graphs
 graph               = require 'Thirdparty.luagraphs.data.graph'
 dijkstra            = require 'Thirdparty.luagraphs.shortest_paths.Dijkstra'
@@ -116,8 +119,6 @@ kruskal_mst         = require 'Thirdparty.luagraphs.mst.KruskalMST'
 prim_mst            = require 'Thirdparty.luagraphs.mst.PrimMST'
 eager_prime_mst     = require 'Thirdparty.luagraphs.mst.EagerPrimMST'
 min_cut_max_flow    = require 'Thirdparty.luagraphs.flow.FordFulkerson'
-
-
 
 -- Utils for fuzzy
 fuzzy               = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'

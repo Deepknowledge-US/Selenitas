@@ -27,6 +27,8 @@ SETUP = function()
         x = x + 2
     end
 
+    open_url("Monitors/d3_templates/template_1.html")
+
 end
 
 

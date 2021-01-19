@@ -148,6 +148,7 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'update_position', function(self, old_node, new_node)
+        print('\tupdate position')
         self.location = new_node
         if not self.location:is_in(self.last_locations) then
             local ll = self.last_locations -- The Violent will remember the last 8 visited nodes
@@ -192,23 +193,30 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'advance', function(self)
+        print('V: advance '.. self.location.__id .. '->'.. self.next_location.__id)
         if self.next_location.locked_room then
             self:find_next_location()
+            -- self.next_location = self.location
+            -- self:face(self.next_location)
         end
         local dist_loc  = self:dist_euc_to(self.location)
         local dist_next = self:dist_euc_to(self.next_location)
         local speed     = self.speed < dist_next and self.speed or dist_next
 
         if dist_next <= 0.8*dist_loc then
+            print('\tclose to next')
             if self.state == 'following_route' then
+                print('\t  route')
                 self:fd(speed)
                 self:update_position(self.location, self.next_location)
             else
+                print('\t  no route')
                 self:fd(speed)
                 self:update_position(self.location, self.next_location)
                 self:find_next_location()
             end
         else
+            print('\tfar to next')
             -- out_neighs is a table "id_of_out_neigh -> list of links". So, we have a direct access to links beetween location and next_location
             local links_with_next_loc = self.location.out_neighs[self.next_location.__id]
             if links_with_next_loc then
@@ -219,11 +227,14 @@ local add_methods = function()
                     current_link.flow_counter = current_link.flow_counter - 1
                     self:fd(speed)
                 end
+            else
+                self:find_next_location()
             end
         end
     end)
 
     Violents:add_method( 'follow_route', function(self)
+        print('\tfollow route to ' .. self.route[#self.route].__id)
         local route = self.route
         if route[#route] == self.location
         or self.next_location.locked_room
@@ -241,6 +252,7 @@ local add_methods = function()
     end)
 
     Violents:add_method( 'find_next_location', function(self)
+        print('\tfind next location')
         local destinations = self.location.neighbors:with(function(x) return not x.locked_room end)
         local not_visited  = destinations:with( function(x) return not x:is_in(self.last_locations) end )
         local with_people  = destinations:with( function(x) return x.my_agents.count - x.hidden_people > 0 end )
