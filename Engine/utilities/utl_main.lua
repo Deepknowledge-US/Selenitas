@@ -120,6 +120,9 @@ prim_mst            = require 'Thirdparty.luagraphs.mst.PrimMST'
 eager_prime_mst     = require 'Thirdparty.luagraphs.mst.EagerPrimMST'
 min_cut_max_flow    = require 'Thirdparty.luagraphs.flow.FordFulkerson'
 
+-- Utils for JSon
+lunajson            = require 'Thirdparty.lunajson-master.src.lunajson'
+
 -- Utils for fuzzy
 fuzzy               = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'
 
@@ -141,7 +144,7 @@ Observer            = Observer()
 
 ------------------
 -- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
--- @function setup
+-- @function SETUP
 -- @param funct An anonymous function.
 -- @return Nothing, unless we specified it in the anonymous function.
 -- @usage
@@ -169,7 +172,7 @@ end
 ------------------
 -- This function is called until we reach a stop condition. Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
 -- @function STEP
--- @param funct, An anonymous function
+-- @param funct An anonymous function
 -- @return Nothing
 -- @usage
 -- TODO
