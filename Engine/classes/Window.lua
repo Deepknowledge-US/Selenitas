@@ -10,7 +10,7 @@ local Window = class.Window()
 ------------------
 -- This function is used to create a new parameters window to be used in the interface.
 -- @function _init
--- @param obj. A table with some basic parameters of the Window (title, width, height, x, y).
+-- @param a_table A table with some basic parameters of the Window (title, width, height, x, y).
 -- @return A Window instance.
 Window._init = function(self, a_table)
 
@@ -72,7 +72,6 @@ end;
 -- Allows the user to create a new monitor field
 -- @function create_monitor
 -- @param name The name of the field
--- @param var The name of the var to be monitored
 -- @return Nothing
 -- @usage
 -- -- It is not recomended to use the methods of this class. You must use the Interface method to do this.

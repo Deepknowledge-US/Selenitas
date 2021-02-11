@@ -27,13 +27,14 @@ Simulation._init = function(self)
     return self
 end;
 
-------------------
+--[[
 -- This function is used to erase a Family (or more than one) of the system.
 -- @function clear
 -- @param ... Variable number of string inputs, the names of the families we want to delete. If the string 'all' is passed as first parameter, all the families will be deleted.
 -- @return Nothing.
 -- @usage
 -- Simulation:clear('fam1', ('fam2'))
+]]--
 Simulation.clear = function(self, ...)
 
     local args = {...}
@@ -121,7 +122,7 @@ end
 ------------------
 -- TODO Not implemented
 -- @function get_delta_time
--- @return
+-- @return Number
 -- @usage
 -- -- TODO
 Simulation.get_delta_time = function(self)

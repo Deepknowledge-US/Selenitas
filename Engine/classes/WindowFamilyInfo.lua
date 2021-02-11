@@ -10,7 +10,7 @@ local WFI = class.WindowFamilyInfo()
 ------------------
 -- This function is called when a new family is created, and it creates a new window with information related to this family.
 -- @function _init
--- @param a_table. A table with values for the window.
+-- @param a_table A table with values for the window.
 WFI._init = function(self, a_table)
 
     self.title          = a_table.title

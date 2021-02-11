@@ -13,7 +13,7 @@ local Mobile = class.Mobil(Agent)
 ------------------
 -- Mobil agents are are the most common agent to work with.
 -- @function _init
--- @param Table with the properties we want in the agent.
+-- @param a_table with the properties we want in the agent.
 -- @return A new instance of Agent class.
 -- @usage new_instance = Mobil()
 Mobile._init = function(self,a_table)
@@ -193,7 +193,7 @@ end
 ------------------
 -- Moves to an agent to the position of other agent
 -- @function move_to
--- @param another_agent The agent from whom we'll get the new position.
+-- @param agent_or_vector The agent from whom we'll get the new position.
 -- @return Agent, the one who has called the function.
 -- @usage
 -- an_agent:move_to(another_ag)

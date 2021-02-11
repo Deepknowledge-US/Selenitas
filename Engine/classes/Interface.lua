@@ -11,7 +11,6 @@ local Interface = class.Interface()
 ------------------
 -- This function creates a new instance of the class Interface. This class is used to interactuate with elements in the graphic interface.
 -- @function _init
--- @param obj A table with some basic parameters of the Controller.
 -- @return A Controller instance.
 Interface._init = function(self)
     self.windows  = {}
@@ -29,7 +28,7 @@ end;
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyMobile type Family. It is used by internal methods to automatize the creation of the information windows.
 -- @function create_family_mobile_window
--- @param a_table. This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
+-- @param a_table This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
 -- @return Nothing
 -- @usage
 -- Used by internal functions
@@ -45,7 +44,7 @@ end
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyCell type Family. It is used by internal methods to automatize the creation of the information windows.
 -- @function create_family_mobile_window
--- @param a_table. This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
+-- @param a_table This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
 -- @return Nothing
 -- @usage
 -- Used by internal functions
@@ -60,7 +59,7 @@ end
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyRelational type Family. It is used by internal methods to automatize the creation of the information windows.
 -- @function create_family_mobile_window
--- @param a_table. This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
+-- @param a_table This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
 -- @return Nothing
 -- @usage
 -- Used by internal functions
@@ -75,8 +74,8 @@ end
 ------------------
 -- This function creates a new window in the Interface instance
 -- @function create_window
--- @param wname, The name of the new window.
--- @param optional_table. An optiopnal to define the width, the height, the x offset, and the y offset of the new window
+-- @param name The name of the new window
+-- @param optional_table An optiopnal to define the width, the height, the x offset, and the y offset of the new window
 -- @return Nothing
 -- @usage
 -- Interface:create_window('my_window')

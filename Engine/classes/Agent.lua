@@ -95,7 +95,7 @@ end
 ------------------
 -- This function give us the manhattan distance from the agent to another point.
 -- @function dist_manh
--- @param point The point to calculate the distance to the agent.
+-- @param ag_or_point The point to calculate the distance to the agent.
 -- @return Number The manhattan distance to the point
 -- @usage
 -- ag:dist_manh( {23, 50, 7} )
