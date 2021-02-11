@@ -28,7 +28,7 @@ global_vars = {
     total_rescued       = 0,
     total_secure_room   = 0,
 	violents_killed		= 0,
-	app_is_triggered    = false
+	app_is_triggered    = 0
 }
 
 -- Global variables to search routes
@@ -53,7 +53,7 @@ id_map = {}
 
 SETUP = function()
 
-	print('\n\n\n\n NEW')
+	-- print('\n\n\n\n NEW')
 
     -- Reset the simulation and the global_vars of our model
 	Simulation:reset()
@@ -75,7 +75,7 @@ SETUP = function()
 
 
 	Peacefuls:add_method('intention', function(self)
-		print('\tIntention.state: '..self.state)
+		-- print('\tIntention.state: '..self.state)
 		local state = self.state
 		if state == "avoiding_violent" then
 			self:avoid_violent()
@@ -131,97 +131,6 @@ SETUP = function()
 	for _,l in sorted(Transits)do
 		g:addEdge(l.source.__id, l.target.__id, l.dist)
 	end
-
-
-
-
-	-- local nodes = {3,4,5}
-
-
--- 	local colors = {
--- 		{0.902,0.098,0.294,1},
--- 		{0.502,0,0,1},
--- 		{0,0,0.502,1},
--- 		{0.235,0.706,0.294,1},
--- 		{0.667,1,0.765,1},
--- 		{0,0.502,0.502,1},
--- 		{1,1,0.098,1},
--- 		{0,0,0,1},
--- 		{0.275,0.941,0.941,1},
--- 		{0.502,0.502,0.502,1},
--- 		{1,1,1,1}
--- };
-
--- 	Nodes:new({
--- 		shape           = 'circle',
--- 		fill            = true,
--- 		color           = {0,0,1,1},
--- 		id              = 33,
--- 		size            = 2,
--- 		radius          = 30,
--- 		capacity        = 50,
--- 		hidden_places   = 1,
--- 		info            = 1,
--- 		has_lock        = 1,
--- 		pos             = { 10,-10 },
--- 		fire_v          = 0,
--- 		fire_s          = 0,
--- 		attacker_v      = 0,
--- 		attacker_s      = 0,
--- 		bomb_v          = 0,
--- 		bomb_s          = 0,
--- 		num_violents    = 0,
--- 		scream          = 0,
--- 		running_people  = 0,
--- 		corpses         = 0,
--- 		leaders         = 0,
--- 		police          = 0,
--- 		hidden_people   = 0,
--- 		locked_room     = false,
--- 		nearest_danger  = 50
-
--- 	})
-
--- 	for i=1, 11 do
--- 		local new_peaceful = Peacefuls:new({
---             attacker_heard      = 0,
---             attacker_sighted    = 0,
---             fire_heard          = 0,
---             fire_sighted        = 0,
---             bomb_heard          = 0,
---             bomb_sighted        = 0,
---             scream_heard        = 0,
---             corpse_sighted      = 0,
---             police_sighted      = 0,
--- 			leader_sighted      = nil,
--- 			bad_area 			= nil,
---             running_people      = 0,
---             percived_risk       = 0,
---             p_timer             = 0,
--- 			fear                = 0,
--- 			heading				= math.pi/2,
---             pos                 = {i*3, -10},
---             shape               = 'person',
---             color               = copy(colors[i]),
---             app                 = math.random() < get.app_perc() and true or false,
---             sensibility         = gaussian( get.sensib_med(), get.sensib_dev() ) * 100,
---             leadership          = lead and math.random() + 0.05 or 0,
---             panic_level         = 0,
---             hidden              = false,
---             last_locations      = {a_node},
---             location            = a_node,
---             next_location       = a_node,
---             route               = {},
---             base_speed          = gaussian(get.med_speed(), get.med_speed_dev()) / 2,
---             speed               = get.n_a_speed(),
--- 			state               = 'not_alerted',
--- 			scale 				= 2,
--- 			label 				= i,
--- 			show_label 			= true,
---             nearest_danger      = 100
-
--- 		})
--- 	end
 
     for i=1,get.num_peace() do
 
@@ -296,7 +205,9 @@ SETUP = function()
 			new_violent.location.num_violents = new_violent.location.num_violents + 1
 		end
 
-    end
+	end
+
+	open_url("Monitors/d3_templates/template_2.html")
 
 
 end
@@ -309,7 +220,7 @@ end
 
 STEP = function()
 
-    print('\n\n---------- TIME: ', Simulation.time)
+    -- print('\n\n---------- TIME: ', Simulation.time)
 
 	---------------
     -- WORLD
@@ -391,12 +302,12 @@ STEP = function()
 
 	for _,p in shuffled(Peacefuls)do
 		if p.__alive and p.state ~= 'at_save' then
-			print('\nAgent: '.. p.__id .. '-' .. round(p.leadership,2), 'Node: '.. p.location.__id .. ' To: '.. p.next_location.__id)
+			-- print('\nAgent: '.. p.__id .. '-' .. round(p.leadership,2), 'Node: '.. p.location.__id .. ' To: '.. p.next_location.__id)
 			if p.state ~= 'not_alerted' and p:in_exit() then p:rescue()	end
 
 			-- p.leader_sighted = p:any_leader()
 			if p.leadership == 0 and not p.hidden and p:any_leader() then
-				print('\twith lead')
+				-- print('\twith lead')
 				p.percived_risk = p.leader_sighted.percived_risk
 				if p.leader_sighted.location == p.location then
 					p.route = copy(p.leader_sighted.route) 		-- Leaders will share the route with agents who are in the same node
@@ -405,7 +316,7 @@ STEP = function()
 				end
 				p.state = 'with_leader'
 			else
-				print('\tno lead')
+				-- print('\tno lead')
 				p:belive()
 				p:desire()
 			end
@@ -415,37 +326,10 @@ STEP = function()
 			if p.fear >= 1 then p.fear = p.fear - 1 end
 
 			p:casualty_risk()
-			-- if nodo_malo ~= 0 then
-			-- 	print(nodo_malo)
-			-- 	Simulation:stop()
-			-- 	nodo_malo = 0
-			-- end
-
 		end
-		-- if p.last_state == 'hidden' and p.last_state ~= p.state then
-		-- 	print('\tCAMBIO: '..p.last_state..', '..p.state)
-		-- 	Simulation:stop()
-		-- end
 	end
 
 	purge_agents(Peacefuls)
-
-	-- for _,node in sorted(Nodes)do
-	-- 	node.label = node.my_agents.count .. '-' .. node.hidden_people
-	-- 	if node.my_agents.count < node.hidden_people then
-	-- 		print('AKIII', node.__id)
-	-- 		Simulation:stop()
-	-- 	end
-	-- 	-- node.label = node.my_agents.count .. '\n' ..node.hidden_places ..'-'..node.hidden_people
-	-- 	-- node.label = node.num_violents
-	-- 	-- node.label = node.running_people
-	-- 	-- if node.has_lock > 0 then
-	-- 	-- 	node.label = tostring(node.locked_room)
-	-- 	-- end
-	-- 	-- node.show_label = true
-	-- end
-
-	-- if Peacefuls.count < 1 then Simulation:stop() end
 
 	local total = global_vars.app_accident
 				+ global_vars.app_killed
@@ -457,8 +341,23 @@ STEP = function()
 				+ global_vars.not_app_secure_room
 
 	if get.num_peace() - total < 1 then
-		print(get.num_peace(), total)
+		-- print(get.num_peace(), total)
 		Simulation:stop()
 	end
+
+	if global_vars ~= nil then
+		local table_to_json = function(tab)
+			local str = '{'
+			for k, v in pairs(tab) do
+				str = str .. '"'.. k ..'":'..v..','
+			end
+			str = str:sub(1,-2) -- remove last char ','
+			str = str .. '}'
+			local messagge = lunajson.encode(str)
+			return messagge
+		end
+
+        os.execute('mosquitto_pub -h localhost -t evacuation -m '.. table_to_json(global_vars))
+    end
 end
 
