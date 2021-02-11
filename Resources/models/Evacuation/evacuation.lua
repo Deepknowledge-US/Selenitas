@@ -207,8 +207,7 @@ SETUP = function()
 
 	end
 
-	open_url("Monitors/d3_templates/template_2.html")
-
+	open_url("Visual_js/d3_templates/template_2.html")
 
 end
 

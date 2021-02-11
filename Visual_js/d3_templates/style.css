@@ -1,0 +1,67 @@
+/* Styles go here */
+
+
+h2 {
+    color: white;
+    width: 99%;
+    margin: .8em;
+}
+
+label {
+    color: white;
+}
+input{
+  margin: 0 .2em .8em 0;
+}
+input[type=button] {
+    margin: 0 1em 1em 3em;
+    width: 7.5em;
+}
+input[type=text] {
+    width: 8em;
+}
+#param{
+  width: 12em;
+}
+
+.navbar-header {
+    padding: .5em;
+}
+
+/* Class Font Options */
+.tick text {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+  }
+  
+  label {
+    font-family: Open Sans, sans-serif;
+    font-size: 16px;
+  }
+  
+  body {
+    font-family: Open Sans, sans-serif;
+    overflow-x: hidden; 
+  }
+
+
+  
+  /* D3 CSS */
+  .chart .domain {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  
+  .xAxis path,
+  .yAxis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+    stroke-width: 3px;
+  }
+  
+  .tick line { 
+    stroke: black;
+    stroke-width: 2px;
+  }
