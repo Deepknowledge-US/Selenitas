@@ -1,10 +1,6 @@
 -----------------
 require 'Engine.utilities.utl_main'
 
-local pretty        = require 'Thirdparty.pl.pretty'
-local utl           = require 'Thirdparty.pl.utils'
-local lambda        = utl.string_lambda
-
 
 -- "COMUNICATION_T_T"
 -- Agents are created and randomly positioned in the grid of patches
@@ -88,7 +84,7 @@ SETUP(function()
     end)
 
     for _,ag in ordered(Mobils)do
-        ag:update_pos(0,xsize):update_cell()
+        ag:update_pos(0,xsize):update_cell(Patches)
     end
 
 end)
@@ -101,19 +97,19 @@ STEP(function()
         for _,ag in shuffled(Mobils) do
             ag:fd(1)
             :update_pos(0,xsize)
-            :update_cell()
+            :update_cell(Patches)
         end
     else
         for _,ag in ordered(Mobils) do
             ag:fd(1)
             :update_pos(0,xsize)
-            :update_cell()
+            :update_cell(Patches)
         end
     end
 
     print_current_config()
 
-    if Simulation.time > 8 then
+    if Simulation.time > 0 then
         Simulation:stop()
     end
 
