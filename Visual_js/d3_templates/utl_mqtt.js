@@ -63,7 +63,7 @@ function onMessageArrived(message) {
     var topic = message.destinationName
     if (topic == document.getElementById("topic").value) {
         var param = document.getElementById("param").value
-        document.getElementById("messages").innerHTML += '<span>Messagge received from Topic: ' + topic + '  |-> Received value: ' + GB[param][GB[param].length-1] + '</span><br/>';
+        document.getElementById("messages").innerHTML += '<span>Messagge received from Topic: ' + topic + '  |-> Received value: ' + GB[param][GB[param].length-1] + ', length '+ GB[param].length +'</span><br/>';
         updateScroll(); // Scroll to bottom of window
         regenerateData('app_rescued')
     }
