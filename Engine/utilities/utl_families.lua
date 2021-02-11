@@ -101,7 +101,7 @@ end
 -- Internal function to make the iterator. It yields a random item of the list gived as parameter every time it is called. This function is called by a consumer function when a new element is needed
 -- @function __producer
 -- @param list A list of elements
--- @param list A index of the list
+-- @param index A index of the list
 -- @return A random element in a position lower or equal to "index" parameter
 -- @usage
 -- local status, number = coroutine.resume(utl_fam.__producer(list, index))

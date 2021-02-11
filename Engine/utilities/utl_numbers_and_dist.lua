@@ -10,10 +10,11 @@ local rad       = math.rad
 local utl_numbers = {}
 
 ------------------
--- It removes from the list the element of a determined position, and permute this element with the last of the list.
+-- Returns the given number, but with the number of decimal places specified in the second parameter.
 -- @function round
--- @param list The list from where remove the index
--- @return List
+-- @param x The number to truncate.
+-- @param n The number of decimals we want.
+-- @return Number
 -- @usage
 -- local my_two_decimals_num = round(1.456789, 2)
 -- -- => 1.46
