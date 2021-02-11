@@ -41,8 +41,7 @@ end
 -- @function copy
 -- @param src Path of the file to be copied. Must be accesible by Love2D, meaning it must be a child of project's root directory.
 -- @param dst Path of the copy destination, relative to the save directory.
--- @param dstpath Path of the copy destination.
--- @param err error in copy if any.
+-- @return err error in copy if any.
 function fileutils.copy_to_save_dir(src, dst)
     local info = love.filesystem.getInfo(src)
     local contents, size = love.filesystem.read(src, info.size)
@@ -82,7 +81,7 @@ end
 -- Loads model file
 -- @function load_model_file
 -- @param file_path model file to load
--- @return error error if an error happened when loading the file
+-- @return err error if an error happened when loading the file
 function fileutils.load_model_file(file_path)
     local file, err = loadfile(file_path)
     if file then
