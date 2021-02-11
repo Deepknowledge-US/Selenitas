@@ -72,14 +72,13 @@ function utl_fam.clone_n(family, n, agent, funct)
     return family:clone_n(n, agent, funct)
 end
 
---[[
+---------------------------
 -- This function delete from the system all agents marked as not alive (a value of false in its parameter '__alive'), it will also delete all the relational agents that involve a not-alive agent.
 -- @function purge_agents
 -- @param ... Undefined number of Families from where we want to purge agents. If no Family is passed, it purge all families in the system.
 -- @return Nothing
 -- @usage
 -- purge_agents(Prays, Predators)
-]]--
 function utl_fam.purge_agents(...)
     if ... ~= nil then
         for i = 1, select("#", ...) do
