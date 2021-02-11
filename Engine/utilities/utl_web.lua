@@ -1,7 +1,7 @@
 ------------------
--- Utilities to operate over lists and tables
+-- Utilities to be used for client/server comunication
 -- @module
--- list_and_tables
+-- web
 
 
 local utl_web = {}
