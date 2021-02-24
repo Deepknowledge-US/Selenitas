@@ -6,7 +6,7 @@ Simulation.max_time = 1
 SETUP(
     function()
         -- math.randomseed(101)
-        People = FamilyMobil()
+        People = FamilyMobile()
         People:create_n(
             5,
             function()

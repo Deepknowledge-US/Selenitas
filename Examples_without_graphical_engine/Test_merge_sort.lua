@@ -17,7 +17,7 @@ end
 
 SETUP(
     function()
-        People = FamilyMobil()
+        People = FamilyMobile()
 
         for i=1,5 do
             People:new({['pos'] = {i,i}})
@@ -33,7 +33,7 @@ STEP(
         -- local p = P_list
         local p = People
 
-        for k,v in sorted(p,'id')do
+        for k,v in sorted(p,'__id')do
             print(k,'id:',v.id)
         end
         print('\n')

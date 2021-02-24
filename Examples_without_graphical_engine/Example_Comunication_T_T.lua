@@ -94,7 +94,7 @@ SETUP(function()
         })
         new_ag
             :update_pos(xsize,ysize)
-            :update_cell()
+            :update_cell(Patches)
     end
 
     one_of(People).message = true
@@ -117,7 +117,7 @@ STEP(function()
             :lt(math.random(__2pi))
             :fd(1)
             :update_pos(0,15)
-            :update_cell()
+            :update_cell(Patches)
         comunicate(person)
     end
 

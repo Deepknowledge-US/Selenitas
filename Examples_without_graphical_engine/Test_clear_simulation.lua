@@ -4,7 +4,7 @@ require "Engine.utilities.utl_main"
 SETUP(
     function()
         -- math.randomseed(101)
-        People = FamilyMobil()
+        People = FamilyMobile()
         People:create_n(
             5000,
             function()
