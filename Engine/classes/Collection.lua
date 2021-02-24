@@ -10,7 +10,6 @@ local Collection = class.Collection(AgentSet)
 ------------------
 -- Collection constructor. It is usually called by some Family methods. A Collection is a set of agents from a Family.
 -- @function _init
--- @param family Is the reference to the Family that has created the Collection and is used to update some methods of the collection. It is also usefull when we need to know the main family of the agents in a collection.
 -- @return A new instance of Collection.
 Collection._init = function(self)
     self:super()
@@ -41,7 +40,7 @@ end
 ------------------
 -- This function removes an element of the Collection by giving a value of nil to the reference of the object.
 -- @function remove
--- @param agent
+-- @param agent A target agent that will be removed from the Collection.
 -- @return Nothing
 -- @usage
 -- A_collection:remove(agent)
@@ -105,7 +104,7 @@ Collection.difference = function(self, agent_set)
     if self.count < agent_set.count then
         for _,ag in next, self.agents do
             if agent_set.agents[ag.__id] ~= nil then
-                res:remove(ag)
+                self:remove(ag)
             end
         end
     else

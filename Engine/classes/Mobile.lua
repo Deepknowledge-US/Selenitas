@@ -13,7 +13,7 @@ local Mobile = class.Mobil(Agent)
 ------------------
 -- Mobil agents are are the most common agent to work with.
 -- @function _init
--- @param Table with the properties we want in the agent.
+-- @param a_table with the properties we want in the agent.
 -- @return A new instance of Agent class.
 -- @usage new_instance = Mobil()
 Mobile._init = function(self,a_table)
@@ -109,20 +109,32 @@ end
 -- @return the Agent who has update its cells.
 -- @usage
 -- agent:fd(4):update_cell()
-Mobile.update_cell = function(self)
-    for i=1,#self.current_cells do
+Mobile.update_cell = function(self,family)
+    local cell      = self.current_cells[family.name]
+    local new_cell  = family:cell_of(self.pos)
+    self.current_cells[family.name] = new_cell
 
-        local cell      = self.current_cells[i]
-        local new_cell  = cell.family:cell_of(self.pos)
-        self.current_cells[i] = new_cell
-
-        if new_cell and new_cell ~= cell then
-            cell:come_out(self)
-            new_cell:come_in(self)
-        end
+    if new_cell and new_cell ~= cell then
+        -- cell could be a nil value (first time updating cells, for example)
+        if cell then cell:come_out(self) end
+        new_cell:come_in(self)
     end
     return self
 end
+-- Mobile.update_cell = function(self,family)
+--     for i=1,#self.current_cells do
+
+--         local cell      = self.current_cells[i]
+--         local new_cell  = cell.family:cell_of(self.pos)
+--         self.current_cells[i] = new_cell
+
+--         if new_cell and new_cell ~= cell then
+--             cell:come_out(self)
+--             new_cell:come_in(self)
+--         end
+--     end
+--     return self
+-- end
 
 ------------------
 -- It produces a right turn in the agent
@@ -181,7 +193,7 @@ end
 ------------------
 -- Moves to an agent to the position of other agent
 -- @function move_to
--- @param another_agent The agent from whom we'll get the new position.
+-- @param agent_or_vector The agent from whom we'll get the new position.
 -- @return Agent, the one who has called the function.
 -- @usage
 -- an_agent:move_to(another_ag)
@@ -198,58 +210,5 @@ Mobile.move_to = function(self, agent_or_vector)
     return self
 end
 
-
-
-
---==============--
---  DISTANCES   --
---==============--
-
-
-
-------------------
--- This function give us the euclidean distance from the agent to another agent or point.
--- @function dist_euc_to
--- @param ag_or_point The agent or point to calculate the distance to the agent.
--- @return Number The euclidean distance to the point
--- @usage
--- ag:dist_euc_to( {23, 50.1, 7} )
--- -- or:
--- dist_euc_to(ag, {23, 50.1, 7})
-Mobile.dist_euc_to = function(self, ag_or_point)
-    local pos = self.pos
-    local point = ag_or_point.pos or ag_or_point
-    local res = 0
-    if #pos ~= #point then
-        error('Error in dist_euc: Diferent number of dimensions')
-    end
-    for i = 1,#pos do
-        res = res + (pos[i] - point[i])^2
-    end
-    return math.sqrt(res)
-end
-
-------------------
--- This function give us the manhattan distance from the agent to another point.
--- @function dist_manh
--- @param point The point to calculate the distance to the agent.
--- @return Number The manhattan distance to the point
--- @usage
--- ag:dist_manh( {23, 50, 7} )
-Mobile.dist_manh_to = function(self, ag_or_point)
-    local pos   = self.pos
-    local point = ag_or_point.pos or ag_or_point
-    local res   = 0
-    if #pos ~= #point then
-        error('Error in dist_manh: Diferent number of coordinates')
-    end
-
-    for i=1,#pos do
-        local dist = pos[i] - point[i]
-        dist = dist >= 0 and dist or dist * (-1)
-        res = res + dist
-    end
-    return res
-end
 
 return Mobile

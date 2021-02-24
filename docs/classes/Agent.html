@@ -37,12 +37,14 @@
     <li><a href="#Agent:_init">Agent:_init ()</a></li>
     <li><a href="#Agent:is_in_in_neighs">Agent:is_in_in_neighs ()</a></li>
     <li><a href="#Agent:set_param">Agent:set_param (name, value)</a></li>
-    <li><a href="#Agent:link_neighbors">Agent:link_neighbors (fam1, fam2)</a></li>
-    <li><a href="#Agent:in_link_neighbors">Agent:in_link_neighbors (fam1, fam2)</a></li>
-    <li><a href="#Agent:out_link_neighbors">Agent:out_link_neighbors (fam1, fam2)</a></li>
-    <li><a href="#Agent:my_links">Agent:my_links (fam1, fam2)</a></li>
-    <li><a href="#Agent:my_in_links">Agent:my_in_links (fam1, fam2)</a></li>
-    <li><a href="#Agent:my_out_links">Agent:my_out_links (fam1, fam2)</a></li>
+    <li><a href="#Agent:dist_euc_to">Agent:dist_euc_to (ag_or_point)</a></li>
+    <li><a href="#Agent:dist_manh">Agent:dist_manh (ag_or_point)</a></li>
+    <li><a href="#Agent:get_neighs">Agent:get_neighs (fam1, fam2)</a></li>
+    <li><a href="#Agent:get_in_neighs">Agent:get_in_neighs (fam1, fam2)</a></li>
+    <li><a href="#Agent:get_out_neighs">Agent:get_out_neighs (fam1, fam2)</a></li>
+    <li><a href="#Agent:get_links">Agent:get_links (fam1, fam2)</a></li>
+    <li><a href="#Agent:get_in_links">Agent:get_in_links (fam1, fam2)</a></li>
+    <li><a href="#Agent:get_out_links">Agent:get_out_links (fam1, fam2)</a></li>
 </ul>
 <h2>Metamethods</h2>
 <ul class="nowrap">
@@ -83,10 +85,8 @@
   <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/web.html">web</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
-  <li><a href="../modules/Resources.tests.test_grid.html">Resources.tests.test_grid</a></li>
-  <li><a href="../modules/Resources.tests.test_neighs.html">Resources.tests.test_neighs</a></li>
-  <li><a href="../modules/Resources.tests.test_scales.html">Resources.tests.test_scales</a></li>
   <li><a href="../modules/draw.html">draw</a></li>
   <li><a href="../modules/fileutils.html">fileutils</a></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
@@ -156,8 +156,46 @@
 
 </dd>
     <dt>
-    <a name = "Agent:link_neighbors"></a>
-    <strong>Agent:link_neighbors (fam1, fam2)</strong>
+    <a name = "Agent:dist_euc_to"></a>
+    <strong>Agent:dist_euc_to (ag_or_point)</strong>
+    </dt>
+    <dd>
+    This function give us the euclidean distance from the agent to another agent or point.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">ag:dist_euc_to( {<span class="number">23</span>, <span class="number">50.1</span>, <span class="number">7</span>} )
+<span class="comment">-- or:
+</span>dist_euc_to(ag, {<span class="number">23</span>, <span class="number">50.1</span>, <span class="number">7</span>})</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Agent:dist_manh"></a>
+    <strong>Agent:dist_manh (ag_or_point)</strong>
+    </dt>
+    <dd>
+    This function give us the manhattan distance from the agent to another point.
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">ag:dist_manh( {<span class="number">23</span>, <span class="number">50</span>, <span class="number">7</span>} )</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Agent:get_neighs"></a>
+    <strong>Agent:get_neighs (fam1, fam2)</strong>
     </dt>
     <dd>
     It returns the neighbors of the agent.
@@ -184,8 +222,8 @@ declare_FamilyRel(<span class="string">'TS'</span>)</pre>
 
 </dd>
     <dt>
-    <a name = "Agent:in_link_neighbors"></a>
-    <strong>Agent:in_link_neighbors (fam1, fam2)</strong>
+    <a name = "Agent:get_in_neighs"></a>
+    <strong>Agent:get_in_neighs (fam1, fam2)</strong>
     </dt>
     <dd>
     It returns the agents related with caller by a link that points to the agent.
@@ -198,8 +236,8 @@ declare_FamilyRel(<span class="string">'TS'</span>)</pre>
 
 </dd>
     <dt>
-    <a name = "Agent:out_link_neighbors"></a>
-    <strong>Agent:out_link_neighbors (fam1, fam2)</strong>
+    <a name = "Agent:get_out_neighs"></a>
+    <strong>Agent:get_out_neighs (fam1, fam2)</strong>
     </dt>
     <dd>
     It returns the other side of the out links with the caller as origin.
@@ -212,8 +250,8 @@ declare_FamilyRel(<span class="string">'TS'</span>)</pre>
 
 </dd>
     <dt>
-    <a name = "Agent:my_links"></a>
-    <strong>Agent:my_links (fam1, fam2)</strong>
+    <a name = "Agent:get_links"></a>
+    <strong>Agent:get_links (fam1, fam2)</strong>
     </dt>
     <dd>
     It returns the links of caller.
@@ -226,8 +264,8 @@ declare_FamilyRel(<span class="string">'TS'</span>)</pre>
 
 </dd>
     <dt>
-    <a name = "Agent:my_in_links"></a>
-    <strong>Agent:my_in_links (fam1, fam2)</strong>
+    <a name = "Agent:get_in_links"></a>
+    <strong>Agent:get_in_links (fam1, fam2)</strong>
     </dt>
     <dd>
     It returns the links that points to caller.
@@ -240,8 +278,8 @@ declare_FamilyRel(<span class="string">'TS'</span>)</pre>
 
 </dd>
     <dt>
-    <a name = "Agent:my_out_links"></a>
-    <strong>Agent:my_out_links (fam1, fam2)</strong>
+    <a name = "Agent:get_out_links"></a>
+    <strong>Agent:get_out_links (fam1, fam2)</strong>
     </dt>
     <dd>
     It returns the links with caller as origin.
@@ -338,7 +376,7 @@ declare_FamilyRel(<span class="string">'TS'</span>)</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-11-30 09:45:25 </i>
+<i style="float:right;">Last updated 2021-02-24 09:03:50 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

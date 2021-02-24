@@ -72,7 +72,7 @@ function utl_fam.clone_n(family, n, agent, funct)
     return family:clone_n(n, agent, funct)
 end
 
-------------------
+---------------------------
 -- This function delete from the system all agents marked as not alive (a value of false in its parameter '__alive'), it will also delete all the relational agents that involve a not-alive agent.
 -- @function purge_agents
 -- @param ... Undefined number of Families from where we want to purge agents. If no Family is passed, it purge all families in the system.
@@ -86,8 +86,8 @@ function utl_fam.purge_agents(...)
             family:__purge_agents()
         end
     else
-        for i = 1, #Config.__all_families do
-            local family = Config.__all_families[i]
+        for i = 1, #Simulation.families do
+            local family = Simulation.families[i]
             family:__purge_agents()
         end
     end
@@ -101,7 +101,7 @@ end
 -- Internal function to make the iterator. It yields a random item of the list gived as parameter every time it is called. This function is called by a consumer function when a new element is needed
 -- @function __producer
 -- @param list A list of elements
--- @param list A index of the list
+-- @param index A index of the list
 -- @return A random element in a position lower or equal to "index" parameter
 -- @usage
 -- local status, number = coroutine.resume(utl_fam.__producer(list, index))

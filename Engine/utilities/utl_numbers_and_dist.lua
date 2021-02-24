@@ -10,10 +10,11 @@ local rad       = math.rad
 local utl_numbers = {}
 
 ------------------
--- It removes from the list the element of a determined position, and permute this element with the last of the list.
+-- Returns the given number, but with the number of decimal places specified in the second parameter.
 -- @function round
--- @param list The list from where remove the index
--- @return List
+-- @param x The number to truncate.
+-- @param n The number of decimals we want.
+-- @return Number
 -- @usage
 -- local my_two_decimals_num = round(1.456789, 2)
 -- -- => 1.46
@@ -34,6 +35,17 @@ end
 -- local some_float_value = utl_numers.random_float(3,5)
 function utl_numbers.random_float(a,b)
     return a + (b-a) * math.random();
+end
+
+------------------
+-- It returns a value of a random gaussian distribution
+-- @function gaussian
+-- @param mean Number. The center value
+-- @param variance Number. The max deviation value
+-- @return Float number
+function utl_numbers.gaussian (mean, variance)
+    return  math.sqrt(-2 * variance * math.log(math.random())) *
+            math.cos(2 * math.pi * math.random()) + mean
 end
 
 ------------------

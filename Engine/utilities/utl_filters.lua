@@ -8,7 +8,7 @@ local utl_filters = {}
 ------------------
 -- It returns a random selectec element of a family or collection
 -- @function one_of
--- @param family The family from which we will choose an agent.
+-- @param fam_or_list The family from which we will choose an agent.
 -- @return An agent
 -- @usage
 -- local n1 = one_of(Nodes)

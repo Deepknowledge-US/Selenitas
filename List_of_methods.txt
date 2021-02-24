@@ -5,11 +5,11 @@ Agent.is_in = function(self,family)
 
 Agent.set_param = function(self,name,value)
 
-Agent.link_neighbors = function(self, optional_families)
+Agent.get_neighs = function(self, fam1,fam2)
 
-Agent.in_link_neighbors  = function(self,fam)
+Agent.get_in_neighs  = function(self,fam1,fam2)
 
-Agent.out_link_neighbors = function(self,fam)
+Agent.get_out_neighs = function(self,fam1,fam2)
 
 Agent.__delete_in_neighs = function(self)
 

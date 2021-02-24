@@ -6,9 +6,10 @@
 local View = {}
 
 local Camera = require("Thirdparty.hump.camera")
-local Slab = require "Thirdparty.Slab.Slab"
-local Grid = require "Thirdparty.editgrid.editgrid"
+local Slab  = require "Thirdparty.Slab.Slab"
+local Grid  = require "Thirdparty.editgrid.editgrid"
 local Input = require("Visual.input")
+local Draw  = require "Visual.draw"
 
 local camera = nil
 local grid = nil

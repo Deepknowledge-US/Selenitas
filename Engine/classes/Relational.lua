@@ -11,7 +11,7 @@ local Rel = class.Relational(Agent)
 -- When a Relational agent is created, some properties are given to it. There are two properties a Relational have to have: source agent and target agent, this determine the direction of the new link. An error message is returned if one of this field is missing.
 -- This class is used by FamilyRelational to create new links betwen agents.
 -- @function _init
--- @param obj A table with some properties to the new link.
+-- @param p_table A table with some properties to the new link.
 -- @return A Relational instance.
 -- @usage
 -- Family_of_relationals:add(

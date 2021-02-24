@@ -220,7 +220,8 @@ end
 -- @function cell_of
 -- @param table_ Agent or position vector
 -- @usage
--- Family_of_cells = create_grid(10,10)
+-- declare_FamilyCell('Family_of_cells')
+-- Family_of_cells:create_grid(10,10)
 -- print(
 --     Family_of_cells:cell_of( {3.16,5.98} )
 -- )

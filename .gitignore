@@ -1,6 +1,8 @@
 #Examples and test path
 Examples_without_graphical_engine/
 
+test_y_pruebas.lua
+
 # Binaries path
 build/
 

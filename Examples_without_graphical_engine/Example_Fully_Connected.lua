@@ -26,7 +26,7 @@ local function print_current_config()
         p.label = '_'
     end
     for _,ag in ordered(Nodes)do
-        ag.current_cells[1].label = 'O'
+        ag.current_cells[Patches.name].label = 'O'
     end
 
     print('\n\n========== tick '.. Simulation.time .. ' ===========')
@@ -57,7 +57,7 @@ local function layout_circle(family, radius)
     for k,v in ordered(family)do
         rt(v, radians)
         fd(v, radius)
-        v:update_cell()
+        v:update_cell(Patches)
 
         radians = radians + step
     end
@@ -70,15 +70,23 @@ local function cell_n_pos(ag)
 end
 
 SETUP(function()
-    Patches = create_grid(xsize, ysize)
+    declare_FamilyCell('Patches')
+    Patches:create_grid(xsize, ysize)
 
-    Nodes = FamilyMobil()
-    Nodes:create_n( Interface.nodes, function()
-        return {
-            ['pos']     = {size,size},
-            ['heading'] = 0
-        }
-    end)
+    declare_FamilyMobile('Nodes')
+    for i=1,10 do
+        local new_node = Nodes:new({
+            pos     = {size,size},
+            heading = 0
+        })
+        new_node:update_cell(Patches)
+    end
+    -- Nodes:create_n( Interface.nodes, function()
+    --     return {
+    --         ['pos']     = {size,size},
+    --         ['heading'] = 0
+    --     }
+    -- end)
 
     layout_circle(Nodes, size-1 )
 
@@ -90,7 +98,7 @@ SETUP(function()
             Links:new({
                 ['source'] = agent,
                 ['target'] = another_agent,
-                ['legend'] = agent.id .. ',' .. another_agent.id
+                ['legend'] = agent.__id .. ',' .. another_agent.__id
             })
         end
     end
@@ -107,7 +115,7 @@ STEP(function()
 
     print_current_config()
 
-    Simulation.is_running = false
+    Simulation:stop()
     -- print(Links)
 end)
 

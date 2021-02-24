@@ -5,13 +5,12 @@
 
 local class  = require 'Thirdparty.pl.class'
 
-local Interface = class.Simulation()
+local Interface = class.Interface()
 
 
 ------------------
 -- This function creates a new instance of the class Interface. This class is used to interactuate with elements in the graphic interface.
 -- @function _init
--- @param obj A table with some basic parameters of the Controller.
 -- @return A Controller instance.
 Interface._init = function(self)
     self.windows  = {}
@@ -29,7 +28,7 @@ end;
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyMobile type Family. It is used by internal methods to automatize the creation of the information windows.
 -- @function create_family_mobile_window
--- @param a_table. This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
+-- @param a_table This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
 -- @return Nothing
 -- @usage
 -- Used by internal functions
@@ -45,7 +44,7 @@ end
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyCell type Family. It is used by internal methods to automatize the creation of the information windows.
 -- @function create_family_mobile_window
--- @param a_table. This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
+-- @param a_table This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
 -- @return Nothing
 -- @usage
 -- Used by internal functions
@@ -60,7 +59,7 @@ end
 ------------------
 -- This function creates a new information window in the Interface instance for a FamilyRelational type Family. It is used by internal methods to automatize the creation of the information windows.
 -- @function create_family_mobile_window
--- @param a_table. This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
+-- @param a_table This parameter could be a string with the NAME OF AN EXISTING FAMILY or an Optional table with the properties of the table, in this last case, the table HAVE TO contain a 'title' param with the name of the family.
 -- @return Nothing
 -- @usage
 -- Used by internal functions
@@ -75,8 +74,8 @@ end
 ------------------
 -- This function creates a new window in the Interface instance
 -- @function create_window
--- @param wname, The name of the new window.
--- @param optional_table. An optiopnal to define the width, the height, the x offset, and the y offset of the new window
+-- @param name The name of the new window
+-- @param optional_table An optiopnal to define the width, the height, the x offset, and the y offset of the new window
 -- @return Nothing
 -- @usage
 -- Interface:create_window('my_window')
@@ -135,10 +134,34 @@ Interface.create_boolean = function(self, window_name, new_boolean_name, def_val
     if next(self.windows) == nil then
         self:create_window('Parameters')
     end
-    if def_value then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
+    if def_value ~= nil then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
         self.windows[window_name]:create_boolean(new_boolean_name, def_value)
     else
         self.windows['Parameters']:create_boolean(window_name, new_boolean_name)
+    end
+end;
+
+------------------
+-- Allows the user to create a new monitor field
+-- @function create_monitor
+-- @param window_name Optional string, The name of the window where the input will be created. If not gived as parameter, the default window will be used
+-- @param var_name The name of the var to be monitored
+-- @return Nothing
+-- @usage
+-- -- Default window option:
+-- Interface:create_monitor('red nodes', my_global_vars.red_nodes)
+--
+-- -- Custom window option:
+-- Interface:create_window('window_name') -- We need to create the window first
+-- Interface:create_slider('window_name', 'my var', one_var)
+Interface.create_monitor = function(self, window_name, var_name)
+    if next(self.windows) == nil then
+        self:create_window('Parameters')
+    end
+    if var_name ~= nil then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
+        self.windows[window_name]:create_monitor( var_name)
+    else
+        self.windows['Parameters']:create_monitor(window_name )
     end
 end;
 
@@ -163,7 +186,7 @@ Interface.create_slider = function(self, window_name, slider_name, min, max, ste
     if next(self.windows) == nil then -- If there is no windows, we use a default window
         self:create_window('Parameters')
     end
-    if value then -- If we have received 6 params, the user has used a custom window name
+    if value ~= nil then -- If we have received 6 params, the user has used a custom window name
         self.windows[window_name]:create_slider(slider_name, min, max, step, value)
     else
         local sl_name, mn, mx, stp, val = window_name, slider_name, min, max, step
@@ -189,7 +212,7 @@ Interface.create_input = function(self, window_name, input_name, value)
     if next(self.windows) == nil then
         self:create_window('Parameters')
     end
-    if value then
+    if value ~= nil then
         self.windows[window_name]:create_input(input_name, value)
     else
         self.windows['Parameters']:create_input(window_name, input_name)

@@ -14,6 +14,7 @@ local function print_current_config()
         for j = 0,xsize-1 do
             local target = Cells:cell_of({j,i})
             local label  = target.my_agents.count > 0 and target.my_agents.count or '_'
+            -- print(target.my_agents.count)
             if Choosen:is_in(target.my_agents) then
                 label = 0
             end
@@ -32,9 +33,10 @@ end
 SETUP(function()
 
     print('\n\n\n\n\n')
-    Cells = create_grid(xsize, ysize)
+    declare_FamilyCell('Cells')
+    Cells:create_grid(xsize, ysize)
 
-    Agents = FamilyMobil()
+    declare_FamilyMobile('Agents')
 
     Agents:create_n( 2, function()
         return {
@@ -45,17 +47,17 @@ SETUP(function()
     end)
     Agents:add_method('update_position', function(agent, min_x, max_x, minim_y, maxim_y)
         local x,y = agent:xcor(),agent:ycor()
-    
+
         local min_y, max_y = minim_y or min_x, maxim_y or max_x
-    
+
         local size_x, size_y = max_x-min_x, max_y-min_y
-    
+
         if x > max_x then
             agent.pos[1] = agent.pos[1] - size_x
         elseif x < min_x then
             agent.pos[1] = agent.pos[1] + size_x
         end
-    
+
         if y > max_y then
             agent.pos[2] = agent.pos[2] - size_y
         elseif y < min_y then
@@ -69,7 +71,7 @@ SETUP(function()
 
     Choosen
         :move_to({xsize/2,ysize/2})
-        :update_cell()
+        :update_cell(Cells)
         :face(Other)
 
 end)
@@ -82,20 +84,21 @@ STEP(function()
             :set_param('heading',math.random(2*math.pi))
             :fd(7)
             :update_position(0,xsize)
-            :update_cell()
+            :update_cell(Cells)
     end
 
     Choosen
         :face(Other)
         :fd(2)
         :update_position(0,xsize)
-        :update_cell()
+        :update_cell(Cells)
 
     print_current_config()
+    print(Cells:cell_of(Other).__id, Cells:cell_of(Choosen).__id )
 
-    if Choosen.current_cells[1] == Other.current_cells[1] then
-        print(Other.current_cells[1]:xcor(),Other.current_cells[1]:ycor())
-        Simulation.is_running = false
+    if Cells:cell_of(Other) == Cells:cell_of(Choosen) then
+        print(Cells:cell_of(Other):xcor(),Cells:cell_of(Other):ycor())
+        Simulation:stop()
     end
 
 end)

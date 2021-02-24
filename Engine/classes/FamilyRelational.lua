@@ -49,11 +49,11 @@ FR.new = function(self,object)
         new_rel.z_order = self.z_order
 
         for prop, def_val in next, self.properties do
-            new_agent[prop] = def_val
+            new_rel[prop] = def_val
         end
 
         for name, funct in next, self.functions do
-            new_agent[name] = funct
+            new_rel[name] = funct
         end
 
         -- New link added to family. Update agents table and size.
@@ -81,29 +81,5 @@ FR.new = function(self,object)
     return self.agents[new_id]
 end;
 
-------------------
--- Create n new Relational agents in the family.
--- @function create_n
--- @param num The number of agents that will be added to the family
--- @param funct An anonymous function that will be executed to create each Relational.
--- @return Nothing
--- @usage
--- Links:create_n( 10, function()
---     local src = one_of(Nodes)
---     local tgt = Nodes:one_of_others(src)
---     return {
---         ['source'] = src,
---         ['target'] = tgt
---     }
--- end)
--- -- This will result in 10 new links between 2 distinct agents of the family Nodes.
-FR.create_n = function(self,num, funct)
-    local res = Collection()
-    for i=1,num do
-        local link = self:new( Relational( funct() ) )
-        res:add(link)
-    end
-    return res
-end;
 
 return FR

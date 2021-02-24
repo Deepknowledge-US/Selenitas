@@ -11,7 +11,16 @@ file = {
                 'conf.lua',
                 'Thirdparty/',
                 'Examples_without_graphical_engine/',
-                'Resources/examples'
+                'Resources',
+                'Visual/Colors.lua',
+                'Visual/syntax_highlight.lua',
+                'Visual/ui.lua',
+                'Visual/ui_internal_editor.lua',
+                'Visual/ui_menu_bar.lua',
+                'Visual/ui_onclick_functions.lua',
+                'Visual/ui_status_bar.lua',
+                'Visual/ui_tool_bar.lua',
+                'Visual/ui_windows.lua'
                 }
        }
 

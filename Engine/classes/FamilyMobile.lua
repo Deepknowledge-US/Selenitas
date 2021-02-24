@@ -55,17 +55,16 @@ FM.new = function(self,object)
     self.agents[key]  = new_agent
     self.count        = self.count + 1
 
-    local cell_fams = find_families(FamilyCell)
-    for i=1,#cell_fams do
-        if cell_fams[i].count > 0 then
-            local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
-            if my_cell then
-                self.agents[key].current_cells[i] = my_cell
-                my_cell:come_in(self.agents[key])
-            end
-        end
-
-    end
+    -- local cell_fams = find_families(FamilyCell)
+    -- for i=1,#cell_fams do
+    --     if cell_fams[i].count > 0 then
+    --         local my_cell = cell_fams[i]:cell_of(self.agents[key].pos)
+    --         if my_cell then
+    --             self.agents[key].current_cells[i] = my_cell
+    --             my_cell:come_in(self.agents[key])
+    --         end
+    --     end
+    -- end
 
     return self.agents[key]
 end

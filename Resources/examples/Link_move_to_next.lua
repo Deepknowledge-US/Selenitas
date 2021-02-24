@@ -33,7 +33,7 @@ SETUP = function()
     })
 
     Walkers:add_method('search_next_node',function(self)
-        local nn = one_of(self.curr_node:out_link_neighbors())
+        local nn = one_of(self.curr_node:get_out_neighs())
         self:face(nn)
         self.next_node = nn
     end)

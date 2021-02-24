@@ -349,7 +349,7 @@ end
 ------------------
 -- Returns the agent with the minimum value for a gived function 
 -- @function Instance:max_one_of
--- @param funct An anonimous function that will be applied to the agents to searching for the maximum.
+-- @param f An anonimous function that will be applied to the agents to searching for the maximum.
 -- @return Agent.
 -- @usage
 -- local olderer_agent = A_family:max_one_of( function(agent) return agent.age end )
@@ -372,8 +372,8 @@ end
 ------------------
 -- Returns the n elements producing the maximum values for a gived function
 -- @function Instance:max_n_of
--- @param num Number of agents we want
--- @param funct An anonimous function that will be applied to agents to compute the value
+-- @param n Number of agents we want
+-- @param f An anonimous function that will be applied to agents to compute the value
 -- @return Collection.
 -- @usage
 -- local older_5_agents = A_family:max_n_of(5, function(ag) return ag.age end)

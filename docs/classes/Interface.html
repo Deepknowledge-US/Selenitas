@@ -34,13 +34,14 @@
 
 <h2>Methods</h2>
 <ul class="nowrap">
-    <li><a href="#Interface:_init">Interface:_init (obj)</a></li>
-    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table.)</a></li>
-    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table.)</a></li>
-    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table.)</a></li>
-    <li><a href="#Interface:create_window">Interface:create_window (wname, optional_table.)</a></li>
+    <li><a href="#Interface:_init">Interface:_init ()</a></li>
+    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table)</a></li>
+    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table)</a></li>
+    <li><a href="#Interface:create_family_mobile_window">Interface:create_family_mobile_window (a_table)</a></li>
+    <li><a href="#Interface:create_window">Interface:create_window (name, optional_table)</a></li>
     <li><a href="#Interface:get_value">Interface:get_value (window_name, param_name)</a></li>
     <li><a href="#Interface:create_boolean">Interface:create_boolean (window_name, new_boolean_name, def_value)</a></li>
+    <li><a href="#Interface:create_monitor">Interface:create_monitor (window_name, var_name)</a></li>
     <li><a href="#Interface:create_slider">Interface:create_slider (window_name, slider_name, min, max, step, value)</a></li>
     <li><a href="#Interface:create_input">Interface:create_input (window_name, input_name, value)</a></li>
     <li><a href="#Interface:clear">Interface:clear ()</a></li>
@@ -76,10 +77,8 @@
   <li><a href="../modules/main.html">main</a></li>
   <li><a href="../modules/numbers_and_dists.html">numbers_and_dists</a></li>
   <li><a href="../modules/strings_and_files.html">strings_and_files</a></li>
+  <li><a href="../modules/web.html">web</a></li>
   <li><a href="../modules/Native.lua.lua.html">Native.lua.lua</a></li>
-  <li><a href="../modules/Resources.tests.test_grid.html">Resources.tests.test_grid</a></li>
-  <li><a href="../modules/Resources.tests.test_neighs.html">Resources.tests.test_neighs</a></li>
-  <li><a href="../modules/Resources.tests.test_scales.html">Resources.tests.test_scales</a></li>
   <li><a href="../modules/draw.html">draw</a></li>
   <li><a href="../modules/fileutils.html">fileutils</a></li>
   <li><a href="../modules/graphicengine.html">graphicengine</a></li>
@@ -102,7 +101,7 @@
     <dl class="function">
     <dt>
     <a name = "Interface:_init"></a>
-    <strong>Interface:_init (obj)</strong>
+    <strong>Interface:_init ()</strong>
     </dt>
     <dd>
     This function creates a new instance of the class Interface.  This class is used to interactuate with elements in the graphic interface.
@@ -116,7 +115,7 @@
 </dd>
     <dt>
     <a name = "Interface:create_family_mobile_window"></a>
-    <strong>Interface:create_family_mobile_window (a_table.)</strong>
+    <strong>Interface:create_family_mobile_window (a_table)</strong>
     </dt>
     <dd>
     This function creates a new information window in the Interface instance for a FamilyMobile type Family.  It is used by internal methods to automatize the creation of the information windows.
@@ -134,7 +133,7 @@
 </dd>
     <dt>
     <a name = "Interface:create_family_mobile_window"></a>
-    <strong>Interface:create_family_mobile_window (a_table.)</strong>
+    <strong>Interface:create_family_mobile_window (a_table)</strong>
     </dt>
     <dd>
     This function creates a new information window in the Interface instance for a FamilyCell type Family.  It is used by internal methods to automatize the creation of the information windows.
@@ -152,7 +151,7 @@
 </dd>
     <dt>
     <a name = "Interface:create_family_mobile_window"></a>
-    <strong>Interface:create_family_mobile_window (a_table.)</strong>
+    <strong>Interface:create_family_mobile_window (a_table)</strong>
     </dt>
     <dd>
     This function creates a new information window in the Interface instance for a FamilyRelational type Family.  It is used by internal methods to automatize the creation of the information windows.
@@ -170,7 +169,7 @@
 </dd>
     <dt>
     <a name = "Interface:create_window"></a>
-    <strong>Interface:create_window (wname, optional_table.)</strong>
+    <strong>Interface:create_window (name, optional_table)</strong>
     </dt>
     <dd>
     This function creates a new window in the Interface instance
@@ -236,6 +235,29 @@
 <span class="comment">-- Custom window option:
 </span>Interface:create_window(<span class="string">'window_name'</span>) <span class="comment">-- We need to create the window first
 </span>Interface:create_slider(<span class="string">'window_name'</span>, <span class="string">'my boolean'</span>, <span class="keyword">true</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Interface:create_monitor"></a>
+    <strong>Interface:create_monitor (window_name, var_name)</strong>
+    </dt>
+    <dd>
+    Allows the user to create a new monitor field
+
+
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="comment">-- Default window option:
+</span>Interface:create_monitor(<span class="string">'red nodes'</span>, my_global_vars.red_nodes)
+
+<span class="comment">-- Custom window option:
+</span>Interface:create_window(<span class="string">'window_name'</span>) <span class="comment">-- We need to create the window first
+</span>Interface:create_slider(<span class="string">'window_name'</span>, <span class="string">'my var'</span>, one_var)</pre>
     </ul>
 
 </dd>
@@ -313,7 +335,7 @@ Interface:create_slider(<span class="string">'window_name'</span>, <span class="
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-11-30 09:45:25 </i>
+<i style="float:right;">Last updated 2021-02-24 09:03:50 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

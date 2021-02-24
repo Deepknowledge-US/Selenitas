@@ -42,7 +42,14 @@ end;
 -- @function is_in_in_neighs
 -- @return Boolean, true if the agent is in the family.
 Agent.is_in = function(self,fam)
-    return fam:is_in(self)
+    if fam.count then
+        return fam:is_in(self)
+    else
+        for _,ag in next, fam do
+            if self == ag then return true end
+        end
+        return false
+    end
 end;
 
 ------------------
@@ -56,16 +63,74 @@ Agent.set_param = function(self,name,value)     --TODO CUIDADO CON LAS TABLAS !!
     return self
 end
 
+
+
+
+--==============--
+--  DISTANCES   --
+--==============--
+
+------------------
+-- This function give us the euclidean distance from the agent to another agent or point.
+-- @function dist_euc_to
+-- @param ag_or_point The agent or point to calculate the distance to the agent.
+-- @return Number The euclidean distance to the point
+-- @usage
+-- ag:dist_euc_to( {23, 50.1, 7} )
+-- -- or:
+-- dist_euc_to(ag, {23, 50.1, 7})
+Agent.dist_euc_to = function(self, ag_or_point)
+    local pos = self.pos
+    local point = ag_or_point.pos or ag_or_point
+    local res = 0
+    if #pos ~= #point then
+        error('Error in dist_euc: Diferent number of dimensions')
+    end
+    for i = 1,#pos do
+        res = res + (pos[i] - point[i])^2
+    end
+    return math.sqrt(res)
+end
+
+------------------
+-- This function give us the manhattan distance from the agent to another point.
+-- @function dist_manh
+-- @param ag_or_point The point to calculate the distance to the agent.
+-- @return Number The manhattan distance to the point
+-- @usage
+-- ag:dist_manh( {23, 50, 7} )
+Agent.dist_manh_to = function(self, ag_or_point)
+    local pos   = self.pos
+    local point = ag_or_point.pos or ag_or_point
+    local res   = 0
+    if #pos ~= #point then
+        error('Error in dist_manh: Diferent number of coordinates')
+    end
+
+    for i=1,#pos do
+        local dist = pos[i] - point[i]
+        dist = dist >= 0 and dist or dist * (-1)
+        res = res + dist
+    end
+    return res
+end
+
+
+
+--==============--
+--  NEIGHBORS   --
+--==============--
+
 ------------------
 -- It returns the neighbors of the agent.
--- @function link_neighbors
+-- @function get_neighs
 -- @param fam1 Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the neighbors member of fam1 related with caller by some link of this family are returned.
 -- @return Collection of neighbors of the agent.
 -- @usage
 --      declare_FamilyMobile('Triangles')
 --      declare_FamilyMobile('Squares')
---      
+--
 --      for i=1,5 do
 --          Triangles:new({
 --          })
@@ -81,8 +146,8 @@ end
 --          end
 --      end
 --
---      my_neighs = an_agent:link_neighbors(Squares,TS)
-Agent.link_neighbors = function(self,fam1, fam2)
+--      my_neighs = an_agent:get_neighs(Squares,TS)
+Agent.get_neighs = function(self,fam1, fam2)
     local res = Collection()
     if fam1 then
         for id_neigh,list_of_links in next,self.in_neighs do
@@ -133,11 +198,11 @@ end
 
 ------------------
 -- It returns the agents related with caller by a link that points to the agent.
--- @function in_link_neighbors
+-- @function get_in_neighs
 -- @param fam1 Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the neighbors member of fam1 related with caller by some link of this family are returned.
 -- @return Collection of links of the agent.
-Agent.in_link_neighbors  = function(self,fam1, fam2)
+Agent.get_in_neighs  = function(self,fam1, fam2)
 
     local res = Collection()
     if fam1 then
@@ -169,11 +234,11 @@ end
 
 ------------------
 -- It returns the other side of the out links with the caller as origin.
--- @function out_link_neighbors
+-- @function get_out_neighs
 -- @param fam1 Optional parameter, if the name of a family is given, only the neighbors member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the neighbors member of fam1 related with caller by some link of this family are returned.
 -- @return Collection of neighs of the agent.
-Agent.out_link_neighbors  = function(self,fam1, fam2)
+Agent.get_out_neighs  = function(self,fam1, fam2)
 
     local res = Collection()
     if fam1 then
@@ -205,11 +270,11 @@ end
 
 ------------------
 -- It returns the links of caller.
--- @function my_links
+-- @function get_links
 -- @param fam1 Optional parameter, if the name of a family is given, only the links member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the links member of fam1 with a member of fam2 in the other end of the link are returned.
 -- @return Collection of neighbors of the agent.
-Agent.my_links = function(self,fam1, fam2)
+Agent.get_links = function(self,fam1, fam2)
     local res = Collection()
     if fam1 then
         local pred_in,pred_out
@@ -244,11 +309,11 @@ end
 
 ------------------
 -- It returns the links that points to caller.
--- @function my_in_links
+-- @function get_in_links
 -- @param fam1 Optional parameter, if the name of a family is given, only the links member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the links member of fam1 with a member of fam2 in the other end of the link are returned.
 -- @return Collection of links of the agent.
-Agent.my_in_links  = function(self,fam1, fam2)
+Agent.get_in_links  = function(self,fam1, fam2)
     local res = Collection()
     if fam1 then
         local pred_in
@@ -272,11 +337,11 @@ end
 
 ------------------
 -- It returns the links with caller as origin.
--- @function my_out_links
+-- @function get_out_links
 -- @param fam1 Optional parameter, if the name of a family is given, only the links member of this family are returned.
 -- @param fam2 Optional parameter, if the name of a family is given, only the links member of fam1 with a member of fam2 in the other end of the link are returned.
 -- @return Collection of links of the agent.
-Agent.my_out_links = function(self,fam1,fam2)
+Agent.get_out_links = function(self,fam1,fam2)
     local res = Collection()
     if fam1 then
         local pred_out

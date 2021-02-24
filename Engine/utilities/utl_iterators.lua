@@ -32,7 +32,7 @@ end
 -- This function ask to the producer for a new element everytime is called.
 -- @function __consumer
 -- @param a_list List of elements
--- @param index Integer, pointing the current element.
+-- @param an_index Integer, pointing the current element.
 -- @return An element of the list
 -- @see __producer
 function utl_iterators.__consumer(a_list, an_index)
@@ -155,7 +155,7 @@ function utl_iterators.sorted(fam_or_list, param, reverse, funct)
         local max_or_min, comparator, list
 
         if reverse == true then
-            max_or_min    = -math.huge           
+            max_or_min    = -math.huge
             comparator    = utl_iterators.__comparator_reverse
         else
             max_or_min    = math.huge

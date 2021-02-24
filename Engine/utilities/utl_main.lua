@@ -3,6 +3,9 @@
 -- @module
 -- main
 
+-- Add Thirdparty folder to the libraries path
+package.path = package.path .. ";./Thirdparty/?.lua"
+
 -- Math constants
 __pi    = math.pi
 __2pi   = 2*math.pi
@@ -28,11 +31,13 @@ WindowFamilyInfo    = require 'Engine.classes.WindowFamilyInfo'
 Interface           = require 'Engine.classes.Interface'
 Simulation          = require 'Engine.classes.Simulation'
 
-Draw                = require 'Visual.draw'
+Colors              = require 'Visual.Colors'
+color               = Colors.color
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 copy                = __list_tables.list_copy
 list_copy           = __list_tables.list_copy
+list_index_of       = __list_tables.list_index_of
 list_remove         = __list_tables.list_remove
 list_remove_index   = __list_tables.list_remove_index
 fam_to_list         = __list_tables.fam_to_list
@@ -47,6 +52,7 @@ sorted              = __iterators.sorted
 __numbers           = require 'Engine.utilities.utl_numbers_and_dist'
 round               = __numbers.round
 random_float        = __numbers.random_float
+gaussian            = __numbers.gaussian
 dist_euc_to         = __numbers.dist_euc_to
 
 __str_fls           = require 'Engine.utilities.utl_strings_and_files'
@@ -93,24 +99,39 @@ gtrn                = __act.gtrn
 rt                  = __act.rt
 lt                  = __act.lt
 
-
 __agset             = require 'Engine.utilities.utl_agent_set'
 union               = __agset.union
 difference          = __agset.difference
 intersection        = __agset.intersection
 
+__web               = require "Engine.utilities.utl_web"
+open_url            = __web.open_url
 
--- Utils from Penlight
-tablex  = require 'pl.tablex'
-pretty  = require 'pl.pretty'
-pd      = pretty.dump
+-- Utils for graphs
+graph               = require 'Thirdparty.luagraphs.data.graph'
+dijkstra            = require 'Thirdparty.luagraphs.shortest_paths.Dijkstra'
+dfs                 = require 'Thirdparty.luagraphs.search.DepthFirstSearch'
+bfs                 = require 'Thirdparty.luagraphs.search.BreadthFirstSearch'
+con_comp            = require 'Thirdparty.luagraphs.connectivity.ConnectedComponents'
+strong_con_comp     = require 'Thirdparty.luagraphs.connectivity.StronglyConnectedComponents'
+topological_sort    = require 'Thirdparty.luagraphs.sort.TopologicalSort'
+kruskal_mst         = require 'Thirdparty.luagraphs.mst.KruskalMST'
+prim_mst            = require 'Thirdparty.luagraphs.mst.PrimMST'
+eager_prime_mst     = require 'Thirdparty.luagraphs.mst.EagerPrimMST'
+min_cut_max_flow    = require 'Thirdparty.luagraphs.flow.FordFulkerson'
 
+-- Utils for fuzzy
+fuzzy               = require 'Thirdparty.luafuzzy-master.luafuzzy.luafuzzy'
+
+-- Utils for Classes
+tablex              = require 'Thirdparty.pl.tablex'
+pretty              = require 'Thirdparty.pl.pretty'
+pd                  = pretty.dump
 
 -- Init Params
-
-Simulation  = Simulation()
-Interface   = Interface()
-Observer    = Observer()
+Simulation          = Simulation()
+Interface           = Interface()
+Observer            = Observer()
 
 
 
@@ -120,7 +141,7 @@ Observer    = Observer()
 
 ------------------
 -- Beside run function this is one of the most important functions, It consist in an anonymous function where we have to define the initial configuration of the system.
--- @function setup
+-- @function SETUP
 -- @param funct An anonymous function.
 -- @return Nothing, unless we specified it in the anonymous function.
 -- @usage
@@ -148,7 +169,7 @@ end
 ------------------
 -- This function is called until we reach a stop condition. Is one of the most important functions of the system and it consist in an anonymous function where we define the actions in every iteration.
 -- @function STEP
--- @param funct, An anonymous function
+-- @param funct An anonymous function
 -- @return Nothing
 -- @usage
 -- TODO

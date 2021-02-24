@@ -19,18 +19,8 @@ local xsize,ysize = 15,15
 -- Agents with the message will share it with other agents in the same patch
 local function comunicate(agent)
     if agent.message then
-        -- ask(
-        --     People:others(agent),
-
-        --     function(other)
-        --         if agent.current_cells[1] == other.current_cells[1] then
-        --             other.message = true
-        --         end
-        --     end
-        -- )
         for _, other in ordered(People)do
-            -- TOD funcion same_pos(optional_families) devuelve true si dos agentes estan en la misma posición en alguno de los "grids" creados, o en algunos en concreto si se pasan como parámetros
-            if agent.current_cells[1] == other.current_cells[1] and agent ~= other then
+            if Patches:cell_of(agent) == Patches:cell_of(other) and agent ~= other then
                 other.message = true
             end
         end
@@ -71,18 +61,13 @@ end
 SETUP(function()
 
     -- Create a grid of patches with the specified dimensions
-    Patches = create_grid(xsize,ysize)
+    declare_FamilyCell('Patches')
+    Patches:create_grid(xsize,ysize)
 
     -- Create a new collection of agents
-    People = FamilyMobil()
+    declare_FamilyMobile('People')
 
-    -- Populate the collection with Agents. Each agent will be randomly positioned.
-    People:create_n( 10, function()
-        return {
-            ['pos']     = {math.random(xsize-1),math.random(ysize-1)},
-            ['message'] = false
-        }
-    end)
+
     People:add_method('update_pos',function(agent, min_x, max_x, minim_y, maxim_y)
         local x,y            = agent:xcor(),agent:ycor()
         local min_y, max_y   = minim_y or min_x, maxim_y or max_x -- Two last params are optional
@@ -102,6 +87,15 @@ SETUP(function()
         return agent
     end)
 
+    for i = 1, 10 do
+        local new_ag = People:new({
+            pos     = {math.random(xsize-1),math.random(ysize-1)},
+            message = false
+        })
+        new_ag
+            :update_pos(xsize,ysize)
+            :update_cell()
+    end
 
     one_of(People).message = true
 
@@ -111,10 +105,10 @@ end)
 -- the number of iterations equals the number of ticks specified inf config_file
 STEP(function()
 
+
     -- Stop condition: All agents have the message
     if People:with(function(x) return x.message == false end).count == 0 then
-        Simulation.is_running = false
-        print('Seed:',Simulation:get_seed())
+        Simulation:stop()
         return
     end
 

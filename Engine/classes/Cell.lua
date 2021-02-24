@@ -25,7 +25,7 @@ Cell._init = function(self,p_table)
 
     self.pos        = p_table.pos         or {0,0,0}
     self.label      = p_table.label       or ''
-    self.label_color= p_table.color       or {1,1,1,1}
+    self.label_color= p_table.label_color or {1,1,1,1}
     self.color      = p_table.color       or {1,1,1,1}
     self.shape      = p_table.shape       or 'square'
     self.width      = p_table.width       or 1

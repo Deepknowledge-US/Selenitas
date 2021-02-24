@@ -24,7 +24,7 @@ end
 -- @return Table of strings, a string per line in the file.
 -- @usage my_table = lines_from(path_to_file)
 function utl_sf.lines_from(file)
-    if not file_exists(file) then return {} end
+    if not file_exists(file) then print('Fichero no encontrado') return {} end
     local lines = {}
     for line in io.lines(file) do
       lines[#lines + 1] = line
