@@ -9,12 +9,12 @@
 --]]
 
 global_vars = {
-  Informed = 0
+  Informed = 1
   }
 -----------------
 -- Interface 
 -----------------
-Interface:create_slider('Num_agents', 0, 1000, 1, 100)
+Interface:create_slider('Num_agents', 0, 1000, 1, 500)
 Interface:create_slider('Radius', 0.0, 10.0, .01, 1.0)
 Interface:create_monitor('Informed')
 -----------------
@@ -44,26 +44,6 @@ SETUP = function()
 
     -- Family of mobil agents
     declare_FamilyMobile('People')
-
-    -- New method for People family: if the calling agent
-    -- has the message, he will communicate it to other
-    -- close agents. People with message are blue.
-    People:add_method('comunicate', 
-      function(self)
-        if self.message then
-            local r = Interface:get_value('Radius')
-            -- Take the neighborhood as the collection of people close enough
-            local PUninformed = People:with(function(ag) return not ag.message end)
-            local neighborhood = PUninformed:with(function(other) return self:dist_euc_to(other) <= r end)
-            -- Spread the message to neighborhood
-            for _,other in ordered(neighborhood) do
-                other.message = true
-                other.color = color('red')
-            end
-        end
-        -- A method must return the self agent in order to concatenate methods
-        return self
-      end)
 
     -- New method for People family: relocate people as they are living in a torus
     People:add_method('pos_to_torus', 
@@ -108,20 +88,31 @@ end
 -----------------
 
 STEP = function()
+    
+    local PUninformed = People:with(function(p) return not p.message end)
+    
     -- Stop simulation when all the people has the message
-    uninformed = People:with(function(x) return x.message == false end).count
-    global_vars.Informed = Interface:get_value('Num_agents') - uninformed
+    uninformed = PUninformed.count
     if uninformed == 0 then
         Simulation:stop()
     end
+    global_vars.Informed = Interface:get_value('Num_agents') - uninformed
+    local r = Interface:get_value('Radius') 
 
     -- Iterate over people to randomly move and communicate the message (if possible)
-    for _, person in ordered(People) do
-        -- Next lines show the concatenation of method over an agent
-        person
+    for _, p in ordered(People) do
+        p
             :lt(math.random(-0.5,0.5))
             :fd(1)
             :pos_to_torus(-50,50,-50,50)
-            :comunicate()
+        if p.message then
+            -- Take the neighborhood as the collection of people close enough
+            local neigh = PUninformed:with(function(other) return p:dist_euc_to(other) <= r end)
+            -- Spread the message to neighborhood
+            for _,other in ordered(neigh) do
+                other.message = true
+                other.color = color('red')
+            end
+        end
     end
 end

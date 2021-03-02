@@ -63,8 +63,10 @@ function Draw.draw_agents_family(family)
             love.graphics.draw(shape_img, x, y, rot, scl, scl, shift, shift)
 
             -- Handle agent label
-            love.graphics.setColor(a.label_color)
-            love.graphics.printf(a.label, x - 45, y + 10, 100, 'center')
+            if a.show_label then 
+                    love.graphics.setColor(a.label_color)
+                    love.graphics.printf(a.label, x-45, y + 10, 100, 'center')
+            end
         end
     end
 end

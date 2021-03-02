@@ -41,7 +41,7 @@ w.create_functions = function(ui)
                 end
             -- Monitor
             elseif v.type == "monitor" then
-                Slab.Text(k .. ': ' .. tostring( global_vars[k] ) )
+                Slab.Text(k .. ': ' .. tostring( global_vars[k] ), {Color = {0.258, 0.529, 0.956}} )
             -- Slider
             elseif v.type == "slider" then
                 Slab.Text(k, {Color = {0.258, 0.529, 0.956}})

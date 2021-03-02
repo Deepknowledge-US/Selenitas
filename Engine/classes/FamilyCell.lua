@@ -30,7 +30,10 @@ end
 -- @return A FamilyCell instance
 -- @usage
 -- declare_FamilyCell('Patches')
--- Patches:create_patches(100,100,-50,-50)
+-- Patches:create_grid(100,100,-50,-50)
+
+-- Warning!!!!: When x_size or y_size are odd, it breaks!!!
+
 FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, cell_height)
     local x      = x_size or 0
     local y      = y_size or 0
@@ -46,15 +49,15 @@ FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, 
     self["cell_height"] = h
     self["offset_x"]    = step_x
     self["offset_y"]    = step_y
+    self["pos_index"]   = {}
 
-    local tabla = {}
     for i = 0 + step_x, x + step_x - 1 do
-        tabla[i + half_w] = {}
+        self.pos_index[i + half_w] = {}
         for j = 0 + step_y, x + step_y - 1 do
-            tabla[i + half_w][j + half_h] = self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+            self.pos_index[i + half_w][j + half_h] = self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
         end
     end
-
+    
     local grid_neighs = {
         {-w, h}, {0, h}, {w, h},
         {-w, 0},         {w, 0},
@@ -70,14 +73,68 @@ FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, 
                 neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
                     neigh_pos[2] <= y + step_y
              then
---                cell.neighbors:add(self:cell_in_pos(neigh_pos))
-                cell.neighbors:add(tabla[neigh_pos[1]][neigh_pos[2]])
+                cell.neighbors:add(self.pos_index[neigh_pos[1]][neigh_pos[2]])
             end
         end
     end
 
     return self
 end
+
+--FC.create_grid = function(self, x_size, y_size, offset_x, offset_y, cell_width, cell_height)
+--    local x      = x_size or 0
+--    local y      = y_size or 0
+--    local w      = cell_width or 1
+--    local h      = cell_height or 1
+--    local half_w = w / 2
+--    local half_h = h / 2
+
+--    local step_x = offset_x or 0
+--    local step_y = offset_y or 0
+
+--    self["cell_width"]  = w
+--    self["cell_height"] = h
+--    self["offset_x"]    = step_x
+--    self["offset_y"]    = step_y
+--    self["pos_index"]   = {}
+
+--    local table = {}
+--    for i = 0 + step_x, x + step_x - 1 do
+--        table[i + half_w] = {}
+--        --self.pos_index[i + half_w] = {}
+--        for j = 0 + step_y, x + step_y - 1 do
+----            local this_cell = self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+----            table[i + half_w][j + half_h] = this_cell
+--            table[i + half_w][j + half_h] = self:new(Cell({["pos"] = {i + half_w, j + half_h}}))
+--          --self.pos_index[i + half_w][j + half_h] = this_cell.__id
+--        end
+--    end
+    
+--    self.pos_index = table
+
+--    local grid_neighs = {
+--        {-w, h}, {0, h}, {w, h},
+--        {-w, 0},         {w, 0},
+--        {-w,-h}, {0,-h}, {w,-h}
+--    }
+
+--    for _, cell in ordered(self) do
+--        local c_x, c_y = cell:xcor(), cell:ycor()
+
+--        for i = 1, 8 do
+--            local neigh_pos = {grid_neighs[i][1] + c_x, grid_neighs[i][2] + c_y}
+--            if
+--                neigh_pos[1] > 0 + step_x and neigh_pos[2] > 0 + step_y and neigh_pos[1] <= x + step_x and
+--                    neigh_pos[2] <= y + step_y
+--             then
+----                cell.neighbors:add(self:cell_in_pos(neigh_pos))
+--                cell.neighbors:add(table[neigh_pos[1]][neigh_pos[2]])
+--            end
+--        end
+--    end
+
+--    return self
+--end
 
 ------------------
 -- Insert a new Cell to the family.
@@ -142,19 +199,6 @@ FC.diffuse = function(self,param,perc,num)
     local n = num or 1
 
     for i=1,n do
-        -- self:ask_ordered(function(cell)
-        --     param_table[cell.__id] = cell[param] * (1-perc)
-        --     cell[param] = cell[param] * perc / cell.neighbors.count
-        -- end)
-        -- self:ask_ordered( function(cell)
-        --     ask_ordered(cell.neighbors, function(neigh)
-        --         param_table[neigh.__id] = param_table[neigh.__id] + cell[param]
-        --     end)
-        -- end)
-        -- self:ask_ordered(function(cell)
-        --     cell[param] = param_table[cell.__id]
-        -- end)
-
         for _,cell in ordered(self.agents) do
             param_table[cell.__id] = cell[param] * (1-perc)
             cell[param] = cell[param] * perc / cell.neighbors.count            
@@ -239,17 +283,20 @@ FC.cell_of = function(self,table_)
 end
 
 ------------------
--- It finds for a Cell in the family with the (exactly) same position as the one gived as parameter.
+-- It looks for a Cell in the family with the (exactly) same position as the one given as parameter.
 -- @function cell_in_pos
 -- @param table_ Agent or position vector.
 FC.cell_in_pos = function(self,table_)
     local pos = table_.pos or table_
-
-    for k,v in pairs(self.agents) do
-        if v.pos[1] == pos[1] and v.pos[2] == pos[2] then
-            return v
-        end
-    end
+--    local id = self.pos_index[pos[1]][pos[2]]
+    return self.pos_index[pos[1]][pos[2]]
+    --return self.agents[id]
+    
+--    for k,v in pairs(self.agents) do
+--        if v.pos[1] == pos[1] and v.pos[2] == pos[2] then
+--            return v
+--        end
+--    end
 end
 
 

@@ -153,7 +153,7 @@ end;
 --
 -- -- Custom window option:
 -- Interface:create_window('window_name') -- We need to create the window first
--- Interface:create_slider('window_name', 'my var', one_var)
+-- Interface:create_monitor('window_name', 'my var', one_var)
 Interface.create_monitor = function(self, window_name, var_name)
     if next(self.windows) == nil then
         self:create_window('Parameters')

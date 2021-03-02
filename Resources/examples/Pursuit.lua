@@ -1,8 +1,5 @@
 --[[
     Pursuit model where some agents must follow one prefixed agent.
-
-    It uses customized methods for families and several standard methods
-    (die, clone) and agent properties (__alive)
 ]]
 
 -----------------
@@ -13,23 +10,6 @@ Interface:create_slider('Num_Pursuers', 0, 100, 1, 10)
 ----------------------
 -- Auxiliary Functions
 ----------------------
-
--- pos_to_torus relocate the agents as they are living in a torus
-local function pos_to_torus(agent, size_x, size_y)
-    local x,y = agent:xcor(),agent:ycor()
-
-    if x > size_x then
-        agent.pos[1] = agent.pos[1] - size_x
-    elseif x < 0 then
-        agent.pos[1] = agent.pos[1] + size_x
-    end
-
-    if y > size_y then
-        agent.pos[2] = agent.pos[2] - size_y
-    elseif y < 0 then
-        agent.pos[2] = agent.pos[2] + size_y
-    end
-end
 
 -- Funtion to return a random float in an interval
 local function random_float(a,b)
@@ -46,17 +26,18 @@ SETUP = function()
     Simulation:reset()
 
     -- Test collection
-    declare_FamilyMobile('Checkpoints')
-    Checkpoints:new({ ['pos'] = {0, 100} })
-    Checkpoints:new({ ['pos'] = {0,0} })
-    Checkpoints:new({ ['pos'] = { 100,0} })
-    Checkpoints:new({ ['pos'] = { 100, 100} })
+    declare_FamilyMobile('Limitpoints')
+    Limitpoints:new({ pos = {0, 100} })
+    Limitpoints:new({ pos = {0,0} })
+    Limitpoints:new({ pos = { 100,0} })
+    Limitpoints:new({ pos = { 100, 100} })
 
-    for _, ch in ordered(Checkpoints) do
-        ch.shape = 'square'
-        ch.scale = 5
-        ch.color = {1,0,0,0.5}
-        ch.label = ch:xcor() .. ',' .. ch:ycor()
+    for _,lp in ordered(Limitpoints) do
+        lp.shape      = 'square'
+        lp.scale      = 4
+        lp.color      = color('grey',.5)
+        lp.show_label = true
+        lp.label      = lp:xcor() .. ',' .. lp:ycor()
     end
 
     -- Create family of pursuers
@@ -65,11 +46,11 @@ SETUP = function()
     -- Populate the collection with Agents.
     for i = 1,Interface:get_value("Num_Pursuers") do
         Pursuers:new({
-            ['pos']     = {math.random(0,100),math.random(0,100)}
-            ,['heading'] = math.random(__2pi)
-            ,['scale']   = 2
-            ,['color']   = {0,0,1,1}
-            ,['speed']   = math.random()
+            pos     = {math.random(0,100),math.random(0,100)},
+            heading = math.random(__2pi),
+            scale   = 2,
+            color   = color('blue'),
+            speed   = math.random()
         })
     end
 
@@ -78,11 +59,11 @@ SETUP = function()
 
     -- Create one pursued
     pursued = Pursueds:new({
-        ['pos']     = {math.random(0,100),math.random(0,100)}
-        ,['heading'] = math.random(__2pi)
-        ,['scale']   = 2
-        ,['color']   = {0,1,0,1}
-        ,['speed']   = 1
+        pos     = {math.random(0,100),math.random(0,100)},
+        heading = math.random(__2pi),
+        scale   = 3,
+        color   = color('green'),
+        speed   = 1.2
     })
 
 end
@@ -92,16 +73,23 @@ end
 -----------------
 
 STEP = function()
-    -- move the pursued in the torus
-    pursued:lt(random_float(-0.6,0.6))
-    pursued:fd(1)
-    pos_to_torus(pursued,100,100)
+    -- move the pursued
+    pursued:lt(random_float(-0.3,0.3))
+           :fd(pursued.speed)
+    -- Check if it is inside the area, if not, move it back and turn it randomly
+    if (math.abs(pursued:xcor()-50) > 50 or math.abs(pursued:ycor()-50) > 50) then
+        pursued:fd(-pursued.speed)
+               :lt(math.random())
+    end 
 
     -- Move the pursuers trying to catch the pursued
-    for _,pursuer in shuffled(Pursuers) do
-        pursuer:face(pursued)
-        pursuer:fd(pursuer.speed)
-        pos_to_torus(pursuer,100,100)
+    for _,p in shuffled(Pursuers) do
+        p:face(pursued)
+         :fd(p.speed)
+        -- Check if it is inside the area, if not, move it back
+        if (math.abs(p:xcor()-50) > 50 or math.abs(p:ycor()-50) > 50) then p:fd(-1) end
+        -- Check if it catched the pursued
+        if p:dist_euc_to(pursued) < 1 then p.color=color('red') else p.color=color('blue') end
     end
 
 end

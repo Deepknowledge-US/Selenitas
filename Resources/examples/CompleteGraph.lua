@@ -5,8 +5,7 @@
 -----------------
 -- Interface
 -----------------
-Interface:create_slider('N_Nodes', 0, 100, 1, 20)
-Interface:create_slider('Radius', 0, 100, 1, 15)
+Interface:create_slider('N_Nodes', 0, 360, 1, 12)
 
 ----------------------
 -- Auxiliary Functions
@@ -22,7 +21,7 @@ local function layout_circle(col, r)
 
     -- Iterate (ordered) the collection to distribute the nodes
     for _,ag in ordered(col) do
-        ag:rt(angle)
+        ag.heading = angle
         ag:fd(r)
         angle = angle + step
     end
@@ -40,19 +39,22 @@ SETUP = function()
 
     -- Family of Nodes of the graph
     declare_FamilyMobile('Nodes')
-
+    N = Interface:get_value('N_Nodes')
     -- Creation of the Nodes
-    for i=1,Interface:get_value('N_Nodes') do
-        Nodes:new({
-            pos     = {0,0},
-            color   = {0,0,1,1},
-            heading = 0,
-			shape   = "circle"
-        })
+    for i=1,N do
+      angle = (i-1)*2*math.pi/N
+      Nodes:new({
+          pos     = {20*math.cos(angle),20*math.sin(angle)},
+          color   = color('blue'),
+          heading = angle,
+          shape   = "circle",
+          label   = (i-1) .. "*2Pi/".. N,
+          show_label = true
+      })
     end
 
     -- Layout the Nodes in a circle
-    layout_circle(Nodes, Interface:get_value("Radius"))
+--    layout_circle(Nodes, 20)
 
     -- Declare a new Family to store the edges
     declare_FamilyRel('Edges')
@@ -63,7 +65,7 @@ SETUP = function()
             Edges:new({
                 source = ag1,
                 target = ag2,
-                color  = {.5, .5, .5, .3}
+                color  = color('grey', .3)
                 }
             )
         end

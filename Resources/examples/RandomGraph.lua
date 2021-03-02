@@ -8,20 +8,20 @@
 -----------------
 -- Interface 
 -----------------
-Interface:create_slider('N_nodes', 0, 100, 1, 22)
-Interface:create_slider('Max_Links', 0, 10000, 1, 15)
+Interface:create_slider('N_nodes', 0, 100, 1, 30)
+Interface:create_slider('Max_Links', 0, 10000, 1, 150)
 
 ---------------------
 -- Auxiliar functions 
 ---------------------
 
-local function layout_circle(collection, r)
+local function layout_circle(collection, radius)
     local step = 2*math.pi / collection.count
     local angle = 0
 
     for _,ag in ordered(collection) do
         ag:lt(angle)
-        ag:fd(r)
+        ag:fd(radius)
         angle = angle + step
     end
 
@@ -38,16 +38,11 @@ SETUP = function()
 
     -- Family for Nodes of the graph
     declare_FamilyMobile('Nodes')
--- <<<<<<< HEAD:Resources/examples/RandomGraph.lua
---     for i=1,Interface.N_nodes do
--- =======
+    
     for i=1,Interface:get_value("N_nodes") do
--- >>>>>>> dev:Resources/examples/Network_example.lua
         Nodes:new({
-            ['pos']     = {0,0}
-            ,['scale']   = 1.5
-            ,['shape']   = 'circle'
-            ,['color']   = {0,1,0,0.5}
+            shape   = 'circle',
+            color   = color('green')
         })
     end
 
@@ -70,19 +65,12 @@ STEP = function()
     local node_2 = one_of(Nodes:others(node_1))
 
     Links:new({
-        ['source'] = node_1,
-        ['target'] = node_2,
-        ['color'] = {0.75, 0, 0, .5},
-        ['visible'] = true
+        source  = node_1,
+        target  = node_2,
+        color   = color('blue',0.5),
     })
 
--- <<<<<<< HEAD:Resources/examples/RandomGraph.lua
---     -- If the number of current links is over the maximum, 
---     -- we remove the leftovers
---     while Links.count > Interface.Max_Links do
--- =======
     while Links.count > Interface:get_value("Max_Links") do
--- >>>>>>> dev:Resources/examples/Network_example.lua
         Links:kill_and_purge(one_of(Links))
     end
 

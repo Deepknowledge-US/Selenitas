@@ -1,5 +1,7 @@
 local colors = {}
 
+-- From: https://flaviocopes.com/rgb-color-codes/
+
 colors.color_table = {
 	maroon                  = { 0.502 , 0 , 0 , 1 },
 	dark_red                = { 0.545 , 0 , 0 , 1 },
@@ -147,10 +149,31 @@ colors.color_table = {
 	white                   = { 1 , 1 , 1 , 1 }
 }
 
-colors.color = function(color_name)
-	return copy(colors.color_table[color_name])
+colors.keys = {}
+for k in pairs(colors.color_table) do table.insert(colors.keys, k) end
+
+-- color returns a color from previous table. If an alpha value is
+-- given, it is used as transparency (if not, defaut value is 1)
+colors.color = function(color_name,alpha)
+    ret = copy(colors.color_table[color_name])
+    if alpha then ret[4]=alpha end
+    return ret
 end
 
+colors.shade_of = function(col, ratio)
+  local ext = ratio <= 0 and {0,0,0,1} or {1,1,1,1}
+  local r = math.abs(ratio)
+  local ret=copy(col)
+  for i=1,3 do
+    ret[i]=col[i]+r*(ext[i]-col[i])
+  end
+  return ret
+end
 
+colors.random_color = function (alpha)
+    ret = colors.color(one_of(colors.keys))
+    if alpha then ret[4]=alpha end
+    return ret
+end
 
 return colors

@@ -37,11 +37,13 @@ SETUP = function()
     local ws = Interface:get_value('World_Size')
     Cells:create_grid(ws, ws, -ws/2, -ws/2) -- width, height, offset x, offset y
 
+  
+    bkg = shade_of(color('grey',0.5),-0.5)
 
     -- Set (and color) the alive cells folowwing Density in the interface
     for _,c in ordered(Cells) do
         c.is_alive = (math.random(100) < Interface:get_value('Density')) 
-        c.color   = c.is_alive and {1,1,1,1} or {0.1,0.1,0.1,1}
+        c.color   = c.is_alive and color('white') or bkg
     end
 
 end
@@ -73,7 +75,7 @@ STEP = function()
                 c.is_alive = false
             end
         end
-        c.color = c.is_alive and {1,1,1,1} or {0.1,0.1,0.1,1}
+        c.color = c.is_alive and color('white') or bkg
     end
 
 end

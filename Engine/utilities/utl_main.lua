@@ -33,6 +33,8 @@ Simulation          = require 'Engine.classes.Simulation'
 
 Colors              = require 'Visual.Colors'
 color               = Colors.color
+random_color        = Colors.random_color
+shade_of            = Colors.shade_of
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 copy                = __list_tables.list_copy

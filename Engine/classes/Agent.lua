@@ -92,6 +92,19 @@ Agent.dist_euc_to = function(self, ag_or_point)
     return math.sqrt(res)
 end
 
+Agent.dist_euc2_to = function(self, ag_or_point)
+    local pos = self.pos
+    local point = ag_or_point.pos or ag_or_point
+    local res = 0
+    if #pos ~= #point then
+        error('Error in dist_euc: Diferent number of dimensions')
+    end
+    for i = 1,#pos do
+        res = res + (pos[i] - point[i])^2
+    end
+    return res
+end
+
 ------------------
 -- This function give us the manhattan distance from the agent to another point.
 -- @function dist_manh

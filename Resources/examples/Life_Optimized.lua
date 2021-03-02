@@ -9,7 +9,7 @@
 
 -- Initial proportion of alive cells
 
-Interface:create_slider('World_Size', 0, 500, 10, 20)
+Interface:create_slider('World_Size', 0, 500, 10, 100)
 Interface:create_slider('Density', 0, 100, 1, 50)
 
 ---------------------
@@ -50,9 +50,13 @@ SETUP = function()
     -- Set (and color) the alive cells folowwing Density in the interface
     -- Initially, setup the cells_to_check collection from alive cells and their 
     -- neighbors
+    
+    -- Background color: died cell
+    bkg = shade_of(color('grey',0.5),-0.5)
+    
     for _,c in ordered(Cells) do
         c.is_alive = (math.random(100) < Interface:get_value('Density')) 
-        c.color   = c.is_alive and {1,1,1,1} or {0.1,0.1,0.1,1}
+        c.color   = c.is_alive and color('white') or bkg
         if c.is_alive then
             cells_to_check:add(c)
             for _, c1 in ordered(c.neighbors) do
@@ -94,7 +98,7 @@ STEP = function()
                 c.is_alive = false
             end
         end
-        c.color = c.is_alive and {1,1,1,1} or {0.1,0.1,0.1,1}
+        c.color = c.is_alive and color('white') or bkg
         -- Update the cells_to_check by:
         --   Adding the changing cells and
         --   Removing the static cells (alive or died)
@@ -106,9 +110,7 @@ STEP = function()
     end
     -- Adding the neighbos of changing cells to cells_to check
     for _,c in ordered(cells_to_check) do
-        for _, c1 in ordered(c.neighbors) do
-            cells_to_check:add(c1)
-        end
+      cells_to_check:union(c.neighbors)
     end
 
 end

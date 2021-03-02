@@ -1,7 +1,7 @@
 -----------------
-local radius = 20
-Interface:create_slider('houses', 0, 100, 1, 22)
-Interface:create_slider('people', 10, 1000, 1, 25)
+local radius = 30
+Interface:create_slider('houses', 0, 50, 1, 24)
+Interface:create_slider('people', 1, 100, 1, 10)
 
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 360º by
@@ -30,10 +30,13 @@ SETUP = function()
     for i=1,Interface:get_value("houses") do
         local tree_or_house = one_of {"house", "tree"}
         Houses:new({
-            ['pos']     = {0,0}
-          , ['shape']   = tree_or_house
-          , ['color']   = tree_or_house == "house" and {0,0,1,1} or {0,1,0,1}
-          , ['scale']   = 3
+          pos     = {0,0},
+          shape   = tree_or_house,
+          color   = tree_or_house == "house" and color('blue') or color('green'),
+          scale   = 0,
+          label   = 0,
+          show_label = true,
+          visits  = 0
       })
     end
 
@@ -41,14 +44,17 @@ SETUP = function()
 
     declare_FamilyMobile('People')
     for i=1,Interface:get_value("people") do
+        local sp = math.random()
         People:new({
-            ['pos']     = {math.random(-radius,radius),math.random(-radius,radius)}
-            , ['shape']   = "person"
-            , ['speed']   = math.random()
+            pos     = {math.random(-radius,radius),math.random(-radius,radius)},
+            shape   = "triangle",
+            scale   = 2 * (.5 + sp),
+            speed   = sp,
+            color   = random_color(.5),
         })
     end
 
-    for _, pers in pairs(People.agents) do
+    for _, pers in ordered(People) do
         local house = one_of(Houses)
         pers:face(house)
         pers.next_house = house
@@ -58,8 +64,11 @@ end
 STEP = function()
     for _, pers in pairs(People.agents) do
         if pers:dist_euc_to(pers.next_house) <= pers.speed then
-            pers.current_house = pers.next_house
-            pers.next_house = one_of(Houses:others(pers.current_house))
+            h = pers.next_house
+            h.visits = h.visits + 1 
+            h.scale = h.visits / 5
+            h.label = h.visits
+            pers.next_house = one_of(Houses:others(h))
             pers:face(pers.next_house)
         end
         pers:fd(pers.speed)
