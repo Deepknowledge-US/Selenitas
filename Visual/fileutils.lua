@@ -13,10 +13,10 @@ local fileutils = {}
 function fileutils.exists(path)
     local ok, err, code = os.rename(path, path)
     if not ok then
-       if code == 13 then
-          -- Permission denied, but it exists
-          return true
-       end
+        if code == 13 then
+            -- Permission denied, but it exists
+            return true
+        end
     end
     return ok, err
 end

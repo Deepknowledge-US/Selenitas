@@ -132,7 +132,9 @@ function GraphicEngine.set_background_color(r, g, b)
     background_color_set = {r, g, b}
 end
 
-
+------------------
+-- This function processes the received message.
+-- @param msg An mqtt message.
 function process_msg(msg)
     print( 'processing... ' .. msg )
     if msg == 'Step' then
@@ -151,10 +153,18 @@ function process_msg(msg)
     elseif msg == 'Load' then
         GraphicEngine.reset_simulation()
         UI.load_model('/home/one/Lua/selenitas_0.1/Selenitas/Resources/models/evacuation/evacuation.lua')
+    elseif string.find(msg,'Update') then
+        local splited = split(msg,'/')
+        local window, param, new_val = splited[2],splited[3],splited[4]
+        if new_val then
+            if new_val == 'true' or new_val == 'false' then
+                Interface.windows[window][param] = new_val == 'true' and true or false
+            else
+                Interface.windows[window][param] = tonumber(new_val)
+            end
+        end
     end
 end
-
-
 
 -- LOVE2D load function
 function love.load()

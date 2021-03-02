@@ -30,14 +30,12 @@ function startConnect() {
 function onConnect() {
     // Fetch the MQTT topic from the form
     topic = document.getElementById("topic").value;
-    // console.log(topic)
 
     // Print output for the user in the messages div
     document.getElementById("messages").innerHTML += '<span> Subscribing model: ' + topic +'</span><br/>';
 
     // Subscribe to the requested topic
     client.subscribe('from_server/#');
-    // sendStep()
 }
 
 // Called when the client loses its connection
@@ -51,20 +49,25 @@ function onConnectionLost(responseObject) {
 // Called when a message arrives
 function onMessageArrived(message) {
 
-    var topic = message.destinationName
-    if (topic.indexOf('init') != -1 ) {
-        console.log('MENSAJE DE INICIO')
-        return
-    }
-    
     // console.log(message.payloadString)
     var myObj = JSON.parse( message.payloadString )
     //  Depending on the message a second parse will be neccessary
     if (typeof(myObj) == "string") {myObj = JSON.parse( myObj )}
 
+    var topic = message.destinationName
+    
+    if (topic.indexOf('panel_info') != -1 ) {
+        // Each element in myObj is a window
+        for (const elem in myObj) {
+            let window = myObj[elem]
+            createWindow(window);
+        }
+        return;
+    }
+
     for (const key in myObj) {
         if (Array.isArray(GB[key])) {
-            GB[key].push(myObj[key] )    // Push new value into the list
+            GB[key].push(myObj[key])    // Push new value into the list
         } else {
             GB[key] = [ myObj[key] ]    // Create a list for the new key 
         }

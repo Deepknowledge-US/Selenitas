@@ -48,6 +48,7 @@ end
 -- A map "id -> internal_id". It will be populated by the "create_scenario function"
 id_map = {}
 
+panels_channel:push(Interface.windows)
 -------------------------------------
 --------------  SETUP  --------------
 -------------------------------------
@@ -198,8 +199,10 @@ SETUP = function()
 		end
 
 	end
+	-- pretty.dump(Interface.windows)
 
-	panels_channel:push(global_vars)
+	-- panels_channel:push(global_vars)
+
 end
 
 
@@ -278,6 +281,7 @@ STEP = function()
 	---------------
 
 	for _,v in shuffled(Violents)do
+		v.speed = get.attacker_speed()
         v:belive()
         v:desire()
 		v:intention()

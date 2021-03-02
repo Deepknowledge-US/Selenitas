@@ -15,9 +15,9 @@ local Window = class.Window()
 Window._init = function(self, a_table)
 
     self.title       = a_table.title
-    self.width       = a_table.width or 150
+    self.width       = a_table.width or 200
     self.height      = a_table.height or 200
-    self.x           = a_table.x or (10 + 155 * Interface.num_windows)
+    self.x           = a_table.x or (10 + 205 * Interface.num_windows)
     self.y           = a_table.y or 100
     self.ui_settings = {}
     self.order       = {}
