@@ -152,7 +152,7 @@ function process_msg(msg)
         UI.load_model(UI.file_loaded_path)
     elseif msg == 'Load' then
         GraphicEngine.reset_simulation()
-        UI.load_model('/home/one/Lua/selenitas_0.1/Selenitas/Resources/models/evacuation/evacuation.lua')
+        UI.load_model('/home/one/Lua/selenitas_0.2/Selenitas/Resources/models/evacuation/evacuation.lua')
     elseif string.find(msg,'Update') then
         local splited = split(msg,'/')
         local window, param, new_val = splited[2],splited[3],splited[4]
@@ -178,7 +178,7 @@ function love.load()
     thread:start()
     thread_pub:start()
 
-    open_url("Visual_js/d3_templates/index.html")
+    open_url("Visual_js/react/index.html")
 
     UI.init()
     Draw.init()
