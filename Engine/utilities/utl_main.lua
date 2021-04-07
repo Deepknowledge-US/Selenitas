@@ -4,7 +4,12 @@
 -- main
 
 -- Add Thirdparty folder to the libraries path
-package.path = package.path .. ";./Thirdparty/?.lua"
+package.path = package.path 
+    .. ";./Thirdparty/?.lua"
+    .. ";./Thirdparty/mqtt/mqtt/?.lua"
+    .. ";./Thirdparty/cjson/bin/linux64/clib/?.so"
+
+
 
 -- Math constants
 __pi    = math.pi

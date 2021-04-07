@@ -22,7 +22,13 @@ local draw_enabled         = true
 local families_visibility  = {}
 local background_color_set = {0, 0, 0}
 
-local mqtt = require("mqtt")
+-- -- TODO: Test cjson
+-- local path = "./Thirdparty/cjson/bin/linux64/clib/cjson.so"
+-- local cjson = package.loadlib(path, "*")
+-- print(cjson)
+-- local cjson2 = cjson.new()
+-- cjson2.encode_sparse_array(true)
+
 
 -- An mqtt subscriptor will be launched in a thread.
 local thread_subscriptor = require "Visual.subscriptor_thread"

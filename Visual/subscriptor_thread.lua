@@ -1,7 +1,9 @@
 
 local thread_subscriptor = [[
+    print("subscriber start")
+    package.path = package.path .. ";./Thirdparty/mqtt/mqtt/?.lua"
     local mqtt = require("mqtt")
-    local mqtt_ioloop = require("mqtt.ioloop")
+    local mqtt_ioloop = require("ioloop")
 
     local info_channel = love.thread.getChannel( 'info' )
 
@@ -32,6 +34,8 @@ local thread_subscriptor = [[
     local ioloop = mqtt_ioloop.create()
     ioloop:add(pong)
     ioloop:run_until_clients()
+
+    print("subscriber end")
 ]]
 
 return thread_subscriptor
