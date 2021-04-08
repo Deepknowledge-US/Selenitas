@@ -5,9 +5,24 @@ local thread_publisher = [[
 
     local mqtt  = require("mqtt")
 
-    -- local cjson  = require "cjson"
-    -- local cjson2 = cjson.new()
-    -- cjson2.encode_sparse_array(true)
+    local path
+
+    -- Check OS and set the proper path to cjson library
+    if package.config:sub(1,1) == '\\' then -- windows
+        path = "./Thirdparty/cjson/bin/mingw64/clib/cjson.dll"
+
+    elseif (io.popen("uname -s"):read'*a') == "Darwin" then -- OSX/Darwin ? (I can not test.)
+        path = "./Thirdparty/cjson/bin/osx64/clib/cjson.so"
+    
+    else -- that ought to only leave Linux
+        path = "./Thirdparty/cjson/bin/linux64/clib/cjson.so"
+    end
+
+
+    local cjson = package.loadlib(path, "luaopen_cjson")
+    local cjson2 = cjson()
+    cjson2.encode_sparse_array(true)
+
 
     local IP    = "127.0.0.1:1883"
     local ID    = tostring( math.floor( math.random() * 100 ) )
@@ -38,8 +53,7 @@ local thread_publisher = [[
         if panel_info then
             ping = mqtt.client{ uri = IP, username = ID , clean = true }
             ping:start_connecting()
-            assert(ping:publish{ topic = "from_server/evacuation/panel_info", payload = "mensaje MQTT", qos = 1 })
-            -- assert(ping:publish{ topic = "from_server/evacuation/panel_info", payload = cjson2.encode(panel_info), qos = 1 })
+            assert(ping:publish{ topic = "from_server/evacuation/panel_info", payload = cjson2.encode(panel_info), qos = 1 })
         end
 
         local state_channel = love.thread.getChannel( 'new_state' )
@@ -47,9 +61,7 @@ local thread_publisher = [[
         if state_info then
             ping = mqtt.client{ uri = IP, username = ID , clean = true }
             ping:start_connecting()
-            assert(ping:publish{ topic = "from_server/evacuation", payload = "mensajeB MQTT", qos = 1 })
-            print("message send")
-            -- assert(ping:publish{ topic = "from_server/evacuation", payload = cjson2.encode(state_info), qos = 1 })
+            assert(ping:publish{ topic = "from_server/evacuation", payload = cjson2.encode(state_info), qos = 1 })
         end
         sock.sleep(0.001)
     end

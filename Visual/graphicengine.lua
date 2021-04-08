@@ -22,12 +22,14 @@ local draw_enabled         = true
 local families_visibility  = {}
 local background_color_set = {0, 0, 0}
 
--- -- TODO: Test cjson
+-- -- Test cjson
 -- local path = "./Thirdparty/cjson/bin/linux64/clib/cjson.so"
--- local cjson = package.loadlib(path, "*")
--- print(cjson)
--- local cjson2 = cjson.new()
+-- local cjson = package.loadlib(path, "luaopen_cjson")
+-- local cjson2 = cjson()
 -- cjson2.encode_sparse_array(true)
+
+-- local parsed = cjson2.encode({one= 1, two= 2})
+-- print(parsed)
 
 
 -- An mqtt subscriptor will be launched in a thread.
