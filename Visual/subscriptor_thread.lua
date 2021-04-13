@@ -1,7 +1,11 @@
 
 local thread_subscriptor = [[
     print("subscriber start")
-    package.path = package.path .. ";./Thirdparty/mqtt/mqtt/?.lua"
+
+    local cwd = love.filesystem.getRealDirectory("Thirdparty")
+    local windows_path = ";"..cwd.."/Thirdparty/mqtt/mqtt/?.lua"
+
+    package.path = package.path .. ";./Thirdparty/mqtt/mqtt/?.lua" .. windows_path
     local mqtt = require("mqtt")
     local mqtt_ioloop = require("ioloop")
 

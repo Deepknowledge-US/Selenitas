@@ -1,15 +1,19 @@
 local thread_publisher = [[
     print("publisher start")
-    package.path = package.path .. ";./Thirdparty/mqtt/mqtt/?.lua"
-    local sock  = require("socket")
 
+    local cwd = love.filesystem.getRealDirectory("Thirdparty")
+    local windows_path = ";"..cwd.."/Thirdparty/mqtt/mqtt/?.lua"
+
+    package.path = package.path .. ";./Thirdparty/mqtt/mqtt/?.lua" .. windows_path
+
+    local sock  = require("socket")
     local mqtt  = require("mqtt")
 
     local path
 
     -- Check OS and set the proper path to cjson library
     if package.config:sub(1,1) == '\\' then -- windows
-        path = "./Thirdparty/cjson/bin/mingw64/clib/cjson.dll"
+        path = cwd .. "/Thirdparty/cjson/bin/mingw64/clib/cjson.dll"
 
     elseif (io.popen("uname -s"):read'*a') == "Darwin" then -- OSX/Darwin ? (I can not test.)
         path = "./Thirdparty/cjson/bin/osx64/clib/cjson.so"

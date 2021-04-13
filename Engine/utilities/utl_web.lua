@@ -15,8 +15,9 @@ utl_web.open_url = function(url)
     if not utl_web.open_cmd then
         if package.config:sub(1,1) == '\\' then -- windows
             utl_web.open_cmd = function()
-                -- Should work on anything since (and including) win'95
-                os.execute(string.format('start "%s"', url))
+                local cwd = love.filesystem.getRealDirectory("Visual_js")
+                local path = cwd .. "/" .. url
+                os.execute(string.format('start "%s"', path))
             end
         -- the only systems left should understand uname...
         elseif (io.popen("uname -s"):read'*a') == "Darwin" then -- OSX/Darwin ? (I can not test.)
