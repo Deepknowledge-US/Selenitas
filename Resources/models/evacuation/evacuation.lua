@@ -1,16 +1,17 @@
 require 'Engine.utilities.utl_main'
-local cs 	= require 'Resources.models.evacuation.files.create_scenario'
-local fs 	= require 'Resources.models.evacuation.files.fuzzy_sets'
-local iw 	= require 'Resources.models.evacuation.files.interface_windows'
+
+add_path("/Resources/models/evacuation/files/")
+
+local cs 	= require('create_scenario')
+local fs 	= require('fuzzy_sets')
+local iw 	= require('interface_windows')
+
 local mqtt  = require('client')
 get 		= iw.create_interface() -- by doing this at this point, we can use 'get' in peacefuls' and violents' files
 
-local add_peacefuls_functions 	= require 'Resources.models.evacuation.files.peacefuls_functions'
-local add_violents_functions  	= require 'Resources.models.evacuation.files.violents_functions'
+local add_peacefuls_functions 	= require('peacefuls_functions')
+local add_violents_functions  	= require('violents_functions')
 
--- local cjson  = require "cjson"
--- local cjson2 = cjson.new()
--- cjson2.encode_sparse_array(true)
 
 -------------------------------------
 ------  Model Global variables ------

@@ -3,12 +3,15 @@
 -- @module
 -- main
 
--- Add Thirdparty folder to the libraries path
-package.path = package.path 
-    .. ";./Thirdparty/?.lua"
-    .. ";./Thirdparty/mqtt/mqtt/?.lua"
-    .. ";./Thirdparty/cjson/bin/linux64/clib/?.so"
+-- The global var "user_cwd" will contain the local route to the main directory of the NIN proyect. This will be useful to find other local routes.
+user_cwd   = love.filesystem.getRealDirectory( "Thirdparty" )
 
+local paths =  ";" .. user_cwd .. "/Thirdparty/?.lua"
+            .. ";" .. user_cwd .. "/Thirdparty/mqtt/mqtt/?.lua"
+            .. ";" .. user_cwd .. "/Thirdparty/cjson/bin/linux64/clib/?.so" 
+
+-- Add Thirdparty folder to the libraries path
+package.path = package.path .. paths
 
 
 -- Math constants
@@ -38,6 +41,9 @@ Simulation          = require 'Engine.classes.Simulation'
 
 Colors              = require 'Visual.Colors'
 color               = Colors.color
+
+__paths             = require 'Engine.utilities.utl_paths'
+add_path            = __paths.add_path
 
 __list_tables       = require 'Engine.utilities.utl_list_and_tables'
 copy                = __list_tables.list_copy
