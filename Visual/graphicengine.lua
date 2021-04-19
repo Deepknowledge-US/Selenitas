@@ -22,17 +22,8 @@ local draw_enabled         = true
 local families_visibility  = {}
 local background_color_set = {0, 0, 0}
 
--- -- Test cjson
--- local path = "./Thirdparty/cjson/bin/linux64/clib/cjson.so"
--- local cjson = package.loadlib(path, "luaopen_cjson")
--- local cjson2 = cjson()
--- cjson2.encode_sparse_array(true)
 
--- local parsed = cjson2.encode({one= 1, two= 2})
--- print(parsed)
-
-
--- An mqtt subscriptor will be launched in a thread.
+-- A mqtt subscriptor will be launched in a thread and a publisher in another.
 local thread_subscriptor = require "Visual.subscriptor_thread"
 local thread_publisher   = require "Visual.publisher_thread"
 
@@ -160,7 +151,8 @@ function process_msg(msg)
         UI.load_model(UI.file_loaded_path)
     elseif msg == 'Load' then
         GraphicEngine.reset_simulation()
-        UI.load_model('/home/one/Lua/selenitas_0.2/Selenitas/Resources/models/evacuation/evacuation.lua')
+        local path = user_cwd .. '/Resources/models/evacuation/evacuation.lua'
+        UI.load_model(path)
     elseif string.find(msg,'Update') then
         local splited = split(msg,'/')
         local window, param, new_val = splited[2],splited[3],splited[4]

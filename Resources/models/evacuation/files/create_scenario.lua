@@ -3,8 +3,8 @@ local cs = {}
 -- This function will create the scenario when called
 cs.create_scenario = function(id_map)
 
-    local nodes_file = 'Resources/models/evacuation/csv/nodesP.csv'
-    local edges_file = 'Resources/models/evacuation/csv/edgesP.csv'
+    local nodes_file = user_cwd .. '/Resources/models/evacuation/csv/nodesP.csv'
+    local edges_file = user_cwd .. '/Resources/models/evacuation/csv/edgesP.csv'
     local nodes = lines_from(nodes_file)
     local edges = lines_from(edges_file)
 

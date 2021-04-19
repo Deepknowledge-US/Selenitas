@@ -18,7 +18,6 @@ utl_web.open_url = function(url)
                 local cwd = love.filesystem.getRealDirectory("Visual_js")
                 local path = cwd .. "/" .. url
 				os.execute('start "" "' .. path .. '"')
---                os.execute(string.format('start %s', path))
             end
         -- the only systems left should understand uname...
         elseif (io.popen("uname -s"):read'*a') == "Darwin" then -- OSX/Darwin ? (I can not test.)
