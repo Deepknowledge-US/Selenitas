@@ -11,6 +11,8 @@
 Interface:create_slider('World_Size', 0, 500, 1, 100)
 Interface:create_slider('Density', 0, 100, 1, 50)
 
+panels_channel:push(Interface.windows)
+
 ---------------------
 -- Auxiliar Functions
 ---------------------

@@ -14,6 +14,8 @@ Interface:create_slider('N_nodes', 0, 50, 1, 12)
 Interface:create_slider('Speed', 0, 4.00001, .01, 1)
 Interface:create_boolean('Jump', true)
 
+panels_channel:push(Interface.windows)
+
 -----------------
 -- Setup function 
 -----------------

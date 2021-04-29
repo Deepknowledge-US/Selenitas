@@ -2,6 +2,8 @@
 Interface:create_slider('nodes', 0, 50, 1, 12)
 Interface:create_slider('speed', 0, 2.001, 0.01, 1)
 
+panels_channel:push(Interface.windows)
+
 SETUP = function()
     -- clear('all')
     Simulation:reset()

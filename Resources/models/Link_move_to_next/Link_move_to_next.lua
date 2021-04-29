@@ -8,6 +8,9 @@ SETUP = function()
     declare_FamilyMobile('Nodes')
     declare_FamilyRel('Edges')
     declare_FamilyMobile('Walkers')
+
+    panels_channel:push(Interface.windows)
+    
     Walkers.z_order = 4 -- By default, all mobil families have a z_order = 3, by setting this to 4, all Walkers will be drown over the other Mobil agents
 
     for i=1,Interface:get_value("nodes") do

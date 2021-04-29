@@ -11,6 +11,8 @@
 Interface:create_slider('N_nodes', 0, 100, 1, 22)
 Interface:create_slider('Max_Links', 0, 10000, 1, 15)
 
+panels_channel:push(Interface.windows)
+
 ---------------------
 -- Auxiliar functions 
 ---------------------

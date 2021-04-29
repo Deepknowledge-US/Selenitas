@@ -2,6 +2,8 @@
 Interface:create_slider('Num_Particles', 0, 3000, 1, 100)
 Interface:create_slider('Attraction_radius', 0, 3, 1, 1)
 
+panels_channel:push(Interface.windows)
+
 -- pos_to_torus relocate the agents as they are living in a torus
 local function pos_to_torus(agent, size_x, size_y)
     local x,y = agent:xcor(),agent:ycor()

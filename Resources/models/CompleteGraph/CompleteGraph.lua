@@ -8,6 +8,8 @@
 Interface:create_slider('N_Nodes', 0, 100, 1, 20)
 Interface:create_slider('Radius', 0, 100, 1, 15)
 
+panels_channel:push(Interface.windows)
+
 ----------------------
 -- Auxiliary Functions
 ----------------------

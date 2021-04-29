@@ -14,6 +14,8 @@ Interface:create_window('params')
 Interface:create_slider('params', 'Num_agents', 0, 1000, 1, 100)
 Interface:create_slider('params', 'radius', 0, 10, .01, 1)
 
+panels_channel:push(Interface.windows)
+
 
 SETUP = function()
     -- clear('all')

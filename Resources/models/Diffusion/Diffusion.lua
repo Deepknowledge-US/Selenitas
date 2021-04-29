@@ -11,6 +11,8 @@ Interface:create_slider('N_Bugs',1,100,1,50)
 Interface:create_slider('Evaporation', 0, 1.0001, 0.1 , 0.99)
 Interface:create_slider('Diffusion', 0, 1.0001, 0.1, 0.5)
 
+panels_channel:push(Interface.windows)
+
 
 -----------------
 -- Setup Function
@@ -24,6 +26,7 @@ SETUP = function()
     -- Cells where the diffusion will occur
     declare_FamilyCell('Cells')
     local ws = Interface:get_value('World_Size')
+    print(ws)
     Cells:create_grid(ws, ws, -ws/2, -ws/2)
     -- feromone will be the parameter to diffuse
     for _,c in ordered(Cells) do

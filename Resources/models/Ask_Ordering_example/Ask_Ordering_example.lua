@@ -3,6 +3,8 @@ Interface:create_slider('N_agents', 0, 20, 1.0, 5)
 Interface:create_boolean('random_ordered', true)
 Interface:create_boolean('Reset', false)
 
+panels_channel:push(Interface.windows)
+
 SETUP = function()
 
     declare_FamilyMobile('Mobils')

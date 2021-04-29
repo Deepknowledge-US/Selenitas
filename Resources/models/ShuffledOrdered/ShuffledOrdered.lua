@@ -13,6 +13,8 @@
 Interface:create_slider('Number of agents', 0, 20, 1.0, 5)
 Interface:create_boolean('Random ordered?', true)
 
+panels_channel:push(Interface.windows)
+
 
 -----------------
 -- Setup Function

@@ -14,6 +14,8 @@
 Interface:create_slider('Num_agents', 0, 1000, 1, 100)
 Interface:create_slider('Radius', 0, 10, .01, 1)
 
+panels_channel:push(Interface.windows)
+
 -----------------
 -- Setup Function
 -----------------

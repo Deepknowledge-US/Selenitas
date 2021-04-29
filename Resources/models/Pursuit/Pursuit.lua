@@ -10,6 +10,8 @@
 -----------------
 Interface:create_slider('Num_Pursuers', 0, 100, 1, 10)
 
+panels_channel:push(Interface.windows)
+
 ----------------------
 -- Auxiliary Functions
 ----------------------

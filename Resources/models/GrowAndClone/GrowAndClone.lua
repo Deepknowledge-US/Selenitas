@@ -13,6 +13,8 @@ Interface:create_slider('Max_age', 5, 100, 1, 40)
 Interface:create_slider('Clone_probability', 0, 100, 1, 30)
 Interface:create_slider('Size_world', 0, 100, 5, 50)
 
+panels_channel:push(Interface.windows)
+
 ----------------------
 -- Auxiliary Functions
 ----------------------

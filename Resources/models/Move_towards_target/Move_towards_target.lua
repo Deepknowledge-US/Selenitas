@@ -3,6 +3,8 @@ local radius = 20
 Interface:create_slider('houses', 0, 100, 1, 22)
 Interface:create_slider('people', 10, 1000, 1, 25)
 
+panels_channel:push(Interface.windows)
+
 
 -- In tick 0, all the agents are in the center of the grid, so we only have to divide 360º by
 -- the number of agents to obtain the degrees of separation between agents (step).

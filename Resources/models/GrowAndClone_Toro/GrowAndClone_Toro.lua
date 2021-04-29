@@ -13,6 +13,8 @@ Interface:create_slider('Max_age', 5, 100, 1, 50)
 Interface:create_slider('Clone_probability', 0, 100, 1, 20)
 Interface:create_boolean('Torus', true)
 
+panels_channel:push(Interface.windows)
+
 ----------------------
 -- Auxiliary Functions
 ----------------------
