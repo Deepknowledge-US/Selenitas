@@ -202,7 +202,7 @@ SETUP = function()
 	end
 	-- pretty.dump(Interface.windows)
 
-	panels_channel:push(global_vars)
+	state_channel:push(global_vars)
 
 end
 

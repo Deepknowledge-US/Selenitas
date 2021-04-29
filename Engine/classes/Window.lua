@@ -76,7 +76,8 @@ end;
 -- @usage
 -- -- It is not recomended to use the methods of this class. You must use the Interface method to do this.
 -- @see Interface.create_boolean
-Window.create_monitor = function(self, name)
+Window.create_monitor = function(self, name, value)
+    self[name] = value
     self.ui_settings[name] = {type = "monitor"}
     self:__new_item(name)
 end;

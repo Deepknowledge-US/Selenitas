@@ -9,6 +9,9 @@
 -- Number of Mobile Agents
 Interface:create_slider('N_Mobiles', 0, 10, 1, 5)
 
+
+panels_channel:push(Interface.windows)
+
 -----------------
 -- Setup Function
 -----------------

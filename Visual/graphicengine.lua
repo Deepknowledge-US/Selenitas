@@ -146,13 +146,35 @@ function process_msg(msg)
         end
     elseif msg == 'Setup' then
         GraphicEngine.setup_simulation()
+
     elseif msg == 'Reload' then
         GraphicEngine.reset_simulation()
         UI.load_model(UI.file_loaded_path)
-    elseif msg == 'Load' then
+
+    elseif string.sub(msg,1,4) == 'Load' then
+        local splited = split(msg,'|')
+        local model = splited[2]
         GraphicEngine.reset_simulation()
-        local path = user_cwd .. '/Resources/models/evacuation/evacuation.lua'
+        local path = user_cwd .. '/Resources/models/' .. model
         UI.load_model(path)
+
+    elseif string.sub(msg,1,5) == "Speed" then
+        local splited = split(msg,':')
+        UI.speed_slider_value = splited[2]
+        GraphicEngine.set_time_between_steps((math.log(11) - math.log (UI.speed_slider_value + 1))/math.log(11))
+
+    elseif string.sub(msg,1,10) == "ToggleView" then
+        local splited = split(msg,":")
+        if splited[2] == "Stats" then
+            UI.on_click_functions.toggle_performance_stats()
+        elseif splited[2] == "Windows" then
+            UI.on_click_functions.toggle_windows_visibility()
+        elseif splited[2] == "Families" then
+            UI.on_click_functions.toggle_families_visibility()
+        elseif splited[2] == "Grid" then
+            UI.on_click_functions.toggle_grid_visibility()
+        end
+
     elseif string.find(msg,'Update') then
         local splited = split(msg,'/')
         local window, param, new_val = splited[2],splited[3],splited[4]

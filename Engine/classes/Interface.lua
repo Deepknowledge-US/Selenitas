@@ -154,14 +154,14 @@ end;
 -- -- Custom window option:
 -- Interface:create_window('window_name') -- We need to create the window first
 -- Interface:create_slider('window_name', 'my var', one_var)
-Interface.create_monitor = function(self, window_name, var_name)
+Interface.create_monitor = function(self, window_name, var_name, value)
     if next(self.windows) == nil then
         self:create_window('Parameters')
     end
-    if var_name ~= nil then -- If there is no def_value, the user has not used the window_name parameter, so all inputs must be moved one position
-        self.windows[window_name]:create_monitor( var_name)
+    if value ~= nil then -- If there is no 'value' param, the user has not used the window_name parameter, so all inputs must be moved one position
+        self.windows[window_name]:create_monitor( var_name, value)
     else
-        self.windows['Parameters']:create_monitor(window_name )
+        self.windows['Parameters']:create_monitor(window_name, var_name )
     end
 end;
 

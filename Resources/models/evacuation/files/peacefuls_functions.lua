@@ -461,11 +461,11 @@ local add_methods = function()
 				end
 			elseif get.app_mode() == 1 then -- The app gives a path to a secure room
 				local candidates = Nodes:with(function(x) return x.has_lock > 0 and not x.locked_room and x:density() < 0.75 end)
-				-- -- print('candidates', candidates.count)
+				-- print('candidates', candidates.count)
 
 				if candidates.count > 0 then
 					local destination = one_of(candidates)
-					-- print('\t candidates', destination.__id)
+					-- print('\t route', self.location.__id .. ' -> ' .. destination.__id)
 					self.route = self:path_to(g,self.location.__id, destination.__id)
 				else
 					-- print('\t no candidates')
@@ -669,31 +669,18 @@ local add_methods = function()
 			self:advance()
 			return
 		end
-		-- print('\tfollow route')
 
 		-- -- print('\t\tfollow route to '.. self.route[#self.route].__id)
 		if self.location == self.next_location then
-			-- print('\t\tloc = next_loc')
 
 			if self.location == self.route[#self.route] then
-				-- print('\t\tlast node')
 				-- The agent has reach its destiny.
 				self.route   = {}
 				self.p_timer = gaussian(wait_time_mean,wait_time_dev)
 			elseif next(self.route) ~= nil and ( not self.location:is_in(self.route) or not self.next_location:is_in(self.route) ) then
-				-- print('\t\tout of route')
 				-- A congestion in the path or the vision of an attacker will force the agent to temporaly stop following the route, but it is near of that route and it could start following again.
-				-- print('\told route:')
-				for _,v in sorted(self.route)do
-					-- print('\t  ' .. v.__id)
-				end
 				self.route = self:path_to(g,self.location.__id, self.route[#self.route].__id)
-				-- print('\tnew route:')
-				for _,v in sorted(self.route)do
-					-- print('\t  ' .. v.__id)
-				end
 			else
-				-- print('\t\t\tnext node')
 				for i=1,#self.route do
 					if self.location == self.route[i] then
 						self.next_location = self.route[i+1]
@@ -703,7 +690,6 @@ local add_methods = function()
 				end
 			end
 		else
-			-- print('\t\tadvance')
 			self:advance()
 		end
 	end)
