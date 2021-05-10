@@ -57,7 +57,7 @@ local thread_publisher = [[
         if panel_info then
             ping = mqtt.client{ uri = IP, username = ID , clean = true }
             ping:start_connecting()
-            assert(ping:publish{ topic = "from_server/evacuation/panel_info", payload = cjson2.encode(panel_info), qos = 1 })
+            assert(ping:publish{ topic = "from_server/panel_info", payload = cjson2.encode(panel_info), qos = 1 })
         end
 
         local state_channel = love.thread.getChannel( 'new_state' )
@@ -65,7 +65,7 @@ local thread_publisher = [[
         if state_info then
             ping = mqtt.client{ uri = IP, username = ID , clean = true }
             ping:start_connecting()
-            assert(ping:publish{ topic = "from_server/evacuation", payload = cjson2.encode(state_info), qos = 1 })
+            assert(ping:publish{ topic = "from_server/update", payload = cjson2.encode(state_info), qos = 1 })
         end
         sock.sleep(0.001)
     end

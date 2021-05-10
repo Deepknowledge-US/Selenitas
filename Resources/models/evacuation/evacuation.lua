@@ -17,24 +17,26 @@ local add_violents_functions  	= require('violents_functions')
 ------  Model Global variables ------
 -------------------------------------
 global_vars = {
-    app_not_alerted     = 0,
     app_accident        = 0,
     app_killed          = 0,
     app_rescued         = 0,
     app_secure_room     = 0,
-    not_app_not_alerted = 0,
     not_app_accident    = 0,
     not_app_killed      = 0,
     not_app_rescued     = 0,
     not_app_secure_room = 0,
+	violents_killed		= 0,
+    --[[app_not_alerted     = 0,
+    not_app_not_alerted = 0,
     total_not_alerted   = 0,
     total_accident      = 0,
     total_killed        = 0,
     total_rescued       = 0,
     total_secure_room   = 0,
-	violents_killed		= 0,
-	app_is_triggered    = 0
+    app_is_triggered    = 0--]]
 }
+
+app_is_triggered = 0
 
 -- Global variables to search routes
 g 	= graph.create(0,true) -- Initial number of nodes = 0. 'true' means the graph is directed
@@ -266,12 +268,12 @@ STEP = function()
 	---------------
 
 	-- The app will trigger with first blood, when a crowd is running away, or both.
-	if global_vars.app_is_triggered == 0 and get.app_info() then
+	if app_is_triggered == 0 and get.app_info() then
 		if get.first_blood() and global_vars.app_killed + global_vars.not_app_killed > 0 then
-			global_vars.app_is_triggered = 1
+			app_is_triggered = 1
 		end
 		if get.crowd_running() and Peacefuls:with(function(x) return x.speed ~= get.n_a_speed() end).count > get.crowd_number() then
-			global_vars.app_is_triggered = 1
+			app_is_triggered = 1
 		end
 	end
 

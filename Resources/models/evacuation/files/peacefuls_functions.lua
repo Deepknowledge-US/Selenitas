@@ -163,7 +163,7 @@ local add_methods = function()
 
 	-- True if the agent has the app installed and the app is active and it has been triggered
 	Peacefuls:add_method('app_pack', function(self)
-		return self.app and get.app_info() and global_vars.app_is_triggered > 0
+		return self.app and get.app_info() and app_is_triggered > 0
 	end)
 
 	-- True if there is a visible agent and some places to hide in the node.
