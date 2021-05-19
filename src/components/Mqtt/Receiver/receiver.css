@@ -1,0 +1,8 @@
+#allMonitorsDiv {
+    width: 100%;
+}
+
+#allMonitorsDiv>div {
+    max-width: 47%;
+    display: inline-block;
+}

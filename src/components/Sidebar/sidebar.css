@@ -1,0 +1,24 @@
+#sideBar {
+	position: fixed;
+	top: 3em;
+	min-height: 100vh;
+	width: 16em !important;
+	z-index: 1;
+}
+
+#sidebar-menu {
+	width: 100%;
+}
+
+.ant-layout-sider-trigger {
+	top: 0;
+	height: 4em !important;
+}
+
+.ant-layout-header {
+	height: 4em;
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-item {
+	margin: 0 !important;
+}

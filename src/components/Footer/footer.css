@@ -1,0 +1,17 @@
+#footer-div {
+    /* border-top: .1em solid grey; */
+    color: aqua;
+    background-color: #001529;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 2;
+}
+
+#footer-div>div {
+    border-right: .1em solid grey;
+    border-left: .1em solid grey;
+    display: inline-block;
+    padding: 0 .7em;
+    margin:  0 .01em;
+}
